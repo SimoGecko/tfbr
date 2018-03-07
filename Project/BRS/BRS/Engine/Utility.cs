@@ -231,4 +231,24 @@ namespace BRS {
 
         }
     }
+
+    public class Curve {
+        //represents a curve that can be evaulated in the range [0,1]
+        public static float EvaluateSigmoid(float t) {
+            return (float)(Math.Tanh((t - 0.5f) * 5.2f) + 1) / 2;
+        }
+        public static float EvaluateSqrt(float t) {
+            return (float)Math.Sqrt(t*1.5f);
+        }
+        public static float EvaluatePingPong(float t) {
+            return (-t * t + t) * 4;
+        }
+        public static float EvaluateUp(float t) {
+            return t*t;
+        }
+        public static float EvaluateDown(float t) {
+            return (float)Math.Pow(t, .2f);
+        }
+
+    }
 }

@@ -38,6 +38,9 @@ namespace BRS {
             return Task.Delay((int)(s * 1000));
             //using System.Threading.Tasks;
         }
+        public static Task WaitForFrame() { // used in coroutines
+            return Task.Delay(1);// gt.ElapsedGameTime.Milliseconds/2);
+        }
 
     }
 

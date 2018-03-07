@@ -36,6 +36,14 @@ namespace BRS.Scripts {
         int capacity = 10;
         public int carryingmoney = 0;
 
+        //attack
+        bool attacking = false;
+        Vector3 startPos, endPos;
+        float attackT;
+        float attackTime = .2f;
+        float attackDistance = 3;
+        Vector3 oldPos;
+        float beforeAttackSpeed;
         //reference
 
 
@@ -46,7 +54,12 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            MoveInput();
+            if(!attacking)
+                MoveInput();
+            AttackInput();
+            if (attacking) {
+                AttackCoroutine(ref attackT);
+            }
         }
 
 
@@ -57,6 +70,8 @@ namespace BRS.Scripts {
         // commands
         void MoveInput() {
             //based on index
+            oldPos = transform.position;
+
             Vector3 input;
             if(playerIndex==0)
                 input = new Vector3(Input.GetAxisRaw0("Horizontal"), 0, Input.GetAxisRaw0("Vertical"));
@@ -82,6 +97,16 @@ namespace BRS.Scripts {
             transform.Translate(Vector3.Forward * currentSpeed * smoothMagnitude * Time.deltatime);
         }
 
+        void AttackInput() {
+            if (Input.Fire1() && !attacking) {
+                attacking = true;
+                attackT = 0;
+                startPos = transform.position;
+                endPos = transform.position + transform.Forward * attackDistance;
+                beforeAttackSpeed = Vector3.Distance(transform.position, oldPos) / Time.deltatime;
+            }
+        }
+
         public void CollectMoney(int amount) {
             carryingmoney += Math.Min(amount, capacity-carryingmoney);
             UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, playerIndex);
@@ -99,6 +124,37 @@ namespace BRS.Scripts {
 
         float currentSpeed { get { return MathHelper.Lerp(maxSpeed, minSpeed, MoneyPercent); } }
         // other
+
+        void AttackCoroutine(ref float percent) {
+            if (percent <= 1) {
+                percent += Time.deltatime / attackTime;
+                float t = Curve.EvaluateSqrt(percent);
+                transform.position = Vector3.LerpPrecise(startPos, endPos, t);
+            } else {
+                attacking = false;
+            }
+        }
+        /*
+        async void Attack() {
+            attacking = true;
+            float attackDistance = 6;
+            float attackTime = 1f;
+
+            Vector3 startPosition = transform.position;
+            Vector3 finalPosition = transform.position + transform.Forward * attackDistance;
+
+            float percent = 0;
+            while (percent < 1) {
+                percent += Time.deltatime / attackTime;
+                float t = percent;//TODO evaluate curve
+                transform.position = Vector3.Lerp(startPosition, finalPosition, t);
+
+                await Time.WaitForFrame();
+            }
+
+            transform.position = finalPosition;
+            attacking = false;
+        }*/
 
     }
 

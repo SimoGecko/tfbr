@@ -63,9 +63,9 @@ namespace BRS {
         // Matrix rotmatrix { get { return Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(m_rotation.Y), MathHelper.ToRadians(m_rotation.X), MathHelper.ToRadians(m_rotation.Z)); } }
 
         //local coords
-        public Vector3 Right   { get { return toWorld(Vector3.Right  ); } }//+X
-        public Vector3 Up      { get { return toWorld(Vector3.Up     ); } }//+Y
-        public Vector3 Forward { get { return toWorld(Vector3.Forward); } }//-Z
+        public Vector3 Right   { get { return toLocalRotation(Vector3.Right  ); } }//+X
+        public Vector3 Up      { get { return toLocalRotation(Vector3.Up     ); } }//+Y
+        public Vector3 Forward { get { return toLocalRotation(Vector3.Forward); } }//-Z
 
         /*
         public Vector3 eulerAngles { // in degrees

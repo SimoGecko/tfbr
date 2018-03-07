@@ -66,6 +66,7 @@ namespace BRS {
             return 0f;
         }
 
+        //CROSS PLATFORM (allows to have same input from gamepad and keyboard
         static internal float GetAxisRaw0(string v) { // WASD and gamepad 0
             if (v == "Horizontal") {
                 return (GetKey(Keys.A) && !GetKey(Keys.D)) ? -1 : (!GetKey(Keys.A) && GetKey(Keys.D)) ? 1 : 0 + GetThumbstick("Left", 0).X;
@@ -84,6 +85,10 @@ namespace BRS {
                 return (GetKey(Keys.Down) && !GetKey(Keys.Up)) ? -1 : (!GetKey(Keys.Down) && GetKey(Keys.Up)) ? 1 : 0 + GetThumbstick("Left", 1).Y;
             }
             return 0f;
+        }
+
+        public static bool Fire1() {
+            return GetKeyDown(Keys.Space) || GetButtonDown(Buttons.A);
         }
 
         //KEYS
