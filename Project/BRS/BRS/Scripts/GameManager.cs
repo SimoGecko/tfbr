@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int numPlayers = 1;
+        public static int numPlayers = 2;
 
 
         //private
