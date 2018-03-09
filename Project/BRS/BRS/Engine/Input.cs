@@ -29,12 +29,13 @@ namespace BRS {
         public static void Update() {
             oldKstate = kState;
             oldMstate = mState;
-            oldGstate = gState;
 
             kState = Keyboard.GetState();
             mState = Mouse.GetState();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 4; i++) {
+                oldGstate[i] = gState[i];
                 gState[i] = GamePad.GetState(i);
+            }
 
             //check for vibration stop
             for (int i = 0; i < 4; i++) {

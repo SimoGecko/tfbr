@@ -8,7 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BRS {
     public class Camera {
         //class that represents a virtual camera in space with projection characteristics
-        public static Camera main, main2; // assumes max 2 cameras
+        public static Camera main;
+        static List<Camera> camList = new List<Camera>();
 
         public enum Projection { Orthographic, Perspective};
         public Projection projectiontype = Projection.Perspective;
@@ -26,21 +27,15 @@ namespace BRS {
         }
         public Matrix Proj; // precomputed
 
-        public Camera(Viewport vp)  {
+        public Camera(Viewport vp, float _fov = 60)  {
             if (main == null) main = this;
-            else main2 = this;
+            camList.Add(this);
             viewport = vp;
+            fov = _fov;
+            aspectRatio = vp.AspectRatio;
             MakeProjMatrix(projectiontype);
         }
 
-        public Camera(Viewport vp, float _aspectRatio, float _fov = 60) {
-            if (main == null) main = this;
-            else main2 = this;
-            fov = _fov;
-            aspectRatio = _aspectRatio;
-            viewport = vp;
-            MakeProjMatrix(projectiontype);
-        }
 
         void MakeProjMatrix(Projection projectionType) {
             if (projectiontype == Projection.Perspective) {
@@ -65,6 +60,10 @@ namespace BRS {
             Vector3 direction = farPoint - nearPoint;
             direction.Normalize();
             return new Ray(nearPoint, direction);
+        }
+
+        public static Camera GetCamera(int i) {
+            return camList[i];
         }
     }
 }

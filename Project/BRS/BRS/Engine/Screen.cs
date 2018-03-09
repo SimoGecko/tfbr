@@ -61,13 +61,22 @@ namespace BRS {
 
             if (numPlayers == 1) {
                 splitViewport[0] = new Viewport(0, 0, screenWidth, screenHeight, 0, 1);
-                cams[0] = new Camera(splitViewport[0], splitViewport[0].AspectRatio);
             }else if (numPlayers == 2) {
                 splitViewport[0] = new Viewport(0, 0, screenWidth/2, screenHeight, 0, 1);
                 splitViewport[1] = new Viewport(screenWidth/2, 0, screenWidth/2, screenHeight, 0, 1);
-                cams[0] = new Camera(splitViewport[0], splitViewport[0].AspectRatio);
-                cams[1] = new Camera(splitViewport[1], splitViewport[0].AspectRatio);
+            }else if (numPlayers == 4) {
+                int h2 = screenHeight / 2;
+                int w2 = screenWidth / 2;
+                splitViewport[0] = new Viewport(0,  0, w2, h2, 0, 1);
+                splitViewport[1] = new Viewport(w2, 0, w2, h2, 0, 1);
+                splitViewport[2] = new Viewport(0, h2, w2, h2, 0, 1);
+                splitViewport[3] = new Viewport(w2,h2, w2, h2, 0, 1);
             }
+
+            for(int i=0; i<numPlayers; i++) {
+                cams[i] = new Camera(splitViewport[i]);
+            }
+           
         }
 
 

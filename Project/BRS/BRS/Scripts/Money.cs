@@ -15,7 +15,7 @@ namespace BRS.Scripts {
 
         //private
         int value = 1;
-
+        float weight = 1f;
 
         //reference
 

@@ -23,25 +23,35 @@ namespace BRS.Scripts {
         public int playerIndex = 0; // player index - to select input and camera
 
         //MOVEMENT
+        const float maxSpeed = 7f;
+        const float minSpeed = 4f;
+        const float maxTurningRate = 360; // degrees/sec
         float smoothMagnitude, refMagnitude;
-        float maxSpeed = 7f;
-        float minSpeed = 4f;
-        float maxTurningRate = 360; // degrees/sec
         float rotation;
         float refangle, refangle2;
         float inputAngle; // store it
         float targetRotation;
 
+        //BOOST
+        const float boostMultiplier = 1.5f;
+        const float staminaPerBoost = .4f;
+        bool boosting;
+
+        //STAMINA
+        float stamina = 1;
+        float staminaPerSecond = .2f;
+
         //MONEY
-        int capacity = 10;
+        const int capacity = 10;
         public int carryingmoney = 0;
 
         //attack
+        const float staminaPerAttack = .6f;
         bool attacking = false;
         Vector3 startPos, endPos;
         float attackT;
-        float attackTime = .2f;
-        float attackDistance = 3;
+        const float attackTime = .2f;
+        const float attackDistance = 3;
         Vector3 oldPos;
         float beforeAttackSpeed;
         //reference
@@ -54,12 +64,18 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if(!attacking)
+            if (!attacking) {
+                BoostInput();
                 MoveInput();
+            }
             AttackInput();
             if (attacking) {
                 AttackCoroutine(ref attackT);
             }
+
+            stamina += staminaPerSecond * Time.deltatime;
+            stamina = Utility.Clamp01(stamina);
+            Debug.Log(stamina.ToString());
         }
 
 
@@ -68,6 +84,17 @@ namespace BRS.Scripts {
 
 
         // commands
+        void BoostInput() {
+            boosting = false;
+            if (Input.GetKey(Keys.LeftShift)) {
+                if(stamina >= staminaPerBoost * Time.deltatime) {
+                    stamina -= staminaPerBoost * Time.deltatime;
+                    boosting = true;
+                }
+            }
+        }
+
+
         void MoveInput() {
             //based on index
             oldPos = transform.position;
@@ -94,11 +121,13 @@ namespace BRS.Scripts {
             transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
-            transform.Translate(Vector3.Forward * currentSpeed * smoothMagnitude * Time.deltatime);
+            float speedboost = boosting ? boostMultiplier : 1f;
+            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
         }
 
         void AttackInput() {
-            if (Input.Fire1() && !attacking) {
+            if (Input.Fire1() && !attacking && stamina >= staminaPerAttack) {
+                stamina -= staminaPerAttack;
                 attacking = true;
                 attackT = 0;
                 startPos = transform.position;

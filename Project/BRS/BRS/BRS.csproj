@@ -126,6 +126,8 @@
     <Compile Include="Scripts\Base.cs" />
     <Compile Include="Scripts\CameraController.cs" />
     <Compile Include="Scripts\GameManager.cs" />
+    <Compile Include="Scripts\IDamageable.cs" />
+    <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Money.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />

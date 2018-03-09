@@ -23,10 +23,13 @@ namespace BRS {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Screen.Setup(graphics, this); // setup screen and create cameras
+
         }
 
         protected override void Initialize() {
             base.Initialize();
+
+
         }
 
 
