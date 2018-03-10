@@ -121,6 +121,13 @@ namespace BRS {
         public void Rotate(Vector3 axis, float angle) {
             m_rotation = Quaternion.Multiply(Quaternion.CreateFromAxisAngle(axis, MathHelper.ToRadians(angle)), m_rotation);
         }
+        public void RotateAround(Vector3 point, Vector3 axis, float angle) {
+            //TODO implement;
+
+            //update position
+            Rotate(axis, angle);
+        }
+
         public void Scale(Vector3 s) { m_scale += s; }
         public void Scale(float s)   { m_scale *= s; }
 

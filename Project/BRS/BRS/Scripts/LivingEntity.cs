@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public float startingHealth;
+        public float startingHealth = 100;
 
         //private
         protected float health;
@@ -22,7 +22,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            health = startingHealth;
+            Respawn();
         }
 
         
@@ -47,14 +47,20 @@ namespace BRS.Scripts {
             }
         }
 
-        public void Die() {
+        protected virtual void Die() {
             dead = true;
             OnDeath?.Invoke();
-            GameObject.Destroy(gameObject);
+            //GameObject.Destroy(gameObject);
         }
+
+        protected virtual void Respawn() {
+            health = startingHealth;
+            dead = false;
+        } 
 
 
         // queries
+        public float HealthPercent { get { return health / startingHealth; } }
 
 
 

@@ -46,11 +46,9 @@ namespace BRS {
     class Timer {
         public TimeSpan span;
         public System.Action callback;
-        //public bool expired;
         public Timer(int minutes, int seconds, System.Action _callback) {
             span = new TimeSpan(0, minutes, seconds);
             callback = _callback;
-            //expired = false;
             Time.timers.Add(this);
         }
     }

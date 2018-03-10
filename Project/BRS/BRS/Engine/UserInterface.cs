@@ -11,7 +11,7 @@ namespace BRS.Scripts {
     class UserInterface {
         ////////// allows to draw interface in 2D //////////
 
-            //TODO: move particular stuff into own class ("load")
+        //TODO: move particular stuff into own class ("load")
 
         // --------------------- VARIABLES ---------------------
 
@@ -20,7 +20,8 @@ namespace BRS.Scripts {
 
         //private
         SpriteFont myfont;
-        Texture2D moneybar;
+        Texture2D bar;
+        const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
 
         PlayerUI[] playerUI;
@@ -34,7 +35,7 @@ namespace BRS.Scripts {
         public void Start() {
             instance = this;
             myfont = Content.Load<SpriteFont>("font1");
-            moneybar = Content.Load<Texture2D>("money_bar");
+            bar = Content.Load<Texture2D>("progress_bar");
 
             playerUI = new PlayerUI[GameManager.numPlayers];
 
@@ -48,10 +49,21 @@ namespace BRS.Scripts {
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
             spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10, 80), Color.White);
 
-            Rectangle fgrect = new Rectangle(0, 0, (int)(291 * playerUI[index].playerMoneyPercent), 32);
-            Rectangle bgrect = new Rectangle(0, 32, 291, 32);
-            spriteBatch.Draw(moneybar, new Vector2(10, 120), bgrect, Color.White);
-            spriteBatch.Draw(moneybar, new Vector2(10, 120), fgrect, Color.White);
+            Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
+            Rectangle bgrect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
+
+            //health
+            fgrect.Width = (int)(BARWIDTH * playerUI[index].healthPercent);
+            spriteBatch.Draw(bar, new Vector2(10, 120), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 120), fgrect, Color.Green);
+            //stamina
+            fgrect.Width = (int)(BARWIDTH * playerUI[index].staminaPercent);
+            spriteBatch.Draw(bar, new Vector2(10, 160), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 160), fgrect, Color.Red);
+            //capacity
+            fgrect.Width = (int)(BARWIDTH * playerUI[index].carryingPercent);
+            spriteBatch.Draw(bar, new Vector2(10, 200), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 200), fgrect, Color.Blue);
         }
 
         //public void Draw() { }
@@ -66,8 +78,10 @@ namespace BRS.Scripts {
             Content = c;
         }
 
-        public void SetPlayerMoneyPercent(float v, int index) {
-            playerUI[index].playerMoneyPercent = v;
+        public void UpdatePlayerUI(int index, float health, float stamina, float carrying) {
+            playerUI[index].healthPercent = health;
+            playerUI[index].staminaPercent = stamina;
+            playerUI[index].carryingPercent = carrying;
         }
         public void SetPlayerMoneyBase(int v, int index) {
             playerUI[index].totalMoneyInBase = v;
@@ -83,8 +97,10 @@ namespace BRS.Scripts {
     }
 
     public struct PlayerUI {
-        public float playerMoneyPercent;
         public int totalMoneyInBase;
+        public float healthPercent; // green
+        public float staminaPercent;//red
+        public float carryingPercent;//blue
     }
 
 }

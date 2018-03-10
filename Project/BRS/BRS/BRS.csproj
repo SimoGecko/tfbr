@@ -131,6 +131,9 @@
     <Compile Include="Scripts\Money.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
+    <Compile Include="Scripts\PlayerAttack.cs" />
+    <Compile Include="Scripts\PlayerInventory.cs" />
+    <Compile Include="Scripts\PlayerMovement.cs" />
     <Compile Include="Scripts\Spawner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +149,7 @@
     <None Include="Content\primitives\plane.xnb" />
     <None Include="Content\primitives\quad.xnb" />
     <None Include="Content\primitives\sphere.xnb" />
+    <None Include="Content\progress_bar_fat.xnb" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>

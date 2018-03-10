@@ -11,7 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
-    class Player : Component {
+    class Player : LivingEntity {
         ////////// player class that allows the user to control the in game avatar //////////
 
         // --------------------- VARIABLES ---------------------
@@ -23,13 +23,13 @@ namespace BRS.Scripts {
         public int playerIndex = 0; // player index - to select input and camera
 
         //MOVEMENT
-        const float maxSpeed = 7f;
         const float minSpeed = 4f;
-        const float maxTurningRate = 360; // degrees/sec
-        float smoothMagnitude, refMagnitude;
+        const float maxSpeed = 7f;
+        const float maxTurningRate = 360; // deg/sec
         float rotation;
+        float smoothMagnitude, refMagnitude;
         float refangle, refangle2;
-        float inputAngle; // store it
+        float inputAngle;
         float targetRotation;
 
         //BOOST
@@ -39,28 +39,35 @@ namespace BRS.Scripts {
 
         //STAMINA
         float stamina = 1;
-        float staminaPerSecond = .2f;
+        const float staminaPerSecond = .2f;
 
         //MONEY
         const int capacity = 10;
         public int carryingmoney = 0;
 
-        //attack
+        //ATTACK
         const float staminaPerAttack = .6f;
-        bool attacking = false;
-        Vector3 startPos, endPos;
-        float attackT;
         const float attackTime = .2f;
         const float attackDistance = 3;
-        Vector3 oldPos;
-        float beforeAttackSpeed;
+        bool attacking = false;
+        Vector3 attackStartPos, attackEndPos;
+        float attackRefTime;
+        bool hasAppliedDamage = false;
+
         //reference
+        Player otherPlayer;
+        bool hasOtherPlayer = false;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            base.Start();
             transform.Rotate(Vector3.Up, -90);
             rotation = targetRotation = -90;
+            hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (playerIndex + 1) % 2) != null;
+            if (hasOtherPlayer) {
+                otherPlayer = GameObject.FindGameObjectWithName("player_" + (playerIndex + 1) % 2).GetComponent<Player>();
+            }
         }
 
         public override void Update() {
@@ -70,12 +77,14 @@ namespace BRS.Scripts {
             }
             AttackInput();
             if (attacking) {
-                AttackCoroutine(ref attackT);
+                AttackCoroutine(ref attackRefTime);
+                if(hasOtherPlayer)
+                    CheckCollision();
             }
 
-            stamina += staminaPerSecond * Time.deltatime;
-            stamina = Utility.Clamp01(stamina);
-            Debug.Log(stamina.ToString());
+            UpdateStamina();
+
+            UpdateUI();
         }
 
 
@@ -94,10 +103,7 @@ namespace BRS.Scripts {
             }
         }
 
-
         void MoveInput() {
-            //based on index
-            oldPos = transform.position;
 
             Vector3 input;
             if(playerIndex==0)
@@ -126,24 +132,59 @@ namespace BRS.Scripts {
         }
 
         void AttackInput() {
-            if (Input.Fire1() && !attacking && stamina >= staminaPerAttack) {
+            bool inputfire = playerIndex==0 ? Input.Fire1() : Input.Fire2();
+            if (inputfire && !attacking && stamina >= staminaPerAttack) {
                 stamina -= staminaPerAttack;
                 attacking = true;
-                attackT = 0;
-                startPos = transform.position;
-                endPos = transform.position + transform.Forward * attackDistance;
-                beforeAttackSpeed = Vector3.Distance(transform.position, oldPos) / Time.deltatime;
+                attackRefTime = 0;
+                attackStartPos = transform.position;
+                attackEndPos = transform.position + transform.Forward * attackDistance;
+                hasAppliedDamage = false;
             }
         }
 
+        void CheckCollision() {
+            const float distanceThreshold = 1f;
+            if(Vector3.DistanceSquared(transform.position, otherPlayer.transform.position) < distanceThreshold && !hasAppliedDamage) {
+                otherPlayer.GetHit();
+                hasAppliedDamage = true;
+            }
+        }
+
+        public void GetHit() {
+            //TODO STUN
+
+            //LOSE MONEY
+            TakeDamage(50);
+        }
+
+        protected override void Die() {
+            base.Die();
+            Timer timer = new Timer(0, 5, Respawn);
+        }
+
+        protected override void Respawn() {
+            base.Respawn();
+            transform.position = Vector3.Zero;
+        }
+
+
+
         public void CollectMoney(int amount) {
             carryingmoney += Math.Min(amount, capacity-carryingmoney);
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, playerIndex);
         }
 
         public void Deload() {
             carryingmoney = 0;
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, playerIndex);
+        }
+
+        void UpdateStamina() {
+            if (!boosting) stamina += staminaPerSecond * Time.deltatime;
+            stamina = Utility.Clamp01(stamina);
+        }
+
+        void UpdateUI() {
+            UserInterface.instance.UpdatePlayerUI(playerIndex, HealthPercent, stamina, MoneyPercent);
         }
 
 
@@ -158,32 +199,11 @@ namespace BRS.Scripts {
             if (percent <= 1) {
                 percent += Time.deltatime / attackTime;
                 float t = Curve.EvaluateSqrt(percent);
-                transform.position = Vector3.LerpPrecise(startPos, endPos, t);
+                transform.position = Vector3.LerpPrecise(this.attackStartPos, attackEndPos, t);
             } else {
                 attacking = false;
             }
         }
-        /*
-        async void Attack() {
-            attacking = true;
-            float attackDistance = 6;
-            float attackTime = 1f;
-
-            Vector3 startPosition = transform.position;
-            Vector3 finalPosition = transform.position + transform.Forward * attackDistance;
-
-            float percent = 0;
-            while (percent < 1) {
-                percent += Time.deltatime / attackTime;
-                float t = percent;//TODO evaluate curve
-                transform.position = Vector3.Lerp(startPosition, finalPosition, t);
-
-                await Time.WaitForFrame();
-            }
-
-            transform.position = finalPosition;
-            attacking = false;
-        }*/
 
     }
 
