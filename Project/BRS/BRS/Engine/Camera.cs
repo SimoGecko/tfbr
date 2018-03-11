@@ -47,8 +47,8 @@ namespace BRS {
 
         public void Start() {
             //default position and rotation
-            transform.position = new Vector3(0, 10, 7);
-            transform.eulerAngles = new Vector3(-45, 0, 0);
+            //transform.position = new Vector3(0, 10, 7);
+            //transform.eulerAngles = new Vector3(-45, 0, 0);
         }
 
         public void Update() { }

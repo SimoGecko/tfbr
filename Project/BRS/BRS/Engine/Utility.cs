@@ -211,9 +211,18 @@ namespace BRS {
         public static int Range(int min, int max) { // random int in [min, max[
             return min + rand.Next(max - min);
         }
+        public static float Range(float min, float max) { // random int in [min, max[
+            return (float)(min + rand.NextDouble()*(max - min));
+        }
 
         public static Vector2 InsideRectangle(Rectangle rect) {
             return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
+        }
+
+        public static Vector2 insideUnitCircle() {
+            double r = Math.Sqrt(rand.NextDouble());
+            double phi = rand.NextDouble() * 2 * Math.PI;
+            return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
         }
 
     }

@@ -46,10 +46,14 @@ namespace BRS {
     class Timer {
         public TimeSpan span;
         public System.Action callback;
-        public Timer(int minutes, int seconds, System.Action _callback) {
-            span = new TimeSpan(0, minutes, seconds);
+        public Timer(int minutes, int seconds, int milliseconds, System.Action _callback) {
+            span = new TimeSpan(0, 0, minutes, seconds, milliseconds);
             callback = _callback;
             Time.timers.Add(this);
         }
+        //shorter versions
+        public Timer(int seconds, System.Action _callback) : this(0, seconds, 0, _callback) { }
+        public Timer(int minutes, int seconds, System.Action _callback) : this(minutes, seconds, 0, _callback) { }
+        public Timer(float seconds, System.Action _callback) : this(0, 0, (int)(1000*seconds), _callback) { }
     }
 }

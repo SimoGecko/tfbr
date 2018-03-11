@@ -15,7 +15,7 @@ namespace BRS.Scripts {
 
         //private
         int value = 1;
-        float weight = 1f;
+        int weight = 1;
 
         //reference
 
@@ -36,10 +36,10 @@ namespace BRS.Scripts {
 
         // commands
         protected override void OnPickup(GameObject o) {
-            Player player = o.GetComponent<Player>();
+            PlayerInventory player = o.GetComponent<PlayerInventory>();
             if (player != null) {
-                if (player.CanPickUp) {
-                    player.CollectMoney(value);
+                if (player.CanPickUp(this)) {
+                    player.Collect(this);
                     GameObject.Destroy(gameObject);
                 }
             }
@@ -47,7 +47,8 @@ namespace BRS.Scripts {
 
 
         // queries
-
+        public int Value  { get { return value; } }
+        public int Weight { get { return weight; } }
 
 
         // other

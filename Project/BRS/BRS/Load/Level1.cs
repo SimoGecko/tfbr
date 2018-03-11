@@ -19,10 +19,10 @@ namespace BRS.Load {
 
 
             //GROUND
-            for (int x = 0; x < 4; x++) {
-                for (int y = 0; y < 4; y++) {
+            for (int x = 0; x < 2; x++) {
+                for (int y = 0; y < 3; y++) {
                     GameObject groundPlane = new GameObject("groundplane_" + x.ToString() + "_" + y.ToString(), Content.Load<Model>("gplane"));
-                    groundPlane.transform.position = new Vector3(x * 10, 0, y * 10 -15);
+                    groundPlane.transform.position = new Vector3(x * 10-5, 0, -y * 10);
                 }
             }
 
@@ -31,10 +31,16 @@ namespace BRS.Load {
             for(int i=0; i<GameManager.numPlayers; i++) {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
                 forklift.tag = "player";
-                forklift.transform.Scale(2);
+                //forklift.transform.Scale(2);
                 forklift.AddComponent(new Player());
                 forklift.GetComponent<Player>().playerIndex = i;
-                forklift.transform.TranslateGlobal(Vector3.Right * 30 * i);
+                forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                //forklift.transform.TranslateGlobal(Vector3.Right * (10 * i -5));
+                //subcomponents
+                forklift.AddComponent(new PlayerMovement());
+                forklift.AddComponent(new PlayerAttack());
+                forklift.AddComponent(new PlayerInventory());
+
             }
 
 
@@ -45,7 +51,10 @@ namespace BRS.Load {
                 playerBase.tag = "base";
                 playerBase.AddComponent(new Base());
                 playerBase.GetComponent<Base>().baseIndex = i;
-                playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
+                //playerBase.transform.TranslateGlobal(Vector3.Right *( 10 * i-5));
+                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                playerBase.transform.scale = new Vector3(3, 1, 1);
+
             }
 
 

@@ -11,38 +11,64 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-
+        const float attackTime = .2f;
+        const float attackDistance = 3;
+        const float attackDistanceThreshold = 2f;
 
         //private
-
+        bool attacking = false;
+        Vector3 attackStartPos, attackEndPos;
+        float attackRefTime;
+        bool hasAppliedDamage = false;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-
-        }
-
-        public override void Update() {
-
-        }
-
+        public override void Start() { }
+        public override void Update() { }
 
 
         // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
+        public void BeginAttack() {
+            attacking = true;
+            attackRefTime = 0;
+            attackStartPos = transform.position;
+            attackEndPos = transform.position + transform.Forward * attackDistance;
+            hasAppliedDamage = false;
+        }
 
+        public void AttackCoroutine() {
+            if (attackRefTime <= 1) {
+                attackRefTime += Time.deltatime / attackTime;
+                float t = Curve.EvaluateSqrt(attackRefTime);
+                transform.position = Vector3.LerpPrecise(this.attackStartPos, attackEndPos, t);
+            } else {
+                EndAttack();
+            }
+        }
+
+        void EndAttack() {
+            attacking = false;
+        }
+
+        public void CheckCollision(Player otherPlayer) {
+            if (!hasAppliedDamage && Vector3.DistanceSquared(transform.position, otherPlayer.transform.position) < attackDistanceThreshold) {
+                otherPlayer.GetHit();
+                hasAppliedDamage = true;
+            }
+        }
 
 
         // queries
+        public bool AttackEnded { get { return !attacking; } }
 
 
 
         // other
-
+        
     }
-
 }

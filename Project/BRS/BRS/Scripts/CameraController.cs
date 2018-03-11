@@ -38,8 +38,8 @@ namespace BRS.Scripts {
             for(int i=0; i<numPlayers; i++) {
                 cams[i] = Camera.GetCamera(i).transform;
                 if (cams[i] != null) {
-                    cams[i].position = new Vector3(0, 10, 7);
-                    cams[i].eulerAngles = new Vector3(-45, 0, 0);
+                    cams[i].position = new Vector3(-5, 7, 5);
+                    cams[i].eulerAngles = new Vector3(-50, 0, 0);
 
                     players[i] = GameObject.FindGameObjectWithName("player_"+i).transform;
                     if (players[i] == null) Debug.LogError("player not found");

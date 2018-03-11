@@ -12,6 +12,7 @@ namespace BRS.Scripts {
 
         //public
         public int baseIndex = 0;
+        const float deloadDistanceThreshold = 2f;
 
         //private
         int totalMoney;
@@ -19,17 +20,17 @@ namespace BRS.Scripts {
 
 
         //reference
-        Player player;
+        PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            player = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<Player>();
-            if (player == null) Debug.LogError("player not found");
+            playerInventory = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<PlayerInventory>();
+            if (playerInventory == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
-            if(Vector3.DistanceSquared(transform.position, player.transform.position) < 2f) {
+            if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
                 DeloadPlayer();
             }
         }
@@ -41,8 +42,8 @@ namespace BRS.Scripts {
 
         // commands
         public void DeloadPlayer() {
-            totalMoney += player.carryingmoney;
-            player.Deload();
+            totalMoney += playerInventory.CarryingValue;
+            playerInventory.Deload();
             UpdateUI();
         }
 

@@ -39,20 +39,30 @@ namespace BRS.Scripts {
         // commands
         void SpawnInitialMoney() {
             for (int i = 0; i < moneyamount; i++)
-                SpawnOneMoney();
+                SpawnOneMoneyRandom();
         }
 
-        void SpawnOneMoney() {
+        void SpawnOneMoneyRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            GameObject newmoney = GameObject.Instantiate("moneyprefab", position.To3(), Quaternion.Identity);
+            SpawnOneMoney(position.To3());
+        }
+
+        void SpawnOneMoney(Vector3 pos) {
+            GameObject newmoney = GameObject.Instantiate("moneyprefab", pos, Quaternion.Identity);
         }
 
         async void SpawnContinuous() {
             float timeBetweenSpawn = 1f;
             while (true) {
-                SpawnOneMoney();
+                SpawnOneMoneyRandom();
                 await Time.WaitForSeconds(timeBetweenSpawn);
             }
+        }
+
+        public void SpawnMoneyAround(Vector3 p) {
+            float radius = 1f;
+            Vector3 pos = p + MyRandom.insideUnitCircle().To3() * radius;
+            SpawnOneMoney(pos);
         }
 
         // queries

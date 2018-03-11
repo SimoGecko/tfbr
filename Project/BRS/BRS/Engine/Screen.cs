@@ -16,9 +16,9 @@ namespace BRS {
 
 
         //private
-        static int screenWidth = 1200;
-        static int screenHeight = 900;
-        static string screenTitle = "GAME TITLE";
+        public static int WIDTH = 1920;
+        public static int HEIGHT = 1080;
+        public static string TITLE = "GAME TITLE";
 
         public static Viewport fullViewport;
         static Viewport[] splitViewport;
@@ -45,8 +45,8 @@ namespace BRS {
 
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
-            graphics.PreferredBackBufferWidth = 1920 / 2;
-            graphics.PreferredBackBufferHeight = 1080 / 2;
+            graphics.PreferredBackBufferWidth = WIDTH;
+            graphics.PreferredBackBufferHeight = HEIGHT;
             graphics.ApplyChanges();
             game.Window.Title = "New Title";
             game.IsMouseVisible = true;
@@ -60,13 +60,13 @@ namespace BRS {
             cams = new Camera[numPlayers];
 
             if (numPlayers == 1) {
-                splitViewport[0] = new Viewport(0, 0, screenWidth, screenHeight, 0, 1);
+                splitViewport[0] = new Viewport(0, 0, WIDTH, HEIGHT, 0, 1);
             }else if (numPlayers == 2) {
-                splitViewport[0] = new Viewport(0, 0, screenWidth/2, screenHeight, 0, 1);
-                splitViewport[1] = new Viewport(screenWidth/2, 0, screenWidth/2, screenHeight, 0, 1);
+                splitViewport[0] = new Viewport(0, 0, WIDTH/2, HEIGHT, 0, 1);
+                splitViewport[1] = new Viewport(WIDTH/2, 0, WIDTH/2, HEIGHT, 0, 1);
             }else if (numPlayers == 4) {
-                int h2 = screenHeight / 2;
-                int w2 = screenWidth / 2;
+                int h2 = HEIGHT / 2;
+                int w2 = WIDTH / 2;
                 splitViewport[0] = new Viewport(0,  0, w2, h2, 0, 1);
                 splitViewport[1] = new Viewport(w2, 0, w2, h2, 0, 1);
                 splitViewport[2] = new Viewport(0, h2, w2, h2, 0, 1);
@@ -82,7 +82,7 @@ namespace BRS {
 
         // queries
         static float AspectRatio {
-            get { return (float)screenWidth / screenHeight; }
+            get { return (float)WIDTH / HEIGHT; }
         }
 
 
