@@ -65,6 +65,7 @@ namespace BRS.Scripts {
             for (int i = 0; i < amount; i++){
                 Money money = carryingMoney.Pop();
                 //Spawn money somewhere
+                Spawner.instance.SpawnMoneyAround(transform.position);
                 carryingValue -= money.Value;
                 carryingWeight -= money.Weight;
             }

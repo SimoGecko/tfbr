@@ -57,6 +57,8 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
+            Gizmos.DrawWireSphere(transform.position, 1);
+
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector3 moveInput =  MoveInput();
@@ -83,7 +85,7 @@ namespace BRS.Scripts {
         // commands
         public void GetHit() {
             state = State.stun;
-            Timer t = new Timer(.2f, () => state = State.normal);
+            Timer t = new Timer(1f, () => state = State.normal);
             playerInventory.LoseMoney();
             TakeDamage(40);
         }
@@ -91,11 +93,13 @@ namespace BRS.Scripts {
 
         protected override void Die() {
             base.Die();
+            state = State.dead;
             Timer timer = new Timer(0, 5, Respawn);
         }
 
         protected override void Respawn() {
             base.Respawn();
+            state = State.normal;
             transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0);
         }
 

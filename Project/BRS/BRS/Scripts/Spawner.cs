@@ -13,7 +13,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        Rectangle spawnArea = new Rectangle(0, -15, 30, 30);
+        public static Spawner instance;
+        Rectangle spawnArea = new Rectangle(-10, 0, 20, -30);
 
         //private
         int moneyamount = 30;
@@ -23,6 +24,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            instance = this;
             SpawnInitialMoney();
             SpawnContinuous();
         }

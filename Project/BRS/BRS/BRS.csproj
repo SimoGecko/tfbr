@@ -150,6 +150,8 @@
     <None Include="Content\primitives\quad.xnb" />
     <None Include="Content\primitives\sphere.xnb" />
     <None Include="Content\progress_bar_fat.xnb" />
+    <None Include="Content\wirecube.xnb" />
+    <None Include="Content\wiresphere.xnb" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>

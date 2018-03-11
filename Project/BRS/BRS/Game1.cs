@@ -17,6 +17,7 @@ namespace BRS {
 
         Scene scene;
         UserInterface ui;
+        RasterizerState fullRasterizer, wireRasterizer;
         
 
         public Game1() {
@@ -29,7 +30,9 @@ namespace BRS {
         protected override void Initialize() {
             base.Initialize();
 
-
+            fullRasterizer = GraphicsDevice.RasterizerState;
+            wireRasterizer = new RasterizerState();
+            wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
 
@@ -82,10 +85,18 @@ namespace BRS {
                 graphics.GraphicsDevice.Viewport = cam.viewport;
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
                 //Transform.Draw(camera);
+
+                //gizmos (wireframe)
+                GraphicsDevice.RasterizerState = wireRasterizer;
+                Gizmos.Draw(cam);
+                GraphicsDevice.RasterizerState = fullRasterizer;
+
+
                 spriteBatch.Begin();
                 ui.DrawSplitscreen(spriteBatch, i++);
                 spriteBatch.End();
             }
+            Gizmos.ClearOrders();
 
             graphics.GraphicsDevice.Viewport = Screen.fullViewport;
 

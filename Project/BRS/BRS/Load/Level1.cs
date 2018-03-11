@@ -52,7 +52,7 @@ namespace BRS.Load {
                 playerBase.AddComponent(new Base());
                 playerBase.GetComponent<Base>().baseIndex = i;
                 //playerBase.transform.TranslateGlobal(Vector3.Right *( 10 * i-5));
-                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
                 playerBase.transform.scale = new Vector3(3, 1, 1);
 
             }
