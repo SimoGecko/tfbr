@@ -142,12 +142,13 @@ namespace BRS {
 
         //STATIC
         public static List<Transform> alltransforms = new List<Transform>();
+        /*
         public static void Draw(Camera cam) {
             foreach(Transform t in alltransforms) {
                 if (t.draw) {
                     Utility.DrawModel(Prefabs.emptymodel, cam.View, cam.Proj, t.World);
                 }
             }
-        }
+        }*/
     }
 }

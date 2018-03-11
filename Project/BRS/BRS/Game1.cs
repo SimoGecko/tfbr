@@ -68,7 +68,6 @@ namespace BRS {
             
             Time.Update(gameTime);
             Input.Update();
-            //camera.Update();
 
             foreach (GameObject go in GameObject.All) go.Update();
             base.Update(gameTime);
@@ -77,7 +76,7 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //3D
+            //foreach camera
             int i = 0;
             foreach(Camera cam in Screen.cams) {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
@@ -91,7 +90,7 @@ namespace BRS {
                 Gizmos.Draw(cam);
                 GraphicsDevice.RasterizerState = fullRasterizer;
 
-
+                //splitscreen UI
                 spriteBatch.Begin();
                 ui.DrawSplitscreen(spriteBatch, i++);
                 spriteBatch.End();
@@ -100,7 +99,7 @@ namespace BRS {
 
             graphics.GraphicsDevice.Viewport = Screen.fullViewport;
 
-            //2D
+            //fullscreen UI
             spriteBatch.Begin();
             ui.DrawGlobal(spriteBatch);
             spriteBatch.End();

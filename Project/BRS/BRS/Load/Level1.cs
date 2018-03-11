@@ -13,7 +13,7 @@ namespace BRS.Load {
 
             //MANAGER
             GameObject manager = new GameObject("manager");
-            manager.AddComponent(new CameraController());
+            //manager.AddComponent(new CameraController());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
 

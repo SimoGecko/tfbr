@@ -12,6 +12,7 @@ namespace BRS {
 
         public static List<Transform> cubeOrder = new List<Transform>();
         public static List<Transform> sphereOrder = new List<Transform>();
+        public static List<Transform> transformOrder = new List<Transform>();
 
         public static void DrawWireCube(Vector3 position, Vector3 size) {
             Transform t = new Transform(); t.position = position; t.scale = size;
@@ -26,6 +27,10 @@ namespace BRS {
         public static void DrawLine(Vector3 from, Vector3 to) {
             //TODO implement
         }
+        public static void DrawTransform(Transform transform, float scale) {
+            Transform t = new Transform(); t.CopyFrom(transform); t.Scale(scale);
+            transformOrder.Add(t);
+        }
 
         public static void Draw(Camera cam) {
             //called at actual draw time
@@ -35,10 +40,14 @@ namespace BRS {
             foreach(Transform sphere in sphereOrder) {
                 Utility.DrawModel(Prefabs.sphereModel, cam.View, cam.Proj, sphere.World);
             }
+            foreach (Transform trans in transformOrder) {
+                Utility.DrawModel(Prefabs.emptymodel, cam.View, cam.Proj, trans.World);
+            }
         }
         public static void ClearOrders() {
             cubeOrder.Clear();
             sphereOrder.Clear();
+            transformOrder.Clear();
         }
 
     }

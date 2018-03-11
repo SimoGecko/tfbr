@@ -13,13 +13,11 @@ namespace BRS {
         // --------------------- VARIABLES ---------------------
 
         //public
-
+        public const int WIDTH = 1920;
+        public const int HEIGHT = 1080;
+        public const string TITLE = "GAME TITLE";
 
         //private
-        public static int WIDTH = 1920;
-        public static int HEIGHT = 1080;
-        public static string TITLE = "GAME TITLE";
-
         public static Viewport fullViewport;
         static Viewport[] splitViewport;
 
@@ -40,24 +38,24 @@ namespace BRS {
         // commands
         public static void Setup(GraphicsDeviceManager graphics, Game game) {
             SetupWindow(graphics, game);
-            SetupSplitScreen(graphics);
+            SetupViewports(graphics);
+            SetupCameras();
         }
 
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
-            graphics.PreferredBackBufferWidth = WIDTH;
-            graphics.PreferredBackBufferHeight = HEIGHT;
-            graphics.ApplyChanges();
-            game.Window.Title = "New Title";
+            //graphics.PreferredBackBufferWidth = WIDTH;
+            //graphics.PreferredBackBufferHeight = HEIGHT;
+            graphics.ApplyChanges(); // DO NOT COMMENT OUT THIS LINE - causes unhandled exception
+            //game.Window.Title = "New Title";
             game.IsMouseVisible = true;
         }
 
-        static void SetupSplitScreen(GraphicsDeviceManager graphics) {
-            fullViewport = graphics.GraphicsDevice.Viewport;
+        static void SetupViewports(GraphicsDeviceManager graphics) {
             int numPlayers = GameManager.numPlayers;
-            //make viewports and setup cameras
+            //make viewports
+            fullViewport = graphics.GraphicsDevice.Viewport;
             splitViewport = new Viewport[numPlayers];
-            cams = new Camera[numPlayers];
 
             if (numPlayers == 1) {
                 splitViewport[0] = new Viewport(0, 0, WIDTH, HEIGHT, 0, 1);
@@ -72,11 +70,18 @@ namespace BRS {
                 splitViewport[2] = new Viewport(0, h2, w2, h2, 0, 1);
                 splitViewport[3] = new Viewport(w2,h2, w2, h2, 0, 1);
             }
+        }
 
-            for(int i=0; i<numPlayers; i++) {
-                cams[i] = new Camera(splitViewport[i]);
+        static void SetupCameras() {
+            cams = new Camera[GameManager.numPlayers];
+            for (int i = 0; i < GameManager.numPlayers; i++) {
+                GameObject camObject = new GameObject("camObject_" + i);
+                camObject.AddComponent(new Camera(splitViewport[i]));
+                camObject.AddComponent(new CameraController());
+                camObject.GetComponent<CameraController>().camIndex = i;
+                cams[i] = camObject.GetComponent<Camera>();
+                if (cams[i] == null) Debug.LogError("cami not found");
             }
-           
         }
 
 

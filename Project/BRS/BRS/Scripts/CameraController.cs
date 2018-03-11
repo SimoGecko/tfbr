@@ -17,24 +17,26 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-
+        public int camIndex;
+        const float smoothTime = .3f;
 
         //private
-        Vector3 offset;
-        Vector3[] refVelocity;
+        static Vector3 offset;
+        Vector3 refVelocity;
 
         //reference
-        Transform[] cams;
-        Transform[] players;
+        //Transform cams;
+        Transform player;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            /*
             int numPlayers = GameManager.numPlayers;
             cams = new Transform[numPlayers];
             players = new Transform[numPlayers];
             refVelocity = new Vector3[numPlayers];
-
+            
             for(int i=0; i<numPlayers; i++) {
                 cams[i] = Camera.GetCamera(i).transform;
                 if (cams[i] != null) {
@@ -46,20 +48,20 @@ namespace BRS.Scripts {
                     if(offset == Vector3.Zero)
                         offset = cams[i].position - players[i].position;
                 }
-            }
+            }*/
+            transform.position = new Vector3(-5, 7, 5);
+            transform.eulerAngles = new Vector3(-50, 0, 0);
+
+            player = GameObject.FindGameObjectWithName("player_" + camIndex).transform;
+            if (player == null) Debug.LogError("player not found");
+            if (offset == Vector3.Zero)
+                offset = transform.position - player.position;
 
         }
 
         public override void Update() {
-
-            for (int i = 0; i < GameManager.numPlayers; i++) {
-                if (cams[i] != null) {
-                    Vector3 target = players[i].position + offset;
-                    cams[i].position = Utility.SmoothDamp(cams[i].position, target, ref refVelocity[i], .3f);
-                }
-            }
-            
-
+            Vector3 target = player.position + offset;
+            transform.position = Utility.SmoothDamp(transform.position, target, ref refVelocity, smoothTime);
         }
 
 

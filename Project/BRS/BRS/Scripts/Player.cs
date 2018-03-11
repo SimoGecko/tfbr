@@ -27,6 +27,11 @@ namespace BRS.Scripts {
         const float staminaReloadDelay = .3f;
         float stamina = 1;
 
+        //HIT and STUN
+        const float damage = 40;
+        const float stunTime = 2f;
+        const float respawnTime = 5f;
+
         //private
         State state = State.normal;
         bool canReloadStamina = true;
@@ -35,6 +40,7 @@ namespace BRS.Scripts {
         Player otherPlayer;
         bool hasOtherPlayer = false;
 
+        //subcomponents
         PlayerAttack playerAttack;
         PlayerMovement playerMovement;
         PlayerInventory playerInventory;
@@ -57,8 +63,6 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            Gizmos.DrawWireSphere(transform.position, 1);
-
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector3 moveInput =  MoveInput();
@@ -85,16 +89,16 @@ namespace BRS.Scripts {
         // commands
         public void GetHit() {
             state = State.stun;
-            Timer t = new Timer(1f, () => state = State.normal);
+            Timer t = new Timer(stunTime, () => { if (state == State.stun) state = State.normal; });
             playerInventory.LoseMoney();
-            TakeDamage(40);
+            TakeDamage(damage);
         }
 
 
         protected override void Die() {
             base.Die();
             state = State.dead;
-            Timer timer = new Timer(0, 5, Respawn);
+            Timer timer = new Timer(respawnTime, Respawn);
         }
 
         protected override void Respawn() {

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public class Camera {
+    public class Camera : Component {
         //class that represents a virtual camera in space with projection characteristics
         public static Camera main;
         static List<Camera> camList = new List<Camera>();
@@ -20,7 +20,7 @@ namespace BRS {
 
         public Viewport viewport;
 
-        public Transform transform = new Transform();
+        //public Transform transform = new Transform();
 
         public Matrix View {
             get { return Matrix.Invert(transform.World); }
@@ -45,13 +45,13 @@ namespace BRS {
             }
         }
 
-        public void Start() {
+        public override void Start() {
             //default position and rotation
             //transform.position = new Vector3(0, 10, 7);
             //transform.eulerAngles = new Vector3(-45, 0, 0);
         }
 
-        public void Update() { }
+        public override void Update() { }
 
         //METHODS
         public Ray ScreenPointToRay(Vector2 point) {
