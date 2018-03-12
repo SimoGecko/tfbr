@@ -8,7 +8,7 @@ namespace BRS {
     static class Gizmos {
         ////////// this class allows to draw wireframe shapes (cubes, spheres) to debug game info //////////
 
-        public static Color color = Color.Red;
+        public static Color color = Color.Red; // TODO draw with actual color
 
         public static List<Transform> cubeOrder = new List<Transform>();
         public static List<Transform> sphereOrder = new List<Transform>();
@@ -44,6 +44,7 @@ namespace BRS {
                 Utility.DrawModel(Prefabs.emptymodel, cam.View, cam.Proj, trans.World);
             }
         }
+
         public static void ClearOrders() {
             cubeOrder.Clear();
             sphereOrder.Clear();

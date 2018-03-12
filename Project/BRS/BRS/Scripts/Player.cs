@@ -81,6 +81,10 @@ namespace BRS.Scripts {
             UpdateUI();
         }
 
+        public override void OnCollisionEnter(Collider c) {
+            if (c.gameObject.tag == "player") Debug.Log("collision enter player");
+        }
+
 
 
         // --------------------- CUSTOM METHODS ----------------

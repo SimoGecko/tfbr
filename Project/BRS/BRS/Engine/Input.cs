@@ -15,7 +15,6 @@ namespace BRS {
         static GamePadState[] gState, oldGstate;
 
         static bool[] vibrating = new bool[4];
-        static float[] timer = new float[4];
 
         public static void Start() {
             gState = oldGstate = new GamePadState[4];
@@ -38,6 +37,7 @@ namespace BRS {
             }
 
             //check for vibration stop
+            /*
             for (int i = 0; i < 4; i++) {
                 if (vibrating[i]) {
                     timer[i] -= Time.deltatime;
@@ -45,7 +45,7 @@ namespace BRS {
                         StopVibration(i);
                     }
                 }
-            }
+            }*/
         }
 
 
@@ -67,7 +67,7 @@ namespace BRS {
             return 0f;
         }
 
-        //CROSS PLATFORM (allows to have same input from gamepad and keyboard
+        //CROSS PLATFORM (allows to have same input from gamepad and keyboard)
         static internal float GetAxisRaw0(string v) { // WASD and gamepad 0
             if (v == "Horizontal") {
                 return (GetKey(Keys.A) && !GetKey(Keys.D)) ? -1 : (!GetKey(Keys.A) && GetKey(Keys.D)) ? 1 : 0 + GetThumbstick("Left", 0).X;
@@ -104,7 +104,7 @@ namespace BRS {
         //MOUSE
         public static Vector2 mousePosition { get { return new Vector2(mState.X, mState.Y); } }
         public static Vector2 mouseDelta    { get { return new Vector2(mState.X - oldMstate.X, mState.Y - oldMstate.Y); } }
-        public static void setMousePosition(Vector2 v) {
+        public static void SetMousePosition(Vector2 v) {
             Mouse.SetPosition((int)v.X, (int)v.Y);
         }
         public static int mouseWheel      { get { return mState.ScrollWheelValue; } }
@@ -122,7 +122,7 @@ namespace BRS {
 
         //GAMEPAD
         //assume gState.IsConnected
-        public static bool IsConnected(int i) {
+        public static bool IsConnected(int i=0) {
             return GamePad.GetState(i).IsConnected;
         }
 
@@ -143,7 +143,7 @@ namespace BRS {
             return 0f;
         }
 
-        static float amountDown = 0.5f; // how much to press to be considered down
+        const float amountDown = 0.5f; // how much to press to be considered down
         public static bool IsTriggerDown(string v, int i = 0) {
             if (v == "Left")  { return gState[i].Triggers.Left >=amountDown; }
             if (v == "Right") { return gState[i].Triggers.Right>=amountDown; }
@@ -153,13 +153,18 @@ namespace BRS {
         //vibration
         public static void Vibrate(float left, float right, float time, int i=0) {
             GamePad.SetVibration(i, left, right);
+            new Timer(time, () => StopVibration(i));
             vibrating[i] = true;
-            timer[i] = time;
+            //timer[i] = time;
         }
 
         static void StopVibration(int i=0) {
             GamePad.SetVibration(i, 0f, 0f);
             vibrating[i] = false;
+        }
+
+        public static bool IsVibrating(int i=0) {
+            return vibrating[i];
         }
 
     }

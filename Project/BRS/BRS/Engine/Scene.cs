@@ -8,21 +8,18 @@ using BRS.Scripts;
 
 namespace BRS {
     class Scene {
-        //static class that contains all gameobjects in the scene
+        ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
+
         protected ContentManager Content;
         //can create scene graph
         
-        /*public Scene(ContentManager c) {
-            Content = c;
-        }*/
-
         public void Start() {
             BuildScene();
         }
 
         public void Update() { }
 
-        protected virtual void BuildScene() {
+        protected virtual void BuildScene() { // levels inherit and fill this
             
         }
 

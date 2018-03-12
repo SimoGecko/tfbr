@@ -12,7 +12,6 @@ namespace BRS {
 
         //public
 
-
         //private
 
         //reference
@@ -34,22 +33,34 @@ namespace BRS {
 
 
         // commands
-        public abstract float? Intersect(Ray ray);
 
-
-        public abstract bool Contains(BoundingSphere other);
         // queries
+        public abstract float? Intersect(Ray ray);
+        public abstract bool Contains(BoundingSphere other);
+        public abstract float radius { get; set; }
+
         public bool Intersects(Ray ray) { return Intersect(ray) != null; }
-
-
+        public bool isStatic { get { return transform.isStatic; } }
         // other
         //STATIC
         public static List<Collider> allcolliders = new List<Collider>();
-
     }
 
     class BoxCollider : Collider {
         BoundingBox box;
+        float radius_cashed;
+
+
+
+        //CONSTRUCTORS
+        public BoxCollider(GameObject o) {
+            //TODO compute more accurately
+            box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
+        }
+
+        public BoxCollider(Vector3 center, Vector3 size) {
+            box = new BoundingBox(center - size / 2, center + size / 2);
+        }
 
         public override bool Contains(BoundingSphere other) {
             throw new System.NotImplementedException();
@@ -58,6 +69,10 @@ namespace BRS {
         public override float? Intersect(Ray ray) {
             return ray.Intersects(box);
         }
+        public override float radius {
+            get { if(radius_cashed==0) radius_cashed = Vector3.Distance(box.Max, box.Min)/2; return radius_cashed; }
+            set { radius_cashed = value; }
+        }
     }
 
     class SphereCollider : Collider {
@@ -65,17 +80,17 @@ namespace BRS {
 
         //it is not called when copied
 
-        public SphereCollider() {
-            sphere = gameObject.mesh.BoundingSphere;
+        public SphereCollider(GameObject o) {
+            sphere = o.mesh.BoundingSphere;
             //Collider.allcolliders.Add(this);
         }
 
-        public SphereCollider(Vector3 center, float radius) {
-            sphere = new BoundingSphere(center, radius);
+        public SphereCollider(Vector3 center, float _radius) {
+            sphere = new BoundingSphere(center, _radius);
             //Collider.allcolliders.Add(this);
         }
 
-        public float radius {
+        public override float radius {
             get { return sphere.Radius; }
             set { sphere.Radius = value; }
         }
@@ -102,6 +117,8 @@ namespace BRS {
             plane = new Plane(n, d);
             //Collider.allcolliders.Add(this);
         }
+
+        public override float radius { get => throw new System.NotImplementedException(); set => throw new System.NotImplementedException(); }
 
         public override bool Contains(BoundingSphere other) {
             throw new System.NotImplementedException();

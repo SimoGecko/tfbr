@@ -24,7 +24,6 @@ namespace BRS {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Screen.Setup(graphics, this); // setup screen and create cameras
-            
         }
 
         protected override void Initialize() {
@@ -53,7 +52,7 @@ namespace BRS {
             scene.Start();
             Input.Start();
 
-            foreach (Camera cam in Screen.cams) cam.Start();
+            foreach (Camera cam in Screen.cameras) cam.Start();
 
             foreach (GameObject go in GameObject.All) go.Start();
             
@@ -70,6 +69,9 @@ namespace BRS {
             Input.Update();
 
             foreach (GameObject go in GameObject.All) go.Update();
+
+            Physics.CheckOnCollisionEnter();
+
             base.Update(gameTime);
         }
 
@@ -78,7 +80,7 @@ namespace BRS {
 
             //foreach camera
             int i = 0;
-            foreach(Camera cam in Screen.cams) {
+            foreach(Camera cam in Screen.cameras) {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;

@@ -135,6 +135,7 @@
     <Compile Include="Scripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerMovement.cs" />
     <Compile Include="Scripts\Spawner.cs" />
+    <Compile Include="Scripts\TransformTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\primitives\capsule.xnb" />

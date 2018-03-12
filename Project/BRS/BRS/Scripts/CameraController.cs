@@ -23,6 +23,8 @@ namespace BRS.Scripts {
         //private
         static Vector3 offset;
         Vector3 refVelocity;
+        const float camSensitivity = 1f;
+        float Yangle = 0;
 
         //reference
         //Transform cams;
@@ -60,8 +62,18 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            Vector3 target = player.position + offset;
-            transform.position = Utility.SmoothDamp(transform.position, target, ref refVelocity, smoothTime);
+            Vector3 targetPos = player.position + offset;
+            //Transform target = new Transform(targetPos, transform.rotation, Vector3.One);
+
+            //Yangle += Input.mouseDelta.X * camSensitivity;
+
+            //target.RotateAround(player.position, Vector3.Up, Yangle);
+
+
+            transform.position = Utility.SmoothDamp(transform.position, targetPos, ref refVelocity, smoothTime);
+            //transform.rotation = target.rotation;
+
+
         }
 
 

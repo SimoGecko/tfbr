@@ -10,8 +10,7 @@ using System.IO;
 
 namespace BRS {
     static class Utility {
-        //class that provides useful methods (mostly math and on existing objects) - Imitates Unity
-
+        ////////// class that provides useful methods (mostly math and on existing objects) - Imitates Unity //////////
 
         //VARIOUS METHODS
         public static T[] ShuffleArray<T>(T[] array, int seed) {
@@ -26,7 +25,6 @@ namespace BRS {
         }
 
 
-
         //MATH METHODS
         public static int Log2(int x) {
             return (int)(Math.Log(x) / Math.Log(2));
@@ -38,6 +36,7 @@ namespace BRS {
         }
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
+            //formula taken from Unity
             float deltaTime = Time.deltatime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
@@ -72,7 +71,7 @@ namespace BRS {
         }
 
         public static Vector3 SmoothDamp(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float smoothTime) {
-            return new Vector3(SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
+            return new Vector3( SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
                                 SmoothDamp(current.Y, target.Y, ref currentVelocity.Y, smoothTime),
                                 SmoothDamp(current.Z, target.Z, ref currentVelocity.Z, smoothTime));
         }
@@ -139,11 +138,11 @@ namespace BRS {
         roll  = MathHelper.ToDegrees(roll);
 
         return new Vector3(pitch, yaw, -roll);
-    }*/
+    }
 
         public static Quaternion Euler(Vector3 angles) {
             return Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(angles.Y), MathHelper.ToRadians(angles.X), MathHelper.ToRadians(angles.Z));
-        }
+        }*/
 
 
         //DEEP COPY
@@ -200,7 +199,7 @@ namespace BRS {
     }
 
 
-    static class MyRandom {
+    static class MyRandom { // TODO find better name
         static int seed = 101;
         static Random rand = new Random(seed);
 
@@ -211,7 +210,7 @@ namespace BRS {
         public static int Range(int min, int max) { // random int in [min, max[
             return min + rand.Next(max - min);
         }
-        public static float Range(float min, float max) { // random int in [min, max[
+        public static float Range(float min, float max) { // random float in [min, max[
             return (float)(min + rand.NextDouble()*(max - min));
         }
 
@@ -257,6 +256,5 @@ namespace BRS {
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
         }
-
     }
 }

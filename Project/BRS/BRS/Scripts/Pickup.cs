@@ -36,7 +36,12 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            CheckPickup();
+            //CheckPickup();
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            Debug.Log("picked up");
+            GameObject.Destroy(gameObject);
         }
 
 

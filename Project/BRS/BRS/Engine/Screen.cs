@@ -9,6 +9,8 @@ using BRS.Scripts;
 namespace BRS {
     class Screen {
         ////////// deals with window issues, such as screen size, title, fullscreen and splitscreen //////////
+        ////////// creates all the cameras that will be in the game //////////
+
 
         // --------------------- VARIABLES ---------------------
 
@@ -22,7 +24,7 @@ namespace BRS {
         static Viewport[] splitViewport;
 
         //reference
-        public static Camera[] cams;
+        public static Camera[] cameras;
 
 
         // --------------------- BASE METHODS ------------------
@@ -44,9 +46,11 @@ namespace BRS {
 
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
-            //graphics.PreferredBackBufferWidth = WIDTH;
-            //graphics.PreferredBackBufferHeight = HEIGHT;
+            //window size
+            graphics.PreferredBackBufferWidth = WIDTH;
+            graphics.PreferredBackBufferHeight = HEIGHT;
             graphics.ApplyChanges(); // DO NOT COMMENT OUT THIS LINE - causes unhandled exception
+            
             //game.Window.Title = "New Title";
             game.IsMouseVisible = true;
         }
@@ -73,14 +77,13 @@ namespace BRS {
         }
 
         static void SetupCameras() {
-            cams = new Camera[GameManager.numPlayers];
+            cameras = new Camera[GameManager.numPlayers];
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject camObject = new GameObject("camObject_" + i);
                 camObject.AddComponent(new Camera(splitViewport[i]));
-                camObject.AddComponent(new CameraController());
+                camObject.AddComponent(new CameraController()); // TODO move out this creation code
                 camObject.GetComponent<CameraController>().camIndex = i;
-                cams[i] = camObject.GetComponent<Camera>();
-                if (cams[i] == null) Debug.LogError("cami not found");
+                cameras[i] = camObject.GetComponent<Camera>();
             }
         }
 
