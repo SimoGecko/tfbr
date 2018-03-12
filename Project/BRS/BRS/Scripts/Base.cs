@@ -25,13 +25,20 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            playerInventory = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<PlayerInventory>();
-            if (playerInventory == null) Debug.LogError("player not found");
+            //playerInventory = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<PlayerInventory>();
+            //if (playerInventory == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
-            if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
+            /*if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
                 DeloadPlayer();
+            }*/
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            Player player = c.gameObject.GetComponent<Player>();
+            if(player != null && player.teamIndex == baseIndex) {
+                DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
 
@@ -41,9 +48,9 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void DeloadPlayer() {
-            totalMoney += playerInventory.CarryingValue;
-            playerInventory.Deload();
+        public void DeloadPlayer(PlayerInventory pi) {
+            totalMoney += pi.CarryingValue;
+            pi.Deload();
             UpdateUI();
         }
 

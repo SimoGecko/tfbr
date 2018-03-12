@@ -35,13 +35,11 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(GameObject o) {
-            PlayerInventory player = o.GetComponent<PlayerInventory>();
-            if (player != null) {
-                if (player.CanPickUp(this)) {
-                    player.Collect(this);
-                    GameObject.Destroy(gameObject);
-                }
+        protected override void OnPickup(Player p) {
+            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
+            if (pi.CanPickUp(this)) {
+                pi.Collect(this);
+                GameObject.Destroy(gameObject);
             }
         }
 

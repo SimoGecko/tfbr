@@ -19,6 +19,7 @@ namespace BRS.Scripts {
         enum State { normal, attack, stun, dead};
         //public
         public int playerIndex = 0; // player index - to select input and camera
+        public int teamIndex = 0;
 
         //STAMINA
         const float staminaReloadPerSecond = .2f;
@@ -63,6 +64,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
+
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector3 moveInput =  MoveInput();
@@ -73,7 +75,7 @@ namespace BRS.Scripts {
             else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
                 if(hasOtherPlayer)
-                    playerAttack.CheckCollision(otherPlayer);
+                    //playerAttack.CheckCollision(otherPlayer);
                 if (playerAttack.AttackEnded) state = State.normal;
             }
 

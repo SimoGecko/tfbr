@@ -28,6 +28,11 @@ namespace BRS.Scripts {
         public override void Start() { }
         public override void Update() { }
 
+        public override void OnCollisionEnter(Collider c) {
+            Player p = c.gameObject.GetComponent<Player>();
+            if (p != null && attacking) DealWithAttack(p);
+        }
+
 
         // --------------------- CUSTOM METHODS ----------------
 
@@ -55,12 +60,19 @@ namespace BRS.Scripts {
             attacking = false;
         }
 
+        void DealWithAttack(Player p) {
+            if (!hasAppliedDamage) {
+                p.GetHit();
+                hasAppliedDamage = true;
+            }
+        }
+        /*
         public void CheckCollision(Player otherPlayer) {
             if (!hasAppliedDamage && Vector3.DistanceSquared(transform.position, otherPlayer.transform.position) < attackDistanceThreshold) {
                 otherPlayer.GetHit();
                 hasAppliedDamage = true;
             }
-        }
+        }*/
 
 
         // queries

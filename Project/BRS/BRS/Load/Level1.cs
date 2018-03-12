@@ -39,10 +39,11 @@ namespace BRS.Load {
                 forklift.tag = "player";
                 forklift.AddComponent(new Player());
                 forklift.GetComponent<Player>().playerIndex = i;
+                forklift.GetComponent<Player>().teamIndex = i%2;
 
                 forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
-                forklift.AddComponent(new SphereCollider(Vector3.Zero, 1f));
+                forklift.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
