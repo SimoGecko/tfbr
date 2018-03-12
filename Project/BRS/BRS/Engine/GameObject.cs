@@ -144,7 +144,7 @@ namespace BRS {
             foreach(IComponent c in components) {
                 if (c is T) return (T)c;
             }
-            Debug.LogError("component not found " + typeof(T).ToString());
+            Debug.LogError("component not found " + typeof(T).ToString() + " inside " + this.name);
             return default(T);
         }
         

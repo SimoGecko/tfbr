@@ -50,7 +50,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            
+
             hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex) ) != null;
             if (hasOtherPlayer) {
                 hasOtherPlayer = true;

@@ -20,6 +20,8 @@ namespace BRS.Scripts {
 
 
         //private
+        const float delayBeforePickup = .5f; // cannot pickup right after spawned
+        bool canPickup = false;
         //string interactabletag = "player";
         //float pickupthreshold = .5f;
 
@@ -33,6 +35,8 @@ namespace BRS.Scripts {
             //players = GameObject.FindGameObjectsWithTag("player");//.GetComponent<Player>();
             //if (players == null) Debug.LogError("player not found");
             //target = player.transform;
+            canPickup = false;
+            Invoke(delayBeforePickup, () => canPickup = true);
         }
 
         public override void Update() {
@@ -41,7 +45,7 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             Player player = c.gameObject.GetComponent<Player>();
-            if (player != null) {
+            if (player != null && canPickup) {
                 OnPickup(player);
             }
             //GameObject.Destroy(gameObject);

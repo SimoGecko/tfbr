@@ -30,5 +30,9 @@ namespace BRS {
         public virtual object Clone() {
             return this.MemberwiseClone(); // MUST DO DEEP COPY!
         }
+
+        public void Invoke(float delay, System.Action callback) {
+            new Timer(delay, callback);
+        }
     }
 }

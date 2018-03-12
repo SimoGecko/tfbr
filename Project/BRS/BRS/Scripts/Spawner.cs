@@ -17,7 +17,8 @@ namespace BRS.Scripts {
         Rectangle spawnArea = new Rectangle(-10, 0, 20, -30);
 
         //private
-        int moneyamount = 30;
+        int moneyAmount = 30;
+        int crateAmount = 10;
 
         //reference
 
@@ -26,6 +27,7 @@ namespace BRS.Scripts {
         public override void Start() {
             instance = this;
             SpawnInitialMoney();
+            SpawnInitialCrates();
             SpawnContinuous();
         }
 
@@ -40,17 +42,31 @@ namespace BRS.Scripts {
 
         // commands
         void SpawnInitialMoney() {
-            for (int i = 0; i < moneyamount; i++)
+            for (int i = 0; i < moneyAmount; i++)
                 SpawnOneMoneyRandom();
         }
 
+
+        void SpawnInitialCrates() {
+            for (int i = 0; i < crateAmount; i++)
+                SpawnOneCrateRandom();
+        }
+
+
+        //money
         void SpawnOneMoneyRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
             SpawnOneMoney(position.To3());
         }
 
         void SpawnOneMoney(Vector3 pos) {
-            GameObject newmoney = GameObject.Instantiate("moneyprefab", pos, Quaternion.Identity);
+            GameObject newmoney = GameObject.Instantiate("moneyPrefab", pos, Quaternion.Identity);
+        }
+
+        //crate
+        void SpawnOneCrateRandom() {
+            Vector2 position = MyRandom.InsideRectangle(spawnArea);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
         }
 
         async void SpawnContinuous() {
