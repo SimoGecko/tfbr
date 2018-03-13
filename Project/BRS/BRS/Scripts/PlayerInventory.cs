@@ -12,7 +12,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const int capacity = 10;
+        const int capacity = 20;
 
 
         //private

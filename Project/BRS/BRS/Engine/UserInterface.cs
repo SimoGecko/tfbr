@@ -48,22 +48,24 @@ namespace BRS.Scripts {
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
             spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10, 80), Color.White);
+            spriteBatch.DrawString(myfont, "carrying: " + playerUI[index].carryingMoneyValue, new Vector2(10, 120), Color.White);
+
 
             Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
             Rectangle bgrect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
 
             //health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].healthPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 120), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 120), fgrect, Color.Green);
+            spriteBatch.Draw(bar, new Vector2(10, 160), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 160), fgrect, Color.Green);
             //stamina
             fgrect.Width = (int)(BARWIDTH * playerUI[index].staminaPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 160), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 160), fgrect, Color.Red);
+            spriteBatch.Draw(bar, new Vector2(10, 200), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 200), fgrect, Color.Red);
             //capacity
             fgrect.Width = (int)(BARWIDTH * playerUI[index].carryingPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 200), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 200), fgrect, Color.Blue);
+            spriteBatch.Draw(bar, new Vector2(10, 240), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 240), fgrect, Color.Blue);
         }
 
         //public void Draw() { }
@@ -78,10 +80,11 @@ namespace BRS.Scripts {
             Content = c;
         }
 
-        public void UpdatePlayerUI(int index, float health, float stamina, float carrying) {
+        public void UpdatePlayerUI(int index, float health, float stamina, float carrying, int value) {
             playerUI[index].healthPercent = health;
             playerUI[index].staminaPercent = stamina;
             playerUI[index].carryingPercent = carrying;
+            playerUI[index].carryingMoneyValue = value;
         }
         public void SetPlayerMoneyBase(int v, int index) {
             playerUI[index].totalMoneyInBase = v;
@@ -98,6 +101,7 @@ namespace BRS.Scripts {
 
     public struct PlayerUI {
         public int totalMoneyInBase;
+        public int carryingMoneyValue;
         public float healthPercent; // green
         public float staminaPercent;//red
         public float carryingPercent;//blue

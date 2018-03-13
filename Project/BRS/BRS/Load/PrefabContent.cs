@@ -17,12 +17,28 @@ namespace BRS {
         static void BuildPrefabs() {
 
             //simple money prefab
-            GameObject moneyprefab = new GameObject("moneyPrefab", Content.Load<Model>("sphere"));
-            moneyprefab.transform.Scale(.2f);
-            moneyprefab.transform.SetStatic();
-            moneyprefab.AddComponent(new Money());
-            moneyprefab.AddComponent(new SphereCollider(Vector3.Zero, .5f));
-            AddPrefab(moneyprefab);
+            GameObject moneyPrefab = new GameObject("moneyPrefab", Content.Load<Model>("cash"));
+            moneyPrefab.transform.Scale(.5f);
+            moneyPrefab.transform.SetStatic();
+            moneyPrefab.AddComponent(new Money(100, 1));
+            moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(moneyPrefab);
+
+            //diamond
+            GameObject diamondPrefab = new GameObject("diamondPrefab", Content.Load<Model>("diamond"));
+            diamondPrefab.transform.Scale(1f);
+            diamondPrefab.transform.SetStatic();
+            diamondPrefab.AddComponent(new Money(300, 2));
+            diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(diamondPrefab);
+
+            //gold
+            GameObject goldPrefab = new GameObject("goldPrefab", Content.Load<Model>("gold"));
+            goldPrefab.transform.Scale(.5f);
+            goldPrefab.transform.SetStatic();
+            goldPrefab.AddComponent(new Money(1000, 3));
+            goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(goldPrefab);
 
             //make more money prefabs
 

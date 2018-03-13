@@ -124,7 +124,7 @@ namespace BRS.Scripts {
         }
 
         void UpdateUI() {
-            UserInterface.instance.UpdatePlayerUI(playerIndex, HealthPercent, stamina, playerInventory.MoneyPercent);
+            UserInterface.instance.UpdatePlayerUI(playerIndex, HealthPercent, stamina, playerInventory.MoneyPercent, playerInventory.CarryingValue);
         }
 
 

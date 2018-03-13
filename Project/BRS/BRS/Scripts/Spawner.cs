@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace BRS.Scripts {
     class Spawner : Component {
@@ -14,11 +15,16 @@ namespace BRS.Scripts {
 
         //public
         public static Spawner instance;
-        Rectangle spawnArea = new Rectangle(-10, 0, 20, -30);
+        Rectangle spawnArea = new Rectangle(-10, 5, 20, -25);
 
         //private
         int moneyAmount = 30;
         int crateAmount = 10;
+
+        const float probOfCash = .6f;
+        const float probOfDiamond = .3f;
+        const float probOfGold = .1f;
+
 
         //reference
 
@@ -55,12 +61,15 @@ namespace BRS.Scripts {
 
         //money
         void SpawnOneMoneyRandom() {
-            Vector2 position = MyRandom.InsideRectangle(spawnArea);
+            Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value));
+            //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
+            Vector2 position = spawnArea.Evaluate(sample);
+            //Vector2 position = MyRandom.InsideRectangle(spawnArea);
             SpawnOneMoney(position.To3());
         }
 
         void SpawnOneMoney(Vector3 pos) {
-            GameObject newmoney = GameObject.Instantiate("moneyPrefab", pos, Quaternion.Identity);
+            GameObject newmoney = GameObject.Instantiate(RandomValuable(), pos, Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(MyRandom.Value*360)));
         }
 
         //crate
@@ -84,6 +93,13 @@ namespace BRS.Scripts {
         }
 
         // queries
+        string RandomValuable() {
+            float val = MyRandom.Value;
+            if (val <= probOfCash) return "moneyPrefab";
+            val -= probOfCash;
+            if (val <= probOfDiamond) return "diamondPrefab";
+            return "goldPrefab";
+        }
 
 
 

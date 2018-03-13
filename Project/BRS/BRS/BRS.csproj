@@ -141,6 +141,9 @@
     <Compile Include="Scripts\TransformTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Content\cash.xnb" />
+    <None Include="Content\diamond.xnb" />
+    <None Include="Content\gold.xnb" />
     <None Include="Content\primitives\capsule.xnb" />
     <None Include="Content\primitives\cube.xnb" />
     <None Include="Content\primitives\cylinder.xnb" />

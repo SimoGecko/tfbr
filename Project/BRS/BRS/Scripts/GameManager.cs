@@ -28,7 +28,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            Timer rt = new Timer(1, 30, OnRoundEnd);
+            Timer rt = new Timer(2, 00, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
         }
 

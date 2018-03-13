@@ -11,6 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public const float randomizer = .1f;
 
 
         //private
@@ -21,8 +22,14 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Money(int _value, int _weight) {
+            value = _value; weight = _weight;
+        }
+
         public override void Start() {
             base.Start();
+
+            value = (int)(Value*MyRandom.Range(1-randomizer, 1+randomizer));
         }
 
         public override void Update() {

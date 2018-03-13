@@ -140,6 +140,11 @@ namespace BRS {
             //no components added at runtime, otherwise c.Start();
         }
 
+        /*
+        public T AddComponent<T>() where T : IComponent {
+            IComponent c = new T();
+        }*/
+
         public T GetComponent<T>() where T : IComponent {
             foreach(IComponent c in components) {
                 if (c is T) return (T)c;

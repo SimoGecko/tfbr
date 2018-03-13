@@ -89,6 +89,11 @@ namespace BRS {
             return angle + reference;
         }
 
+
+        public static float InverseCDF(float x, float a) {
+            return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
+        }
+
         //TRANSORM METHODS
         /*
         public static Vector3 toEulerAngle(this Quaternion q){ // in degrees //NOT WORKING CORRECTLY
@@ -196,6 +201,10 @@ namespace BRS {
             return new Vector3(v.X, 0, v.Y);
         }
 
+        public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
+            return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
+        }
+
     }
 
 
@@ -222,6 +231,10 @@ namespace BRS {
             double r = Math.Sqrt(rand.NextDouble());
             double phi = rand.NextDouble() * 2 * Math.PI;
             return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
+        }
+
+        public static Vector2 insideUnitSquare() {
+            return new Vector2(Value, Value);
         }
 
     }
