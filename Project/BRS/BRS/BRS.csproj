@@ -168,6 +168,18 @@
     <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Load\UnityScenes\lvl1\Bases.txt" />
+    <Content Include="Load\UnityScenes\lvl1\Boundaries.txt" />
+    <Content Include="Load\UnityScenes\lvl1\Ground.txt" />
+    <Content Include="Load\UnityScenes\lvl1\Obstacles.txt" />
+    <Content Include="Load\UnityScenes\lvl2\Bases.txt" />
+    <Content Include="Load\UnityScenes\lvl2\Boundaries.txt" />
+    <Content Include="Load\UnityScenes\lvl2\Ground.txt" />
+    <Content Include="Load\UnityScenes\lvl2\Obstacles.txt" />
+    <Content Include="Load\UnityScenes\lvl3\Bases.txt" />
+    <Content Include="Load\UnityScenes\lvl3\Boundaries.txt" />
+    <Content Include="Load\UnityScenes\lvl3\Ground.txt" />
+    <Content Include="Load\UnityScenes\lvl3\Obstacles.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

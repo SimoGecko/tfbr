@@ -5,9 +5,45 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace BRS.Load {
     class Level1 : Scene {
+
+        public List<GameObject> ReadFile(string pathName, string prefabToUse, string nameObj)
+        {
+            List<GameObject> objects = new List<GameObject>();
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
+            {
+                string firstLine = reader.ReadLine();
+                int n = int.Parse(firstLine);
+
+                for (int i = 0; i < n; i++)
+                {
+                    string p = reader.ReadLine();
+                    string r = reader.ReadLine();
+                    string s = reader.ReadLine();
+
+                    string[] pSplit = p.Split(' ');
+                    string[] rSplit = r.Split(' ');
+                    string[] sSplit = s.Split(' ');
+
+                    Vector3 position = new Vector3(float.Parse(pSplit[2]), float.Parse(pSplit[1]), float.Parse(pSplit[0]));
+                    Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[0])), MathHelper.ToRadians(float.Parse(pSplit[2])));
+                    Vector3 scale = new Vector3(float.Parse(sSplit[2]), float.Parse(sSplit[1]), float.Parse(sSplit[0]));
+
+                    GameObject playerBase = new GameObject(nameObj + "_" + i.ToString(), Content.Load<Model>(prefabToUse));
+                    playerBase.transform.position = position;
+                    playerBase.transform.scale = scale;
+                    //playerBase.transform.rotation = rotation; // rotation not parsed correctly
+
+                    objects.Add(playerBase);
+                }
+                return objects;
+            }
+        }
+
         protected override void BuildScene() {
             ////////// scene setup for level1 //////////
 
@@ -24,13 +60,13 @@ namespace BRS.Load {
 
 
             //GROUND
-            for (int x = 0; x < 2; x++) {
+            /*for (int x = 0; x < 2; x++) {
                 for (int y = 0; y < 3; y++) {
                     GameObject groundPlane = new GameObject("groundplane_" + x.ToString() + "_" + y.ToString(), Content.Load<Model>("gplane"));
                     groundPlane.transform.position = new Vector3(x * 10-5, 0, -y * 10);
                     groundPlane.transform.SetStatic();
                 }
-            }
+            }*/
 
 
             //PLAYER
@@ -53,7 +89,7 @@ namespace BRS.Load {
 
 
             //BASE
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            /*for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject playerBase = new GameObject("playerBase_"+i.ToString(), Content.Load<Model>("cube"));
                 playerBase.tag = "base";
                 playerBase.AddComponent(new Base());
@@ -63,10 +99,39 @@ namespace BRS.Load {
                 playerBase.transform.SetStatic();
                 playerBase.AddComponent(new BoxCollider(playerBase));
 
-            }
+            }*/
 
 
+            //LOAD UNITY SCENE
+            var task = Task.Run(() =>
+            {
+                //GROUND
+                List<GameObject> groundPlane = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Ground.txt", "gplane", "groundplane");
 
+                //BASES
+                List<GameObject> bases = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Bases.txt", "cube", "playerBase");
+
+                for (int i = 0; i < GameManager.numPlayers; i++)
+                {
+                    bases[i].tag = "base";
+                    bases[i].AddComponent(new Base());
+                    bases[i].GetComponent<Base>().baseIndex = i;
+                    //bases[i].GetComponent<Base>().player = GameObject.FindGameObjectWithName("player_" + i).GetComponent<Player>();
+                    bases[i].AddComponent(new BoxCollider(bases[i]));
+                    bases[i].transform.SetStatic();
+                }
+
+                //OBSTACLES
+                List<GameObject> obstacles = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Obstacles.txt", "cube", "obstacle");
+                foreach (GameObject go in obstacles)
+                    go.tag = "obstacle";
+
+                //BOUNDARIES
+                List<GameObject> boundaries = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Boundaries.txt", "cube", "boundary");
+                foreach (GameObject go in boundaries)
+                    go.tag = "boundary";
+            });
+            task.Wait();
         }
     }
 

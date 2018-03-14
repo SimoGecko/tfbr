@@ -18,7 +18,7 @@ namespace BRS.Scripts {
 
         //public
         public static int numPlayers = 2;
-
+        public static int lvlScene = 3;
 
         //private
 
