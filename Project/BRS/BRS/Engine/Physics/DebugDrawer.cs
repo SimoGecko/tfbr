@@ -121,7 +121,7 @@ namespace BRS.Engine.Physics {
         private int _triangleIndex = 0;
 
         public override void Draw(GameTime gameTime) {
-            Camera camera = Screen.cams[0];
+            Camera camera = Screen.cameras[0];
 
             _basicEffect.View = camera.View;
             _basicEffect.Projection = camera.Proj;

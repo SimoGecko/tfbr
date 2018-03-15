@@ -1,4 +1,5 @@
-﻿using BRS.Engine.Physics;
+﻿using System.Collections.Generic;
+using BRS.Engine.Physics;
 using BRS.Scripts;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
@@ -14,6 +15,7 @@ namespace BRS.Load {
         // Todo: To be refactored
         private QuadDrawer quadDrawer = null;
         private Game1 Demo;
+        private List<GameObject> Players = new List<GameObject>();
 
 
         public LevelPhysics(Game1 game, PhysicsManager physics)
@@ -48,10 +50,13 @@ namespace BRS.Load {
                 forklift.Type = ObjectType.Player;
                 forklift.Transform.Scale(2);
                 forklift.AddComponent(new Player(i));
+                forklift.AddComponent(new PlayerMovement());
+                forklift.AddComponent(new PlayerAttack());
+                forklift.AddComponent(new PlayerInventory());
                 forklift.Transform.TranslateGlobal(Vector3.Right * 30 * i);
                 forklift.Position = Conversion.ToJitterVector(new Vector3(31 * i, 1, 0));
                 forklift.IsStatic = false;
-                forklift.Tag = BodyTag.DontDrawMe;
+                forklift.Tag = BodyTag.DrawMe;
 
 
                 PhysicsManager.World.AddBody(forklift);

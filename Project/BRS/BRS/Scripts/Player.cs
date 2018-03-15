@@ -16,7 +16,7 @@ namespace BRS.Scripts {
         ////////// it manages the state, team, calls relative functions with input //////////
 
         // --------------------- VARIABLES ---------------------
-        enum State { normal, attack, stun, dead};
+        enum State { normal, attack, stun, dead };
         //public
         public int playerIndex = 0; // player index - to select input and camera
         public int teamIndex = 0;
@@ -48,13 +48,17 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Player(int index) {
+            playerIndex = index;
+        }
+
         public override void Start() {
             base.Start();
 
-            hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex) ) != null;
+            hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1 - playerIndex)) != null;
             if (hasOtherPlayer) {
                 hasOtherPlayer = true;
-                otherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex)).GetComponent<Player>();
+                otherPlayer = GameObject.FindGameObjectWithName("player_" + (1 - playerIndex)).GetComponent<Player>();
             }
 
             //subcomponents
@@ -67,16 +71,15 @@ namespace BRS.Scripts {
 
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
-                Vector3 moveInput =  MoveInput();
+                Vector3 moveInput = MoveInput();
                 playerMovement.Move(moveInput);
 
                 if (AttackInput()) playerAttack.BeginAttack();
-            }
-            else if (state == State.attack) {
+            } else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
-                if(hasOtherPlayer)
+                if (hasOtherPlayer)
                     //playerAttack.CheckCollision(otherPlayer);
-                if (playerAttack.AttackEnded) state = State.normal;
+                    if (playerAttack.AttackEnded) state = State.normal;
             }
 
             UpdateStamina();
@@ -84,7 +87,7 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if (c.gameObject.tag == "player") Debug.Log("collision enter player");
+            if (c.gameObject.Type == ObjectType.Player) Debug.Log("collision enter player");
         }
 
 
@@ -114,7 +117,7 @@ namespace BRS.Scripts {
         }
 
         void UpdateStamina() {
-            if(canReloadStamina && stamina < 0) {
+            if (canReloadStamina && stamina < 0) {
                 canReloadStamina = false;
                 stamina = 0;
                 Timer t = new Timer(1, () => canReloadStamina = true);
@@ -131,7 +134,7 @@ namespace BRS.Scripts {
         // INPUT queries
         bool BoostInput() {
             if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder)) {
-                if (stamina > 0){//staminaPerBoost * Time.deltatime) {
+                if (stamina > 0) {//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     return true;
                 }
@@ -148,7 +151,7 @@ namespace BRS.Scripts {
 
         bool AttackInput() {
             bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
-            if (inputfire && state==State.normal && stamina >= staminaPerAttack) {
+            if (inputfire && state == State.normal && stamina >= staminaPerAttack) {
                 state = State.attack;
                 stamina -= staminaPerAttack;
                 return true;

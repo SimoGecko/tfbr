@@ -62,7 +62,7 @@ namespace BRS.Engine.Physics {
         }
 
         public void Draw() {
-            Camera camera = Screen.cams[0];
+            Camera camera = Screen.cameras[0];
             BasicEffect.GraphicsDevice.Viewport = Screen.fullViewport;
             BasicEffect.View = camera.View;
             BasicEffect.Projection = camera.Proj;

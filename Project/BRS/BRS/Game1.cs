@@ -90,7 +90,7 @@ namespace BRS {
 
             //foreach camera
             int i = 0;
-            foreach (Camera cam in Screen.cams) {
+            foreach (Camera cam in Screen.cameras) {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;

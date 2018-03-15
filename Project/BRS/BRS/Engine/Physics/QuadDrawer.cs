@@ -72,8 +72,8 @@ namespace BRS.Engine.Physics {
             GraphicsDevice.SamplerStates[0] = SamplerState.AnisotropicWrap;
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 
-            effect.View = Screen.cams[0].View;
-            effect.Projection = Screen.cams[0].Proj;
+            effect.View = Screen.cameras[0].View;
+            effect.Projection = Screen.cameras[0].Proj;
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes) {
                 pass.Apply();

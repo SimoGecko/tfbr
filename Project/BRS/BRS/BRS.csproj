@@ -102,11 +102,13 @@
     </Compile>
     <Compile Include="Engine\Audio.cs" />
     <Compile Include="Engine\Camera.cs" />
+    <Compile Include="Engine\Collider.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
+    <Compile Include="Engine\Physics.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />

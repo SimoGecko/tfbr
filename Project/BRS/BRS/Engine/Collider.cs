@@ -55,7 +55,7 @@ namespace BRS {
         //CONSTRUCTORS
         public BoxCollider(GameObject o) {
             //TODO compute more accurately
-            box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
+            box = new BoundingBox(-o.Transform.scale / 2, o.Transform.scale / 2);
         }
 
         public BoxCollider(Vector3 center, Vector3 size) {
@@ -96,11 +96,11 @@ namespace BRS {
         }
 
         public override float? Intersect(Ray ray) {
-            return ray.Intersects(sphere.Transform(gameObject.transform.World));
+            return ray.Intersects(sphere.Transform(gameObject.Transform.World));
         }
 
         public override bool Contains(BoundingSphere other) {
-            ContainmentType result = sphere.Transform(gameObject.transform.World).Contains(other);
+            ContainmentType result = sphere.Transform(gameObject.Transform.World).Contains(other);
             return  result!=ContainmentType.Disjoint;
         }
     }

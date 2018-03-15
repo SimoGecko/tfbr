@@ -47,11 +47,10 @@ namespace BRS {
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
             //window size
-            graphics.PreferredBackBufferWidth = WIDTH;
-            graphics.PreferredBackBufferHeight = HEIGHT;
-            graphics.ApplyChanges(); // DO NOT COMMENT OUT THIS LINE - causes unhandled exception
-            
-            //game.Window.Title = "New Title";
+            //graphics.PreferredBackBufferWidth = WIDTH;
+            //graphics.PreferredBackBufferHeight = HEIGHT;
+            graphics.ApplyChanges(); 
+            game.Window.Title = "New Title";
             game.IsMouseVisible = true;
         }
 

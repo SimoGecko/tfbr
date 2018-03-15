@@ -20,6 +20,7 @@ namespace BRS.Scripts {
 
 
         //reference
+        Player player;
         PlayerInventory playerInventory;
 
 
@@ -41,7 +42,7 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             Player player = c.gameObject.GetComponent<Player>();
-            if(player != null && player.teamIndex == baseIndex) {
+            if(player != null && player.teamIndex == BaseIndex) {
                 DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
@@ -53,7 +54,7 @@ namespace BRS.Scripts {
 
         // commands
         public void DeloadPlayer(PlayerInventory pi) {
-            totalMoney += pi.CarryingValue;
+            TotalMoney += pi.CarryingValue;
             pi.Deload();
             UpdateUI();
         }

@@ -9,12 +9,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectType { Player, Base, Default }
+    public enum ObjectType { Player, Base, Obstacle, Boundary, Default }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
-    public class GameObject : RigidBody{
+    public class GameObject : RigidBody {
         public Transform Transform;
         List<IComponent> components;
         private Model _model;
@@ -26,8 +26,7 @@ namespace BRS {
         static int InstanceCount = 0;
 
         public GameObject(string name, Model model = null)
-            : this(name,  new BoxShape(0.0f, 0.0f, 0.0f), model)
-        {
+            : this(name, new BoxShape(0.0f, 0.0f, 0.0f), model) {
         }
 
         public GameObject(string name, Shape collisionShape, Model model = null)
@@ -54,7 +53,7 @@ namespace BRS {
         }
 
         public virtual void OnCollisionEnter(Collider col) {
-            if (active)
+            if (Active)
                 foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
         //public virtual void OnCollisionExit () { }
@@ -74,6 +73,7 @@ namespace BRS {
         public static void Add(GameObject o) {
             allGameObjects.Add(o);
         }
+        */
 
         //INSTANTIATION
         public static GameObject Instantiate(string name) {
@@ -92,9 +92,9 @@ namespace BRS {
             }
 
             GameObject result = (GameObject)tocopy.Clone();
-            result.transform.position = position;
-            result.transform.rotation = rotation;
-            if (tocopy.transform.isStatic) result.transform.SetStatic();
+            result.Transform.position = position;
+            result.Transform.rotation = rotation;
+            if (tocopy.Transform.isStatic) result.Transform.SetStatic();
 
             result.Start();
             return result;
@@ -167,7 +167,8 @@ namespace BRS {
             foreach (IComponent c in components) {
                 if (c is T) return (T)c;
             }
-            Debug.LogError("component not found " + typeof(T).ToString() + " inside " + this.name);
+
+            Debug.LogError("component not found " + typeof(T) + " inside " + Name);
             return default(T);
         }
 
