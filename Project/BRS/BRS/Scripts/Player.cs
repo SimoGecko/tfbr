@@ -2,81 +2,89 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
-using BRS.Engine.Physics;
-using Jitter.LinearMath;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
-    class Player : Component {
-        ////////// player class that allows the user to control the in game avatar //////////
+    class Player : LivingEntity {
+        ////////// player class that is a center hub for all things related to the player //////////
+        ////////// it manages the state, team, calls relative functions with input //////////
 
         // --------------------- VARIABLES ---------------------
-
+        enum State { normal, attack, stun, dead};
         //public
-
-
-        //private
-        public int PlayerIndex { get; private set; } = 0; // player index - to select input and camera
-
-        //MOVEMENT
-        const float maxSpeed = 7f;
-        const float minSpeed = 4f;
-        const float maxTurningRate = 360; // degrees/sec
-        float smoothMagnitude, refMagnitude;
-        float rotation;
-        float refangle, refangle2;
-        float inputAngle; // store it
-        float targetRotation;
-
-        //BOOST
-        const float boostMultiplier = 1.5f;
-        const float staminaPerBoost = .4f;
-        bool boosting;
+        public int playerIndex = 0; // player index - to select input and camera
+        public int teamIndex = 0;
 
         //STAMINA
-        float stamina = 1;
-        float staminaPerSecond = .2f;
-
-        //MONEY
-        const int capacity = 10;
-        public int carryingmoney = 0;
-
-        //attack
+        const float staminaReloadPerSecond = .2f;
+        const float staminaPerBoost = .4f;
         const float staminaPerAttack = .6f;
-        bool attacking = false;
-        Vector3 startPos, endPos;
-        float attackT;
-        const float attackTime = .2f;
-        const float attackDistance = 3;
-        Vector3 oldPos;
-        float beforeAttackSpeed;
+        const float staminaReloadDelay = .3f;
+        float stamina = 1;
+
+        //HIT and STUN
+        const float damage = 40;
+        const float stunTime = 2f;
+        const float respawnTime = 5f;
+
+        //private
+        State state = State.normal;
+        bool canReloadStamina = true;
+
         //reference
+        Player otherPlayer;
+        bool hasOtherPlayer = false;
+
+        //subcomponents
+        PlayerAttack playerAttack;
+        PlayerMovement playerMovement;
+        PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex) {
-            PlayerIndex = playerIndex;
-        }
-
         public override void Start() {
-            transform.Rotate(Vector3.Up, -90);
-            rotation = targetRotation = -90;
+            base.Start();
+
+            hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex) ) != null;
+            if (hasOtherPlayer) {
+                hasOtherPlayer = true;
+                otherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex)).GetComponent<Player>();
+            }
+
+            //subcomponents
+            playerAttack = gameObject.GetComponent<PlayerAttack>();
+            playerMovement = gameObject.GetComponent<PlayerMovement>();
+            playerInventory = gameObject.GetComponent<PlayerInventory>();
         }
 
         public override void Update() {
-            if (!attacking) {
-                BoostInput();
-                MoveInput();
+
+            if (state == State.normal) {
+                playerMovement.boosting = BoostInput();
+                Vector3 moveInput =  MoveInput();
+                playerMovement.Move(moveInput);
+
+                if (AttackInput()) playerAttack.BeginAttack();
             }
-            AttackInput();
-            if (attacking) {
-                AttackCoroutine(ref attackT);
+            else if (state == State.attack) {
+                playerAttack.AttackCoroutine();
+                if(hasOtherPlayer)
+                    //playerAttack.CheckCollision(otherPlayer);
+                if (playerAttack.AttackEnded) state = State.normal;
             }
 
-            stamina += staminaPerSecond * Time.deltatime;
-            stamina = Utility.Clamp01(stamina);
-            Debug.Log(stamina.ToString());
+            UpdateStamina();
+            UpdateUI();
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            if (c.gameObject.tag == "player") Debug.Log("collision enter player");
         }
 
 
@@ -85,109 +93,72 @@ namespace BRS.Scripts {
 
 
         // commands
-        void BoostInput() {
-            boosting = false;
-            if (Input.GetKey(Keys.LeftShift)) {
-                if (stamina >= staminaPerBoost * Time.deltatime) {
+        public void GetHit() {
+            state = State.stun;
+            Timer t = new Timer(stunTime, () => { if (state == State.stun) state = State.normal; });
+            playerInventory.LoseMoney();
+            TakeDamage(damage);
+        }
+
+
+        protected override void Die() {
+            base.Die();
+            state = State.dead;
+            Timer timer = new Timer(respawnTime, Respawn);
+        }
+
+        protected override void Respawn() {
+            base.Respawn();
+            state = State.normal;
+            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0);
+        }
+
+        void UpdateStamina() {
+            if(canReloadStamina && stamina < 0) {
+                canReloadStamina = false;
+                stamina = 0;
+                Timer t = new Timer(1, () => canReloadStamina = true);
+            }
+            if (canReloadStamina) stamina += staminaReloadPerSecond * Time.deltatime;
+            stamina = Utility.Clamp01(stamina);
+        }
+
+        void UpdateUI() {
+            UserInterface.instance.UpdatePlayerUI(playerIndex, HealthPercent, stamina, playerInventory.MoneyPercent, playerInventory.CarryingValue);
+        }
+
+
+        // INPUT queries
+        bool BoostInput() {
+            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder)) {
+                if (stamina > 0){//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
-                    boosting = true;
+                    return true;
                 }
             }
+            return false;
         }
 
-
-        void MoveInput() {
-            //based on index
-            oldPos = transform.position;
-
-            Vector3 input;
-            if (PlayerIndex == 0)
-                input = new Vector3(Input.GetAxisRaw0(Input.Direction.Horizontal), 0, Input.GetAxisRaw0(Input.Direction.Vertical));
+        Vector3 MoveInput() {
+            if (playerIndex == 0)
+                return new Vector3(Input.GetAxisRaw0("Horizontal"), 0, Input.GetAxisRaw0("Vertical"));
             else
-                input = new Vector3(Input.GetAxisRaw1(Input.Direction.Horizontal), 0, Input.GetAxisRaw1(Input.Direction.Vertical));
-
-            float magnitude = Utility.Clamp01(input.Length());
-            smoothMagnitude = Utility.SmoothDamp(smoothMagnitude, magnitude, ref refMagnitude, .1f);
-
-            //rotate towards desired angle
-            if (smoothMagnitude > .05f) { // avoid changing if 0
-                inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
-                inputAngle = Utility.WrapAngle(inputAngle, targetRotation);
-                targetRotation = Utility.SmoothDampAngle(targetRotation, inputAngle - 90, ref refangle, .3f, maxTurningRate * smoothMagnitude);
-            } else {
-                targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
-            }
-
-            rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            transform.eulerAngles = new Vector3(0, rotation, 0);
-
-            //move forward
-            float speedboost = boosting ? boostMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
-
-            gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
-            gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+                return new Vector3(Input.GetAxisRaw1("Horizontal"), 0, Input.GetAxisRaw1("Vertical"));
         }
 
-        void AttackInput() {
-            if (Input.Fire1() && !attacking && stamina >= staminaPerAttack) {
+        bool AttackInput() {
+            bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
+            if (inputfire && state==State.normal && stamina >= staminaPerAttack) {
+                state = State.attack;
                 stamina -= staminaPerAttack;
-                attacking = true;
-                attackT = 0;
-                startPos = transform.position;
-                endPos = transform.position + transform.Forward * attackDistance;
-                beforeAttackSpeed = Vector3.Distance(transform.position, oldPos) / Time.deltatime;
+                return true;
             }
+            return false;
         }
 
-        public void CollectMoney(int amount) {
-            carryingmoney += Math.Min(amount, capacity - carryingmoney);
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, PlayerIndex);
-        }
-
-        public void Deload() {
-            carryingmoney = 0;
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, PlayerIndex);
-        }
-
-
-        // queries
-        public float MoneyPercent { get { return (float)carryingmoney / capacity; } }
-        public bool CanPickUp { get { return carryingmoney < capacity; } }
-
-        float currentSpeed { get { return MathHelper.Lerp(maxSpeed, minSpeed, MoneyPercent); } }
         // other
 
-        void AttackCoroutine(ref float percent) {
-            if (percent <= 1) {
-                percent += Time.deltatime / attackTime;
-                float t = Curve.EvaluateSqrt(percent);
-                transform.position = Vector3.LerpPrecise(startPos, endPos, t);
-            } else {
-                attacking = false;
-            }
-        }
-        /*
-        async void Attack() {
-            attacking = true;
-            float attackDistance = 6;
-            float attackTime = 1f;
 
-            Vector3 startPosition = transform.position;
-            Vector3 finalPosition = transform.position + transform.Forward * attackDistance;
-
-            float percent = 0;
-            while (percent < 1) {
-                percent += Time.deltatime / attackTime;
-                float t = percent;//TODO evaluate curve
-                transform.position = Vector3.Lerp(startPosition, finalPosition, t);
-
-                await Time.WaitForFrame();
-            }
-
-            transform.position = finalPosition;
-            attacking = false;
-        }*/
 
     }
 

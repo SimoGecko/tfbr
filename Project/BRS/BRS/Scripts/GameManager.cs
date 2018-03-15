@@ -17,8 +17,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int numPlayers = 1;
-
+        public static int numPlayers = 2;
+        public static int lvlScene = 3;
 
         //private
 
@@ -28,7 +28,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            Timer rt = new Timer(1, 30, OnRoundEnd);
+            Timer rt = new Timer(2, 00, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
         }
 

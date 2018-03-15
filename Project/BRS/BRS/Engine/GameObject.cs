@@ -53,9 +53,11 @@ namespace BRS {
             }
         }
 
-        // TODO make sure this callback is called from physics engine
-        public virtual void OnCollisionEnter() { }
-        public virtual void OnCollisionExit() { }
+        public virtual void OnCollisionEnter(Collider col) {
+            if (active)
+                foreach (IComponent c in components) c.OnCollisionEnter(col);
+        }
+        //public virtual void OnCollisionExit () { }
 
         public virtual void Draw(Camera cam) {
             if (_model != null && Active) {
@@ -73,22 +75,7 @@ namespace BRS {
             allGameObjects.Add(o);
         }
 
-        
-        public static GameObject Instantiate(string name) { // or prefab?
-            GameObject tocopy = Prefabs.GetPrefab(name);
-            if (tocopy == null) {
-                Debug.LogError("Prefab not found");
-                return null;
-            }
-
-            //TODO: Make a deep copy
-
-            GameObject result = (GameObject)tocopy.Clone();
-            Add(result);
-            result.Start();
-            return result;
-        }*/
-
+        //INSTANTIATION
         public static GameObject Instantiate(string name) {
             return Instantiate(name, Vector3.Zero, Quaternion.Identity);
         }
@@ -105,45 +92,13 @@ namespace BRS {
             }
 
             GameObject result = (GameObject)tocopy.Clone();
-            //GameObject result = GameObject.DeepCopy(tocopy);
-            //GameObject result = GameObject.MyClone(tocopy);
-
-            result.Transform.position = position;
-            result.Transform.rotation = rotation;
+            result.transform.position = position;
+            result.transform.rotation = rotation;
+            if (tocopy.transform.isStatic) result.transform.SetStatic();
 
             result.Start();
             return result;
         }
-
-        /*
-        public static GameObject New(Model _model) {
-            GameObject newobject = new GameObject(_model);
-            //Add(newobject);
-            return newobject;
-        }*/
-
-
-        /*
-        public static GameObject DeepCopy(GameObject go) {
-            return Utility.DeepClone<GameObject>(go);
-        }
-       
-
-
-        public static GameObject MyClone(GameObject go) {
-            GameObject result = (GameObject)go.MemberwiseClone();
-            //do deep copy
-            result.transform = new Transform();
-            result.transform.CopyFrom(go.transform);
-            result.components = new List<IComponent>();
-            foreach (IComponent c in go.components) {
-                //result.AddComponent((IComponent)c.Clone());
-                result.AddComponent(Utility.DeepClone<IComponent>(c));
-            }
-            return result;
-        }
-        */
-
 
         public virtual object Clone() {
             GameObject newObject = new GameObject(Name + "_clone_" + InstanceCount, Shape);// (((GameObject)Activator.CreateInstance(type);
@@ -156,7 +111,6 @@ namespace BRS {
             }
             newObject._model = this._model;
             return newObject;
-            //return this.MemberwiseClone();
         }
 
         public static void Destroy(GameObject o) {
@@ -172,7 +126,7 @@ namespace BRS {
 
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
 
-        //assumes name is unique // TODO enforce that
+        //assumes name is unique
         public static GameObject FindGameObjectWithName(string name) { // THIS is dangerous method, as it could return null and cause unhandled exception
             foreach (GameObject o in allGameObjects) {
                 if (o.Name.Equals(name)) return o;
@@ -201,14 +155,19 @@ namespace BRS {
         public void AddComponent(IComponent c) {
             components.Add(c);
             c.gameObject = this;
+            //no components added at runtime, otherwise c.Start();
         }
+
+        /*
+        public T AddComponent<T>() where T : IComponent {
+            IComponent c = new T();
+        }*/
 
         public T GetComponent<T>() where T : IComponent {
             foreach (IComponent c in components) {
                 if (c is T) return (T)c;
             }
-
-            Debug.LogError("component not found " + typeof(T).ToString());
+            Debug.LogError("component not found " + typeof(T).ToString() + " inside " + this.name);
             return default(T);
         }
 

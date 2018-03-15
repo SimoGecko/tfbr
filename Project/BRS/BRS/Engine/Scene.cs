@@ -2,39 +2,24 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using BRS.Engine.Physics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using BRS.Scripts;
 
 namespace BRS {
-    /// <summary>
-    /// Static class that contains all gameobjects in the scene
-    /// </summary>
     class Scene {
+        ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 
-        // Reference to the content-manager to load the assets
         protected ContentManager Content;
-
-        // Reference to the game 
-        protected readonly PhysicsManager PhysicsManager;
-
-        // Ground of the level
-        protected GameObject Ground { get; set; }
-
-        // All players
-        protected List<GameObject> Players = new List<GameObject>();
-
-
-        public Scene(PhysicsManager physics) {
-            PhysicsManager = physics;
-        }
-
+        //can create scene graph
+        
         public void Start() {
-            Build();
+            BuildScene();
         }
 
         public void Update() { }
 
-        protected virtual void Build() {
+        protected virtual void BuildScene() { // levels inherit and fill this
             
         }
 

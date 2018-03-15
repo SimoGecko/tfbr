@@ -10,8 +10,7 @@ using System.IO;
 
 namespace BRS {
     static class Utility {
-        //class that provides useful methods (mostly math and on existing objects) - Imitates Unity
-
+        ////////// class that provides useful methods (mostly math and on existing objects) - Imitates Unity //////////
 
         //VARIOUS METHODS
         public static T[] ShuffleArray<T>(T[] array, int seed) {
@@ -26,7 +25,6 @@ namespace BRS {
         }
 
 
-
         //MATH METHODS
         public static int Log2(int x) {
             return (int)(Math.Log(x) / Math.Log(2));
@@ -38,6 +36,7 @@ namespace BRS {
         }
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
+            //formula taken from Unity
             float deltaTime = Time.deltatime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
@@ -72,7 +71,7 @@ namespace BRS {
         }
 
         public static Vector3 SmoothDamp(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float smoothTime) {
-            return new Vector3(SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
+            return new Vector3( SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
                                 SmoothDamp(current.Y, target.Y, ref currentVelocity.Y, smoothTime),
                                 SmoothDamp(current.Z, target.Z, ref currentVelocity.Z, smoothTime));
         }
@@ -88,6 +87,11 @@ namespace BRS {
             if (angle < -180) while (angle < -180) angle += 360;
             if (angle > 180) while (angle > 180) angle -= 360;
             return angle + reference;
+        }
+
+
+        public static float InverseCDF(float x, float a) {
+            return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
         }
 
         //TRANSORM METHODS
@@ -139,11 +143,11 @@ namespace BRS {
         roll  = MathHelper.ToDegrees(roll);
 
         return new Vector3(pitch, yaw, -roll);
-    }*/
+    }
 
         public static Quaternion Euler(Vector3 angles) {
             return Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(angles.Y), MathHelper.ToRadians(angles.X), MathHelper.ToRadians(angles.Z));
-        }
+        }*/
 
 
         //DEEP COPY
@@ -197,10 +201,14 @@ namespace BRS {
             return new Vector3(v.X, 0, v.Y);
         }
 
+        public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
+            return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
+        }
+
     }
 
 
-    static class MyRandom {
+    static class MyRandom { // TODO find better name
         static int seed = 101;
         static Random rand = new Random(seed);
 
@@ -211,9 +219,22 @@ namespace BRS {
         public static int Range(int min, int max) { // random int in [min, max[
             return min + rand.Next(max - min);
         }
+        public static float Range(float min, float max) { // random float in [min, max[
+            return (float)(min + rand.NextDouble()*(max - min));
+        }
 
         public static Vector2 InsideRectangle(Rectangle rect) {
             return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
+        }
+
+        public static Vector2 insideUnitCircle() {
+            double r = Math.Sqrt(rand.NextDouble());
+            double phi = rand.NextDouble() * 2 * Math.PI;
+            return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
+        }
+
+        public static Vector2 insideUnitSquare() {
+            return new Vector2(Value, Value);
         }
 
     }
@@ -248,6 +269,5 @@ namespace BRS {
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
         }
-
     }
 }

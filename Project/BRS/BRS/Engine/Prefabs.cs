@@ -9,13 +9,17 @@ using BRS.Load;
 
 namespace BRS {
     static partial class Prefabs {
-        //static class that contains all GameObjects stored as prefabs and allows access to instantiate them
+        ////////// static class that contains all GameObjects stored as prefabs and allows access to instantiate them //////////
+
         static Dictionary<string, GameObject> allprefabs = new Dictionary<string, GameObject>();
         static ContentManager Content;
         public static Model emptymodel; // to represent a small transform without mesh - debug
+        public static Model cubeModel, sphereModel;
 
         public static void Start() {
             emptymodel = Content.Load<Model>("empty");
+            cubeModel = Content.Load<Model>("cube");
+            sphereModel = Content.Load<Model>("sphere");
             BuildPrefabs();
         }
 

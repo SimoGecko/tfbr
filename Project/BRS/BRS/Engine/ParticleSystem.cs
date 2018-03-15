@@ -10,6 +10,8 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BRS {
     public class ParticleSystem : Component {
         ////////// class that represents a 2D particle engine for various effects //////////
+        //TODO test
+        //TODO make 3d
 
         // --------------------- VARIABLES ---------------------
 

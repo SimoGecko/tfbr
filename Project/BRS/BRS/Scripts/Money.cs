@@ -11,18 +11,25 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public const float randomizer = .1f;
 
 
         //private
         int value = 1;
-        float weight = 1f;
+        int weight = 1;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
+        public Money(int _value, int _weight) {
+            value = _value; weight = _weight;
+        }
+
         public override void Start() {
             base.Start();
+
+            value = (int)(Value*MyRandom.Range(1-randomizer, 1+randomizer));
         }
 
         public override void Update() {
@@ -35,19 +42,18 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(GameObject o) {
-            Player player = o.GetComponent<Player>();
-            if (player != null) {
-                if (player.CanPickUp) {
-                    player.CollectMoney(value);
-                    GameObject.Destroy(gameObject);
-                }
+        protected override void OnPickup(Player p) {
+            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
+            if (pi.CanPickUp(this)) {
+                pi.Collect(this);
+                GameObject.Destroy(gameObject);
             }
         }
 
 
         // queries
-
+        public int Value  { get { return value; } }
+        public int Weight { get { return weight; } }
 
 
         // other

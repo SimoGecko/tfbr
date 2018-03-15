@@ -17,6 +17,8 @@ namespace BRS {
         private Display _display;
         private DebugDrawer _debugDrawer;
         private PhysicsManager _physicsManager;
+        RasterizerState fullRasterizer, wireRasterizer;
+        
 
 
         public Game1() {
@@ -32,6 +34,10 @@ namespace BRS {
             Components.Add(_display);
 
             base.Initialize();
+
+            fullRasterizer = GraphicsDevice.RasterizerState;
+            wireRasterizer = new RasterizerState();
+            wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
 
@@ -54,7 +60,7 @@ namespace BRS {
             scene.Start();
             Input.Start();
 
-            foreach (Camera cam in Screen.cams) cam.Start();
+            foreach (Camera cam in Screen.cameras) cam.Start();
 
             foreach (GameObject go in GameObject.All) go.Start();
 
@@ -69,18 +75,20 @@ namespace BRS {
 
             Time.Update(gameTime);
             Input.Update();
-            //camera.Update();
 
             _physicsManager.Update(gameTime);
 
             foreach (GameObject go in GameObject.All) go.Update();
+
+            Physics.CheckOnCollisionEnter();
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //3D
+            //foreach camera
             int i = 0;
             foreach (Camera cam in Screen.cams) {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
@@ -89,22 +97,27 @@ namespace BRS {
                 _physicsManager.Draw();
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
                 //Transform.Draw(camera);
+
+                //gizmos (wireframe)
+                GraphicsDevice.RasterizerState = wireRasterizer;
+                Gizmos.Draw(cam);
+                GraphicsDevice.RasterizerState = fullRasterizer;
+
+                //splitscreen UI
                 spriteBatch.Begin();
                 ui.DrawSplitscreen(spriteBatch, i++);
                 spriteBatch.End();
             }
+            Gizmos.ClearOrders();
 
             graphics.GraphicsDevice.Viewport = Screen.fullViewport;
 
-            //2D
+            //fullscreen UI
             spriteBatch.Begin();
             ui.DrawGlobal(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
         }
-
-
-
     }
 }

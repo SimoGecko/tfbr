@@ -6,26 +6,27 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public class Camera {
-        //class that represents a virtual camera in space with projection characteristics
+    public class Camera : Component {
+        ////////// class that represents a virtual camera in space with projection characteristics //////////
+        public enum Projection { Orthographic, Perspective};
+
+        //public
         public static Camera main;
         static List<Camera> camList = new List<Camera>();
 
-        public enum Projection { Orthographic, Perspective};
-        public Projection projectiontype = Projection.Perspective;
-        public float fov = 60; // degrees
-        public float near = 0.3f;
-        public float far = 1000f;
+        //private
+        Projection projectiontype = Projection.Perspective;
+        float fov = 60; // degrees
+        const float near = 0.3f;
+        const float far = 1000f;
         float aspectRatio = 1.33333333f; //1280/720 or 1920/1080 =1.7778, 1200/900 = 1.3333
 
-        public Viewport viewport;
+        public Viewport viewport { get; }
 
-        public Transform transform = new Transform();
-
+        public Matrix Proj; // precomputed
         public Matrix View {
             get { return Matrix.Invert(transform.World); }
         }
-        public Matrix Proj; // precomputed
 
         public Camera(Viewport vp, float _fov = 60)  {
             if (main == null) main = this;
@@ -45,15 +46,10 @@ namespace BRS {
             }
         }
 
-        public void Start() {
-            //default position and rotation
-            transform.position = new Vector3(0, 10, 7);
-            transform.eulerAngles = new Vector3(-45, 0, 0);
-        }
+        public override void Start() { }
+        public override void Update() { }
 
-        public void Update() { }
-
-        //METHODS
+        //static METHODS
         public Ray ScreenPointToRay(Vector2 point) {
             Vector3 nearPoint = viewport.Unproject(new Vector3(point.X, point.Y, 0.0f), Proj, View, Matrix.Identity);
             Vector3 farPoint  = viewport.Unproject(new Vector3(point.X, point.Y, 1.0f), Proj, View, Matrix.Identity);

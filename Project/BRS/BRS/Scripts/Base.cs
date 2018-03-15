@@ -11,6 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float deloadDistanceThreshold = 2f;
         public int BaseIndex { get; set; } = 0;
 
         //private
@@ -19,7 +20,7 @@ namespace BRS.Scripts {
 
 
         //reference
-        Player player;
+        PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
@@ -33,8 +34,15 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if (Vector3.DistanceSquared(transform.position, player.transform.position) < 2f) {
+            /*if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
                 DeloadPlayer();
+            }*/
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            Player player = c.gameObject.GetComponent<Player>();
+            if(player != null && player.teamIndex == baseIndex) {
+                DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
 
@@ -44,9 +52,9 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void DeloadPlayer() {
-            TotalMoney += player.carryingmoney;
-            player.Deload();
+        public void DeloadPlayer(PlayerInventory pi) {
+            totalMoney += pi.CarryingValue;
+            pi.Deload();
             UpdateUI();
         }
 

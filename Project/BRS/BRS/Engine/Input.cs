@@ -1,25 +1,20 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 
 namespace BRS {
-    /// <summary>
-    /// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration.
-    /// </summary>
     static class Input {
-        public enum Direction { Horizontal, Vertical }
+        //Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration
 
         static KeyboardState kState, oldKstate;
         static MouseState mState, oldMstate;
         static GamePadState[] gState, oldGstate;
 
         static bool[] vibrating = new bool[4];
-        static float[] timer = new float[4];
 
         public static void Start() {
             gState = oldGstate = new GamePadState[4];
@@ -42,6 +37,7 @@ namespace BRS {
             }
 
             //check for vibration stop
+            /*
             for (int i = 0; i < 4; i++) {
                 if (vibrating[i]) {
                     timer[i] -= Time.deltatime;
@@ -49,7 +45,7 @@ namespace BRS {
                         StopVibration(i);
                     }
                 }
-            }
+            }*/
         }
 
 
@@ -61,32 +57,32 @@ namespace BRS {
         static bool DownAxis()  { return kState.IsKeyDown(Keys.Down)  || kState.IsKeyDown(Keys.S); }
 
 
-        static internal float GetAxisRaw(Direction v) { // WASD, ARROWS and gamepad all work
-            if (v == Direction.Horizontal) {
+        static internal float GetAxisRaw(string v) { // WASD, ARROWS and gamepad all work
+            if (v == "Horizontal") {
                 return LeftAxis() && !RightAxis() ? -1 : !LeftAxis() && RightAxis() ? 1 : 0 + GetThumbstick("Left").X;
             }
-            if (v == Direction.Vertical) {
+            if (v == "Vertical") {
                 return DownAxis() && !UpAxis() ? -1 : !DownAxis() && UpAxis() ? 1 : 0 + GetThumbstick("Left").Y;
             }
             return 0f;
         }
 
-        //CROSS PLATFORM (allows to have same input from gamepad and keyboard
-        static internal float GetAxisRaw0(Direction v) { // WASD and gamepad 0
-            if (v == Direction.Horizontal) {
+        //CROSS PLATFORM (allows to have same input from gamepad and keyboard)
+        static internal float GetAxisRaw0(string v) { // WASD and gamepad 0
+            if (v == "Horizontal") {
                 return (GetKey(Keys.A) && !GetKey(Keys.D)) ? -1 : (!GetKey(Keys.A) && GetKey(Keys.D)) ? 1 : 0 + GetThumbstick("Left", 0).X;
             }
-            if (v == Direction.Vertical) {
+            if (v == "Vertical") {
                 return (GetKey(Keys.S) && !GetKey(Keys.W)) ? -1 : (!GetKey(Keys.S) && GetKey(Keys.W)) ? 1 : 0 + GetThumbstick("Left", 0).Y;
             }
             return 0f;
         }
 
-        static internal float GetAxisRaw1(Direction v) { // ARROWS and gamepad 1
-            if (v == Direction.Horizontal) {
+        static internal float GetAxisRaw1(string v) { // ARROWS and gamepad 1
+            if (v == "Horizontal") {
                 return (GetKey(Keys.Left) && !GetKey(Keys.Right)) ? -1 : (!GetKey(Keys.Left) && GetKey(Keys.Right)) ? 1 : 0 + GetThumbstick("Left", 1).X;
             }
-            if (v == Direction.Vertical) {
+            if (v == "Vertical") {
                 return (GetKey(Keys.Down) && !GetKey(Keys.Up)) ? -1 : (!GetKey(Keys.Down) && GetKey(Keys.Up)) ? 1 : 0 + GetThumbstick("Left", 1).Y;
             }
             return 0f;
@@ -94,6 +90,9 @@ namespace BRS {
 
         public static bool Fire1() {
             return GetKeyDown(Keys.Space) || GetButton(Buttons.A);
+        }
+        public static bool Fire2() {
+            return GetKeyDown(Keys.Enter) || GetButton(Buttons.A, 1);
         }
 
         //KEYS
@@ -105,7 +104,7 @@ namespace BRS {
         //MOUSE
         public static Vector2 mousePosition { get { return new Vector2(mState.X, mState.Y); } }
         public static Vector2 mouseDelta    { get { return new Vector2(mState.X - oldMstate.X, mState.Y - oldMstate.Y); } }
-        public static void setMousePosition(Vector2 v) {
+        public static void SetMousePosition(Vector2 v) {
             Mouse.SetPosition((int)v.X, (int)v.Y);
         }
         public static int mouseWheel      { get { return mState.ScrollWheelValue; } }
@@ -123,7 +122,7 @@ namespace BRS {
 
         //GAMEPAD
         //assume gState.IsConnected
-        public static bool IsConnected(int i) {
+        public static bool IsConnected(int i=0) {
             return GamePad.GetState(i).IsConnected;
         }
 
@@ -144,7 +143,7 @@ namespace BRS {
             return 0f;
         }
 
-        static float amountDown = 0.5f; // how much to press to be considered down
+        const float amountDown = 0.5f; // how much to press to be considered down
         public static bool IsTriggerDown(string v, int i = 0) {
             if (v == "Left")  { return gState[i].Triggers.Left >=amountDown; }
             if (v == "Right") { return gState[i].Triggers.Right>=amountDown; }
@@ -154,13 +153,18 @@ namespace BRS {
         //vibration
         public static void Vibrate(float left, float right, float time, int i=0) {
             GamePad.SetVibration(i, left, right);
+            new Timer(time, () => StopVibration(i));
             vibrating[i] = true;
-            timer[i] = time;
+            //timer[i] = time;
         }
 
         static void StopVibration(int i=0) {
             GamePad.SetVibration(i, 0f, 0f);
             vibrating[i] = false;
+        }
+
+        public static bool IsVibrating(int i=0) {
+            return vibrating[i];
         }
 
     }
