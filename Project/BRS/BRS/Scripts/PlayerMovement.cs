@@ -12,8 +12,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float minSpeed = 2f;
-        const float maxSpeed = 4f;
+        const float minSpeed = 5f;
+        const float maxSpeed = 10f;
         const float maxTurningRate = 360; // deg/sec
         const float boostSpeedMultiplier = 1.5f;
 

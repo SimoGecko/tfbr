@@ -89,10 +89,10 @@ namespace BRS {
         }
 
         public static bool Fire1() {
-            return GetKeyDown(Keys.Space) || GetButtonDown(Buttons.A);
+            return GetKeyDown(Keys.Space) || GetButton(Buttons.A);
         }
         public static bool Fire2() {
-            return GetKeyDown(Keys.Enter) || GetButtonDown(Buttons.A, 1);
+            return GetKeyDown(Keys.Enter) || GetButton(Buttons.A, 1);
         }
 
         //KEYS

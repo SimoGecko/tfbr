@@ -130,7 +130,7 @@ namespace BRS.Scripts {
 
         // INPUT queries
         bool BoostInput() {
-            if (Input.GetKey(Keys.LeftShift)) {
+            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder)) {
                 if (stamina > 0){//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     return true;
