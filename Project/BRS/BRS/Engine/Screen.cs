@@ -16,7 +16,7 @@ namespace BRS {
 
 
         //private
-        static int screenWidth = 1200;
+        static int screenWidth = 1920;
         static int screenHeight = 900;
         static string screenTitle = "GAME TITLE";
 
@@ -45,8 +45,10 @@ namespace BRS {
 
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
-            graphics.PreferredBackBufferWidth = 1920 / 2;
-            graphics.PreferredBackBufferHeight = 1080 / 2;
+            // Todo: Dynamically change this.. If we set it like this we are not able to write on the whole screen now.
+            //graphics.PreferredBackBufferWidth = 1920 / 2;
+            //graphics.PreferredBackBufferHeight = 1080 / 2;
+
             graphics.ApplyChanges();
             game.Window.Title = "New Title";
             game.IsMouseVisible = true;

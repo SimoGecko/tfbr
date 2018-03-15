@@ -11,10 +11,10 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public int baseIndex = 0;
+        public int BaseIndex { get; set; } = 0;
 
         //private
-        int totalMoney;
+        public int TotalMoney { get; private set; }
 
 
 
@@ -23,13 +23,17 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Base(int baseIndex) {
+            BaseIndex = baseIndex;
+        }
+
         public override void Start() {
-            player = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<Player>();
+            player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
             if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
-            if(Vector3.DistanceSquared(transform.position, player.transform.position) < 2f) {
+            if (Vector3.DistanceSquared(transform.position, player.transform.position) < 2f) {
                 DeloadPlayer();
             }
         }
@@ -41,19 +45,18 @@ namespace BRS.Scripts {
 
         // commands
         public void DeloadPlayer() {
-            totalMoney += player.carryingmoney;
+            TotalMoney += player.carryingmoney;
             player.Deload();
             UpdateUI();
         }
 
         void UpdateUI() {
-            UserInterface.instance.SetPlayerMoneyBase(totalMoney, baseIndex);
+            UserInterface.instance.SetPlayerMoneyBase(TotalMoney, BaseIndex);
         }
 
 
 
         // queries
-        public int TotalMoney { get { return totalMoney; } }
 
 
         // other

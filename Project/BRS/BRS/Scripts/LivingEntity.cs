@@ -35,7 +35,7 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void TakeHit(float damage, RaycastHit hit) {
+        public void TakeHit(float damage) {
             //do stuff here
             TakeDamage(damage);
         }

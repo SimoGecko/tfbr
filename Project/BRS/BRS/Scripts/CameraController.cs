@@ -1,18 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// Sets the camera position and follows the player smoothly
+    /// </summary>
     class CameraController : Component {
-        ////////// Sets the camera position and follows the player smoothly //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -38,10 +33,10 @@ namespace BRS.Scripts {
             for(int i=0; i<numPlayers; i++) {
                 cams[i] = Camera.GetCamera(i).transform;
                 if (cams[i] != null) {
-                    cams[i].position = new Vector3(0, 10, 7);
+                    cams[i].position = new Vector3(0, 15, 15);
                     cams[i].eulerAngles = new Vector3(-45, 0, 0);
 
-                    players[i] = GameObject.FindGameObjectWithName("player_"+i).transform;
+                    players[i] = GameObject.FindGameObjectWithName("player_"+i).Transform;
                     if (players[i] == null) Debug.LogError("player not found");
                     if(offset == Vector3.Zero)
                         offset = cams[i].position - players[i].position;

@@ -1,14 +1,18 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 
 namespace BRS {
+    /// <summary>
+    /// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration.
+    /// </summary>
     static class Input {
-        //Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration
+        public enum Direction { Horizontal, Vertical }
 
         static KeyboardState kState, oldKstate;
         static MouseState mState, oldMstate;
@@ -57,32 +61,32 @@ namespace BRS {
         static bool DownAxis()  { return kState.IsKeyDown(Keys.Down)  || kState.IsKeyDown(Keys.S); }
 
 
-        static internal float GetAxisRaw(string v) { // WASD, ARROWS and gamepad all work
-            if (v == "Horizontal") {
+        static internal float GetAxisRaw(Direction v) { // WASD, ARROWS and gamepad all work
+            if (v == Direction.Horizontal) {
                 return LeftAxis() && !RightAxis() ? -1 : !LeftAxis() && RightAxis() ? 1 : 0 + GetThumbstick("Left").X;
             }
-            if (v == "Vertical") {
+            if (v == Direction.Vertical) {
                 return DownAxis() && !UpAxis() ? -1 : !DownAxis() && UpAxis() ? 1 : 0 + GetThumbstick("Left").Y;
             }
             return 0f;
         }
 
         //CROSS PLATFORM (allows to have same input from gamepad and keyboard
-        static internal float GetAxisRaw0(string v) { // WASD and gamepad 0
-            if (v == "Horizontal") {
+        static internal float GetAxisRaw0(Direction v) { // WASD and gamepad 0
+            if (v == Direction.Horizontal) {
                 return (GetKey(Keys.A) && !GetKey(Keys.D)) ? -1 : (!GetKey(Keys.A) && GetKey(Keys.D)) ? 1 : 0 + GetThumbstick("Left", 0).X;
             }
-            if (v == "Vertical") {
+            if (v == Direction.Vertical) {
                 return (GetKey(Keys.S) && !GetKey(Keys.W)) ? -1 : (!GetKey(Keys.S) && GetKey(Keys.W)) ? 1 : 0 + GetThumbstick("Left", 0).Y;
             }
             return 0f;
         }
 
-        static internal float GetAxisRaw1(string v) { // ARROWS and gamepad 1
-            if (v == "Horizontal") {
+        static internal float GetAxisRaw1(Direction v) { // ARROWS and gamepad 1
+            if (v == Direction.Horizontal) {
                 return (GetKey(Keys.Left) && !GetKey(Keys.Right)) ? -1 : (!GetKey(Keys.Left) && GetKey(Keys.Right)) ? 1 : 0 + GetThumbstick("Left", 1).X;
             }
-            if (v == "Vertical") {
+            if (v == Direction.Vertical) {
                 return (GetKey(Keys.Down) && !GetKey(Keys.Up)) ? -1 : (!GetKey(Keys.Down) && GetKey(Keys.Up)) ? 1 : 0 + GetThumbstick("Left", 1).Y;
             }
             return 0f;

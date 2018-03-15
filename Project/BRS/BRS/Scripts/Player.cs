@@ -2,12 +2,9 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BRS.Engine.Physics;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
@@ -20,7 +17,7 @@ namespace BRS.Scripts {
 
 
         //private
-        public int playerIndex = 0; // player index - to select input and camera
+        public int PlayerIndex { get; private set; } = 0; // player index - to select input and camera
 
         //MOVEMENT
         const float maxSpeed = 7f;
@@ -58,6 +55,10 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Player(int playerIndex) {
+            PlayerIndex = playerIndex;
+        }
+
         public override void Start() {
             transform.Rotate(Vector3.Up, -90);
             rotation = targetRotation = -90;
@@ -87,7 +88,7 @@ namespace BRS.Scripts {
         void BoostInput() {
             boosting = false;
             if (Input.GetKey(Keys.LeftShift)) {
-                if(stamina >= staminaPerBoost * Time.deltatime) {
+                if (stamina >= staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     boosting = true;
                 }
@@ -100,21 +101,21 @@ namespace BRS.Scripts {
             oldPos = transform.position;
 
             Vector3 input;
-            if(playerIndex==0)
-                input = new Vector3(Input.GetAxisRaw0("Horizontal"), 0, Input.GetAxisRaw0("Vertical"));
+            if (PlayerIndex == 0)
+                input = new Vector3(Input.GetAxisRaw0(Input.Direction.Horizontal), 0, Input.GetAxisRaw0(Input.Direction.Vertical));
             else
-                input = new Vector3(Input.GetAxisRaw1("Horizontal"), 0, Input.GetAxisRaw1("Vertical"));
+                input = new Vector3(Input.GetAxisRaw1(Input.Direction.Horizontal), 0, Input.GetAxisRaw1(Input.Direction.Vertical));
 
             float magnitude = Utility.Clamp01(input.Length());
             smoothMagnitude = Utility.SmoothDamp(smoothMagnitude, magnitude, ref refMagnitude, .1f);
 
             //rotate towards desired angle
             if (smoothMagnitude > .05f) { // avoid changing if 0
-                inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X)); 
+                inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
                 inputAngle = Utility.WrapAngle(inputAngle, targetRotation);
-                targetRotation = Utility.SmoothDampAngle(targetRotation, inputAngle-90, ref refangle, .3f, maxTurningRate*smoothMagnitude);
+                targetRotation = Utility.SmoothDampAngle(targetRotation, inputAngle - 90, ref refangle, .3f, maxTurningRate * smoothMagnitude);
             } else {
-                targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate*smoothMagnitude);
+                targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
             }
 
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
@@ -123,6 +124,9 @@ namespace BRS.Scripts {
             //move forward
             float speedboost = boosting ? boostMultiplier : 1f;
             transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+
+            gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
+            gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
         }
 
         void AttackInput() {
@@ -137,13 +141,13 @@ namespace BRS.Scripts {
         }
 
         public void CollectMoney(int amount) {
-            carryingmoney += Math.Min(amount, capacity-carryingmoney);
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, playerIndex);
+            carryingmoney += Math.Min(amount, capacity - carryingmoney);
+            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, PlayerIndex);
         }
 
         public void Deload() {
             carryingmoney = 0;
-            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, playerIndex);
+            UserInterface.instance.SetPlayerMoneyPercent(MoneyPercent, PlayerIndex);
         }
 
 
