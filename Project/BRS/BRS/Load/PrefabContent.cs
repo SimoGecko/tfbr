@@ -18,24 +18,24 @@ namespace BRS {
 
             //simple money prefab
             GameObject moneyPrefab = new GameObject("moneyPrefab", Content.Load<Model>("cash"));
-            moneyPrefab.transform.Scale(.5f);
-            moneyPrefab.transform.SetStatic();
+            moneyPrefab.Transform.Scale(.5f);
+            moneyPrefab.Transform.SetStatic();
             moneyPrefab.AddComponent(new Money(100, 1));
             moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(moneyPrefab);
 
             //diamond
             GameObject diamondPrefab = new GameObject("diamondPrefab", Content.Load<Model>("diamond"));
-            diamondPrefab.transform.Scale(1f);
-            diamondPrefab.transform.SetStatic();
+            diamondPrefab.Transform.Scale(1f);
+            diamondPrefab.Transform.SetStatic();
             diamondPrefab.AddComponent(new Money(300, 2));
             diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(diamondPrefab);
 
             //gold
             GameObject goldPrefab = new GameObject("goldPrefab", Content.Load<Model>("gold"));
-            goldPrefab.transform.Scale(.5f);
-            goldPrefab.transform.SetStatic();
+            goldPrefab.Transform.Scale(.5f);
+            goldPrefab.Transform.SetStatic();
             goldPrefab.AddComponent(new Money(1000, 3));
             goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(goldPrefab);
@@ -45,16 +45,16 @@ namespace BRS {
 
             //crate prefab
             GameObject cratePrefab = new GameObject("cratePrefab", Content.Load<Model>("cube"));
-            cratePrefab.transform.Scale(.5f);
-            cratePrefab.transform.SetStatic();
+            cratePrefab.Transform.Scale(.5f);
+            cratePrefab.Transform.SetStatic();
             cratePrefab.AddComponent(new Crate());
             cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
             AddPrefab(cratePrefab);
 
             //power up prefab
             GameObject powerUpPrefab = new GameObject("powerUpPrefab", Content.Load<Model>("sphere"));
-            powerUpPrefab.transform.Scale(.5f);
-            powerUpPrefab.transform.SetStatic();
+            powerUpPrefab.Transform.Scale(.5f);
+            powerUpPrefab.Transform.SetStatic();
             powerUpPrefab.AddComponent(new CapacityBoost());
             powerUpPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(powerUpPrefab);

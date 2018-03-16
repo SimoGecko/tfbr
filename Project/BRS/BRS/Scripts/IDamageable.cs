@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace BRS.Scripts {
     public interface IDamageable : IComponent {
-        void TakeHit(float damage, RaycastHit hit);
+        void TakeHit(float damage);
         void TakeDamage(float damage);
     }
 

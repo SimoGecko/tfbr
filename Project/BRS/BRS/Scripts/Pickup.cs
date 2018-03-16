@@ -1,14 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
     class Pickup : Component {
@@ -60,7 +53,7 @@ namespace BRS.Scripts {
         /*
         void CheckPickup() {
             foreach(GameObject o in players) {
-                float dist = Vector3.DistanceSquared(transform.position, o.transform.position);
+                float dist = Vector3.DistanceSquared(transform.position, o.Transform.position);
                 if (dist < pickupthreshold) {
                     OnPickup(o);
                 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,8 +13,13 @@ namespace BRS {
 
         Scene scene;
         UserInterface ui;
+
+        private Display _display;
+        private DebugDrawer _debugDrawer;
+        private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
         
+
 
         public Game1() {
             graphics = new GraphicsDeviceManager(this);
@@ -27,6 +28,11 @@ namespace BRS {
         }
 
         protected override void Initialize() {
+            _debugDrawer = new DebugDrawer(this);
+            //Components.Add(_debugDrawer);
+            _display = new Display(this);
+            //Components.Add(_display);
+
             base.Initialize();
 
             fullRasterizer = GraphicsDevice.RasterizerState;
@@ -38,11 +44,14 @@ namespace BRS {
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            scene = new Level1();
+            _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
+
+            //scene = new LevelPhysics(this, _physicsManager);
+            scene = new Level1(_physicsManager);
             ui = new UserInterface();
 
             //LOAD
-            Prefabs.GiveContent(Content); // do not put in initialize
+            Prefabs.GiveContent(Content); // do not put in initialize: Todo: Why?
             ui.GiveContent(Content);
             scene.GiveContent(Content);
 
@@ -55,7 +64,7 @@ namespace BRS {
             foreach (Camera cam in Screen.cameras) cam.Start();
 
             foreach (GameObject go in GameObject.All) go.Start();
-            
+
         }
 
         protected override void UnloadContent() {
@@ -64,9 +73,11 @@ namespace BRS {
 
         protected override void Update(GameTime gameTime) {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
-            
+
             Time.Update(gameTime);
             Input.Update();
+
+            _physicsManager.Update(gameTime);
 
             foreach (GameObject go in GameObject.All) go.Update();
 
@@ -80,10 +91,11 @@ namespace BRS {
 
             //foreach camera
             int i = 0;
-            foreach(Camera cam in Screen.cameras) {
+            foreach (Camera cam in Screen.cameras) {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;
+                //_physicsManager.Draw();
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
                 //Transform.Draw(camera);
 
