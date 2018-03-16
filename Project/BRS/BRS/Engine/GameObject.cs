@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectType { Player, Base, Obstacle, Boundary, Default }
+    public enum ObjectType { Ground, Player, Base, Obstacle, Boundary, Default }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -136,7 +136,7 @@ namespace BRS {
         }
 
         //returns all the gameobject that satisfy the tag
-        public static GameObject[] FindGameObjectsWithTag(string tag) {
+        public static GameObject[] FindGameObjectsWithTag(object tag) {
             List<GameObject> result = new List<GameObject>();
 
             foreach (GameObject o in allGameObjects) {

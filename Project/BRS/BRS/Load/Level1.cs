@@ -42,21 +42,20 @@ namespace BRS.Load {
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[2])), MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
-                        GameObject go = new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
+                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
+                        
                         go.Transform.position = position;
                         go.Transform.scale = scale;
-
-                        //if (tagName == "Ground")
-                            //go.Type = ObjectType.Ground;
-                        if (tagName == "Base")
+                        //go.transform.rotation = rotation; // rotation not parsed correctly
+                        
+                        if (tagName == "Ground")
+                            go.Type = ObjectType.Ground;
+                        else if (tagName == "Base")
                             go.Type = ObjectType.Base;
                         else if (tagName == "Obstacle")
                             go.Type = ObjectType.Obstacle;
                         else if (tagName == "Boundary")
                             go.Type = ObjectType.Boundary;
-
-                        //go.transform.rotation = rotation; // rotation not parsed correctly
-
                     }
 
                     nameContent = reader.ReadLine();
@@ -128,16 +127,12 @@ namespace BRS.Load {
             });
             task.Wait();
 
-            GameObject[] bases = GameObject.FindGameObjectsWithTag("Base");
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectType.Base);
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 bases[i].AddComponent(new Base(i));
-                //bases[i].GetComponent<Base>().BaseIndex = i;
                 bases[i].AddComponent(new BoxCollider(bases[i]));
                 bases[i].Transform.SetStatic();
             }
-
-            
         }
     }
-
 }
