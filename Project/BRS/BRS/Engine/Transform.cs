@@ -105,7 +105,7 @@ namespace BRS {
         }
 
         public Vector3 eulerAngles {
-            //get { return m_rotation; } // TODO
+            get { return Utility.toEulerAngle(m_rotation); } // TODO
             set { m_rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(value.Y), MathHelper.ToRadians(value.X), MathHelper.ToRadians(value.Z)); }
         }
 

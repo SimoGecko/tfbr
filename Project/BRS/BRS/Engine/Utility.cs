@@ -95,7 +95,7 @@ namespace BRS {
         }
 
         //TRANSORM METHODS
-        /*
+        
         public static Vector3 toEulerAngle(this Quaternion q){ // in degrees //NOT WORKING CORRECTLY
 	        // roll (x-axis rotation)
 	        double sinr = 2.0 * (q.W * q.X + q.Y * q.Z);
@@ -121,8 +121,9 @@ namespace BRS {
             yaw   = MathHelper.ToDegrees(yaw);
             roll  = MathHelper.ToDegrees(roll);
 
-            return new Vector3(pitch, -yaw, -roll); // Ensure it's right
-        }*/
+            //return new Vector3(pitch, -yaw, -roll); // Ensure it's right
+            return new Vector3(roll, -pitch, yaw); // Ensure it's right
+        }
 
         /*
     public static Vector3 toEulerAngles(this Matrix m) { // IT WORKS!
@@ -203,6 +204,10 @@ namespace BRS {
 
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
+        }
+
+        public static Vector2 Round(this Vector2 v) { // Makes it Point2
+            return new Vector2((int)v.X, (int)v.Y);
         }
 
     }

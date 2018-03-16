@@ -49,14 +49,14 @@ namespace BRS.Load {
                 GameObject forklift = new GameObject("player_" + i, new BoxShape(bbSize), model);
                 forklift.Type = ObjectType.Player;
                 forklift.Transform.Scale(2);
-                forklift.AddComponent(new Player(i));
+                forklift.AddComponent(new Player());
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
                 forklift.Transform.TranslateGlobal(Vector3.Right * 30 * i);
                 forklift.Position = Conversion.ToJitterVector(new Vector3(31 * i, 1, 0));
                 forklift.IsStatic = false;
-                forklift.Tag = BodyTag.DrawMe;
+                //forklift.Tag = BodyTag.DrawMe;
 
 
                 PhysicsManager.World.AddBody(forklift);
@@ -100,7 +100,7 @@ namespace BRS.Load {
             groundPlane.Transform.position = new Vector3(0, 0, 0);
 
             groundPlane.Position = new JVector(0, -10, 0);
-            groundPlane.Tag = BodyTag.DontDrawMe;
+            //groundPlane.Tag = BodyTag.DontDrawMe;
             groundPlane.IsStatic = true;
             groundPlane.Material.Restitution = 0.0f;
             groundPlane.Material.StaticFriction = 0.4f;

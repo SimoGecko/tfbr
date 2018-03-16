@@ -77,7 +77,8 @@ namespace BRS.Load {
             for(int i=0; i<GameManager.numPlayers; i++) {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
-                forklift.AddComponent(new Player(i));
+                forklift.myTag = "player";
+                forklift.AddComponent(new Player());
                 forklift.GetComponent<Player>().playerIndex = i;
                 forklift.GetComponent<Player>().teamIndex = i%2;
 
