@@ -130,7 +130,7 @@ namespace BRS {
             Rotate(axis, angle);
         }
         public void LookAt(Vector3 p) { // this caused the use of quaternions
-            Matrix look = Matrix.CreateLookAt(m_position, p, Up);
+            Matrix look = Matrix.CreateLookAt(m_position, p, Vector3.Up);
             //eulerAngles = look.toEulerAngles();
             m_rotation = look.Rotation;
             m_rotation.Conjugate();

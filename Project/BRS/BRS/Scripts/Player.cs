@@ -13,7 +13,7 @@ using Microsoft.Xna.Framework.Input;
 namespace BRS.Scripts {
     class Player : LivingEntity {
         ////////// player class that is a center hub for all things related to the player //////////
-        ////////// it manages the state, team, calls relative functions with input //////////
+        ////////// it manages the state, team, calls relative functions with input BUT NOTHING ELSE //////////
 
         // --------------------- VARIABLES ---------------------
         enum State { normal, attack, stun, dead};
@@ -22,7 +22,7 @@ namespace BRS.Scripts {
         public int teamIndex = 0;
 
         //STAMINA
-        const float staminaReloadPerSecond = .2f;
+        const float staminaReloadPerSecond = .2f; // maybe move to its own class?
         const float staminaPerBoost = .4f;
         const float staminaPerAttack = .6f;
         const float staminaReloadDelay = .3f;
@@ -30,8 +30,9 @@ namespace BRS.Scripts {
         float maxStamina = 1;
 
         //HIT and STUN
-        const float damage = 40;
+        const float damage = 40; // put into attack
         const float stunTime = 2f;
+
         const float respawnTime = 5f;
 
         //private
@@ -39,8 +40,8 @@ namespace BRS.Scripts {
         bool canReloadStamina = true;
 
         //reference
-        Player otherPlayer;
-        bool hasOtherPlayer = false;
+        //Player otherPlayer;
+        //bool hasOtherPlayer = false;
 
         //subcomponents
         PlayerAttack playerAttack;
@@ -51,12 +52,12 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-
+            /*
             hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex) ) != null;
             if (hasOtherPlayer) {
                 hasOtherPlayer = true;
                 otherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex)).GetComponent<Player>();
-            }
+            }*/
 
             //subcomponents
             playerAttack = gameObject.GetComponent<PlayerAttack>();
@@ -65,7 +66,6 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector3 moveInput =  MoveInput();
@@ -77,8 +77,6 @@ namespace BRS.Scripts {
             }
             else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
-                if(hasOtherPlayer)
-                    //playerAttack.CheckCollision(otherPlayer);
                 if (playerAttack.AttackEnded) state = State.normal;
             }
 
@@ -87,7 +85,7 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if (c.gameObject.tag == "player") Debug.Log("collision enter player");
+            //if (c.gameObject.tag == "player") Debug.Log("collision enter player");
         }
 
 
@@ -142,7 +140,7 @@ namespace BRS.Scripts {
 
         // INPUT queries
         bool BoostInput() {
-            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder)) {
+            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex)) {
                 if (stamina > 0){//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     return true;

@@ -18,7 +18,7 @@ namespace BRS.Scripts {
 
         //public
         public int camIndex;
-        const float smoothTime = .3f;
+        const float smoothTime = .1f;
 
         //private
         static Vector3 offset;
@@ -51,7 +51,7 @@ namespace BRS.Scripts {
                         offset = cams[i].position - players[i].position;
                 }
             }*/
-            transform.position = new Vector3(-5, 10, 5);
+            transform.position = new Vector3(-5, 10, 10);
             transform.eulerAngles = new Vector3(-50, 0, 0);
 
             player = GameObject.FindGameObjectWithName("player_" + camIndex).transform;
@@ -72,6 +72,7 @@ namespace BRS.Scripts {
 
             transform.position = Utility.SmoothDamp(transform.position, targetPos, ref refVelocity, smoothTime);
             //transform.rotation = target.rotation;
+            //transform.LookAt(player.position);
 
 
         }

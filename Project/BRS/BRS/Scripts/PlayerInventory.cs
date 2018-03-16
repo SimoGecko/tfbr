@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     class PlayerInventory : Component {
-        ////////// knows about the stuff the player is currently carrying //////////
+        ////////// knows about the valuables the player is currently carrying //////////
 
         // --------------------- VARIABLES ---------------------
 

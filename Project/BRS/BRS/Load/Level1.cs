@@ -52,6 +52,7 @@ namespace BRS.Load {
             //manager.AddComponent(new CameraController());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
+            manager.AddComponent(new Minimap());
 
 
             //TRANSFORM TEST
