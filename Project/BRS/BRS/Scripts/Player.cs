@@ -27,6 +27,7 @@ namespace BRS.Scripts {
         const float staminaPerAttack = .6f;
         const float staminaReloadDelay = .3f;
         float stamina = 1;
+        float maxStamina = 1;
 
         //HIT and STUN
         const float damage = 40;
@@ -68,13 +69,15 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-
+            
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector3 moveInput = MoveInput();
                 playerMovement.Move(moveInput);
 
                 if (AttackInput()) playerAttack.BeginAttack();
+
+                if (PowerUpInput()) playerInventory.UsePowerUp(this);
             } else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
                 if (hasOtherPlayer)
@@ -122,14 +125,23 @@ namespace BRS.Scripts {
                 stamina = 0;
                 Timer t = new Timer(1, () => canReloadStamina = true);
             }
-            if (canReloadStamina) stamina += staminaReloadPerSecond * Time.deltatime;
-            stamina = Utility.Clamp01(stamina);
+            //if (canReloadStamina) stamina += staminaReloadPerSecond * Time.deltatime;
+            //stamina = Utility.Clamp01(stamina);
+
+            if (canReloadStamina) AddStamina(staminaReloadPerSecond * Time.deltatime);
+        }
+
+        public void AddStamina(float amount) {
+            stamina = MathHelper.Min(stamina + amount, maxStamina);
+        }
+
+        public void UpdateMaxStamina(float amountToAdd) {
+            maxStamina += amountToAdd;
         }
 
         void UpdateUI() {
-            UserInterface.instance.UpdatePlayerUI(playerIndex, HealthPercent, stamina, playerInventory.MoneyPercent, playerInventory.CarryingValue);
+            UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight);
         }
-
 
         // INPUT queries
         bool BoostInput() {
@@ -149,6 +161,13 @@ namespace BRS.Scripts {
                 return new Vector3(Input.GetAxisRaw1("Horizontal"), 0, Input.GetAxisRaw1("Vertical"));
         }
 
+        bool PowerUpInput() {
+            if (Input.GetKey(Keys.P)) {
+                return true;
+            }
+            return false;
+        }
+
         bool AttackInput() {
             bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
             if (inputfire && state == State.normal && stamina >= staminaPerAttack) {
@@ -160,7 +179,7 @@ namespace BRS.Scripts {
         }
 
         // other
-
+        public float StaminaPercent { get { return stamina / maxStamina; } }
 
 
     }
