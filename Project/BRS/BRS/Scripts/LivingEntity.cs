@@ -58,6 +58,14 @@ namespace BRS.Scripts {
             dead = false;
         } 
 
+        public void AddHealth(float amount) {
+            health = MathHelper.Min(health + amount, startingHealth);
+        }
+
+        public void UpdateMaxHealth(float amountToAdd) {
+            startingHealth += amountToAdd;
+        }
+
 
         // queries
         public float HealthPercent { get { return health / startingHealth; } }

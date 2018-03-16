@@ -12,7 +12,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const int capacity = 20;
+        int capacity = 20;
 
 
         //private
@@ -21,6 +21,9 @@ namespace BRS.Scripts {
         int carryingValue = 0;
         Stack<Money> carryingMoney = new Stack<Money>();
 
+        //POWER UP
+        int maxNumberPowerUps = 1;
+        List<Powerup> carryingPowerUp = new List<Powerup>();
 
         //reference
 
@@ -40,6 +43,10 @@ namespace BRS.Scripts {
 
 
         // commands
+        public void Collect(Powerup powerUp) {
+            carryingPowerUp.Add(powerUp);
+        }
+        
         public void Collect(Money money) {
             //carryingWeight += Math.Min(amount, capacity - carryingWeight);
             carryingWeight += money.Weight;
@@ -71,14 +78,28 @@ namespace BRS.Scripts {
             }
         }
 
+        public void UsePowerUp(Player p) {
+            if (carryingPowerUp.Count > 0) {
+                carryingPowerUp[0].UsePowerUp(p);
+                carryingPowerUp.Remove(carryingPowerUp[0]);
+            }
+        }
 
+        public void UpdateCapacity(int amountToAdd) {
+            capacity += amountToAdd;
+        }
 
         // queries
+        public bool CanPickUp(Powerup powerUp) {
+            return carryingPowerUp.Count < maxNumberPowerUps;
+        }
         public bool CanPickUp(Money money) {
             return carryingWeight + money.Weight <= capacity;
         }
         public float MoneyPercent { get { return (float)carryingWeight / capacity; } }
         public int CarryingValue { get { return carryingValue; } }
+        public int Capacity { get { return capacity; } }
+        public int CarryingWeight { get { return carryingWeight; } }
 
 
         // other
