@@ -81,7 +81,7 @@ namespace BRS.Scripts {
             sourceRect = new Rectangle(0, 0, ICONSIZE, ICONSIZE);
             foreach (Transform player in Players()) {
                 Vector3 position = player.position;
-                float Yrot = player.eulerAngles.Y;
+                float Yrot = -player.eulerAngles.Y;
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(position), sourceRect, Color.Orange, MathHelper.ToRadians(Yrot), new Vector2(32, 32), .3f, SpriteEffects.None, 1f);
             }
 

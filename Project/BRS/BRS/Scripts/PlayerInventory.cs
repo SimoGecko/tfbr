@@ -59,15 +59,19 @@ namespace BRS.Scripts {
             carryingValue = 0;
         }
 
+        public void DropMoney() {
+            DropMoneyAmount(1);
+        }
+
         public void LoseMoney() {
-            LoseMoneyAmount(3);
+            DropMoneyAmount(3);
         }
 
         public void LoseAllMoney() {
-            LoseMoneyAmount(carryingMoney.Count);
+            DropMoneyAmount(carryingMoney.Count);
         }
 
-        void LoseMoneyAmount(int amount) {
+        void DropMoneyAmount(int amount) {
             amount = Math.Min(amount, carryingMoney.Count);
             for (int i = 0; i < amount; i++){
                 Money money = carryingMoney.Pop();
