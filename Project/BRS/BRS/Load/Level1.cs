@@ -87,6 +87,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
+                forklift.AddComponent(new PlayerPowerup());
 
             }
 

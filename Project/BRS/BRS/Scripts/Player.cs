@@ -46,6 +46,7 @@ namespace BRS.Scripts {
         PlayerAttack playerAttack;
         PlayerMovement playerMovement;
         PlayerInventory playerInventory;
+        PlayerPowerup playerPowerup;
 
 
         // --------------------- BASE METHODS ------------------
@@ -66,6 +67,7 @@ namespace BRS.Scripts {
             playerAttack = gameObject.GetComponent<PlayerAttack>();
             playerMovement = gameObject.GetComponent<PlayerMovement>();
             playerInventory = gameObject.GetComponent<PlayerInventory>();
+            playerPowerup = gameObject.GetComponent<PlayerPowerup>();
         }
 
         public override void Update() {
@@ -77,7 +79,7 @@ namespace BRS.Scripts {
 
                 if (AttackInput()) playerAttack.BeginAttack();
 
-                if (PowerUpInput()) playerInventory.UsePowerUp(this);
+                if (PowerUpInput()) playerPowerup.UsePowerup(this);
             } else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
                 if (hasOtherPlayer)

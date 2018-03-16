@@ -34,12 +34,10 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(Player p)
-        {
-            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
-            if (pi.CanPickUp(this))
-            {
-                pi.Collect(this);
+        protected override void OnPickup(Player p) {
+            PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
+            if (pp.CanPickUp(this)) {
+                pp.Collect(this);
                 GameObject.Destroy(gameObject);
             }
         }
@@ -50,14 +48,13 @@ namespace BRS.Scripts {
         // queries
 
 
- 
+
         // other
 
     }
 
 
-    class HealthPotion : Powerup
-    {
+    class HealthPotion : Powerup {
         ////////// Health potion: regain some life //////////
 
         // --------------------- VARIABLES ---------------------
@@ -91,7 +88,7 @@ namespace BRS.Scripts {
         }
 
         public override void UsePowerUp(Player p) {
-            p.AddHealth(valuePotion);                   
+            p.AddHealth(valuePotion);
         }
 
         // queries
