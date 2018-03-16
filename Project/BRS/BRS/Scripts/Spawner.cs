@@ -20,10 +20,12 @@ namespace BRS.Scripts {
         //private
         int moneyAmount = 30;
         int crateAmount = 10;
+        int powerUpAmount = 10;
 
         const float probOfCash = .6f;
         const float probOfDiamond = .3f;
         const float probOfGold = .1f;
+        const float probOfPowerUp = .1f;
 
 
         //reference
@@ -34,7 +36,8 @@ namespace BRS.Scripts {
             instance = this;
             SpawnInitialMoney();
             SpawnInitialCrates();
-            SpawnContinuous();
+            SpawnInitialPowerUp();
+            //SpawnContinuous();
         }
 
         public override void Update() {
@@ -58,6 +61,10 @@ namespace BRS.Scripts {
                 SpawnOneCrateRandom();
         }
 
+        void SpawnInitialPowerUp() {
+            for (int i = 0; i < powerUpAmount; i++)
+                SpawnOnePowerUpRandom();
+        }
 
         //money
         void SpawnOneMoneyRandom() {
@@ -76,6 +83,12 @@ namespace BRS.Scripts {
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
+        }
+
+        //power up
+        void SpawnOnePowerUpRandom() {
+            Vector2 position = MyRandom.InsideRectangle(spawnArea);
+            GameObject newCrate = GameObject.Instantiate("powerUpPrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
         }
 
         async void SpawnContinuous() {
