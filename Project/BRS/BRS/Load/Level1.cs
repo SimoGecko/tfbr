@@ -7,9 +7,12 @@ using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
 using System.IO;
 using System.Threading.Tasks;
+using BRS.Engine.Physics;
 
 namespace BRS.Load {
     class Level1 : Scene {
+        public Level1(PhysicsManager physics)
+            : base(physics) { }
 
         public List<GameObject> ReadFile(string pathName, string prefabToUse, string nameObj)
         {
@@ -34,8 +37,8 @@ namespace BRS.Load {
                     Vector3 scale = new Vector3(float.Parse(sSplit[2]), float.Parse(sSplit[1]), float.Parse(sSplit[0]));
 
                     GameObject playerBase = new GameObject(nameObj + "_" + i.ToString(), Content.Load<Model>(prefabToUse));
-                    playerBase.transform.position = position;
-                    playerBase.transform.scale = scale;
+                    playerBase.Transform.position = position;
+                    playerBase.Transform.scale = scale;
                     //playerBase.transform.rotation = rotation; // rotation not parsed correctly
 
                     objects.Add(playerBase);
@@ -44,7 +47,7 @@ namespace BRS.Load {
             }
         }
 
-        protected override void BuildScene() {
+        protected override void Build() {
             ////////// scene setup for level1 //////////
 
             //MANAGER
@@ -72,12 +75,12 @@ namespace BRS.Load {
             //PLAYER
             for(int i=0; i<GameManager.numPlayers; i++) {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
-                forklift.tag = "player";
-                forklift.AddComponent(new Player());
+                forklift.Type = ObjectType.Player;
+                forklift.AddComponent(new Player(i));
                 forklift.GetComponent<Player>().playerIndex = i;
                 forklift.GetComponent<Player>().teamIndex = i%2;
 
-                forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                forklift.Transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 forklift.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
@@ -113,23 +116,22 @@ namespace BRS.Load {
 
                 for (int i = 0; i < GameManager.numPlayers; i++)
                 {
-                    bases[i].tag = "base";
-                    bases[i].AddComponent(new Base());
-                    bases[i].GetComponent<Base>().baseIndex = i;
+                    bases[i].Type = ObjectType.Base;
+                    bases[i].AddComponent(new Base(i));
                     //bases[i].GetComponent<Base>().player = GameObject.FindGameObjectWithName("player_" + i).GetComponent<Player>();
                     bases[i].AddComponent(new BoxCollider(bases[i]));
-                    bases[i].transform.SetStatic();
+                    bases[i].Transform.SetStatic();
                 }
 
                 //OBSTACLES
                 List<GameObject> obstacles = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Obstacles.txt", "cube", "obstacle");
                 foreach (GameObject go in obstacles)
-                    go.tag = "obstacle";
+                    go.Type = ObjectType.Obstacle;
 
                 //BOUNDARIES
                 List<GameObject> boundaries = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Boundaries.txt", "cube", "boundary");
                 foreach (GameObject go in boundaries)
-                    go.tag = "boundary";
+                    go.Type = ObjectType.Boundary;
             });
             task.Wait();
         }

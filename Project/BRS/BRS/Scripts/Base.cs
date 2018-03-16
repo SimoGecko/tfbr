@@ -11,22 +11,27 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public int baseIndex = 0;
         const float deloadDistanceThreshold = 2f;
+        public int BaseIndex { get; set; } = 0;
 
         //private
-        int totalMoney;
+        public int TotalMoney { get; private set; }
 
 
 
         //reference
+        Player player;
         PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
+        public Base(int baseIndex) {
+            BaseIndex = baseIndex;
+        }
+
         public override void Start() {
-            //playerInventory = GameObject.FindGameObjectWithName("player_"+baseIndex).GetComponent<PlayerInventory>();
-            //if (playerInventory == null) Debug.LogError("player not found");
+            player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
+            if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
@@ -37,7 +42,7 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             Player player = c.gameObject.GetComponent<Player>();
-            if(player != null && player.teamIndex == baseIndex) {
+            if(player != null && player.teamIndex == BaseIndex) {
                 DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
@@ -49,19 +54,18 @@ namespace BRS.Scripts {
 
         // commands
         public void DeloadPlayer(PlayerInventory pi) {
-            totalMoney += pi.CarryingValue;
+            TotalMoney += pi.CarryingValue;
             pi.Deload();
             UpdateUI();
         }
 
         void UpdateUI() {
-            UserInterface.instance.SetPlayerMoneyBase(totalMoney, baseIndex);
+            UserInterface.instance.SetPlayerMoneyBase(TotalMoney, BaseIndex);
         }
 
 
 
         // queries
-        public int TotalMoney { get { return totalMoney; } }
 
 
         // other
