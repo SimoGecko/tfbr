@@ -51,8 +51,7 @@ namespace BRS.Scripts {
                         offset = cams[i].position - players[i].position;
                 }
             }*/
-            transform.position = new Vector3(0, 20, 10);
-            transform.position = new Vector3(-5, 10, 5);
+            transform.position = new Vector3(0, 10, 5);
             transform.eulerAngles = new Vector3(-50, 0, 0);
 
             player = GameObject.FindGameObjectWithName("player_" + camIndex).Transform;

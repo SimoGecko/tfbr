@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Scripts.Physics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
@@ -71,8 +72,9 @@ namespace BRS.Scripts {
             transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
-            gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
-            gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+            RigidBodyComponent rigidBodyComponent = gameObject.GetComponent<RigidBodyComponent>();
+            rigidBodyComponent.RigidBody.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
+            rigidBodyComponent.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
 
         }
 

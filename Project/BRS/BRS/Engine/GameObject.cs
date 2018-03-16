@@ -3,8 +3,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jitter.Collision.Shapes;
-using Jitter.Dynamics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,27 +12,22 @@ namespace BRS {
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
-    public class GameObject : RigidBody {
+    public class GameObject {
         public Transform Transform;
         List<IComponent> components;
-        private Model _model;
-        public ModelMesh mesh { get { return _model?.Meshes[0]; } } // assumes just 1 mesh per model
+        public Model Model { get; private set; }
+        public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool Active { get; set; } = true;
         public string Name { private set; get; }
         public ObjectType Type { set; get; } = ObjectType.Default;
 
         static int InstanceCount = 0;
 
-        public GameObject(string name, Model model = null)
-            : this(name, new BoxShape(0.0f, 0.0f, 0.0f), model) {
-        }
-
-        public GameObject(string name, Shape collisionShape, Model model = null)
-            : base(collisionShape) {
+        public GameObject(string name, Model model = null) {
             Name = name;
             Transform = new Transform();
             components = new List<IComponent>();
-            _model = model;
+            Model = model;
             allGameObjects.Add(this);
         }
 
@@ -59,8 +52,8 @@ namespace BRS {
         //public virtual void OnCollisionExit () { }
 
         public virtual void Draw(Camera cam) {
-            if (_model != null && Active) {
-                Utility.DrawModel(_model, cam.View, cam.Proj, Transform.World);
+            if (Model != null && Active) {
+                Utility.DrawModel(Model, cam.View, cam.Proj, Transform.World);
             }
         }
 
@@ -101,7 +94,7 @@ namespace BRS {
         }
 
         public virtual object Clone() {
-            GameObject newObject = new GameObject(Name + "_clone_" + InstanceCount, Shape);// (((GameObject)Activator.CreateInstance(type);
+            GameObject newObject = new GameObject(Name + "_clone_" + InstanceCount);// (((GameObject)Activator.CreateInstance(type);
             InstanceCount++;
             newObject.Transform.CopyFrom(this.Transform);
             newObject.Type = Type;
@@ -109,7 +102,7 @@ namespace BRS {
             foreach (IComponent c in this.components) {
                 newObject.AddComponent((IComponent)c.Clone());
             }
-            newObject._model = this._model;
+            newObject.Model = this.Model;
             return newObject;
         }
 

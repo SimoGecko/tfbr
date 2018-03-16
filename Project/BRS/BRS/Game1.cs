@@ -29,9 +29,9 @@ namespace BRS {
 
         protected override void Initialize() {
             _debugDrawer = new DebugDrawer(this);
-            //Components.Add(_debugDrawer);
+            Components.Add(_debugDrawer);
             _display = new Display(this);
-            //Components.Add(_display);
+            Components.Add(_display);
 
             base.Initialize();
 
@@ -46,8 +46,8 @@ namespace BRS {
 
             _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
 
-            //scene = new LevelPhysics(this, _physicsManager);
-            scene = new Level1(_physicsManager);
+            scene = new LevelPhysics(_physicsManager);
+            //scene = new Level1(_physicsManager);
             ui = new UserInterface();
 
             //LOAD
@@ -95,7 +95,7 @@ namespace BRS {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;
-                //_physicsManager.Draw();
+                _physicsManager.Draw();
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
                 //Transform.Draw(camera);
 

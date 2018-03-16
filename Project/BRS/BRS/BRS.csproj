@@ -147,6 +147,7 @@
     <Compile Include="Scripts\IDamageable.cs" />
     <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Money.cs" />
+    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
     <Compile Include="Scripts\PlayerAttack.cs" />
