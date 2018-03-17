@@ -116,11 +116,11 @@ h1{
 * --------------------------------------- */
 #slide1{
 	background-image: url(../images/bg2.jpg);
-	padding: 6% 0 0 0;
+	padding: 0% 0 0 0;
 }
 #slide2{
 	background-image: url(../images/bg5.jpg);
-	padding: 6% 0 0 0;
+	padding: 0	% 0 0 0;
 }
 
 
@@ -345,41 +345,47 @@ p{
   margin-top:0px;
 }
 
-.section h1 {
+.header-title {
   text-align:center;
   color:#fff;
   font-family:'Bangers';
-  font-size:81px;
+  font-size:42px;
   text-shadow:1px 1px 1px #000;
 }
 
 .section-p {
   text-align:center;
   color:#fff;
-  font-size:32px;
+  font-size:26px;
   text-shadow:1px 1px 1px #000;
 }
 
 
 .main-navbar {
-	font-size: 35px;
+	font-size: 25px;
 	font-weight: bold;
 
 }
 
 .profil {
-	padding-top: 40px;
+	padding-bottom:10px;
+	height: 95%;
 }
 
 .profil-pic {
-	height: 200px;
-	width: 200px;
+	height: 100px;
+	width: 100px;
 }
 
 .profil-text {
-	font-size: 20px;
+	font-size: 12px;
 }
-
+.social-container {
+	width: 100%;
+    margin-bottom: 40px;
+	position:absolute; 
+	bottom:0;
+}
 
 /*=========================
   Icons
@@ -433,13 +439,13 @@ a.socialIcon:hover, .socialHoverClass {
 	-webkit-border-radius:50%;
 	border-radius:50%;
 	text-align:center;
-	width: 50px;
-	height: 50px;
+	width: 30px;
+	height: 30px;
 	font-size:20px;
 }
 .social-circle li i {
 	margin:0;
-	line-height:50px;
+	line-height:30px;
 	text-align: center;
 }
 
@@ -461,4 +467,8 @@ a.socialIcon:hover, .socialHoverClass {
 	-o-transition: all 0.8s;
 	-ms-transition: all 0.8s;
 	transition: all 0.8s;
+}
+
+.technicalInfo-text {
+	font-size: 18px;
 }
