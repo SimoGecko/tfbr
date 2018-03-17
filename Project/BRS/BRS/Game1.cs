@@ -72,7 +72,7 @@ namespace BRS {
         }
 
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            if (/*GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||*/ Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             Time.Update(gameTime);
             Input.Update();
@@ -80,6 +80,7 @@ namespace BRS {
             _physicsManager.Update(gameTime);
 
             foreach (GameObject go in GameObject.All) go.Update();
+            foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             Physics.CheckOnCollisionEnter();
 

@@ -35,6 +35,8 @@ namespace BRS {
             return v < 0 ? 0 : v > 1 ? 1 : v;
         }
 
+
+
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
             float deltaTime = Time.deltatime;
@@ -228,7 +230,7 @@ namespace BRS {
             }
         }
 
-
+        //==============================================================
         //EXTENSION METHODS
         public static Vector3 normalized(this Vector3 v) {
             if (v.Length() < 1e-5) return Vector3.Zero;
@@ -250,12 +252,21 @@ namespace BRS {
             return new Vector3(v.X, 0, v.Y);
         }
 
+        public static Vector2 Rotate(this Vector2 v, float angle) {
+            float cos = (float)Math.Cos(MathHelper.ToRadians(angle));
+            float sin = (float)Math.Sin(MathHelper.ToRadians(angle));
+            return new Vector2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
+        }
+
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
         }
 
         public static Vector2 Round(this Vector2 v) { // Makes it Point2
             return new Vector2((int)v.X, (int)v.Y);
+        }
+        public static float Clamp(this float f, float min, float max) {
+            return f < min ? min : f > max ? max : f;
         }
 
     }
@@ -296,8 +307,11 @@ namespace BRS {
         public static void Log(string s) {
             //Console.WriteLine(s);
             System.Diagnostics.Debug.WriteLine(s);
-
         }
+        public static void Log(Object o) {
+            System.Diagnostics.Debug.WriteLine(o.ToString());
+        }
+
         public static void LogError(string s) {
             //Console.WriteLine("//ERROR//: "+s);
             System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);

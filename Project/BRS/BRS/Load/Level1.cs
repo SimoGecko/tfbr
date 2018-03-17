@@ -56,11 +56,12 @@ namespace BRS.Load {
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
+            manager.AddComponent(new GamepadTest());
 
 
             //TRANSFORM TEST
-            //GameObject testCube = new GameObject("testcube", Content.Load<Model>("cube"));
-            //testCube.AddComponent(new TransformTest());
+            GameObject testCube = new GameObject("testcube", Content.Load<Model>("cube"));
+            testCube.AddComponent(new TransformTest());
 
 
             //GROUND
@@ -89,6 +90,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
+                forklift.AddComponent(new PlayerPowerup());
 
             }
 
@@ -122,6 +124,7 @@ namespace BRS.Load {
                     bases[i].AddComponent(new Base(i));
                     //bases[i].GetComponent<Base>().player = GameObject.FindGameObjectWithName("player_" + i).GetComponent<Player>();
                     bases[i].AddComponent(new BoxCollider(bases[i]));
+                    bases[i].myTag = "base";
                     bases[i].Transform.SetStatic();
                 }
 

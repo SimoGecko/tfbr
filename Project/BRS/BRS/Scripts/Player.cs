@@ -26,8 +26,8 @@ namespace BRS.Scripts {
         const float staminaPerBoost = .4f;
         const float staminaPerAttack = .6f;
         const float staminaReloadDelay = .3f;
-        float stamina = 1;
         float maxStamina = 1;
+        float stamina = 1;
 
         //HIT and STUN
         const float damage = 40; // put into attack
@@ -47,33 +47,34 @@ namespace BRS.Scripts {
         PlayerAttack playerAttack;
         PlayerMovement playerMovement;
         PlayerInventory playerInventory;
+        PlayerPowerup playerPowerup;
+
+        CameraController camController;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            /*
-            hasOtherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex) ) != null;
-            if (hasOtherPlayer) {
-                hasOtherPlayer = true;
-                otherPlayer = GameObject.FindGameObjectWithName("player_" + (1-playerIndex)).GetComponent<Player>();
-            }*/
+
+            camController = GameObject.FindGameObjectWithName("camera_" + playerIndex).GetComponent<CameraController>();
 
             //subcomponents
-            playerAttack = gameObject.GetComponent<PlayerAttack>();
-            playerMovement = gameObject.GetComponent<PlayerMovement>();
+            playerAttack    = gameObject.GetComponent<PlayerAttack>();
+            playerMovement  = gameObject.GetComponent<PlayerMovement>();
             playerInventory = gameObject.GetComponent<PlayerInventory>();
+            playerPowerup   = gameObject.GetComponent<PlayerPowerup>();
         }
 
         public override void Update() {
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
-                Vector3 moveInput =  MoveInput();
-                playerMovement.Move(moveInput);
+                Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
+                playerMovement.Move(moveInput.To3());
 
                 if (AttackInput()) playerAttack.BeginAttack();
 
                 if (PowerUpInput()) playerInventory.UsePowerUp(this);
+                if (DropCashInput()) playerInventory.DropMoney();
             }
             else if (state == State.attack) {
                 playerAttack.AttackCoroutine();
@@ -140,7 +141,7 @@ namespace BRS.Scripts {
 
         // INPUT queries
         bool BoostInput() {
-            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex)) {
+            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex)) {
                 if (stamina > 0){//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     return true;
@@ -149,15 +150,22 @@ namespace BRS.Scripts {
             return false;
         }
 
-        Vector3 MoveInput() {
+        Vector2 MoveInput() {
             if (playerIndex == 0)
-                return new Vector3(Input.GetAxisRaw0("Horizontal"), 0, Input.GetAxisRaw0("Vertical"));
+                return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
             else
-                return new Vector3(Input.GetAxisRaw1("Horizontal"), 0, Input.GetAxisRaw1("Vertical"));
+                return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
         }
 
         bool PowerUpInput() {
-            if (Input.GetKey(Keys.P)) {
+            if (Input.GetKey(Keys.P) || Input.GetButton(Buttons.X, playerIndex)) {
+                return true;
+            }
+            return false;
+        }
+
+        bool DropCashInput() {
+            if (Input.GetKey(Keys.L) || Input.GetButton(Buttons.B, playerIndex)) {
                 return true;
             }
             return false;

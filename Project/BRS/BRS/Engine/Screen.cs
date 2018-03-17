@@ -78,7 +78,7 @@ namespace BRS {
         static void SetupCameras() {
             cameras = new Camera[GameManager.numPlayers];
             for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject camObject = new GameObject("camObject_" + i);
+                GameObject camObject = new GameObject("camera_" + i);
                 camObject.AddComponent(new Camera(splitViewport[i]));
                 camObject.AddComponent(new CameraController()); // TODO move out this creation code
                 camObject.GetComponent<CameraController>().camIndex = i;

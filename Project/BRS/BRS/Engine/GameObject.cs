@@ -53,6 +53,13 @@ namespace BRS {
                 }
             }
         }
+        public virtual void LateUpdate() {
+            if (Active) {
+                foreach (IComponent c in components) {
+                    c.LateUpdate();
+                }
+            }
+        }
 
         public virtual void OnCollisionEnter(Collider col) {
             if (Active)

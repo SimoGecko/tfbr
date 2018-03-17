@@ -13,12 +13,13 @@ namespace BRS.Scripts {
 
         //public
         int capacity = 20;
-
+        const float timeBetweenDrops = .1f;
 
         //private
         //MONEY
         int carryingWeight = 0;
         int carryingValue = 0;
+        bool canDropMoney = true;
         Stack<Money> carryingMoney = new Stack<Money>();
 
         //POWER UP
@@ -60,11 +61,15 @@ namespace BRS.Scripts {
         }
 
         public void DropMoney() {
-            DropMoneyAmount(1);
+            if (canDropMoney) {
+                DropMoneyAmount(1);
+                canDropMoney = false;
+                new Timer(timeBetweenDrops, () => canDropMoney = true);
+            }
         }
 
         public void LoseMoney() {
-            DropMoneyAmount(3);
+            DropMoneyAmount(carryingMoney.Count/3);
         }
 
         public void LoseAllMoney() {

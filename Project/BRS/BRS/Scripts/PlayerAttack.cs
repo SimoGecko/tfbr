@@ -12,7 +12,7 @@ namespace BRS.Scripts {
 
         //public
         const float attackDuration = .2f;
-        const float attackDistance = 3;
+        const float attackDistance = 5;
         const float attackDistanceThreshold = 2f;
 
         //private
