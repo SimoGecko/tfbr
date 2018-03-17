@@ -77,9 +77,10 @@ namespace BRS {
             Time.Update(gameTime);
             Input.Update();
 
-            _physicsManager.Update(gameTime);
 
             foreach (GameObject go in GameObject.All) go.Update();
+
+            _physicsManager.Update(gameTime);
 
             Physics.CheckOnCollisionEnter();
 

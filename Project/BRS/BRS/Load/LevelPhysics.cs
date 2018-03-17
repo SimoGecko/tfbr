@@ -13,7 +13,6 @@ namespace BRS.Load {
 
     class LevelPhysics : Scene {
         // Todo: To be refactored
-        private QuadDrawer quadDrawer = null;
         private List<GameObject> Players = new List<GameObject>();
 
 
@@ -44,7 +43,7 @@ namespace BRS.Load {
                 GameObject forklift = new GameObject("player_" + i, Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
                 //forklift.Transform.Scale(2);
-                forklift.Transform.TranslateGlobal(Vector3.Right * 30 * i);
+                forklift.Transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
                 forklift.AddComponent(new Player(i));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
@@ -68,32 +67,34 @@ namespace BRS.Load {
             BoxShape bShape = new BoxShape(0.5f, 4.0f, 2.0f);
 
             for (int i = 0; i < 4; i++) {
-                GameObject body = new GameObject("domino_" + i, Content.Load<Model>("cube"));
-                body.Type = ObjectType.Obstacle;
-                body.Transform.TranslateGlobal(new Vector3(1.5f * (i+1), 2, -1.5f * (i+1)));
-                body.AddComponent(new RigidBodyComponent(PhysicsManager, false));
+                for (int j = 0; j < 3; ++j) {
+                    GameObject body = new GameObject("domino_" + i, Content.Load<Model>("cube"));
+                    body.Type = ObjectType.Obstacle;
+                    body.Transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
+                    body.AddComponent(new RigidBodyComponent(PhysicsManager, false));
+                }
             }
 
-
-            //// Dummy object at position (0/0/0) for debug-rendering.
-            //JBBox box = JBBox.SmallBox;
-            //GameObject dummy= new GameObject("dummy_object", new BoxShape(1,1,1));
-            //dummy.Position = JVector.Zero;
-            //dummy.IsStatic = true;
-            //dummy.Active = false;
-            //PhysicsManager.World.AddBody(dummy);
+            // Dummy object at position (0/0/0) for debug-rendering.
+            GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
+            dummy.Type = ObjectType.Default;
+            dummy.AddComponent(new RigidBodyComponent(PhysicsManager, true, false));
         }
 
 
         public void AddGround(GameObject parent) {
-            Material material = new Material();
-            material.Restitution = 0.0f;
-            material.StaticFriction = 0.4f;
-            material.KineticFriction = 0.0f;
+            for (int x = -2; x < 2; ++x) {
+                for (int y = -2; y < 2; ++y) {
+                    Material material = new Material();
+                    material.Restitution = 0.0f;
+                    material.StaticFriction = 0.4f;
+                    material.KineticFriction = 1.0f;
 
-            GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
-            groundPlane.Transform.position = new Vector3(0, 0, 0);
-            groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material));
+                    GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
+                    groundPlane.Transform.position = new Vector3(x * 10, 0, y*10);
+                    groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material: material));
+                }
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using BRS.Scripts.Physics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -25,6 +26,7 @@ namespace BRS.Scripts {
         float refangle, refangle2;
         float inputAngle;
         float targetRotation;
+        private Vector3 _previousLinearVelocity = Vector3.Zero;
 
         //BOOST
         public bool boosting;
@@ -64,18 +66,27 @@ namespace BRS.Scripts {
                 targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
             }
 
+           
+            float rotationOld = rotation;
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            transform.eulerAngles = new Vector3(0, rotation, 0);
+            //transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
             float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+            Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude);
+            //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
             RigidBodyComponent rigidBodyComponent = gameObject.GetComponent<RigidBodyComponent>();
-            rigidBodyComponent.RigidBody.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
+            rigidBodyComponent.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity);
             rigidBodyComponent.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+            //rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
+            rigidBodyComponent.RigidBody.Mass = 10;
 
+            rigidBodyComponent.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
+            Debug.Log(rigidBodyComponent.RigidBody.Position.ToString());
+
+            _previousLinearVelocity = linearVelocity;
         }
 
 

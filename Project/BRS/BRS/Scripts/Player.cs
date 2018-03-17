@@ -116,7 +116,10 @@ namespace BRS.Scripts {
         protected override void Respawn() {
             base.Respawn();
             state = State.normal;
-            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0);
+
+            // Todo: Position to be defined => can be that it is droped from the air and while not reaching the floor it can't drive.
+            // For now there is 2 because the bounding-box is not yet correctly translated into the local-space. Will be fixed in the next commit.
+            transform.position = new Vector3(-5 + 10 * playerIndex, 2, 0);
         }
 
         void UpdateStamina() {
