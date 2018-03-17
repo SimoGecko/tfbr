@@ -34,12 +34,11 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(Player p)
-        {
+        protected override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
-            if (pi.CanPickUp(this))
-            {
+            if (pi.CanPickUp(this)) {
                 pi.Collect(this);
+                Spawner.instance.RemovePowerup(this);
                 GameObject.Destroy(gameObject);
             }
         }
@@ -50,233 +49,49 @@ namespace BRS.Scripts {
         // queries
 
 
- 
+
         // other
 
     }
 
-
-    class HealthPotion : Powerup
-    {
-        ////////// Health potion: regain some life //////////
-
-        // --------------------- VARIABLES ---------------------
-
-        //public
-
-
-        //private
+    //-------------------------------------------------------------------------------------------------- all simple powerups
+    class HealthPotion : Powerup {
         float valuePotion = 20;
 
-        //reference
-
-
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
-        public override void Update() {
-            base.Update();
-        }
-
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
-        protected override void OnPickup(Player p) {
-            base.OnPickup(p);
-        }
-
         public override void UsePowerUp(Player p) {
-            p.AddHealth(valuePotion);                   
+            p.AddHealth(valuePotion);
         }
-
-        // queries
-
-
-
-        // other
-
     }
+
     class HealthBoost : Powerup {
-        ////////// Health potion: regain some life //////////
-
-        // --------------------- VARIABLES ---------------------
-
-        //public
-
-
-        //private
         float valueBoost = 20;
-
-        //reference
-
-
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
-        public override void Update() {
-            base.Update();
-        }
-
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
-        protected override void OnPickup(Player p) {
-            base.OnPickup(p);
-        }
 
         public override void UsePowerUp(Player p) {
             p.UpdateMaxHealth(valueBoost);
         }
-
-        // queries
-
-
-
-        // other
-
     }
 
     class StaminaPotion : Powerup {
-        ////////// Health potion: regain some life //////////
-
-        // --------------------- VARIABLES ---------------------
-
-        //public
-
-
-        //private
         float valuePotion = .2f;
-
-        //reference
-
-
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
-        public override void Update() {
-            base.Update();
-        }
-
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
-        protected override void OnPickup(Player p) {
-            base.OnPickup(p);
-        }
 
         public override void UsePowerUp(Player p) {
             p.AddStamina(valuePotion);
         }
-
-        // queries
-
-
-
-        // other
-
     }
+
     class StaminaBoost : Powerup {
-        ////////// Health potion: regain some life //////////
-
-        // --------------------- VARIABLES ---------------------
-
-        //public
-
-
-        //private
         float valueBoost = .2f;
-
-        //reference
-
-
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
-        public override void Update() {
-            base.Update();
-        }
-
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
-        protected override void OnPickup(Player p) {
-            base.OnPickup(p);
-        }
 
         public override void UsePowerUp(Player p) {
             p.UpdateMaxStamina(valueBoost);
         }
-
-        // queries
-
-
-
-        // other
-
     }
 
     class CapacityBoost : Powerup {
-        ////////// Health potion: regain some life //////////
-
-        // --------------------- VARIABLES ---------------------
-
-        //public
-
-
-        //private
         int valueBoost = 2;
-
-        //reference
-
-
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
-        public override void Update() {
-            base.Update();
-        }
-
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
-        protected override void OnPickup(Player p) {
-            base.OnPickup(p);
-        }
 
         public override void UsePowerUp(Player p) {
             p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
         }
-
-        // queries
-
-
-
-        // other
-
     }
 }

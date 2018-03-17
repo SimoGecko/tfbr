@@ -35,6 +35,8 @@ namespace BRS {
             return v < 0 ? 0 : v > 1 ? 1 : v;
         }
 
+
+
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
             float deltaTime = Time.deltatime;
@@ -121,7 +123,8 @@ namespace BRS {
             yaw   = MathHelper.ToDegrees(yaw);
             roll  = MathHelper.ToDegrees(roll);
 
-            return new Vector3(pitch, -yaw, -roll); // Ensure it's right
+            //return new Vector3(pitch, -yaw, -roll); // Ensure it's right
+            return new Vector3(roll, -pitch, yaw); // Ensure it's right
         }*/
 
         /*
@@ -161,6 +164,54 @@ namespace BRS {
             }
         }*/
 
+        //========================================================0
+
+        //In a 2D grid, returns the angle to a specified point from the +X axis
+        public static float ArcTanAngle(float X, float Y) {
+            if (X == 0) {
+                if (Y == 1) return (float)MathHelper.PiOver2;
+                else        return (float)-MathHelper.PiOver2;
+            } else if (X > 0) return (float)Math.Atan(Y / X);
+            else if (X < 0) {
+                if (Y > 0) return (float)Math.Atan(Y / X) + MathHelper.Pi;
+                else       return (float)Math.Atan(Y / X) - MathHelper.Pi;
+            } else return 0;
+        }
+
+        //returns Euler angles that point from one point to another
+        public static Vector3 AngleTo(Vector3 from, Vector3 location) {
+            Vector3 angle = new Vector3();
+            Vector3 v3 = Vector3.Normalize(location - from);
+            angle.X = (float)Math.Asin(v3.Y);
+            angle.Y = ArcTanAngle(-v3.Z, -v3.X);
+            return angle;
+        }
+
+        //converts a Quaternion to Euler angles (X = pitch, Y = yaw, Z = roll)
+        public static Vector3 ToEuler(this Quaternion rotation) {
+            Vector3 rotationaxes = new Vector3();
+
+            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+            Vector3 up = Vector3.Transform(Vector3.Up, rotation);
+            rotationaxes = AngleTo(new Vector3(), forward);
+            if (rotationaxes.X == MathHelper.PiOver2) {
+                rotationaxes.Y = ArcTanAngle(up.Z, up.X);
+                rotationaxes.Z = 0;
+            } else if (rotationaxes.X == -MathHelper.PiOver2) {
+                rotationaxes.Y = ArcTanAngle(-up.Z, -up.X);
+                rotationaxes.Z = 0;
+            } else {
+                up = Vector3.Transform(up, Matrix.CreateRotationY(-rotationaxes.Y));
+                up = Vector3.Transform(up, Matrix.CreateRotationX(-rotationaxes.X));
+                rotationaxes.Z = ArcTanAngle(up.Y, -up.X);
+            }
+            return new Vector3(MathHelper.ToDegrees(rotationaxes.X), MathHelper.ToDegrees(rotationaxes.Y), MathHelper.ToDegrees(rotationaxes.Z));
+        }
+
+
+
+        //==============================================================
+
 
 
         //GRAPHICS METHODS
@@ -179,7 +230,7 @@ namespace BRS {
             }
         }
 
-
+        //==============================================================
         //EXTENSION METHODS
         public static Vector3 normalized(this Vector3 v) {
             if (v.Length() < 1e-5) return Vector3.Zero;
@@ -201,8 +252,21 @@ namespace BRS {
             return new Vector3(v.X, 0, v.Y);
         }
 
+        public static Vector2 Rotate(this Vector2 v, float angle) {
+            float cos = (float)Math.Cos(MathHelper.ToRadians(angle));
+            float sin = (float)Math.Sin(MathHelper.ToRadians(angle));
+            return new Vector2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
+        }
+
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
+        }
+
+        public static Vector2 Round(this Vector2 v) { // Makes it Point2
+            return new Vector2((int)v.X, (int)v.Y);
+        }
+        public static float Clamp(this float f, float min, float max) {
+            return f < min ? min : f > max ? max : f;
         }
 
     }
@@ -243,8 +307,11 @@ namespace BRS {
         public static void Log(string s) {
             //Console.WriteLine(s);
             System.Diagnostics.Debug.WriteLine(s);
-
         }
+        public static void Log(Object o) {
+            System.Diagnostics.Debug.WriteLine(o.ToString());
+        }
+
         public static void LogError(string s) {
             //Console.WriteLine("//ERROR//: "+s);
             System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);

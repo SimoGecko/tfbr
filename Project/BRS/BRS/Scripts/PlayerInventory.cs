@@ -7,18 +7,19 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     class PlayerInventory : Component {
-        ////////// knows about the stuff the player is currently carrying //////////
+        ////////// knows about the valuables the player is currently carrying //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
         int capacity = 20;
-
+        const float timeBetweenDrops = .1f;
 
         //private
         //MONEY
         int carryingWeight = 0;
         int carryingValue = 0;
+        bool canDropMoney = true;
         Stack<Money> carryingMoney = new Stack<Money>();
 
         //POWER UP
@@ -59,15 +60,23 @@ namespace BRS.Scripts {
             carryingValue = 0;
         }
 
+        public void DropMoney() {
+            if (canDropMoney) {
+                DropMoneyAmount(1);
+                canDropMoney = false;
+                new Timer(timeBetweenDrops, () => canDropMoney = true);
+            }
+        }
+
         public void LoseMoney() {
-            LoseMoneyAmount(3);
+            DropMoneyAmount(carryingMoney.Count/3);
         }
 
         public void LoseAllMoney() {
-            LoseMoneyAmount(carryingMoney.Count);
+            DropMoneyAmount(carryingMoney.Count);
         }
 
-        void LoseMoneyAmount(int amount) {
+        void DropMoneyAmount(int amount) {
             amount = Math.Min(amount, carryingMoney.Count);
             for (int i = 0; i < amount; i++){
                 Money money = carryingMoney.Pop();

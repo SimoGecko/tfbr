@@ -11,14 +11,16 @@ namespace BRS.Scripts {
     class Spawner : Component {
         ////////// spawns money randomly on the map //////////
 
+        //TODO move storing objects in scene in some other class
+
         // --------------------- VARIABLES ---------------------
 
         //public
         public static Spawner instance;
-        Rectangle spawnArea = new Rectangle(-10, 5, 20, -25);
+        Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
 
         //private
-        int moneyAmount = 30;
+        int moneyAmount = 50;
         int crateAmount = 10;
         int powerUpAmount = 10;
 
@@ -29,6 +31,9 @@ namespace BRS.Scripts {
 
 
         //reference
+        List<Money> moneyList = new List<Money>();
+        List<Crate> crateList = new List<Crate>();
+        List<Powerup> powerupList = new List<Powerup>();
 
 
         // --------------------- BASE METHODS ------------------
@@ -37,7 +42,7 @@ namespace BRS.Scripts {
             SpawnInitialMoney();
             SpawnInitialCrates();
             SpawnInitialPowerUp();
-            //SpawnContinuous();
+            SpawnContinuous();
         }
 
         public override void Update() {
@@ -71,24 +76,37 @@ namespace BRS.Scripts {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value));
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
             Vector2 position = spawnArea.Evaluate(sample);
-            //Vector2 position = MyRandom.InsideRectangle(spawnArea);
             SpawnOneMoney(position.To3());
         }
 
         void SpawnOneMoney(Vector3 pos) {
             GameObject newmoney = GameObject.Instantiate(RandomValuable(), pos, Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(MyRandom.Value*360)));
+            Money moneyComponent = newmoney.GetComponent<Money>();
+            moneyList.Add(moneyComponent);
+        }
+
+        public void RemoveMoney(Money money) {
+            moneyList.Remove(money);
         }
 
         //crate
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
+            crateList.Add(newCrate.GetComponent<Crate>());
+        }
+        public void RemoveCrate(Crate crate) {
+            crateList.Remove(crate);
         }
 
         //power up
         void SpawnOnePowerUpRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            GameObject newCrate = GameObject.Instantiate("powerUpPrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
+            GameObject newPowerup = GameObject.Instantiate("powerUpPrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
+            powerupList.Add(newPowerup.GetComponent<Powerup>());
+        }
+        public void RemovePowerup(Powerup powerup) {
+            powerupList.Remove(powerup);
         }
 
         async void SpawnContinuous() {
@@ -112,6 +130,24 @@ namespace BRS.Scripts {
             val -= probOfCash;
             if (val <= probOfDiamond) return "diamondPrefab";
             return "goldPrefab";
+        }
+
+        public Vector3[] AllMoneyPosition() {
+            List<Vector3> result = new List<Vector3>();
+            foreach (Money m in moneyList) result.Add(m.gameObject.Transform.position);
+            return result.ToArray();
+        }
+
+        public Vector3[] AllCratePosition() {
+            List<Vector3> result = new List<Vector3>();
+            foreach (Crate c in crateList) result.Add(c.gameObject.Transform.position);
+            return result.ToArray();
+        }
+
+        public Vector3[] AllPowerupPosition() {
+            List<Vector3> result = new List<Vector3>();
+            foreach (Powerup p in powerupList) result.Add(p.gameObject.Transform.position);
+            return result.ToArray();
         }
 
 
