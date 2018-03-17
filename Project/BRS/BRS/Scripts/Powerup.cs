@@ -35,9 +35,9 @@ namespace BRS.Scripts {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
-            if (pi.CanPickUp(this)) {
-                pi.Collect(this);
+            PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
+            if (pp.CanPickUp(this)) {
+                pp.Collect(this);
                 Spawner.instance.RemovePowerup(this);
                 GameObject.Destroy(gameObject);
             }
