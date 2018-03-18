@@ -105,6 +105,11 @@ namespace BRS.Scripts {
             GameObject newPowerup = GameObject.Instantiate("powerUpPrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
             powerupList.Add(newPowerup.GetComponent<Powerup>());
         }
+        public Powerup SpawnOnePowerUpAt(Vector3 position) {
+            GameObject newPowerup = GameObject.Instantiate("powerUpPrefab", position + Vector3.Up * .25f, Quaternion.Identity);
+            powerupList.Add(newPowerup.GetComponent<Powerup>());
+            return newPowerup.GetComponent<Powerup>();
+        }
         public void RemovePowerup(Powerup powerup) {
             powerupList.Remove(powerup);
         }

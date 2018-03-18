@@ -69,6 +69,7 @@ namespace BRS.Scripts {
 
         // queries
         public float HealthPercent { get { return health / startingHealth; } }
+        public float Health { get { return health; } }
 
 
 

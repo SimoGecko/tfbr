@@ -50,6 +50,11 @@ namespace BRS.Scripts {
             return carryingPowerUp.Count < maxNumberPowerUps;
         }
 
+        public Powerup DropBomb(Vector3 pos) {
+            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(pos);
+            return pu;
+        }
+
         // queries
         bool HasPowerup { get { return carryingPowerUp.Count > 0; } }
 

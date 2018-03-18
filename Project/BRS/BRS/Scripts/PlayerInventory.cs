@@ -22,10 +22,6 @@ namespace BRS.Scripts {
         bool canDropMoney = true;
         Stack<Money> carryingMoney = new Stack<Money>();
 
-        //POWER UP
-        int maxNumberPowerUps = 1;
-        List<Powerup> carryingPowerUp = new List<Powerup>();
-
         //reference
 
 
@@ -43,11 +39,7 @@ namespace BRS.Scripts {
         // --------------------- CUSTOM METHODS ----------------
 
 
-        // commands
-        public void Collect(Powerup powerUp) {
-            carryingPowerUp.Add(powerUp);
-        }
-        
+        // commands        
         public void Collect(Money money) {
             //carryingWeight += Math.Min(amount, capacity - carryingWeight);
             carryingWeight += money.Weight;
@@ -87,21 +79,11 @@ namespace BRS.Scripts {
             }
         }
 
-        public void UsePowerUp(Player p) {
-            if (carryingPowerUp.Count > 0) {
-                carryingPowerUp[0].UsePowerUp(p);
-                carryingPowerUp.Remove(carryingPowerUp[0]);
-            }
-        }
-
         public void UpdateCapacity(int amountToAdd) {
             capacity += amountToAdd;
         }
 
         // queries
-        public bool CanPickUp(Powerup powerUp) {
-            return carryingPowerUp.Count < maxNumberPowerUps;
-        }
         public bool CanPickUp(Money money) {
             return carryingWeight + money.Weight <= capacity;
         }

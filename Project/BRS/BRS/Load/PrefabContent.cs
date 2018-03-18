@@ -55,7 +55,7 @@ namespace BRS {
             GameObject powerUpPrefab = new GameObject("powerUpPrefab", Content.Load<Model>("sphere"));
             powerUpPrefab.Transform.Scale(.5f);
             powerUpPrefab.Transform.SetStatic();
-            powerUpPrefab.AddComponent(new CapacityBoost());
+            powerUpPrefab.AddComponent(new Bomb());
             powerUpPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(powerUpPrefab);
 

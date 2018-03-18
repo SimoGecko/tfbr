@@ -73,7 +73,7 @@ namespace BRS.Scripts {
 
                 if (AttackInput()) playerAttack.BeginAttack();
 
-                if (PowerUpInput()) playerInventory.UsePowerUp(this);
+                if (PowerUpInput()) playerPowerup.UsePowerup(this);
                 if (DropCashInput()) playerInventory.DropMoney();
             }
             else if (state == State.attack) {
@@ -136,7 +136,8 @@ namespace BRS.Scripts {
         }
 
         void UpdateUI() {
-            UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight);
+            Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
+            UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight, ba.Health, ba.startingHealth);
         }
 
         // INPUT queries
