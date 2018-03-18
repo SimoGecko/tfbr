@@ -82,11 +82,11 @@ namespace BRS {
             shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(shieldPrefab);
 
-            /*GameObject powerUpPrefab = new GameObject("speedPrefab", Content.Load<Model>("speed"));
-            powerUpPrefab.Transform.Scale(.3f);
-            powerUpPrefab.AddComponent(new SpeedBoost());
-            powerUpPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(powerUpPrefab);*/
+            GameObject speedPrefab = new GameObject("speedPrefab", Content.Load<Model>("speed"));
+            speedPrefab.Transform.Scale(.3f);
+            speedPrefab.AddComponent(new SpeedBoost());
+            speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(speedPrefab);
 
         }
 

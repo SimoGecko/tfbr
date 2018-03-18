@@ -22,7 +22,7 @@ namespace BRS.Scripts {
         //private
         const int moneyAmount = 50;
         const int crateAmount = 10;
-        const int powerUpAmount = 10;
+        const int powerUpAmount = 5;
 
         const float probOfCash = .6f;
         const float probOfDiamond = .3f;
@@ -71,7 +71,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnInitialPowerUp() {
-            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab"};
+            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab", "speedPrefab" };
 
             for (int i = 0; i < namesPowerupsPrefab.Length; i++)
                 for (int j = 0; j < powerUpAmount; j++)
@@ -115,6 +115,7 @@ namespace BRS.Scripts {
         }
         public Powerup SpawnOnePowerUpAt(Vector3 position, string prefabName) {
             GameObject newPowerup = GameObject.Instantiate(prefabName, position + Vector3.Up * .25f, Quaternion.Identity);
+            newPowerup.Transform.position += new Vector3(0, .2f, 0);
             powerupList.Add(newPowerup.GetComponent<Powerup>());
             return newPowerup.GetComponent<Powerup>();
         }

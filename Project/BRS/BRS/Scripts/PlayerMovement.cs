@@ -27,6 +27,7 @@ namespace BRS.Scripts {
 
         //BOOST
         public bool boosting;
+        public bool powerUpBoosting;
 
         //reference
         PlayerInventory playerInventory;
@@ -68,7 +69,8 @@ namespace BRS.Scripts {
 
             //move forward
             float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+            float speedboostPowerUp = powerUpBoosting ? boostSpeedMultiplier : 1f;
+            transform.Translate(Vector3.Forward * currentSpeed * speedboost * speedboostPowerUp * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
             gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);

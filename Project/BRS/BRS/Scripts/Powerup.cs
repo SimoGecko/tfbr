@@ -95,6 +95,15 @@ namespace BRS.Scripts {
         }
     }
 
+    class SpeedBoost : Powerup {
+        const float boostTime = 3;
+
+        public override void UsePowerUp(Player p) {
+            p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = true;
+            new Timer(boostTime, () => p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = false);
+        }
+    }
+
     class Bomb : Powerup {
         const float timeBombToExplode = 3;
         const float radiusExplosion = 2;
@@ -112,7 +121,7 @@ namespace BRS.Scripts {
             GameObject[] vautlDoor = GameObject.FindGameObjectsWithTag("VaultDoor");
 
             foreach (GameObject go in bases) {
-                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion* radiusExplosion)
+                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion)
                     go.GetComponent<Base>().TakeHit(damageExplosion);
             }
 
@@ -121,11 +130,13 @@ namespace BRS.Scripts {
                     go.GetComponent<Player>().TakeHit(damageExplosion);
             }
 
-            foreach (GameObject go in vautlDoor) {
-                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion) {
-                    GameObject.Destroy(go);
+            if (vautlDoor != null) { 
+                foreach (GameObject go in vautlDoor) {
+                    if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion) {
+                        GameObject.Destroy(go);
+                    }
+
                 }
-                    
             }
 
             Spawner.instance.RemovePowerup(pu);

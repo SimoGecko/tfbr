@@ -32,7 +32,7 @@ namespace BRS.Scripts {
         public override void Start() {
             gameActive = true;
             instance = this;
-            Timer rt = new Timer(0, 10, OnRoundEnd);
+            Timer rt = new Timer(0, 100, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
         }
 
