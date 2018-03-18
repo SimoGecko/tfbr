@@ -47,12 +47,13 @@ namespace BRS.Load {
                         go.Transform.position = position;
                         go.Transform.scale = scale;
                         //go.transform.rotation = rotation; // rotation not parsed correctly
-                        
+
                         if (tagName == "Ground")
                             go.Type = ObjectType.Ground;
-                        else if (tagName == "Base")
+                        else if (tagName == "Base") {
                             go.Type = ObjectType.Base;
-                        else if (tagName == "Obstacle")
+                            go.myTag = "base";
+                        } else if (tagName == "Obstacle")
                             go.Type = ObjectType.Obstacle;
                         else if (tagName == "Boundary")
                             go.Type = ObjectType.Boundary;
@@ -126,37 +127,12 @@ namespace BRS.Load {
 
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() =>
-            {
-                //GROUND
-                List<GameObject> groundPlane = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Ground.txt", "gplane", "groundplane");
-
-                //BASES
-                List<GameObject> bases = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Bases.txt", "cube", "playerBase");
-
-                for (int i = 0; i < GameManager.numPlayers; i++)
-                {
-                    bases[i].Type = ObjectType.Base;
-                    bases[i].AddComponent(new Base(i));
-                    //bases[i].GetComponent<Base>().player = GameObject.FindGameObjectWithName("player_" + i).GetComponent<Player>();
-                    bases[i].AddComponent(new BoxCollider(bases[i]));
-                    bases[i].myTag = "base";
-                    bases[i].Transform.SetStatic();
-                }
-
-                //OBSTACLES
-                List<GameObject> obstacles = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Obstacles.txt", "cube", "obstacle");
-                foreach (GameObject go in obstacles)
-                    go.Type = ObjectType.Obstacle;
-
-                //BOUNDARIES
-                List<GameObject> boundaries = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Boundaries.txt", "cube", "boundary");
-                foreach (GameObject go in boundaries)
-                    go.Type = ObjectType.Boundary;
+            var task = Task.Run(() => {
+                ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
             });
             task.Wait();
 
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectType.Base);
+            GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 bases[i].AddComponent(new Base(i));
                 bases[i].AddComponent(new BoxCollider(bases[i]));
