@@ -53,10 +53,13 @@ namespace BRS.Load {
                         else if (tagName == "Base") {
                             go.Type = ObjectType.Base;
                             go.myTag = "base";
-                        } else if (tagName == "Obstacle")
+                        }
+                        else if (tagName == "Obstacle")
                             go.Type = ObjectType.Obstacle;
                         else if (tagName == "Boundary")
                             go.Type = ObjectType.Boundary;
+                        else if (tagName == "VaultDoor")
+                            go.myTag = "VaultDoor";
                     }
 
                     nameContent = reader.ReadLine();

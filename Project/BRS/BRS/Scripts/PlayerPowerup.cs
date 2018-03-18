@@ -51,7 +51,7 @@ namespace BRS.Scripts {
         }
 
         public Powerup DropBomb(Vector3 pos) {
-            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(pos);
+            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(pos, "bombPrefab");
             return pu;
         }
 
