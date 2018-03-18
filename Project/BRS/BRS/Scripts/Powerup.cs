@@ -94,4 +94,36 @@ namespace BRS.Scripts {
             p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
         }
     }
+
+    class Bomb : Powerup {
+        const float timeBombToExplode = 3;
+        const float radiusExplosion = 2;
+        const float damageExplosion = 60;
+
+        public override void UsePowerUp(Player p) {
+            Vector3 posBomb = p.transform.position;
+            Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
+            new Timer(timeBombToExplode, () => BombExplosion(pu, posBomb));
+        }
+
+        void BombExplosion(Powerup pu, Vector3 posBomb) {
+            GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
+            GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+
+            foreach (GameObject go in bases) {
+                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion* radiusExplosion)
+                    go.GetComponent<Base>().TakeHit(damageExplosion);
+            }
+
+            foreach (GameObject go in players) {
+                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion)
+                    go.GetComponent<Player>().TakeHit(damageExplosion);
+            }
+
+            Spawner.instance.RemovePowerup(pu);
+            GameObject.Destroy(pu.gameObject);
+
+            
+        }
+    }
 }

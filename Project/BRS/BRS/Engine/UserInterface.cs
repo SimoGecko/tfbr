@@ -72,6 +72,11 @@ namespace BRS.Scripts {
             spriteBatch.Draw(bar, new Vector2(10, 270), bgrect, Color.White);
             spriteBatch.Draw(bar, new Vector2(10, 270), fgrect, Color.Blue);
             spriteBatch.DrawString(myfont, playerUI[index].carryingWeight + "/" + playerUI[index].maxCarrying, new Vector2(100, 260), Color.White);
+            //base health
+            fgrect.Width = (int)(BARWIDTH * playerUI[index].baseHealthPercent);
+            spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Green);
+            spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
         }
 
         //public void Draw() { }
@@ -86,22 +91,25 @@ namespace BRS.Scripts {
             Content = c;
         }
 
-        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) { 
+        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight, float baseHealth, float baseStartingHealth) { 
             // percent
             playerUI[index].healthPercent = health / startingHealth;
             playerUI[index].staminaPercent = stamina / maxStamina;
             playerUI[index].carryingPercent = (float)carryingWeight / capacity;
+            playerUI[index].baseHealthPercent = baseHealth / baseStartingHealth;
 
             // max
             playerUI[index].maxHealth = startingHealth;
             playerUI[index].maxStamina = maxStamina;
             playerUI[index].maxCarrying = capacity;
+            playerUI[index].baseMaxHealth = startingHealth;
 
             // current
             playerUI[index].health = health;
             playerUI[index].stamina = stamina;
             playerUI[index].carryingMoneyValue = carryingValue;
             playerUI[index].carryingWeight = carryingWeight;
+            playerUI[index].baseHealth = baseHealth;
 
         }
         public void SetPlayerMoneyBase(int v, int index) {
@@ -127,11 +135,13 @@ namespace BRS.Scripts {
         public float healthPercent; // green
         public float staminaPercent;//red
         public float carryingPercent;//blue
+        public float baseHealthPercent;
 
         // max
         public float maxHealth;
         public float maxStamina;
         public int maxCarrying;
+        public float baseMaxHealth;
 
         // current
         public int totalMoneyInBase;
@@ -139,6 +149,7 @@ namespace BRS.Scripts {
         public float health;
         public float stamina;
         public int carryingWeight;
+        public float baseHealth;
 
     }
 

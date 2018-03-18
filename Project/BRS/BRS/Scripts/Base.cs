@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
-    class Base : Component {
+    class Base : LivingEntity {
         ////////// base in the game that has health and collects money //////////
 
         // --------------------- VARIABLES ---------------------
@@ -30,6 +30,7 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
+            base.Start();
             player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
             if (player == null) Debug.LogError("player not found");
         }
@@ -64,6 +65,9 @@ namespace BRS.Scripts {
             UserInterface.instance.SetPlayerMoneyBase(TotalMoney, BaseIndex);
         }
 
+        protected override void Die() {
+            
+        }
 
 
         // queries
