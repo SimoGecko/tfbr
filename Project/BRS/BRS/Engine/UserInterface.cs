@@ -21,9 +21,12 @@ namespace BRS.Scripts {
 
         //private
         SpriteFont myfont;
+        SpriteFont winnerFont;
         Texture2D bar;
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
+        bool showWinner;
+        string winnerString = "";
 
         PlayerUI[] playerUI;
 
@@ -35,8 +38,10 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public void Start() {
+            showWinner = false;
             instance = this;
             myfont = Content.Load<SpriteFont>("font1");
+            winnerFont = Content.Load<SpriteFont>("font2");
             bar = Content.Load<Texture2D>("progress_bar");
 
             playerUI = new PlayerUI[GameManager.numPlayers];
@@ -44,9 +49,12 @@ namespace BRS.Scripts {
         }
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(10, 40), Color.White);
+            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(Screen.WIDTH/2-50, Screen.HEIGHT/2), Color.White);
 
             Minimap.instance.Draw(spriteBatch);
+            if (showWinner) {
+                spriteBatch.DrawString(winnerFont,winnerString, new Vector2(Screen.WIDTH / 2 - 200, Screen.HEIGHT/2), Color.White);
+            }
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
@@ -75,7 +83,7 @@ namespace BRS.Scripts {
             //base health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].baseHealthPercent);
             spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Green);
+            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Yellow);
             spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
         }
 
@@ -114,6 +122,11 @@ namespace BRS.Scripts {
         }
         public void SetPlayerMoneyBase(int v, int index) {
             playerUI[index].totalMoneyInBase = v;
+        }
+
+        public void UpdateGameWinnerUI(int winner) {
+            winnerString = "Player " + winner + " won!";
+            showWinner = true;
         }
 
         //GENERAL ACCESS

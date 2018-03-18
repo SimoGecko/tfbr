@@ -346,3 +346,10 @@
 /processorParam:TextureFormat=Color
 /build:minimap.png
 
+#begin font2.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:font2.spritefont
+

@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float deloadDistanceThreshold = 2f;
+        const float deloadDistanceThreshold = 10f;
         public int BaseIndex { get; set; } = 0;
 
         //private
@@ -31,6 +31,7 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
+            TotalMoney = 0;
             player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
             if (player == null) Debug.LogError("player not found");
         }
@@ -79,8 +80,9 @@ namespace BRS.Scripts {
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
             float timeBetweenUnloads = .1f;
-            while (pi.CarryingValue > 0 ) { // && PlayerInsideRange(pi.gameObject)
-                TotalMoney += pi.DeloadOne();
+            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
+                TotalMoney += pi.ValueOnTop;
+                pi.DeloadOne();
                 UpdateUI();
                 await Time.WaitForSeconds(timeBetweenUnloads);
             }

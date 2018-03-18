@@ -26,7 +26,13 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { }
+        public override void Start() {
+            //INIT
+            carryingValue = 0;
+            carryingWeight = 0;
+            carryingMoney = new Stack<Money>();
+            canDropMoneyTimer = true;
+        }
         public override void Update() { }
 
 
@@ -100,6 +106,7 @@ namespace BRS.Scripts {
         public int CarryingWeight { get { return carryingWeight; } }
         public int Capacity { get { return capacity; } }
 
+        public int ValueOnTop { get { return carryingMoney.Peek().Value; } }
 
         // other
 

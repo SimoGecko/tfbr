@@ -21,14 +21,18 @@ namespace BRS.Scripts {
         public static int lvlScene = 3;
 
         //private
-
+        public static bool gameActive;
 
         //reference
+        public static GameManager instance;
+
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            Timer rt = new Timer(2, 00, OnRoundEnd);
+            gameActive = true;
+            instance = this;
+            Timer rt = new Timer(0, 10, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
         }
 
@@ -43,16 +47,25 @@ namespace BRS.Scripts {
 
         // commands
         void OnRoundEnd() {
-            Debug.Log("round end");
+            gameActive = false;
             int winner = FindWinner();
-            Debug.Log("Player " + winner + " won!");
-
+            UserInterface.instance.UpdateGameWinnerUI(winner);
+            new Timer(3f, () => Restart());
         }
 
+        void Restart() {
+            UserInterface.instance.Start();
+            foreach (GameObject go in GameObject.All) go.Start();
+        }
+
+
+
+
+        // queries
         int FindWinner() {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
             int winner = 0;
-            
+
             int maxCash = bases[0].GetComponent<Base>().TotalMoney;
             for (int i = 1; i < numPlayers; i++) {
                 int totmoney = bases[i].GetComponent<Base>().TotalMoney;
@@ -63,10 +76,6 @@ namespace BRS.Scripts {
             }
             return winner;
         }
-
-
-        // queries
-
 
 
         // other

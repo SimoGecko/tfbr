@@ -61,11 +61,12 @@ namespace BRS {
             scene.Start();
             Input.Start();
 
-            foreach (Camera cam in Screen.cameras) cam.Start();
+            //foreach (Camera cam in Screen.cameras) cam.Start();
 
             foreach (GameObject go in GameObject.All) go.Start();
 
         }
+
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here

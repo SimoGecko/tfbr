@@ -17,12 +17,12 @@ namespace BRS.Scripts {
 
         //public
         public static Spawner instance;
-        Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
+        static Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
 
         //private
-        int moneyAmount = 50;
-        int crateAmount = 10;
-        int powerUpAmount = 10;
+        const int moneyAmount = 50;
+        const int crateAmount = 10;
+        const int powerUpAmount = 10;
 
         const float probOfCash = .6f;
         const float probOfDiamond = .3f;
@@ -31,13 +31,17 @@ namespace BRS.Scripts {
 
 
         //reference
-        List<Money> moneyList = new List<Money>();
-        List<Crate> crateList = new List<Crate>();
-        List<Powerup> powerupList = new List<Powerup>();
+        List<Money> moneyList;
+        List<Crate> crateList;
+        List<Powerup> powerupList;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            moneyList = new List<Money>();
+            crateList = new List<Crate>();
+            powerupList = new List<Powerup>();
+
             instance = this;
             SpawnInitialMoney();
             SpawnInitialCrates();

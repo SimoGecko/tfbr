@@ -66,6 +66,12 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
+            if (!GameManager.gameActive) {
+                playerMovement.Move(Vector3.Zero); // smooth stop
+                return;
+            }
+
+
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();
                 Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
