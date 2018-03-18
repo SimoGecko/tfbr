@@ -71,8 +71,11 @@ namespace BRS.Scripts {
         }
 
         void SpawnInitialPowerUp() {
-            for (int i = 0; i < powerUpAmount; i++)
-                SpawnOnePowerUpRandom();
+            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab"};
+
+            for (int i = 0; i < namesPowerupsPrefab.Length; i++)
+                for (int j = 0; j < powerUpAmount; j++)
+                    SpawnOnePowerUpRandom(namesPowerupsPrefab[i]);
         }
 
         //money
@@ -104,13 +107,14 @@ namespace BRS.Scripts {
         }
 
         //power up
-        void SpawnOnePowerUpRandom() {
+        void SpawnOnePowerUpRandom(string prefabName) {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            GameObject newPowerup = GameObject.Instantiate("powerUpPrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
+            GameObject newPowerup = GameObject.Instantiate(prefabName, position.To3() + Vector3.Up * .25f, Quaternion.Identity);
+            newPowerup.Transform.position += new Vector3(0, .2f, 0);
             powerupList.Add(newPowerup.GetComponent<Powerup>());
         }
-        public Powerup SpawnOnePowerUpAt(Vector3 position) {
-            GameObject newPowerup = GameObject.Instantiate("powerUpPrefab", position + Vector3.Up * .25f, Quaternion.Identity);
+        public Powerup SpawnOnePowerUpAt(Vector3 position, string prefabName) {
+            GameObject newPowerup = GameObject.Instantiate(prefabName, position + Vector3.Up * .25f, Quaternion.Identity);
             powerupList.Add(newPowerup.GetComponent<Powerup>());
             return newPowerup.GetComponent<Powerup>();
         }

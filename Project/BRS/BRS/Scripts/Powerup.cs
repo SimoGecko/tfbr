@@ -109,6 +109,7 @@ namespace BRS.Scripts {
         void BombExplosion(Powerup pu, Vector3 posBomb) {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
             GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+            GameObject[] vautlDoor = GameObject.FindGameObjectsWithTag("VaultDoor");
 
             foreach (GameObject go in bases) {
                 if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion* radiusExplosion)
@@ -118,6 +119,13 @@ namespace BRS.Scripts {
             foreach (GameObject go in players) {
                 if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion)
                     go.GetComponent<Player>().TakeHit(damageExplosion);
+            }
+
+            foreach (GameObject go in vautlDoor) {
+                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion) {
+                    GameObject.Destroy(go);
+                }
+                    
             }
 
             Spawner.instance.RemovePowerup(pu);

@@ -52,12 +52,41 @@ namespace BRS {
             AddPrefab(cratePrefab);
 
             //power up prefab
-            GameObject powerUpPrefab = new GameObject("powerUpPrefab", Content.Load<Model>("sphere"));
-            powerUpPrefab.Transform.Scale(.5f);
-            powerUpPrefab.Transform.SetStatic();
-            powerUpPrefab.AddComponent(new Bomb());
+            GameObject bombPrefab = new GameObject("bombPrefab", Content.Load<Model>("bomb"));
+            bombPrefab.Transform.Scale(.3f);
+            bombPrefab.AddComponent(new Bomb());
+            bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(bombPrefab);
+
+            GameObject capacityPrefab = new GameObject("capacityPrefab", Content.Load<Model>("capacity"));
+            capacityPrefab.Transform.Scale(.3f);
+            capacityPrefab.AddComponent(new CapacityBoost());
+            capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(capacityPrefab);
+
+            /*GameObject keyPrefab = new GameObject("keyPrefab", Content.Load<Model>("key"));
+            keyPrefab.Transform.Scale(.3f);
+            keyPrefab.AddComponent(new Key());
+            keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(keyPrefab);*/
+
+            GameObject healthPrefab = new GameObject("healthPrefab", Content.Load<Model>("health"));
+            healthPrefab.Transform.Scale(.3f);
+            healthPrefab.AddComponent(new HealthPotion());
+            healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(healthPrefab);
+
+            GameObject shieldPrefab = new GameObject("shieldPrefab", Content.Load<Model>("shield"));
+            shieldPrefab.Transform.Scale(.3f);
+            shieldPrefab.AddComponent(new StaminaPotion());
+            shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            AddPrefab(shieldPrefab);
+
+            /*GameObject powerUpPrefab = new GameObject("speedPrefab", Content.Load<Model>("speed"));
+            powerUpPrefab.Transform.Scale(.3f);
+            powerUpPrefab.AddComponent(new SpeedBoost());
             powerUpPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(powerUpPrefab);
+            AddPrefab(powerUpPrefab);*/
 
         }
 
