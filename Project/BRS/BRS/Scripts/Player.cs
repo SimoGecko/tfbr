@@ -71,7 +71,11 @@ namespace BRS.Scripts {
                 Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
                 playerMovement.Move(moveInput.To3());
 
-                if (AttackInput()) playerAttack.BeginAttack();
+                if (AttackInput()) {
+                    state = State.attack;
+                    stamina -= staminaPerAttack;
+                    playerAttack.BeginAttack();
+                }
 
                 if (PowerUpInput()) playerPowerup.UsePowerup(this);
                 if (DropCashInput()) playerInventory.DropMoney();
@@ -140,6 +144,7 @@ namespace BRS.Scripts {
             UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight, ba.Health, ba.startingHealth);
         }
 
+        //-------------------------------------------------------------------------------------------
         // INPUT queries
         bool BoostInput() {
             if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex)) {
@@ -175,8 +180,7 @@ namespace BRS.Scripts {
         bool AttackInput() {
             bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
             if (inputfire && state==State.normal && stamina >= staminaPerAttack) {
-                state = State.attack;
-                stamina -= staminaPerAttack;
+               
                 return true;
             }
             return false;

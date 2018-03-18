@@ -12,51 +12,54 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        int capacity = 20;
         const float timeBetweenDrops = .1f;
+        int capacity = 20;
 
         //private
         //MONEY
         int carryingWeight = 0;
         int carryingValue = 0;
-        bool canDropMoney = true;
+        bool canDropMoneyTimer = true;
         Stack<Money> carryingMoney = new Stack<Money>();
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-
-        }
-
-        public override void Update() {
-
-        }
-
+        public override void Start() { }
+        public override void Update() { }
 
 
         // --------------------- CUSTOM METHODS ----------------
 
 
-        // commands        
+        // commands
+        
         public void Collect(Money money) {
-            //carryingWeight += Math.Min(amount, capacity - carryingWeight);
-            carryingWeight += money.Weight;
-            carryingValue += money.Value;
-            carryingMoney.Push(money);
+            if (CanPickUp(money)) {
+                carryingWeight += money.Weight;
+                carryingValue += money.Value;
+                carryingMoney.Push(money);
+            }
         }
 
-        public void Deload() {
+        public void DeloadAll() {
             carryingWeight = 0;
             carryingValue = 0;
+            carryingMoney.Clear();
+        }
+
+        public void DeloadOne() {
+            Money m = carryingMoney.Pop();
+            carryingWeight -= m.Weight;
+            carryingValue -= m.Value;
         }
 
         public void DropMoney() {
-            if (canDropMoney) {
+            if (canDropMoneyTimer) {
                 DropMoneyAmount(1);
-                canDropMoney = false;
-                new Timer(timeBetweenDrops, () => canDropMoney = true);
+                canDropMoneyTimer = false;
+                new Timer(timeBetweenDrops, () => canDropMoneyTimer = true);
             }
         }
 
@@ -87,10 +90,15 @@ namespace BRS.Scripts {
         public bool CanPickUp(Money money) {
             return carryingWeight + money.Weight <= capacity;
         }
+
+        bool CanDrop() {
+            return canDropMoneyTimer && carryingMoney.Count > 0;
+        }
+
         public float MoneyPercent { get { return (float)carryingWeight / capacity; } }
-        public int CarryingValue { get { return carryingValue; } }
-        public int Capacity { get { return capacity; } }
+        public int CarryingValue  { get { return carryingValue; } }
         public int CarryingWeight { get { return carryingWeight; } }
+        public int Capacity { get { return capacity; } }
 
 
         // other

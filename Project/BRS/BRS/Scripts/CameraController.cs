@@ -18,12 +18,11 @@ namespace BRS.Scripts {
 
         //public
         const float smoothTime = .3f;
-        const float mouseSensitivity = .5f;
-        const float gamepadSensitivity = 3f;
+        static Vector2 mouseSensitivity =new Vector2(-.5f, -.5f); // set those (also with sign) into options menu
+        static Vector2 gamepadSensitivity = new Vector2(-3f, -3f);
         static Vector3 offset = new Vector3(0, 10, 10);
-        static Vector3 angles = new Vector3(-50, 0, 0);
-        const float startXangle = -50;
-
+        static Vector3 angles = new Vector3(-40, 0, 0);
+        static Vector2 angleRange = new Vector2(-1, 1); // -40, 40
         //private
         float Xangle = 0, XangleSmooth=0;
         float Yangle = 0, YangleSmooth=0;
@@ -46,13 +45,13 @@ namespace BRS.Scripts {
         }
 
         public override void LateUpdate() { // after player has moved
-            float inputX = ( Input.mouseDelta.X*mouseSensitivity).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta
-            float inputY = (-Input.mouseDelta.Y*mouseSensitivity).Clamp(-100, 100);
+            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta
+            float inputY = (Input.mouseDelta.Y*mouseSensitivity.Y).Clamp(-100, 100);
 
-            inputX += -Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity;
-            inputY += -Input.GetThumbstick("Right", camIndex).Y * gamepadSensitivity;
+            inputX += Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity.X;
+            inputY += Input.GetThumbstick("Right", camIndex).Y * gamepadSensitivity.Y;
 
-            Xangle = (Xangle + inputY).Clamp(-40, 40);
+            Xangle = (Xangle + inputY).Clamp(angleRange.X, angleRange.Y);
             XangleSmooth = Utility.SmoothDamp(XangleSmooth, Xangle, ref refVelocityX, smoothTime);
 
             Yangle += inputX;

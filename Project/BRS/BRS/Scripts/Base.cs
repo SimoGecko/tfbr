@@ -44,7 +44,8 @@ namespace BRS.Scripts {
         public override void OnCollisionEnter(Collider c) {
             Player player = c.gameObject.GetComponent<Player>();
             if(player != null && player.teamIndex == BaseIndex) {
-                DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
+                //DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
+                DeloadPlayerProgression(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
 
@@ -56,7 +57,7 @@ namespace BRS.Scripts {
         // commands
         public void DeloadPlayer(PlayerInventory pi) {
             TotalMoney += pi.CarryingValue;
-            pi.Deload();
+            pi.DeloadAll();
             UpdateUI();
         }
 
@@ -70,9 +71,20 @@ namespace BRS.Scripts {
 
 
         // queries
+        bool PlayerInsideRange(GameObject p) {
+            return (p.Transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold;
+        }
 
 
         // other
+        async void DeloadPlayerProgression(PlayerInventory pi) {
+            float timeBetweenUnloads = .1f;
+            while (pi.CarryingValue > 0 ) { // && PlayerInsideRange(pi.gameObject)
+                TotalMoney += pi.DeloadOne();
+                UpdateUI();
+                await Time.WaitForSeconds(timeBetweenUnloads);
+            }
+        }
 
     }
 
