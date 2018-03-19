@@ -11,29 +11,26 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-
-        public string namePowerup;
-
-
         const float rotSpeed = 90;
 
 
         //private
+        protected string powerupName;
         protected bool destroyOnUse = true;
         protected bool rotate = true;
+
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            transform.Rotate(Vector3.Up, MyRandom.Value * 360);
+            destroyOnUse = rotate = true;
+            transform.rotation = MyRandom.YRotation();
         }
 
         public override void Update() {
             base.Update();
-
-            //transform.RotateAround(transform.position, Vector3.Up, 180 * Time.deltatime);
 
             if(rotate)
                 transform.Rotate(Vector3.Up, rotSpeed * Time.deltatime);
@@ -51,19 +48,17 @@ namespace BRS.Scripts {
                 pp.Collect(this);
                 Spawner.instance.RemovePowerup(this);
 
-                GameObject.Destroy(gameObject);
-                UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, namePowerup, false);
+                UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, powerupName, true);
 
-                if(!destroyOnUse)
-                    gameObject.Active = false;
-                else
-                    GameObject.Destroy(gameObject);
-
+                if(!destroyOnUse) gameObject.Active = false;
+                else GameObject.Destroy(gameObject);
             }
             
         }
 
-        public virtual void UsePowerUp(Player p) { UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, namePowerup, true); }
+        public virtual void UsePowerUp(Player p) {
+            UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, powerupName, false);
+        }
 
         // queries
 
@@ -72,90 +67,5 @@ namespace BRS.Scripts {
         // other
 
     }
-
-    //-------------------------------------------------------------------------------------------------- all simple powerups
-    class HealthPotion : Powerup {
-        float valuePotion = 20;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "health";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.AddHealth(valuePotion);
-        }
-    }
-
-    class HealthBoost : Powerup {
-        float valueBoost = 20;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "health";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.UpdateMaxHealth(valueBoost);
-        }
-    }
-
-    class StaminaPotion : Powerup {
-        float valuePotion = .2f;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "shield";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.AddStamina(valuePotion);
-        }
-    }
-
-    class StaminaBoost : Powerup {
-        float valueBoost = .2f;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "shield";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.UpdateMaxStamina(valueBoost);
-        }
-    }
-
-    class CapacityBoost : Powerup {
-        int valueBoost = 2;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "capacity";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
-        }
-    }
-
-    class SpeedBoost : Powerup {
-        const float boostTime = 3;
-
-        public override void Start() {
-            base.Start();
-            namePowerup = "speed";
-        }
-
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = true;
-            new Timer(boostTime, () => p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = false);
-        }
-    }
+    
 }

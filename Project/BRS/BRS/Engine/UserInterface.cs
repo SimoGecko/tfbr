@@ -142,11 +142,11 @@ namespace BRS.Scripts {
 
         }
 
-        public void UpdatePlayerPowerupUI(int index, string name, bool remove) {
-            if (remove)
-                playerUI[index].currentPowerUp.Remove(name);
-            else
+        public void UpdatePlayerPowerupUI(int index, string name, bool add) {
+            if (add)
                 playerUI[index].currentPowerUp.Add(name);
+            else
+                playerUI[index].currentPowerUp.Remove(name);
         }
 
         public void SetPlayerMoneyBase(int v, int index) {

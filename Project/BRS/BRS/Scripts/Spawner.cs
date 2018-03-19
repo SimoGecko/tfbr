@@ -16,10 +16,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static Spawner instance;
         static Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
 
-        //private
         const int moneyAmount = 50;
         const int crateAmount = 10;
         const int powerUpAmount = 5;
@@ -27,26 +25,37 @@ namespace BRS.Scripts {
         const float probOfCash = .6f;
         const float probOfDiamond = .3f;
         const float probOfGold = .1f;
+
         const float probOfPowerUp = .1f;
 
+        const float timeBetweenCashSpawn = 1f;
+        float randomCashRadius = 1f;
 
-        //reference
+
+        //private
         List<Money> moneyList;
         List<Crate> crateList;
         List<Powerup> powerupList;
 
 
+        //reference
+        public static Spawner instance;
+
+
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            instance = this;
+
             moneyList = new List<Money>(); moneyList.Clear();
             crateList = new List<Crate>(); crateList.Clear();
             powerupList = new List<Powerup>(); powerupList.Clear();
 
-            instance = this;
             SpawnInitialMoney();
             SpawnInitialCrates();
             SpawnInitialPowerUp();
-            SpawnContinuous();
+
+            SpawnCashContinuous();
         }
 
         public override void Update() {
@@ -71,14 +80,14 @@ namespace BRS.Scripts {
         }
 
         void SpawnInitialPowerUp() {
-            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab", "speedPrefab" };
+            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab", "speedPrefab" }; // TODO move out of here, spawner should not know names of powerup
 
             for (int i = 0; i < namesPowerupsPrefab.Length; i++)
                 for (int j = 0; j < powerUpAmount; j++)
                     SpawnOnePowerUpRandom(namesPowerupsPrefab[i]);
         }
 
-        //money
+        // MONEY
         void SpawnOneMoneyRandom() {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value));
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
@@ -86,17 +95,23 @@ namespace BRS.Scripts {
             SpawnOneMoney(position.To3());
         }
 
+        public void SpawnMoneyAround(Vector3 p) {
+            Vector3 pos = p + MyRandom.insideUnitCircle().To3() * randomCashRadius;
+            SpawnOneMoney(pos);
+        }
+
         void SpawnOneMoney(Vector3 pos) {
-            GameObject newmoney = GameObject.Instantiate(RandomValuable(), pos, Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(MyRandom.Value*360)));
+            GameObject newmoney = GameObject.Instantiate(RandomValuable(), pos, MyRandom.YRotation());
             Money moneyComponent = newmoney.GetComponent<Money>();
             moneyList.Add(moneyComponent);
         }
+        
 
         public void RemoveMoney(Money money) {
             moneyList.Remove(money);
         }
 
-        //crate
+        // CRATE
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
@@ -106,36 +121,20 @@ namespace BRS.Scripts {
             crateList.Remove(crate);
         }
 
-        //power up
+        // POWERUP
         void SpawnOnePowerUpRandom(string prefabName) {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            GameObject newPowerup = GameObject.Instantiate(prefabName, position.To3() + Vector3.Up * .25f, Quaternion.Identity);
-            newPowerup.Transform.position += new Vector3(0, .2f, 0);
-            powerupList.Add(newPowerup.GetComponent<Powerup>());
+            SpawnOnePowerUpAt(position.To3(), prefabName);
         }
-        public Powerup SpawnOnePowerUpAt(Vector3 position, string prefabName) {
-            GameObject newPowerup = GameObject.Instantiate(prefabName, position + Vector3.Up * .25f, Quaternion.Identity);
-            newPowerup.Transform.position += new Vector3(0, .2f, 0);
+        void SpawnOnePowerUpAt(Vector3 position, string prefabName) {
+            GameObject newPowerup = GameObject.Instantiate(prefabName, position + Vector3.Up*.45f, Quaternion.Identity);
             powerupList.Add(newPowerup.GetComponent<Powerup>());
-            return newPowerup.GetComponent<Powerup>();
+            //return newPowerup.GetComponent<Powerup>(); // WHY would you want to return it
         }
         public void RemovePowerup(Powerup powerup) {
             powerupList.Remove(powerup);
         }
 
-        async void SpawnContinuous() {
-            float timeBetweenSpawn = 1f;
-            while (true) {
-                SpawnOneMoneyRandom();
-                await Time.WaitForSeconds(timeBetweenSpawn);
-            }
-        }
-
-        public void SpawnMoneyAround(Vector3 p) {
-            float radius = 1f;
-            Vector3 pos = p + MyRandom.insideUnitCircle().To3() * radius;
-            SpawnOneMoney(pos);
-        }
 
         // queries
         string RandomValuable() {
@@ -146,6 +145,8 @@ namespace BRS.Scripts {
             return "goldPrefab";
         }
 
+
+        //TODO move in their own class
         public Vector3[] AllMoneyPosition() {
             List<Vector3> result = new List<Vector3>();
             foreach (Money m in moneyList) result.Add(m.gameObject.Transform.position);
@@ -165,9 +166,13 @@ namespace BRS.Scripts {
         }
 
 
-
-        // other
-
+        // OTHER
+        async void SpawnCashContinuous() {
+            while (true) {
+                SpawnOneMoneyRandom();
+                await Time.WaitForSeconds(timeBetweenCashSpawn);
+            }
+        }
     }
 
 }

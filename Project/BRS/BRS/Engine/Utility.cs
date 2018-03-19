@@ -96,6 +96,8 @@ namespace BRS {
             return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
         }
 
+        
+
         //TRANSORM METHODS
         /*
         public static Vector3 toEulerAngle(this Quaternion q){ // in degrees //NOT WORKING CORRECTLY
@@ -273,7 +275,7 @@ namespace BRS {
 
 
     static class MyRandom { // TODO find better name
-        static int seed = 101;
+        static int seed = 102;
         static Random rand = new Random(seed);
 
         public static float Value { // random float in [0, 1[
@@ -299,6 +301,10 @@ namespace BRS {
 
         public static Vector2 insideUnitSquare() {
             return new Vector2(Value, Value);
+        }
+
+        public static Quaternion YRotation() {
+            return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
         }
 
     }

@@ -21,27 +21,25 @@ namespace BRS.Scripts {
         public int playerIndex = 0; // player index - to select input and camera
         public int teamIndex = 0;
 
-        //STAMINA
-        const float staminaReloadPerSecond = .2f; // maybe move to its own class?
+        //STAMINA // maybe move to its own class?
+        const float staminaReloadPerSecond = .2f; 
         const float staminaPerBoost = .4f;
         const float staminaPerAttack = .6f;
         const float staminaReloadDelay = .3f;
         float maxStamina = 1;
         float stamina = 1;
+        bool canReloadStamina = true;
+
 
         //HIT and STUN
         const float damage = 40; // put into attack
         const float stunTime = 2f;
-
         const float respawnTime = 5f; // put into living entity?
 
         //private
         State state = State.normal;
-        bool canReloadStamina = true;
 
         //reference
-        //Player otherPlayer;
-        //bool hasOtherPlayer = false;
 
         //subcomponents
         PlayerAttack playerAttack;
@@ -71,6 +69,7 @@ namespace BRS.Scripts {
                 return;
             }
 
+            //only if game is running
 
             if (state == State.normal) {
                 playerMovement.boosting = BoostInput();

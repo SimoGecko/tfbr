@@ -146,7 +146,6 @@
     <Compile Include="Scripts\Crate.cs" />
     <Compile Include="Scripts\GameManager.cs" />
     <Compile Include="Scripts\GamepadTest.cs" />
-    <Compile Include="Scripts\IDamageable.cs" />
     <Compile Include="Scripts\Key.cs" />
     <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Minimap.cs" />
@@ -157,6 +156,7 @@
     <Compile Include="Scripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerMovement.cs" />
     <Compile Include="Scripts\PlayerPowerup.cs" />
+    <Compile Include="Scripts\Potions.cs" />
     <Compile Include="Scripts\Powerup.cs" />
     <Compile Include="Scripts\Spawner.cs" />
     <Compile Include="Scripts\TransformTest.cs" />

@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
-    class Key : Component {
-        ////////// DESCRIPTION //////////
+    class Key : Powerup {
+        ////////// key that can be used to open vault or safeboxes //////////
 
         // --------------------- VARIABLES ---------------------
 

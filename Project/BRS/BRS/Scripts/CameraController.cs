@@ -12,17 +12,17 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
     class CameraController : Component {
-        ////////// Sets the camera position and follows the player smoothly, allowing also rotation //////////
+        ////////// Sets the camera position and follows the player smoothly, also allowing rotation //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
         const float smoothTime = .3f;
-        static Vector2 mouseSensitivity =new Vector2(-.5f, -.5f); // set those (also with sign) into options menu
+        static Vector2 mouseSensitivity =new Vector2(-.3f, -.3f); // set those (also with sign) into options menu
         static Vector2 gamepadSensitivity = new Vector2(-3f, -3f);
         static Vector3 offset = new Vector3(0, 10, 10);
         static Vector3 angles = new Vector3(-40, 0, 0);
-        static Vector2 angleRange = new Vector2(-1, 1); // -40, 40
+        static Vector2 angleRange = new Vector2(-10, 10); // -40, 40
 
         //private
         float Xangle = 0, XangleSmooth=0;
@@ -36,7 +36,6 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            //Xangle = XangleSmooth = startXangle;
             Xangle = XangleSmooth = Yangle = YangleSmooth = refVelocityX = refVelocityY = 0;
 
             player = GameObject.FindGameObjectWithName("player_" + camIndex).Transform;
@@ -47,7 +46,7 @@ namespace BRS.Scripts {
         }
 
         public override void LateUpdate() { // after player has moved
-            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta
+            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
             float inputY = (Input.mouseDelta.Y*mouseSensitivity.Y).Clamp(-100, 100);
 
             inputX += Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity.X;

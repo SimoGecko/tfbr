@@ -7,6 +7,8 @@ using BRS.Load;
 
 namespace BRS {
 
+    //TODO organize
+
     public class Game1 : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;

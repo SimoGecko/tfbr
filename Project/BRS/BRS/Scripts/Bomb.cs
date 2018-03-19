@@ -6,13 +6,13 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     class Bomb : Powerup {
-        ////////// DESCRIPTION //////////
+        ////////// bomb that can be planted and explodes after some time damaging what's around //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float timeBeforeExplosion = 3;
-        const float explosionRadius = 2;
+        const float timeBeforeExplosion = 3f;
+        const float explosionRadius = 2f;
         const float explosionDamage = 60;
 
         //private
@@ -26,7 +26,7 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             destroyOnUse = false;
-            namePowerup = "bomb";
+            powerupName = "bomb";
         }
 
         public override void Update() {
@@ -46,14 +46,14 @@ namespace BRS.Scripts {
             planted = true; 
             gameObject.Active = true;
             rotate = false;
-            //Spawner.instance.SpawnOnePowerUpAt(pos, "bombPrefab")
-            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(p.transform.position, "bombPrefab");
+
+            //Powerup pu = Spawner.instance.SpawnOnePowerUpAt(p.transform.position, "bombPrefab");
             //Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
 
-            new Timer(timeBeforeExplosion, () => Explode(pu));
+            new Timer(timeBeforeExplosion, () => Explode());
         }
 
-        void Explode(Powerup pu) {
+        void Explode() {
             //THIS CODE SHOULD NOT KNOW ANYTHING ABOUT THE SCENE -> THAT'S WHAT THE Idamageable interface is for
             /*
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
@@ -85,9 +85,9 @@ namespace BRS.Scripts {
                 }
             }
 
+            //GameObject.Destroy(gameObject);
+            //Spawner.instance.RemovePowerup(pu);
             GameObject.Destroy(gameObject);
-            Spawner.instance.RemovePowerup(pu);
-            GameObject.Destroy(pu.gameObject);
         }
 
         // queries

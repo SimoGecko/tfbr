@@ -15,10 +15,12 @@ namespace BRS.Scripts {
         ////////// controls the game state, ie round time, ... //////////
 
         // --------------------- VARIABLES ---------------------
+        enum State { playing, paused, finished, menu};
 
         //public
         public static int numPlayers = 2;
         public static int lvlScene = 3;
+        const int roundTime = 120;
 
         //private
         public static bool gameActive;
@@ -30,9 +32,9 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            gameActive = true;
             instance = this;
-            Timer rt = new Timer(0, 100, OnRoundEnd);
+            gameActive = true;
+            Timer rt = new Timer(0, roundTime, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
         }
 
@@ -53,7 +55,7 @@ namespace BRS.Scripts {
             new Timer(1f, () => Restart());
         }
 
-        void Restart() {
+        void Restart() { // TODO fix this shit
             //UserInterface.instance.Start();
             GameObject.ClearAll();
             //Game1.instance.Reset();
@@ -72,12 +74,16 @@ namespace BRS.Scripts {
         // queries
         int FindWinner() {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
+            if (bases.Length < 1) {
+                Debug.LogError("could not find the bases"); // avoids tag messup
+                return 0;
+            }
             int winner = 0;
 
             int maxCash = bases[0].GetComponent<Base>().TotalMoney;
             for (int i = 1; i < numPlayers; i++) {
                 int totmoney = bases[i].GetComponent<Base>().TotalMoney;
-                if (totmoney > maxCash) {
+                if (totmoney > maxCash) { // TODO deal with tie
                     winner = i;
                     maxCash = totmoney;
                 }

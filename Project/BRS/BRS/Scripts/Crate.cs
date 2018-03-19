@@ -31,9 +31,8 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            Player p = c.gameObject.GetComponent<Player>();
-            if(p!= null) {
-                PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
+            if(c.gameObject.myTag == "player") {
+                PlayerAttack pa = c.gameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
                     CrackCrate();
             }
@@ -46,7 +45,8 @@ namespace BRS.Scripts {
 
         // commands
         void CrackCrate() {
-            for(int i=0; i<MyRandom.Range(minNumCoins, maxNumCoins+1); i++) {
+            int numCoins = MyRandom.Range(minNumCoins, maxNumCoins + 1);
+            for (int i=0; i<numCoins; i++) {
                 Spawner.instance.SpawnMoneyAround(transform.position);
             }
             Spawner.instance.RemoveCrate(this);

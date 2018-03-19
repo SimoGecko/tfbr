@@ -11,17 +11,18 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float deloadDistanceThreshold = 10f;
-        public int BaseIndex { get; set; } = 0;
+        const float deloadDistanceThreshold = 2f;
+        const float timeBetweenUnloads = .1f;
 
         //private
+        public int BaseIndex { get; set; } = 0;
         public int TotalMoney { get; private set; }
 
 
 
         //reference
-        Player player;
-        PlayerInventory playerInventory;
+        //Player player;
+        //PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
@@ -32,8 +33,8 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
-            player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
-            if (player == null) Debug.LogError("player not found");
+            //player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
+            //if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
@@ -46,9 +47,9 @@ namespace BRS.Scripts {
             bool isPlayer = c.gameObject.myTag.Equals("player");
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
-                if (player.teamIndex == BaseIndex) {
-                    //DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
-                    DeloadPlayerProgression(player.gameObject.GetComponent<PlayerInventory>());
+                if (p.teamIndex == BaseIndex) {
+                    //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
+                    DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
             }
             
@@ -83,7 +84,6 @@ namespace BRS.Scripts {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
-            float timeBetweenUnloads = .1f;
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();

@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const float randomizer = .1f;
+        public const float randomizer = .1f; // how much to deviate from actual value
 
 
         //private
@@ -28,7 +28,6 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
-
             value = (int)(Value*MyRandom.Range(1-randomizer, 1+randomizer));
         }
 

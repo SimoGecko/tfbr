@@ -27,7 +27,7 @@ namespace BRS.Scripts {
 
         //BOOST
         public bool boosting;
-        public bool powerUpBoosting;
+        public bool powerUpBoosting; // TODO avoid double effect
 
         //reference
         PlayerInventory playerInventory;
