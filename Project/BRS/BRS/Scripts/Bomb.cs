@@ -26,6 +26,7 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             destroyOnUse = false;
+            namePowerup = "bomb";
         }
 
         public override void Update() {
@@ -39,18 +40,20 @@ namespace BRS.Scripts {
 
         // commands
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             transform.position = p.transform.position + Vector3.Up;
             canPickup = false;
             planted = true; 
             gameObject.Active = true;
             rotate = false;
             //Spawner.instance.SpawnOnePowerUpAt(pos, "bombPrefab")
+            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(p.transform.position, "bombPrefab");
             //Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
 
-            new Timer(timeBeforeExplosion, () => Explode());
+            new Timer(timeBeforeExplosion, () => Explode(pu));
         }
 
-        void Explode() {
+        void Explode(Powerup pu) {
             //THIS CODE SHOULD NOT KNOW ANYTHING ABOUT THE SCENE -> THAT'S WHAT THE Idamageable interface is for
             /*
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
@@ -83,6 +86,8 @@ namespace BRS.Scripts {
             }
 
             GameObject.Destroy(gameObject);
+            Spawner.instance.RemovePowerup(pu);
+            GameObject.Destroy(pu.gameObject);
         }
 
         // queries

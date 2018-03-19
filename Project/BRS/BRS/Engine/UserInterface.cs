@@ -23,6 +23,10 @@ namespace BRS.Scripts {
         SpriteFont myfont;
         SpriteFont winnerFont;
         Texture2D bar;
+        Texture2D[] powerUpsPng = new Texture2D[6];
+        Dictionary<string, int> mapNamePowerUpIndexPng = new Dictionary<string, int>();
+        string[] namePowerUpsPng = {"bomb", "key", "capacity", "speed", "health", "shield"};
+    
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
         bool showWinner;
@@ -45,6 +49,13 @@ namespace BRS.Scripts {
             bar = Content.Load<Texture2D>("progress_bar");
 
             playerUI = new PlayerUI[GameManager.numPlayers];
+
+            for (int i = 0; i < namePowerUpsPng.Length; ++i) {
+                powerUpsPng[i] = Content.Load<Texture2D>("images/" + namePowerUpsPng[i] + "_pic");
+                if (!mapNamePowerUpIndexPng.ContainsKey(namePowerUpsPng[i]))
+                    mapNamePowerUpIndexPng.Add(namePowerUpsPng[i], i);
+            }
+
 
         }
 
@@ -85,6 +96,13 @@ namespace BRS.Scripts {
             spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
             spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Yellow);
             spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
+            //power ups    
+            if (playerUI[index].currentPowerUp != null)
+                foreach (string name in playerUI[index].currentPowerUp)
+                    spriteBatch.Draw(powerUpsPng[mapNamePowerUpIndexPng[name]], new Vector2(10, 370), Color.AliceBlue);
+            else
+                playerUI[index].currentPowerUp = new List<string>();
+            
         }
 
         //public void Draw() { }
@@ -120,6 +138,14 @@ namespace BRS.Scripts {
             playerUI[index].baseHealth = baseHealth;
 
         }
+
+        public void UpdatePlayerPowerupUI(int index, string name, bool remove) {
+            if (remove)
+                playerUI[index].currentPowerUp.Remove(name);
+            else
+                playerUI[index].currentPowerUp.Add(name);
+        }
+
         public void SetPlayerMoneyBase(int v, int index) {
             playerUI[index].totalMoneyInBase = v;
         }
@@ -163,6 +189,9 @@ namespace BRS.Scripts {
         public float stamina;
         public int carryingWeight;
         public float baseHealth;
+
+        //power ups
+        public List<string> currentPowerUp;
 
     }
 
