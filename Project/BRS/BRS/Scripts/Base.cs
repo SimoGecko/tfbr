@@ -43,11 +43,15 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            Player player = c.gameObject.GetComponent<Player>();
-            if(player != null && player.teamIndex == BaseIndex) {
-                //DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
-                DeloadPlayerProgression(player.gameObject.GetComponent<PlayerInventory>());
+            bool isPlayer = c.gameObject.myTag.Equals("player");
+            if (isPlayer) {
+                Player p = c.gameObject.GetComponent<Player>();
+                if (player.teamIndex == BaseIndex) {
+                    //DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
+                    DeloadPlayerProgression(player.gameObject.GetComponent<PlayerInventory>());
+                }
             }
+            
         }
 
 
@@ -73,7 +77,7 @@ namespace BRS.Scripts {
 
         // queries
         bool PlayerInsideRange(GameObject p) {
-            return (p.Transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold;
+            return (p.Transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
         }
 
 

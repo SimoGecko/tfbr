@@ -96,12 +96,15 @@ namespace BRS.Scripts {
             spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
             spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Yellow);
             spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
-            //power ups    
-            if (playerUI[index].currentPowerUp != null)
-                foreach (string name in playerUI[index].currentPowerUp)
-                    spriteBatch.Draw(powerUpsPng[mapNamePowerUpIndexPng[name]], new Vector2(10, 370), Color.AliceBlue);
-            else
+            //power ups
+            Rectangle powerupRectDestination = new Rectangle(10, 370, 50, 50);
+            if (playerUI[index].currentPowerUp != null) {
+                foreach (string name in playerUI[index].currentPowerUp) {
+                    spriteBatch.Draw(powerUpsPng[mapNamePowerUpIndexPng[name]], powerupRectDestination, Color.AliceBlue);
+                }
+            } else {
                 playerUI[index].currentPowerUp = new List<string>();
+            }
             
         }
 

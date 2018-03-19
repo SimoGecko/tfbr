@@ -73,8 +73,8 @@ namespace BRS.Scripts {
             transform.Translate(Vector3.Forward * currentSpeed * speedboost * speedboostPowerUp * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
-            gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
-            gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+            //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
+            //gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
 
         }
 
