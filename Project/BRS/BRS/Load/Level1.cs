@@ -138,7 +138,8 @@ namespace BRS.Load {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new BoxCollider(bases[i]));
+                //bases[i].AddComponent(new BoxCollider(bases[i]));
+                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
                 bases[i].Transform.SetStatic();
             }
         }

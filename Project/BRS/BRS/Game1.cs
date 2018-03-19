@@ -92,7 +92,7 @@ namespace BRS {
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
-            Physics.CheckOnCollisionEnter();
+            Physics.Update();
 
             base.Update(gameTime);
         }
