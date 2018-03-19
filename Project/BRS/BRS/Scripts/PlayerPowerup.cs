@@ -12,10 +12,10 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const int maxNumberPowerUps = 1;
 
 
         //private
-        int maxNumberPowerUps = 1;
         List<Powerup> carryingPowerUp;
 
         //reference
@@ -23,7 +23,8 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            carryingPowerUp = new List<Powerup>(); carryingPowerUp.Clear();
+            carryingPowerUp = new List<Powerup>();
+
         }
         public override void Update() { }
 
@@ -34,9 +35,10 @@ namespace BRS.Scripts {
 
         // commands
         public void UsePowerup(Player p) {
+            //could implement selector here
             if (carryingPowerUp.Count > 0) {
                 carryingPowerUp[0].UsePowerUp(p);
-                carryingPowerUp.Remove(carryingPowerUp[0]);
+                carryingPowerUp.RemoveAt(0);
             }
         }
 

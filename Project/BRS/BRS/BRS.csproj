@@ -156,6 +156,7 @@
     <Compile Include="Scripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerMovement.cs" />
     <Compile Include="Scripts\PlayerPowerup.cs" />
+    <Compile Include="Scripts\PlayerStamina.cs" />
     <Compile Include="Scripts\Potions.cs" />
     <Compile Include="Scripts\Powerup.cs" />
     <Compile Include="Scripts\Spawner.cs" />

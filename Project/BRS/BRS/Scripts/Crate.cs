@@ -11,6 +11,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float crackSpawnRadius = 1f;
+
         const int minNumCoins = 1;
         const int maxNumCoins = 8;
 
@@ -47,7 +49,7 @@ namespace BRS.Scripts {
         void CrackCrate() {
             int numCoins = MyRandom.Range(minNumCoins, maxNumCoins + 1);
             for (int i=0; i<numCoins; i++) {
-                Spawner.instance.SpawnMoneyAround(transform.position);
+                Spawner.instance.SpawnMoneyAround(transform.position, crackSpawnRadius);
             }
             Spawner.instance.RemoveCrate(this);
             GameObject.Destroy(gameObject);

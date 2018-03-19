@@ -100,12 +100,6 @@ namespace BRS {
             return 0f;
         }
 
-        public static bool Fire1() {
-            return GetKeyDown(Keys.Space) || GetButton(Buttons.A);
-        }
-        public static bool Fire2() {
-            return GetKeyDown(Keys.Enter) || GetButton(Buttons.A, 1);
-        }
 
         //KEYS
         public static bool GetKey(Keys k)     { return kState.IsKeyDown(k); }

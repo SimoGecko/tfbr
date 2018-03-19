@@ -17,24 +17,15 @@ namespace BRS.Scripts {
 
         // --------------------- VARIABLES ---------------------
         enum State { normal, attack, stun, dead};
+
         //public
         public int playerIndex = 0; // player index - to select input and camera
-        public int teamIndex = 0;
-
-        //STAMINA // maybe move to its own class?
-        const float staminaReloadPerSecond = .2f; 
-        const float staminaPerBoost = .4f;
-        const float staminaPerAttack = .6f;
-        const float staminaReloadDelay = .3f;
-        float maxStamina = 1;
-        float stamina = 1;
-        bool canReloadStamina = true;
+        public int teamIndex = 0; // to differentiate teams
 
 
         //HIT and STUN
-        const float damage = 40; // put into attack
         const float stunTime = 2f;
-        const float respawnTime = 5f; // put into living entity?
+        const float respawnTime = 5f;
 
         //private
         State state = State.normal;
@@ -42,10 +33,11 @@ namespace BRS.Scripts {
         //reference
 
         //subcomponents
-        PlayerAttack playerAttack;
-        PlayerMovement playerMovement;
-        PlayerInventory playerInventory;
-        PlayerPowerup playerPowerup;
+        PlayerAttack    pA;
+        PlayerMovement  pM;
+        PlayerInventory pI;
+        PlayerPowerup   pP;
+        PlayerStamina   pS;
 
         CameraController camController;
 
@@ -56,110 +48,85 @@ namespace BRS.Scripts {
 
             camController = GameObject.FindGameObjectWithName("camera_" + playerIndex).GetComponent<CameraController>();
 
-            //subcomponents
-            playerAttack    = gameObject.GetComponent<PlayerAttack>();
-            playerMovement  = gameObject.GetComponent<PlayerMovement>();
-            playerInventory = gameObject.GetComponent<PlayerInventory>();
-            playerPowerup   = gameObject.GetComponent<PlayerPowerup>();
+            //subcomponents (shorten)
+            pA = gameObject.GetComponent<PlayerAttack>();
+            pM = gameObject.GetComponent<PlayerMovement>();
+            pI = gameObject.GetComponent<PlayerInventory>();
+            pP = gameObject.GetComponent<PlayerPowerup>();
+            pS = gameObject.GetComponent<PlayerStamina>();
         }
 
         public override void Update() {
             if (!GameManager.gameActive) {
-                playerMovement.Move(Vector3.Zero); // smooth stop
+                pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
 
             //only if game is running
-
             if (state == State.normal) {
-                playerMovement.boosting = BoostInput();
+                bool boosting = BoostInput() && pS.HasStaminaForBoost();
+                pM.boosting = boosting;
+                if (boosting) pS.UseStaminaForBoost();
+
                 Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
-                playerMovement.Move(moveInput.To3());
+                pM.Move(moveInput.To3());
 
-                if (AttackInput()) {
+                if (PowerUpInput())  pP.UsePowerup(this);
+                if (DropCashInput()) pI.DropMoney();
+
+                if (AttackInput() && pS.HasStaminaForAttack()) {
                     state = State.attack;
-                    stamina -= staminaPerAttack;
-                    playerAttack.BeginAttack();
+                    pS.UseStaminaForAttack();
+                    pA.BeginAttack();
                 }
-
-                if (PowerUpInput()) playerPowerup.UsePowerup(this);
-                if (DropCashInput()) playerInventory.DropMoney();
             }
             else if (state == State.attack) {
-                playerAttack.AttackCoroutine();
-                if (playerAttack.AttackEnded) state = State.normal;
+                pA.AttackCoroutine();
+                if (pA.AttackEnded) state = State.normal;
             }
 
-            UpdateStamina();
+            pS.UpdateStamina();
             UpdateUI();
         }
-
-        public override void OnCollisionEnter(Collider c) {
-            //if (c.gameObject.tag == "player") Debug.Log("collision enter player");
-        }
-
 
 
         // --------------------- CUSTOM METHODS ----------------
 
 
-        // commands
-        public void GetHit() {
-            state = State.stun;
-            Timer t = new Timer(stunTime, () => { if (state == State.stun) state = State.normal; });
-            playerInventory.LoseMoney();
-            TakeDamage(damage);
+        // LIVING STUFF
+        public override void TakeDamage(float damage) { // for bombs aswell
+            base.TakeDamage(damage); // don't override state
+            if (!dead) {
+                state = State.stun;
+                pI.LoseMoney();
+                Timer t = new Timer(stunTime, () => { if (state == State.stun) state = State.normal; });
+            }
         }
-
 
         protected override void Die() {
             base.Die();
             state = State.dead;
+            pI.LoseAllMoney();
             Timer timer = new Timer(respawnTime, Respawn);
         }
 
         protected override void Respawn() {
             base.Respawn();
             state = State.normal;
-            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0);
-        }
-
-        void UpdateStamina() {
-            if(canReloadStamina && stamina < 0) {
-                canReloadStamina = false;
-                stamina = 0;
-                Timer t = new Timer(1, () => canReloadStamina = true);
-            }
-            //if (canReloadStamina) stamina += staminaReloadPerSecond * Time.deltatime;
-            //stamina = Utility.Clamp01(stamina);
-
-            if (canReloadStamina) AddStamina(staminaReloadPerSecond * Time.deltatime);
-        }
-
-        public void AddStamina(float amount) {
-            stamina = MathHelper.Min(stamina + amount, maxStamina);
-        }
-
-        public void UpdateMaxStamina(float amountToAdd) {
-            maxStamina += amountToAdd;
+            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0); // store base position
         }
 
         void UpdateUI() {
-            Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
-            UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight, ba.Health, ba.startingHealth);
+            //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
+            // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
+            UserInterface.instance.UpdatePlayerUI(playerIndex,
+                health, startingHealth,
+                pS.stamina, pS.maxStamina,
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries
-        bool BoostInput() {
-            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex)) {
-                if (stamina > 0){//staminaPerBoost * Time.deltatime) {
-                    stamina -= staminaPerBoost * Time.deltatime;
-                    return true;
-                }
-            }
-            return false;
-        }
 
         Vector2 MoveInput() {
             if (playerIndex == 0)
@@ -168,31 +135,32 @@ namespace BRS.Scripts {
                 return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
         }
 
-        bool PowerUpInput() {
-            if (Input.GetKey(Keys.P) || Input.GetButton(Buttons.X, playerIndex)) {
-                return true;
-            }
-            return false;
+        bool AttackInput() {
+            return (playerIndex == 0 ? Input.GetKey(Keys.Space) : Input.GetKey(Keys.Enter))
+                || Input.GetButton(Buttons.A, playerIndex);
         }
 
         bool DropCashInput() {
-            if (Input.GetKey(Keys.L) || Input.GetButton(Buttons.B, playerIndex)) {
-                return true;
-            }
-            return false;
+            return (playerIndex == 0 ? Input.GetKey(Keys.C) : Input.GetKey(Keys.M))
+               || Input.GetButton(Buttons.B, playerIndex);
         }
 
-        bool AttackInput() {
-            bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
-            if (inputfire && state==State.normal && stamina >= staminaPerAttack) {
-               
-                return true;
-            }
-            return false;
+        bool PowerUpInput() {
+            return (playerIndex == 0 ? Input.GetKey(Keys.R) : Input.GetKey(Keys.P))
+               || Input.GetButton(Buttons.X, playerIndex);
+        }
+
+        bool LiftInput() {
+            return (playerIndex == 0 ? Input.GetKey(Keys.F) : Input.GetKey(Keys.L))
+               || Input.GetButton(Buttons.Y, playerIndex);
+        }
+
+        bool BoostInput() {
+            return (playerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
+               || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex);
         }
 
         // other
-        public float StaminaPercent { get { return stamina / maxStamina; } }
 
 
     }

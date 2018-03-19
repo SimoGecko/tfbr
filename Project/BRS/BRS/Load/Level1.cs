@@ -111,7 +111,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerPowerup());
-
+                forklift.AddComponent(new PlayerStamina());
             }
 
 

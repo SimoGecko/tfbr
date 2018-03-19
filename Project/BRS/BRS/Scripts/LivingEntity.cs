@@ -39,7 +39,7 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void TakeDamage(float damage) {
+        public virtual void TakeDamage(float damage) {
             health -= damage;
             if (health <= 0 && !dead) {
                 Die();

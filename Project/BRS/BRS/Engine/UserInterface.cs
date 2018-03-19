@@ -120,28 +120,36 @@ namespace BRS.Scripts {
             Content = c;
         }
 
-        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight, float baseHealth, float baseStartingHealth) { 
+        //PLAYER
+        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) { 
             // percent
             playerUI[index].healthPercent = health / startingHealth;
             playerUI[index].staminaPercent = stamina / maxStamina;
             playerUI[index].carryingPercent = (float)carryingWeight / capacity;
-            playerUI[index].baseHealthPercent = baseHealth / baseStartingHealth;
 
             // max
             playerUI[index].maxHealth = startingHealth;
             playerUI[index].maxStamina = maxStamina;
             playerUI[index].maxCarrying = capacity;
-            playerUI[index].baseMaxHealth = startingHealth;
 
             // current
             playerUI[index].health = health;
             playerUI[index].stamina = stamina;
             playerUI[index].carryingMoneyValue = carryingValue;
             playerUI[index].carryingWeight = carryingWeight;
+        }
+
+
+        //BASE
+        public void UpdateBaseUI(int index, float baseHealth, float baseStartingHealth, int value) {
+            playerUI[index].baseHealthPercent = baseHealth / baseStartingHealth; // TODO make this relative to base, not player!!
             playerUI[index].baseHealth = baseHealth;
+            playerUI[index].baseMaxHealth = baseStartingHealth;
+            playerUI[index].totalMoneyInBase = value;
 
         }
 
+        //POWERUP
         public void UpdatePlayerPowerupUI(int index, string name, bool add) {
             if (add)
                 playerUI[index].currentPowerUp.Add(name);
@@ -149,10 +157,8 @@ namespace BRS.Scripts {
                 playerUI[index].currentPowerUp.Remove(name);
         }
 
-        public void SetPlayerMoneyBase(int v, int index) {
-            playerUI[index].totalMoneyInBase = v;
-        }
 
+        //WINNER
         public void UpdateGameWinnerUI(int winner) {
             winnerString = "Player " + winner + " won!";
             showWinner = true;
@@ -174,10 +180,10 @@ namespace BRS.Scripts {
 
     public struct PlayerUI {
         // percent
-        public float healthPercent; // green
-        public float staminaPercent;//red
-        public float carryingPercent;//blue
-        public float baseHealthPercent;
+        public float healthPercent;     // green
+        public float staminaPercent;    // red
+        public float carryingPercent;   // blue
+        public float baseHealthPercent; // yellow
 
         // max
         public float maxHealth;

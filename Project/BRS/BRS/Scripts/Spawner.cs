@@ -29,7 +29,6 @@ namespace BRS.Scripts {
         const float probOfPowerUp = .1f;
 
         const float timeBetweenCashSpawn = 1f;
-        float randomCashRadius = 1f;
 
 
         //private
@@ -95,8 +94,8 @@ namespace BRS.Scripts {
             SpawnOneMoney(position.To3());
         }
 
-        public void SpawnMoneyAround(Vector3 p) {
-            Vector3 pos = p + MyRandom.insideUnitCircle().To3() * randomCashRadius;
+        public void SpawnMoneyAround(Vector3 p, float radius) {
+            Vector3 pos = p + MyRandom.insideUnitCircle().To3() * radius;
             SpawnOneMoney(pos);
         }
 

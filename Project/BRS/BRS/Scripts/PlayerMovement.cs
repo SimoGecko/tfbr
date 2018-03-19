@@ -27,7 +27,7 @@ namespace BRS.Scripts {
 
         //BOOST
         public bool boosting;
-        public bool powerUpBoosting; // TODO avoid double effect
+        public bool powerUpBoosting;
 
         //reference
         PlayerInventory playerInventory;
@@ -68,9 +68,8 @@ namespace BRS.Scripts {
             transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
-            float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            float speedboostPowerUp = powerUpBoosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * speedboostPowerUp * smoothMagnitude * Time.deltatime);
+            float speedboost = boosting || powerUpBoosting ? boostSpeedMultiplier : 1f;
+            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
             //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);

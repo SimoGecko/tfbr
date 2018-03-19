@@ -47,7 +47,7 @@ namespace BRS.Scripts {
 
         public override void UsePowerUp(Player p) {
             base.UsePowerUp(p);
-            p.AddStamina(valuePotion);
+            p.gameObject.GetComponent<PlayerStamina>().AddStamina(valuePotion);
         }
     }
 
@@ -61,7 +61,7 @@ namespace BRS.Scripts {
 
         public override void UsePowerUp(Player p) {
             base.UsePowerUp(p);
-            p.UpdateMaxStamina(valueBoost);
+            p.gameObject.GetComponent<PlayerStamina>().UpdateMaxStamina(valueBoost);
         }
     }
 

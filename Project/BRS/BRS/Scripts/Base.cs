@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float deloadDistanceThreshold = 2f;
+        const float deloadDistanceThreshold = 4f;
         const float timeBetweenUnloads = .1f;
 
         //private
@@ -41,6 +41,7 @@ namespace BRS.Scripts {
             /*if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
                 DeloadPlayer();
             }*/
+            UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
@@ -64,11 +65,11 @@ namespace BRS.Scripts {
         public void DeloadPlayer(PlayerInventory pi) {
             TotalMoney += pi.CarryingValue;
             pi.DeloadAll();
-            UpdateUI();
+            //UpdateUI();
         }
 
         void UpdateUI() {
-            UserInterface.instance.SetPlayerMoneyBase(TotalMoney, BaseIndex);
+            UserInterface.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
         }
 
         protected override void Die() {
@@ -87,7 +88,7 @@ namespace BRS.Scripts {
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
-                UpdateUI();
+                //UpdateUI();
                 await Time.WaitForSeconds(timeBetweenUnloads);
             }
         }
