@@ -315,7 +315,10 @@ namespace BRS {
         public static void LogError(string s) {
             //Console.WriteLine("//ERROR//: "+s);
             System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);
+        }
 
+        public static void Assert(bool b, string s) {
+            if (!b) System.Diagnostics.Debug.WriteLine("//ASSERTION FAIL//: " + s);
         }
     }
 

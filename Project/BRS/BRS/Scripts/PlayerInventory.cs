@@ -30,7 +30,7 @@ namespace BRS.Scripts {
             //INIT
             carryingValue = 0;
             carryingWeight = 0;
-            carryingMoney = new Stack<Money>();
+            carryingMoney = new Stack<Money>(); carryingMoney.Clear();
             canDropMoneyTimer = true;
         }
         public override void Update() { }

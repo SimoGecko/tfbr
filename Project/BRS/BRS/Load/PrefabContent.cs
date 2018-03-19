@@ -16,7 +16,8 @@ namespace BRS {
         // create all prefabs - PUT YOUR CODE HERE
         static void BuildPrefabs() {
 
-            //simple money prefab
+            //VALUABLES
+            //cash
             GameObject moneyPrefab = new GameObject("moneyPrefab", Content.Load<Model>("cash"));
             moneyPrefab.Transform.Scale(.5f);
             moneyPrefab.Transform.SetStatic();
@@ -40,8 +41,6 @@ namespace BRS {
             goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(goldPrefab);
 
-            //make more money prefabs
-
 
             //crate prefab
             GameObject cratePrefab = new GameObject("cratePrefab", Content.Load<Model>("cube"));
@@ -51,37 +50,45 @@ namespace BRS {
             cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
             AddPrefab(cratePrefab);
 
-            //power up prefab
+
+            //POWER UPS
+
+            //bomb
             GameObject bombPrefab = new GameObject("bombPrefab", Content.Load<Model>("bomb"));
             bombPrefab.Transform.Scale(.3f);
             bombPrefab.AddComponent(new Bomb());
             bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(bombPrefab);
 
+            //capacity
             GameObject capacityPrefab = new GameObject("capacityPrefab", Content.Load<Model>("capacity"));
             capacityPrefab.Transform.Scale(.3f);
             capacityPrefab.AddComponent(new CapacityBoost());
             capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(capacityPrefab);
 
-            /*GameObject keyPrefab = new GameObject("keyPrefab", Content.Load<Model>("key"));
+            //key
+            GameObject keyPrefab = new GameObject("keyPrefab", Content.Load<Model>("key"));
             keyPrefab.Transform.Scale(.3f);
             keyPrefab.AddComponent(new Key());
             keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(keyPrefab);*/
+            AddPrefab(keyPrefab);
 
+            //health
             GameObject healthPrefab = new GameObject("healthPrefab", Content.Load<Model>("health"));
             healthPrefab.Transform.Scale(.3f);
             healthPrefab.AddComponent(new HealthPotion());
             healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(healthPrefab);
 
+            //shield
             GameObject shieldPrefab = new GameObject("shieldPrefab", Content.Load<Model>("shield"));
             shieldPrefab.Transform.Scale(.3f);
             shieldPrefab.AddComponent(new StaminaPotion());
             shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(shieldPrefab);
 
+            //speed
             GameObject speedPrefab = new GameObject("speedPrefab", Content.Load<Model>("speed"));
             speedPrefab.Transform.Scale(.3f);
             speedPrefab.AddComponent(new SpeedBoost());

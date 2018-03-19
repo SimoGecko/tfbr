@@ -33,12 +33,12 @@ namespace BRS {
             return false;
         }*/
 
-        internal static Collider[] OverlapSphere(Vector3 position, float radius, ObjectType collisionmask) {
+        internal static Collider[] OverlapSphere(Vector3 position, float radius, string collisionmask = "") {
             List<Collider> result = new List<Collider>();
             BoundingSphere sphere = new BoundingSphere(position, radius);
             //find all the colliders that intersect this sphere
             foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
-                if (c.gameObject.Type != collisionmask || !c.gameObject.Active) continue;
+                if (/*(!collisionmask.Equals("") && c.gameObject.myTag != collisionmask) ||*/ !c.gameObject.Active) continue;
                 if (c.Contains(sphere)) result.Add(c);
             }
             return result.ToArray();

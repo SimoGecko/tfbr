@@ -63,7 +63,9 @@ namespace BRS {
         }
 
         public override bool Contains(BoundingSphere other) {
-            throw new System.NotImplementedException();
+            //throw new System.NotImplementedException();
+            Debug.LogError("not implemented contains for bbox");
+            return false;
         }
 
         public override float? Intersect(Ray ray) {

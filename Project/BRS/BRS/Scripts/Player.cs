@@ -33,7 +33,7 @@ namespace BRS.Scripts {
         const float damage = 40; // put into attack
         const float stunTime = 2f;
 
-        const float respawnTime = 5f;
+        const float respawnTime = 5f; // put into living entity?
 
         //private
         State state = State.normal;

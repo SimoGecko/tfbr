@@ -50,12 +50,20 @@ namespace BRS.Scripts {
             gameActive = false;
             int winner = FindWinner();
             UserInterface.instance.UpdateGameWinnerUI(winner);
-            new Timer(3f, () => Restart());
+            new Timer(1f, () => Restart());
         }
 
         void Restart() {
-            UserInterface.instance.Start();
-            foreach (GameObject go in GameObject.All) go.Start();
+            //UserInterface.instance.Start();
+            GameObject.ClearAll();
+            //Game1.instance.Reset();
+
+            //scene.Start();
+            /*
+            foreach (GameObject go in GameObject.All) {
+                Debug.Log("restart " + go.Name);
+                go.Start();
+            }*/
         }
 
 

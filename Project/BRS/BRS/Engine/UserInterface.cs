@@ -49,7 +49,7 @@ namespace BRS.Scripts {
         }
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(Screen.WIDTH/2-50, Screen.HEIGHT/2), Color.White);
+            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(Screen.WIDTH/2-50, Screen.HEIGHT/2-100), Color.White);
 
             Minimap.instance.Draw(spriteBatch);
             if (showWinner) {

@@ -14,7 +14,7 @@ namespace BRS.Scripts {
 
         //private
         const float delayBeforePickup = .5f; // cannot pickup right after spawned
-        bool canPickup = false;
+        protected bool canPickup = false;
         public System.Action OnPickup;
         //string interactabletag = "player";
         //float pickupthreshold = .5f;
