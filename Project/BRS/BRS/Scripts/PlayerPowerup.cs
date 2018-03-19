@@ -16,18 +16,16 @@ namespace BRS.Scripts {
 
         //private
         int maxNumberPowerUps = 1;
-        List<Powerup> carryingPowerUp = new List<Powerup>();
+        List<Powerup> carryingPowerUp;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { }
-        public override void Update() {
-            /*if (Input.GetKeyDown(Keys.E) && HasPowerup) {
-                UsePowerup();
-            }*/
+        public override void Start() {
+            carryingPowerUp = new List<Powerup>(); carryingPowerUp.Clear();
         }
+        public override void Update() { }
 
 
 
@@ -48,11 +46,6 @@ namespace BRS.Scripts {
 
         public bool CanPickUp(Powerup powerUp) {
             return carryingPowerUp.Count < maxNumberPowerUps;
-        }
-
-        public Powerup DropBomb(Vector3 pos) {
-            Powerup pu = Spawner.instance.SpawnOnePowerUpAt(pos, "bombPrefab");
-            return pu;
         }
 
         // queries

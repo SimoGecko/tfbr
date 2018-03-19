@@ -84,6 +84,11 @@ namespace BRS {
         }
         */
 
+        public static void ClearAll() {
+            foreach (GameObject o in allGameObjects) o.Active = false;
+            //allGameObjects.Clear();
+        }
+
         //INSTANTIATION
         public static GameObject Instantiate(string name) {
             return Instantiate(name, Vector3.Zero, Quaternion.Identity);
@@ -179,6 +184,13 @@ namespace BRS {
 
             Debug.LogError("component not found " + typeof(T) + " inside " + Name);
             return default(T);
+        }
+
+        public bool HasComponent<T>() where T : IComponent {
+            foreach (IComponent c in components) {
+                if (c is T) return true;
+            }
+            return false;
         }
 
     }

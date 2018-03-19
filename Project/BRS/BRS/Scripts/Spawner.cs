@@ -20,9 +20,9 @@ namespace BRS.Scripts {
         static Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
 
         //private
-        const int moneyAmount = 50;
-        const int crateAmount = 10;
-        const int powerUpAmount = 5;
+        const int moneyAmount = 1;
+        const int crateAmount = 1;
+        const int powerUpAmount = 1;
 
         const float probOfCash = .6f;
         const float probOfDiamond = .3f;
@@ -38,9 +38,9 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            moneyList = new List<Money>();
-            crateList = new List<Crate>();
-            powerupList = new List<Powerup>();
+            moneyList = new List<Money>(); moneyList.Clear();
+            crateList = new List<Crate>(); crateList.Clear();
+            powerupList = new List<Powerup>(); powerupList.Clear();
 
             instance = this;
             SpawnInitialMoney();

@@ -23,6 +23,7 @@ namespace BRS.Scripts {
         static Vector3 offset = new Vector3(0, 10, 10);
         static Vector3 angles = new Vector3(-40, 0, 0);
         static Vector2 angleRange = new Vector2(-1, 1); // -40, 40
+
         //private
         float Xangle = 0, XangleSmooth=0;
         float Yangle = 0, YangleSmooth=0;
@@ -36,6 +37,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             //Xangle = XangleSmooth = startXangle;
+            Xangle = XangleSmooth = Yangle = YangleSmooth = refVelocityX = refVelocityY = 0;
 
             player = GameObject.FindGameObjectWithName("player_" + camIndex).Transform;
             if (player == null) Debug.LogError("player not found");

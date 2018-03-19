@@ -18,8 +18,8 @@ namespace BRS.Scripts {
         const float mapScale = .6f;
         const float iconScale = .3f;
 
-        Rectangle mapArea = new Rectangle((int)(Screen.WIDTH/2-MAPWIDTH/2*mapScale), 10, (int)(MAPWIDTH*mapScale), (int)(MAPHEIGHT*mapScale));
-        Vector3 upperLeftPt, lowerRightPt; // corners of physical map
+        static Rectangle mapArea = new Rectangle((int)(Screen.WIDTH/2-MAPWIDTH/2*mapScale), 10, (int)(MAPWIDTH*mapScale), (int)(MAPHEIGHT*mapScale));
+        static Vector3 upperLeftPt, lowerRightPt; // corners of physical map
 
         Texture2D mapSprite;
         Texture2D mapIcons;

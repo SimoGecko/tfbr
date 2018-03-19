@@ -467,6 +467,7 @@
 /processorParam:TextureFormat=Compressed
 /build:capacity.obj
 
+<<<<<<< .merge_file_a14436
 #begin images/bomb_pic.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -551,3 +552,5 @@
 /processorParam:TextureFormat=Color
 /build:images/speed_pic.png
 
+=======
+>>>>>>> .merge_file_a02308

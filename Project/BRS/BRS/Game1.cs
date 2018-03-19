@@ -18,10 +18,12 @@ namespace BRS {
         private DebugDrawer _debugDrawer;
         private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
+        public static Game1 instance;
         
 
 
         public Game1() {
+            instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Screen.Setup(graphics, this); // setup screen and create cameras
@@ -55,6 +57,15 @@ namespace BRS {
             ui.GiveContent(Content);
             scene.GiveContent(Content);
 
+            Start(); // CALL HERE
+
+        }
+
+        public void Reset() {
+            LoadContent();
+        }
+
+        public void Start() {
             //START
             Prefabs.Start();
             ui.Start();
@@ -62,9 +73,7 @@ namespace BRS {
             Input.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start();
-
             foreach (GameObject go in GameObject.All) go.Start();
-
         }
 
 
