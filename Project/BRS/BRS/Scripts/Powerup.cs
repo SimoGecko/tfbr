@@ -11,6 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public string namePowerup;
 
 
         //private
@@ -26,6 +27,7 @@ namespace BRS.Scripts {
 
         public override void Update() {
             base.Update();
+            transform.RotateAround(transform.position, Vector3.Up, 180 * Time.deltatime);
         }
 
 
@@ -40,11 +42,12 @@ namespace BRS.Scripts {
                 pp.Collect(this);
                 Spawner.instance.RemovePowerup(this);
                 GameObject.Destroy(gameObject);
+                UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, namePowerup, false);
             }
+            
         }
 
-        public virtual void UsePowerUp(Player p) { }
-
+        public virtual void UsePowerUp(Player p) { UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, namePowerup, true); }
 
         // queries
 
@@ -58,7 +61,13 @@ namespace BRS.Scripts {
     class HealthPotion : Powerup {
         float valuePotion = 20;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "health";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.AddHealth(valuePotion);
         }
     }
@@ -66,7 +75,13 @@ namespace BRS.Scripts {
     class HealthBoost : Powerup {
         float valueBoost = 20;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "health";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.UpdateMaxHealth(valueBoost);
         }
     }
@@ -74,7 +89,13 @@ namespace BRS.Scripts {
     class StaminaPotion : Powerup {
         float valuePotion = .2f;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "shield";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.AddStamina(valuePotion);
         }
     }
@@ -82,7 +103,13 @@ namespace BRS.Scripts {
     class StaminaBoost : Powerup {
         float valueBoost = .2f;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "shield";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.UpdateMaxStamina(valueBoost);
         }
     }
@@ -90,7 +117,13 @@ namespace BRS.Scripts {
     class CapacityBoost : Powerup {
         int valueBoost = 2;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "capacity";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
         }
     }
@@ -98,7 +131,13 @@ namespace BRS.Scripts {
     class SpeedBoost : Powerup {
         const float boostTime = 3;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "speed";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = true;
             new Timer(boostTime, () => p.gameObject.GetComponent<PlayerMovement>().powerUpBoosting = false);
         }
@@ -109,7 +148,13 @@ namespace BRS.Scripts {
         const float radiusExplosion = 2;
         const float damageExplosion = 60;
 
+        public override void Start() {
+            base.Start();
+            namePowerup = "bomb";
+        }
+
         public override void UsePowerUp(Player p) {
+            base.UsePowerUp(p);
             Vector3 posBomb = p.transform.position;
             Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
             new Timer(timeBombToExplode, () => BombExplosion(pu, posBomb));
