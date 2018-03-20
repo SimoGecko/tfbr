@@ -13,6 +13,7 @@ namespace BRS.Scripts {
         //public
         const float deloadDistanceThreshold = 4f;
         const float timeBetweenUnloads = .1f;
+        const float moneyPenalty = .5f; // percent
 
         //private
         public int BaseIndex { get; set; } = 0;
@@ -21,8 +22,8 @@ namespace BRS.Scripts {
 
 
         //reference
-        //Player player;
-        //PlayerInventory playerInventory;
+        Player player;
+        PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
@@ -33,8 +34,9 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
-            //player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
-            //if (player == null) Debug.LogError("player not found");
+
+            player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
+            if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
@@ -74,6 +76,13 @@ namespace BRS.Scripts {
 
         protected override void Die() {
             
+        }
+
+        public void NotifyRoundEnd() {
+            if (!PlayerInsideRange(player.gameObject)) {
+                //apply penalty
+                TotalMoney -= (int)(TotalMoney * moneyPenalty);
+            }
         }
 
 

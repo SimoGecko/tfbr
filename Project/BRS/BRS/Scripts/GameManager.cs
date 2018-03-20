@@ -20,26 +20,32 @@ namespace BRS.Scripts {
         //public
         public static int numPlayers = 2;
         public static int lvlScene = 3;
-        const int roundTime = 120;
+        public const int roundTime = 120;
+        public const int timeBeforePolice = 20;
 
         //private
         public static bool gameActive;
+        Timer rt;
 
         //reference
         public static GameManager instance;
-
+        Base[] bases;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
             gameActive = true;
-            Timer rt = new Timer(0, roundTime, OnRoundEnd);
+            rt = new Timer(0, roundTime, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
+
+            FindBases();
         }
 
         public override void Update() {
-            
+            if (rt.span.TotalSeconds < timeBeforePolice) {
+                UserInterface.instance.UpdatePoliceComing();
+            }
         }
 
 
@@ -50,9 +56,10 @@ namespace BRS.Scripts {
         // commands
         void OnRoundEnd() {
             gameActive = false;
+            NotifyBases();
             int winner = FindWinner();
             UserInterface.instance.UpdateGameWinnerUI(winner);
-            new Timer(1f, () => Restart());
+            new Timer(5f, () => Restart());
         }
 
         void Restart() { // TODO fix this shit
@@ -69,20 +76,32 @@ namespace BRS.Scripts {
         }
 
 
+        void FindBases() {
+            //find bases
+            GameObject[] basesObject = GameObject.FindGameObjectsWithTag("base");
+            if (basesObject.Length < 1) {
+                Debug.LogError("could not find the bases"); // avoids tag messup
+            } else {
+                bases = new Base[basesObject.Length];
+                for (int i = 0; i < bases.Length; i++)
+                    bases[i] = basesObject[i].GetComponent<Base>();
+            }
+        }
+
+        void NotifyBases() {
+            for (int i = 0; i < bases.Length; i++)
+                bases[i].NotifyRoundEnd();
+        }
+
+
 
 
         // queries
         int FindWinner() {
-            GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
-            if (bases.Length < 1) {
-                Debug.LogError("could not find the bases"); // avoids tag messup
-                return 0;
-            }
             int winner = 0;
-
-            int maxCash = bases[0].GetComponent<Base>().TotalMoney;
+            int maxCash = bases[0].TotalMoney;
             for (int i = 1; i < numPlayers; i++) {
-                int totmoney = bases[i].GetComponent<Base>().TotalMoney;
+                int totmoney = bases[i].TotalMoney;
                 if (totmoney > maxCash) { // TODO deal with tie
                     winner = i;
                     maxCash = totmoney;

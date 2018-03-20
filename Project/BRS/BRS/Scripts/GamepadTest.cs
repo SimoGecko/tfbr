@@ -61,7 +61,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            //TestInput();
+            TestInput();
 
         }
 

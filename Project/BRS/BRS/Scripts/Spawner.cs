@@ -79,7 +79,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnInitialPowerUp() {
-            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab", "speedPrefab" }; // TODO move out of here, spawner should not know names of powerup
+            string[] namesPowerupsPrefab = { "bombPrefab", "capacityPrefab", "healthPrefab", "shieldPrefab", "speedPrefab", "keyPrefab" }; // TODO move out of here, spawner should not know names of powerup
 
             for (int i = 0; i < namesPowerupsPrefab.Length; i++)
                 for (int j = 0; j < powerUpAmount; j++)

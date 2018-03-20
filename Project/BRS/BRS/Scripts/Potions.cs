@@ -16,9 +16,9 @@ namespace BRS.Scripts {
             powerupName = "health"; // TODO distinguish
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.AddHealth(valuePotion);
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            owner.AddHealth(valuePotion);
         }
     }
 
@@ -30,9 +30,9 @@ namespace BRS.Scripts {
             powerupName = "health";
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.UpdateMaxHealth(valueBoost);
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            owner.UpdateMaxHealth(valueBoost);
         }
     }
 
@@ -45,9 +45,9 @@ namespace BRS.Scripts {
             powerupName = "shield"; // not shield
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.gameObject.GetComponent<PlayerStamina>().AddStamina(valuePotion);
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            owner.gameObject.GetComponent<PlayerStamina>().AddStamina(valuePotion);
         }
     }
 
@@ -59,9 +59,9 @@ namespace BRS.Scripts {
             powerupName = "stamina";
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.gameObject.GetComponent<PlayerStamina>().UpdateMaxStamina(valueBoost);
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            owner.gameObject.GetComponent<PlayerStamina>().UpdateMaxStamina(valueBoost);
         }
     }
 
@@ -75,9 +75,9 @@ namespace BRS.Scripts {
             powerupName = "capacity";
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            owner.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
         }
     }
 
@@ -89,9 +89,9 @@ namespace BRS.Scripts {
             powerupName = "speed";
         }
 
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            PlayerMovement pm = p.gameObject.GetComponent<PlayerMovement>();
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            PlayerMovement pm = owner.gameObject.GetComponent<PlayerMovement>();
             pm.powerUpBoosting = true;
             new Timer(boostTime, () => pm.powerUpBoosting = false);
         }

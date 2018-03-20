@@ -39,9 +39,9 @@ namespace BRS.Scripts {
 
 
         // commands
-        public override void UsePowerUp(Player p) {
-            base.UsePowerUp(p);
-            transform.position = p.transform.position + Vector3.Up;
+        public override void UsePowerUp() {
+            base.UsePowerUp();
+            transform.position = owner.transform.position + Vector3.Up;
             canPickup = false;
             planted = true; 
             gameObject.Active = true;

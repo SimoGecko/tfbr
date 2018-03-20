@@ -24,12 +24,14 @@ namespace BRS.Scripts {
         SpriteFont winnerFont;
         Texture2D bar;
         Texture2D[] powerUpsPng = new Texture2D[6];
+        Texture2D policeCar, policeLight;
         Dictionary<string, int> mapNamePowerUpIndexPng = new Dictionary<string, int>();
         string[] namePowerUpsPng = {"bomb", "key", "capacity", "speed", "health", "shield"};
     
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
         bool showWinner;
+        bool showPolice;
         string winnerString = "";
 
         PlayerUI[] playerUI;
@@ -42,11 +44,13 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public void Start() {
-            showWinner = false;
+            showWinner = showPolice = false;
             instance = this;
             myfont = Content.Load<SpriteFont>("font1");
             winnerFont = Content.Load<SpriteFont>("font2");
             bar = Content.Load<Texture2D>("progress_bar");
+            policeCar = Content.Load<Texture2D>("images/policecar");
+            policeLight = Content.Load<Texture2D>("images/policecar_lights");
 
             playerUI = new PlayerUI[GameManager.numPlayers];
 
@@ -60,7 +64,23 @@ namespace BRS.Scripts {
         }
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(Screen.WIDTH/2-50, Screen.HEIGHT/2-100), Color.White);
+            Vector2 centerPos = new Vector2(Screen.WIDTH / 2 - 100, Screen.HEIGHT / 2 - 100);
+            spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), centerPos, Color.White);
+
+            //police bar
+            Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
+            Rectangle bgrect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
+            fgrect.Width = (int)(BARWIDTH * (1-roundtime.span.TotalSeconds / GameManager.roundTime));
+            spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), bgrect, Color.White);
+            spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), fgrect, Color.Gray);
+            spriteBatch.Draw(policeCar, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One*64, .6f, SpriteEffects.None, 1);
+
+            if (showPolice) {
+                spriteBatch.DrawString(myfont, "Get back to your base!", centerPos + new Vector2(-50, 100), Color.White);
+                if((Time.frame/10)%2==0)
+                    spriteBatch.Draw(policeLight, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One * 64, .6f, SpriteEffects.None, 1);
+            }
+
 
             Minimap.instance.Draw(spriteBatch);
             if (showWinner) {
@@ -94,7 +114,7 @@ namespace BRS.Scripts {
             //base health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].baseHealthPercent);
             spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Yellow);
+            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Orange);
             spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
             //power ups
             Rectangle powerupRectDestination = new Rectangle(10, 370, 50, 50);
@@ -162,6 +182,10 @@ namespace BRS.Scripts {
         public void UpdateGameWinnerUI(int winner) {
             winnerString = "Player " + winner + " won!";
             showWinner = true;
+        }
+
+        public void UpdatePoliceComing() {
+            showPolice = true;
         }
 
         //GENERAL ACCESS

@@ -17,12 +17,18 @@ namespace BRS {
         static bool[] vibrating = new bool[4];
 
         public static void Start() {
-            gState = oldGstate = new GamePadState[4];
+            gState  = new GamePadState[4];
+            oldGstate = new GamePadState[4];
 
             kState = Keyboard.GetState();
             mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 gState[i] = GamePad.GetState(i);
+
+            //old stuff for mouse
+            oldMstate = Mouse.GetState();
+           
+
         }
 
         public static void Update() {
@@ -33,13 +39,7 @@ namespace BRS {
             mState = Mouse.GetState();
 
             for (int i = 0; i < 4; i++) {
-                //I don't know why this is always the same as the new state??
-
-                //oldGstate[i] = gState[i];
-                oldGstate[i] = new GamePadState(gState[i].ThumbSticks, gState[i].Triggers, gState[i].Buttons, gState[i].DPad);
-                //oldGstate[i] = new GamePadState(gState[i].ThumbSticks.Left, gState[i].ThumbSticks.Right, gState[i].Triggers.Left, gState[i].Triggers.Right, gState[i].Buttons);
-            }
-            for (int i = 0; i < 4; i++) {
+                oldGstate[i] = gState[i];
                 gState[i] = GamePad.GetState(i);
             }
 
@@ -54,13 +54,6 @@ namespace BRS {
                 }
             }*/
         }
-
-
-        static void Copy(GamePadState from, ref GamePadState to) {
-            GamePadState newg = new GamePadState(from.ThumbSticks, from.Triggers, from.Buttons, from.DPad);
-        }
-
-
 
         //AXIS
         static bool LeftAxis()  { return kState.IsKeyDown(Keys.Left)  || kState.IsKeyDown(Keys.A);  }

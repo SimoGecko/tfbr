@@ -20,7 +20,7 @@ namespace BRS.Scripts {
         protected bool rotate = true;
 
         //reference
-
+        protected Player owner;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -46,8 +46,9 @@ namespace BRS.Scripts {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
                 pp.Collect(this);
-                Spawner.instance.RemovePowerup(this);
+                owner = p;
 
+                Spawner.instance.RemovePowerup(this);
                 UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, powerupName, true);
 
                 if(!destroyOnUse) gameObject.Active = false;
@@ -56,12 +57,15 @@ namespace BRS.Scripts {
             
         }
 
-        public virtual void UsePowerUp(Player p) {
-            UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, powerupName, false);
+        public virtual void UsePowerUp() {
+            UserInterface.instance.UpdatePlayerPowerupUI(owner.playerIndex, powerupName, false);
         }
 
         // queries
-
+        public virtual bool CanUse() {
+            //fill 
+            return true;
+        }
 
 
         // other

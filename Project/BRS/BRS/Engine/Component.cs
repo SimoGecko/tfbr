@@ -26,7 +26,7 @@ namespace BRS {
 
         public virtual void Start() { }
         public virtual void Update() { }
-        public virtual void LateUpdate() { }
+        public virtual void LateUpdate() { } // really necessary?
         public virtual void OnCollisionEnter(Collider c) { }
 
         public virtual object Clone() {

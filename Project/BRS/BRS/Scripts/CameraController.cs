@@ -46,7 +46,7 @@ namespace BRS.Scripts {
         }
 
         public override void LateUpdate() { // after player has moved
-            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
+            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
             float inputY = (Input.mouseDelta.Y*mouseSensitivity.Y).Clamp(-100, 100);
 
             inputX += Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity.X;

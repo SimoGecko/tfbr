@@ -114,6 +114,8 @@ namespace BRS {
                 }
             }
 
+            //DO concollisionExit check
+
             previousCollisions = new List<string>(currentCollisions);
         }//end oncollisionenter check
     }

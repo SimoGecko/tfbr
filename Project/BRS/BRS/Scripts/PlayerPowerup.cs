@@ -37,7 +37,7 @@ namespace BRS.Scripts {
         public void UsePowerup(Player p) {
             //could implement selector here
             if (carryingPowerUp.Count > 0) {
-                carryingPowerUp[0].UsePowerUp(p);
+                carryingPowerUp[0].UsePowerUp();
                 carryingPowerUp.RemoveAt(0);
             }
         }

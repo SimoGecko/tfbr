@@ -161,6 +161,7 @@
     <Compile Include="Scripts\Powerup.cs" />
     <Compile Include="Scripts\Spawner.cs" />
     <Compile Include="Scripts\TransformTest.cs" />
+    <Compile Include="Scripts\Vault.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Content\cash.xnb" />
@@ -192,6 +193,8 @@
     <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\policecar.png" />
+    <Content Include="Content\policecar_lights.png" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />

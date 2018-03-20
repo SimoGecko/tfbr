@@ -128,6 +128,16 @@ namespace BRS.Load {
 
             }*/
 
+            //VAULT
+            GameObject vault = new GameObject("vault", Content.Load<Model>("cylinder"));
+            vault.AddComponent(new Vault());
+            vault.Transform.position = new Vector3(5 , 1.5f, -62);
+            //vault.Transform.position = new Vector3(0 , 1.5f, -5);
+            vault.Transform.scale = new Vector3(3, .5f, 3);
+            vault.Transform.eulerAngles = new Vector3(90, 0, 0);
+            vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+
+
 
             //LOAD UNITY SCENE
             var task = Task.Run(() => {

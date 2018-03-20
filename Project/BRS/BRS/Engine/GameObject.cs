@@ -21,7 +21,7 @@ namespace BRS {
         public ModelMesh mesh { get { return _model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool Active { get; set; } = true;
         public string Name { private set; get; }
-        public string myTag = "";
+        public string myTag = ""; // Make this tag and enum
         public ObjectType Type { set; get; } = ObjectType.Default;
 
 
