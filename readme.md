@@ -28,17 +28,26 @@ Experiment with Lighting in mono game. Here are some highlights:
     up to 3 directional lights, and can set direction, diffuse color and specular color of the directional lights directly.
     
 
-###### Advanced lighting (requires writing shaders) 
+###### Advanced lighting (requires writing shaders and effect file) 
 
 - Point light
 
+    Write in the .fx such that the light emits the same amount of light in all directions and diminishes with inverse ratio to distance squared.
+
 - Spot light
 
+    Similar to point light, except the light emission equation.
+    
 - Pre-baked light maps
 
 
 Scenes in Unity can be built as light maps (for example the sky box light map baked for the environment as in `dungeon/Asset/LightMaps`).
-Light on textures can be baked in Unity or Blender.
+Light on textures can be baked in Unity(older versions of Unity) or Blender(Version 2.7.1).
+
+- Shaders
+
+Shaders are written in HLSL, which is the same as Unity customized shaders (thus can use available Unity shaders ). The folder `Shaders` contains how to integrate shaders
+in mono game and a simple ambient shader.
 
 
 
