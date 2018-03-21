@@ -35,8 +35,10 @@ Experiment with Lighting in mono game. Here are some highlights:
 - Spot light
 
 - Pre-baked light maps
-  Scenes in Unity can be built as light maps (for example the sky box light map baked for the environment as in the `dungeon/Asset/LightMaps`).
-  Light on textures can be baked in Unity or Blender.
+
+
+Scenes in Unity can be built as light maps (for example the sky box light map baked for the environment as in `dungeon/Asset/LightMaps`).
+Light on textures can be baked in Unity or Blender.
 
 
 
