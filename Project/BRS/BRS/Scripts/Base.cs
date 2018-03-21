@@ -22,8 +22,8 @@ namespace BRS.Scripts {
 
 
         //reference
-        Player player;
-        PlayerInventory playerInventory;
+        //Player player; // should be array
+        //PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
@@ -35,8 +35,8 @@ namespace BRS.Scripts {
             base.Start();
             TotalMoney = 0;
 
-            player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
-            if (player == null) Debug.LogError("player not found");
+            //player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
+            //if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
@@ -79,10 +79,15 @@ namespace BRS.Scripts {
         }
 
         public void NotifyRoundEnd() {
-            if (!PlayerInsideRange(player.gameObject)) {
-                //apply penalty
-                TotalMoney -= (int)(TotalMoney * moneyPenalty);
+            GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+            foreach(var player in players) {
+                Player p = player.GetComponent<Player>();
+                if (p.teamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {
+                    //apply penalty (could happen twice)
+                    TotalMoney -= (int)(TotalMoney * moneyPenalty);
+                }
             }
+            
         }
 
 

@@ -127,6 +127,7 @@ namespace BRS.Scripts {
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries
+        //note: keyboard assumes max 2 players, gamepad works for 4
 
         Vector2 MoveInput() {
             if (playerIndex == 0)
@@ -136,8 +137,8 @@ namespace BRS.Scripts {
         }
 
         bool AttackInput() {
-            return (playerIndex == 0 ? Input.GetKey(Keys.Space) : Input.GetKey(Keys.Enter))
-                || Input.GetButton(Buttons.A, playerIndex);
+            return (playerIndex == 0 ? Input.GetKeyDown(Keys.Space) : Input.GetKeyDown(Keys.Enter))
+                || Input.GetButtonDown(Buttons.A, playerIndex);
         }
 
         bool DropCashInput() {
@@ -146,13 +147,13 @@ namespace BRS.Scripts {
         }
 
         bool PowerUpInput() {
-            return (playerIndex == 0 ? Input.GetKey(Keys.R) : Input.GetKey(Keys.P))
-               || Input.GetButton(Buttons.X, playerIndex);
+            return (playerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
+               || Input.GetButtonDown(Buttons.X, playerIndex);
         }
 
         bool LiftInput() {
-            return (playerIndex == 0 ? Input.GetKey(Keys.F) : Input.GetKey(Keys.L))
-               || Input.GetButton(Buttons.Y, playerIndex);
+            return (playerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
+               || Input.GetButtonDown(Buttons.Y, playerIndex);
         }
 
         bool BoostInput() {

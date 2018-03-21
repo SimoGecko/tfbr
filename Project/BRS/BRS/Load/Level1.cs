@@ -132,7 +132,6 @@ namespace BRS.Load {
             GameObject vault = new GameObject("vault", Content.Load<Model>("cylinder"));
             vault.AddComponent(new Vault());
             vault.Transform.position = new Vector3(5 , 1.5f, -62);
-            //vault.Transform.position = new Vector3(0 , 1.5f, -5);
             vault.Transform.scale = new Vector3(3, .5f, 3);
             vault.Transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
@@ -146,7 +145,8 @@ namespace BRS.Load {
             task.Wait();
 
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            Debug.Assert(bases.Length == 2, "there should be 2 bases");
+            for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
                 //bases[i].AddComponent(new BoxCollider(bases[i]));
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
