@@ -154,6 +154,7 @@
     <Compile Include="Scripts\Money.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
+    <Compile Include="Scripts\PlayerLift.cs" />
     <Compile Include="Scripts\PlayerAttack.cs" />
     <Compile Include="Scripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerMovement.cs" />

@@ -38,6 +38,7 @@ namespace BRS.Scripts {
                 PlayerAttack pa = c.gameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
                     CrackCrate();
+
             }
         }
 
@@ -60,6 +61,7 @@ namespace BRS.Scripts {
             Elements.instance.Remove(this);
             GameObject.Destroy(gameObject);
         }
+
 
         public void TakeDamage(float damage) {
             CrackCrate();

@@ -53,6 +53,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
+                forklift.AddComponent(new PlayerLift());
                 forklift.Transform.TranslateGlobal(Vector3.Right * 30 * i);
                 forklift.Position = Conversion.ToJitterVector(new Vector3(31 * i, 1, 0));
                 forklift.IsStatic = false;

@@ -38,6 +38,7 @@ namespace BRS.Scripts {
         PlayerInventory pI;
         PlayerPowerup   pP;
         PlayerStamina   pS;
+        PlayerLift      pL;
 
         CameraController camController;
 
@@ -54,6 +55,7 @@ namespace BRS.Scripts {
             pI = gameObject.GetComponent<PlayerInventory>();
             pP = gameObject.GetComponent<PlayerPowerup>();
             pS = gameObject.GetComponent<PlayerStamina>();
+            pL = gameObject.GetComponent<PlayerLift>();
         }
 
         public override void Update() {
@@ -79,6 +81,11 @@ namespace BRS.Scripts {
                     pS.UseStaminaForAttack();
                     pA.BeginAttack();
                 }
+
+                if (LiftInput()) {
+                    pL.Lift();
+                }
+
             }
             else if (state == State.attack) {
                 pA.AttackCoroutine();
