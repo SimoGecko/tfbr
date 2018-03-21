@@ -57,7 +57,7 @@ namespace BRS.Scripts {
             
         }
 
-        public virtual void UsePowerUp() {
+        public virtual void UsePowerup() {
             UserInterface.instance.UpdatePlayerPowerupUI(owner.playerIndex, powerupName, false);
         }
 

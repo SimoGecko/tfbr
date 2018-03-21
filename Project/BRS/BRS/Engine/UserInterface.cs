@@ -23,10 +23,10 @@ namespace BRS.Scripts {
         SpriteFont myfont;
         SpriteFont winnerFont;
         Texture2D bar;
-        Texture2D[] powerUpsPng = new Texture2D[6];
+        Texture2D[] powerupsPng = new Texture2D[6];
         Texture2D policeCar, policeLight;
-        Dictionary<string, int> mapNamePowerUpIndexPng = new Dictionary<string, int>();
-        string[] namePowerUpsPng = {"bomb", "key", "capacity", "speed", "health", "shield"};
+        Dictionary<string, int> mapNamePowerupIndexPng = new Dictionary<string, int>();
+        string[] namePowerupsPng = {"bomb", "key", "capacity", "speed", "health", "shield"};
     
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
@@ -35,6 +35,9 @@ namespace BRS.Scripts {
         string winnerString = "";
 
         PlayerUI[] playerUI;
+
+        //circle UI
+        Texture2D circleBg, circleFg, circleGr;
 
 
         //reference
@@ -54,11 +57,17 @@ namespace BRS.Scripts {
 
             playerUI = new PlayerUI[GameManager.numPlayers];
 
-            for (int i = 0; i < namePowerUpsPng.Length; ++i) {
-                powerUpsPng[i] = Content.Load<Texture2D>("images/" + namePowerUpsPng[i] + "_pic");
-                if (!mapNamePowerUpIndexPng.ContainsKey(namePowerUpsPng[i]))
-                    mapNamePowerUpIndexPng.Add(namePowerUpsPng[i], i);
+            for (int i = 0; i < namePowerupsPng.Length; ++i) {
+                powerupsPng[i] = Content.Load<Texture2D>("images/" + namePowerupsPng[i] + "_pic");
+                if (!mapNamePowerupIndexPng.ContainsKey(namePowerupsPng[i]))
+                    mapNamePowerupIndexPng.Add(namePowerupsPng[i], i);
             }
+
+            circleBg = Content.Load<Texture2D>("images/circle_bg");
+            circleFg = Content.Load<Texture2D>("images/circle_fg");
+            circleGr = Content.Load<Texture2D>("images/circle_gradient");
+            CircleBar.Initialize(circleFg, circleGr, Game1.instance.GraphicsDevice);
+            
 
 
         }
@@ -86,6 +95,11 @@ namespace BRS.Scripts {
             if (showWinner) {
                 spriteBatch.DrawString(winnerFont,winnerString, new Vector2(Screen.WIDTH / 2 - 200, Screen.HEIGHT/2), Color.White);
             }
+
+
+            //TRY CIRCLE
+            spriteBatch.Draw(circleBg, new Vector2(300, 200), Color.White);
+            spriteBatch.Draw(CircleBar.Mix(playerUI[0].stamina), new Vector2(300, 200), Color.White);
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
@@ -119,12 +133,12 @@ namespace BRS.Scripts {
             spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75 + offset, 310), Color.White);
             //power ups
             Rectangle powerupRectDestination = new Rectangle(10 + offset, 370, 50, 50);
-            if (playerUI[index].currentPowerUp != null) {
-                foreach (string name in playerUI[index].currentPowerUp) {
-                    spriteBatch.Draw(powerUpsPng[mapNamePowerUpIndexPng[name]], powerupRectDestination, Color.AliceBlue);
+            if (playerUI[index].currentPowerup != null) {
+                foreach (string name in playerUI[index].currentPowerup) {
+                    spriteBatch.Draw(powerupsPng[mapNamePowerupIndexPng[name]], powerupRectDestination, Color.AliceBlue);
                 }
             } else {
-                playerUI[index].currentPowerUp = new List<string>();
+                playerUI[index].currentPowerup = new List<string>();
             }
             
         }
@@ -173,9 +187,9 @@ namespace BRS.Scripts {
         //POWERUP
         public void UpdatePlayerPowerupUI(int index, string name, bool add) {
             if (add)
-                playerUI[index].currentPowerUp.Add(name);
+                playerUI[index].currentPowerup.Add(name);
             else
-                playerUI[index].currentPowerUp.Remove(name);
+                playerUI[index].currentPowerup.Remove(name);
         }
 
 
@@ -225,7 +239,7 @@ namespace BRS.Scripts {
         public float baseHealth;
 
         //power ups
-        public List<string> currentPowerUp;
+        public List<string> currentPowerup;
 
     }
 

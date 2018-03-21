@@ -16,8 +16,8 @@ namespace BRS.Scripts {
             powerupName = "health"; // TODO distinguish
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             owner.AddHealth(valuePotion);
         }
     }
@@ -30,8 +30,8 @@ namespace BRS.Scripts {
             powerupName = "health";
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             owner.UpdateMaxHealth(valueBoost);
         }
     }
@@ -45,8 +45,8 @@ namespace BRS.Scripts {
             powerupName = "shield"; // not shield
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             owner.gameObject.GetComponent<PlayerStamina>().AddStamina(valuePotion);
         }
     }
@@ -59,8 +59,8 @@ namespace BRS.Scripts {
             powerupName = "stamina";
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             owner.gameObject.GetComponent<PlayerStamina>().UpdateMaxStamina(valueBoost);
         }
     }
@@ -75,8 +75,8 @@ namespace BRS.Scripts {
             powerupName = "capacity";
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             owner.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
         }
     }
@@ -89,11 +89,11 @@ namespace BRS.Scripts {
             powerupName = "speed";
         }
 
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             PlayerMovement pm = owner.gameObject.GetComponent<PlayerMovement>();
-            pm.powerUpBoosting = true;
-            new Timer(boostTime, () => pm.powerUpBoosting = false);
+            pm.powerupBoosting = true;
+            new Timer(boostTime, () => pm.powerupBoosting = false);
         }
     }
 

@@ -143,6 +143,7 @@
     <Compile Include="Scripts\Base.cs" />
     <Compile Include="Scripts\Bomb.cs" />
     <Compile Include="Scripts\CameraController.cs" />
+    <Compile Include="Scripts\CircleBar.cs" />
     <Compile Include="Scripts\Crate.cs" />
     <Compile Include="Scripts\Elements.cs" />
     <Compile Include="Scripts\GameManager.cs" />

@@ -27,7 +27,7 @@ namespace BRS.Scripts {
 
         //BOOST
         public bool boosting;
-        public bool powerUpBoosting;
+        public bool powerupBoosting;
 
         //reference
         PlayerInventory playerInventory;
@@ -68,7 +68,7 @@ namespace BRS.Scripts {
             transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
-            float speedboost = boosting || powerUpBoosting ? boostSpeedMultiplier : 1f;
+            float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
             transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics

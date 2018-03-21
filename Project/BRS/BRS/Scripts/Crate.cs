@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
-    class Crate : Component {
+    class Crate : Component, IDamageable {
         ////////// represents a crate that can be cracked when attacked and reveals money and powerup inside //////////
 
         // --------------------- VARIABLES ---------------------
@@ -59,6 +59,10 @@ namespace BRS.Scripts {
 
             Elements.instance.Remove(this);
             GameObject.Destroy(gameObject);
+        }
+
+        public void TakeDamage(float damage) {
+            CrackCrate();
         }
 
 

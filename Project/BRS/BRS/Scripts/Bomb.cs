@@ -39,15 +39,15 @@ namespace BRS.Scripts {
 
 
         // commands
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             transform.position = owner.transform.position + Vector3.Up;
             canPickup = false;
             planted = true; 
             gameObject.Active = true;
             rotate = false;
 
-            //Powerup pu = Spawner.instance.SpawnOnePowerUpAt(p.transform.position, "bombPrefab");
+            //Powerup pu = Spawner.instance.SpawnOnePowerupAt(p.transform.position, "bombPrefab");
             //Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
 
             new Timer(timeBeforeExplosion, () => Explode());

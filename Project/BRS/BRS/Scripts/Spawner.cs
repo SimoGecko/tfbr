@@ -20,25 +20,22 @@ namespace BRS.Scripts {
 
         const int moneyAmount = 50;
         const int crateAmount = 10;
-        const int powerUpAmount = 5;
-
-        Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .3f }, { "gold", .1f } };
-        Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .3f }, { "capacity", .2f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f } };
-
-
-        /*
-        const float probOfCash = .6f;
-        const float probOfDiamond = .3f;
-        const float probOfGold = .1f;
-
-        const float probOfPowerUp = .1f;
-        */
+        const int powerupAmount = 5;
 
         const float timeBetweenCashSpawn = 1f;
+        const float timeBetweenCrateSpawn = 5f;
+        const float timeBetweenPowerupSpawn = 10f;
+
+        const float timeRandomizer = .2f;
+
+        //prob distributions
+        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .3f }, { "gold", .1f } };
+        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .3f }, { "capacity", .2f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f } };
+        
 
 
         //private
-        
+
 
 
         //reference
@@ -52,13 +49,11 @@ namespace BRS.Scripts {
             
             SpawnInitialMoney();
             SpawnInitialCrates();
-            SpawnInitialPowerUp();
+            SpawnInitialPowerup();
 
             SpawnCashContinuous();
-
-            GameObject manager = GameObject.FindGameObjectWithName("manager");
-            if (!manager.HasComponent<Elements>()) Debug.LogError("ont attackedd");
-            else Debug.Log("has instance");
+            SpawnCrateContinuous();
+            SpawnPowerupContinuous();
         }
 
         public override void Update() {
@@ -71,64 +66,62 @@ namespace BRS.Scripts {
 
 
         // commands
+
+        // MONEY
         void SpawnInitialMoney() {
             for (int i = 0; i < moneyAmount; i++)
                 SpawnOneMoneyRandom();
         }
 
-
-        void SpawnInitialCrates() {
-            for (int i = 0; i < crateAmount; i++)
-                SpawnOneCrateRandom();
-        }
-
-        void SpawnInitialPowerUp() {
-            //for (int i = 0; i < namesPowerupsPrefab.Length; i++)
-            for (int i = 0; i < powerUpAmount; i++)
-                SpawnOnePowerUpRandom();
-        }
-
-        // MONEY
         void SpawnOneMoneyRandom() {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
             Vector2 position = spawnArea.Evaluate(sample);
-            SpawnOneMoney(position.To3());
+            SpawnOneMoneyAt(position.To3());
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius) {
             Vector3 pos = p + MyRandom.insideUnitCircle().To3() * radius;
-            SpawnOneMoney(pos);
+            SpawnOneMoneyAt(pos);
         }
 
-        void SpawnOneMoney(Vector3 pos) {
+        void SpawnOneMoneyAt(Vector3 pos) {
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
             Elements.instance.Add(newmoney.GetComponent<Money>());
         }
 
         // CRATE
+        void SpawnInitialCrates() {
+            for (int i = 0; i < crateAmount; i++)
+                SpawnOneCrateRandom();
+        }
+
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
             Elements.instance.Add(newCrate.GetComponent<Crate>());
         }
-        
+
 
         // POWERUP
-        void SpawnOnePowerUpRandom() {
+        void SpawnInitialPowerup() {
+            for (int i = 0; i < powerupAmount; i++)
+                SpawnOnePowerupRandom();
+        }
+
+        void SpawnOnePowerupRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            SpawnOnePowerUpAt(position.To3());
+            SpawnOnePowerupAt(position.To3());
         }
         public void SpawnPowerupAround(Vector3 p, float radius) {
             Vector3 pos = p + MyRandom.insideUnitCircle().To3() * radius;
-            SpawnOnePowerUpAt(pos);
+            SpawnOnePowerupAt(pos);
         }
 
-        void SpawnOnePowerUpAt(Vector3 position) {
+        void SpawnOnePowerupAt(Vector3 position) {
             GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up*.45f, Quaternion.Identity);
             Elements.instance.Add(newPowerup.GetComponent<Powerup>());
-            //return newPowerup.GetComponent<Powerup>(); // WHY would you want to return it
         }
 
 
@@ -139,9 +132,25 @@ namespace BRS.Scripts {
         async void SpawnCashContinuous() {
             while (true) {
                 SpawnOneMoneyRandom();
-                await Time.WaitForSeconds(timeBetweenCashSpawn);
+                await Time.WaitForSeconds(timeBetweenCashSpawn * MyRandom.Range(1 - timeRandomizer, 1 + timeRandomizer));
             }
         }
+
+        async void SpawnCrateContinuous() {
+            while (true) {
+                SpawnOneCrateRandom();
+                await Time.WaitForSeconds(timeBetweenCrateSpawn * MyRandom.Range(1-timeRandomizer, 1+timeRandomizer));
+            }
+        }
+
+        async void SpawnPowerupContinuous() {
+            while (true) {
+                SpawnOnePowerupRandom();
+                await Time.WaitForSeconds(timeBetweenPowerupSpawn * MyRandom.Range(1 - timeRandomizer, 1 + timeRandomizer));
+            }
+        }
+
+       
     }
 
 }

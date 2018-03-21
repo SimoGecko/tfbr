@@ -131,6 +131,7 @@ namespace BRS {
             ui.DrawGlobal(spriteBatch);
             spriteBatch.End();
 
+
             base.Draw(gameTime);
         }
     }

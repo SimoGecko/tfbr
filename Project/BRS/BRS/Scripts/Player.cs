@@ -71,7 +71,7 @@ namespace BRS.Scripts {
                 Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
                 pM.Move(moveInput.To3());
 
-                if (PowerUpInput())  pP.UsePowerup(this);
+                if (PowerupInput())  pP.UsePowerup(this);
                 if (DropCashInput()) pI.DropMoney();
 
                 if (AttackInput() && pS.HasStaminaForAttack()) {
@@ -146,7 +146,7 @@ namespace BRS.Scripts {
                || Input.GetButton(Buttons.B, playerIndex);
         }
 
-        bool PowerUpInput() {
+        bool PowerupInput() {
             return (playerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
                || Input.GetButtonDown(Buttons.X, playerIndex);
         }

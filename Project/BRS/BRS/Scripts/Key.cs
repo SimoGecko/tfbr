@@ -36,8 +36,8 @@ namespace BRS.Scripts {
 
 
         // commands
-        public override void UsePowerUp() {
-            base.UsePowerUp();
+        public override void UsePowerup() {
+            base.UsePowerup();
             transform.position = owner.transform.position;
             new Timer(timeToUse, () => OpenVault());
         }
