@@ -89,8 +89,9 @@ namespace BRS.Scripts {
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
-            spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10, 80), Color.White);
-            spriteBatch.DrawString(myfont, "carrying: " + playerUI[index].carryingMoneyValue, new Vector2(10, 120), Color.White);
+            int offset = index % 2 == 0 ? 0 : +650;
+            spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10+offset, 80), Color.White);
+            spriteBatch.DrawString(myfont, "carrying: " + playerUI[index].carryingMoneyValue, new Vector2(10+offset, 120), Color.White);
 
 
             Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
@@ -98,26 +99,26 @@ namespace BRS.Scripts {
 
             //health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].healthPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 170), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 170), fgrect, Color.Green);
-            spriteBatch.DrawString(myfont, playerUI[index].health + "/" + playerUI[index].maxHealth, new Vector2(75, 160), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 170), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 170), fgrect, Color.Green);
+            spriteBatch.DrawString(myfont, playerUI[index].health + "/" + playerUI[index].maxHealth, new Vector2(75+offset, 160), Color.White);
             //stamina
             fgrect.Width = (int)(BARWIDTH * playerUI[index].staminaPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 220), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 220), fgrect, Color.Red);
-            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina*100) + "/" + playerUI[index].maxStamina*100, new Vector2(75, 210), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 220), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 220), fgrect, Color.Red);
+            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina*100) + "/" + playerUI[index].maxStamina*100, new Vector2(75 + offset, 210), Color.White);
             //capacity
             fgrect.Width = (int)(BARWIDTH * playerUI[index].carryingPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 270), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 270), fgrect, Color.Blue);
-            spriteBatch.DrawString(myfont, playerUI[index].carryingWeight + "/" + playerUI[index].maxCarrying, new Vector2(100, 260), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 270), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10+offset, 270), fgrect, Color.Blue);
+            spriteBatch.DrawString(myfont, playerUI[index].carryingWeight + "/" + playerUI[index].maxCarrying, new Vector2(100 + offset, 260), Color.White);
             //base health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].baseHealthPercent);
-            spriteBatch.Draw(bar, new Vector2(10, 320), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10, 320), fgrect, Color.Orange);
-            spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75, 310), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 320), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 320), fgrect, Color.Orange);
+            spriteBatch.DrawString(myfont, playerUI[index].baseHealth + "/" + playerUI[index].baseMaxHealth, new Vector2(75 + offset, 310), Color.White);
             //power ups
-            Rectangle powerupRectDestination = new Rectangle(10, 370, 50, 50);
+            Rectangle powerupRectDestination = new Rectangle(10 + offset, 370, 50, 50);
             if (playerUI[index].currentPowerUp != null) {
                 foreach (string name in playerUI[index].currentPowerUp) {
                     spriteBatch.Draw(powerUpsPng[mapNamePowerUpIndexPng[name]], powerupRectDestination, Color.AliceBlue);

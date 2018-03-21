@@ -15,6 +15,7 @@ namespace BRS.Scripts {
 
         const int minNumCoins = 1;
         const int maxNumCoins = 8;
+        const float probOfPowerup = .3f;
 
 
         //private
@@ -51,7 +52,12 @@ namespace BRS.Scripts {
             for (int i=0; i<numCoins; i++) {
                 Spawner.instance.SpawnMoneyAround(transform.position, crackSpawnRadius);
             }
-            Spawner.instance.RemoveCrate(this);
+
+            if (MyRandom.Value <= probOfPowerup)
+                Spawner.instance.SpawnPowerupAround(transform.position, crackSpawnRadius);
+
+
+            Elements.instance.Remove(this);
             GameObject.Destroy(gameObject);
         }
 

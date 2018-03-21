@@ -21,7 +21,7 @@ namespace BRS {
 
             //find all the colliders that intersect this sphere
             foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
-                //if ( (!collisionmask.Equals("") && !c.gameObject.myTag.Equals(collisionmask)) || !c.gameObject.Active) continue;
+                if ( (!collisionmask.Equals("") && !c.gameObject.myTag.Equals(collisionmask)) || !c.gameObject.Active) continue;
 
                 if (c.Intersects(sphere)) result.Add(c);
             }

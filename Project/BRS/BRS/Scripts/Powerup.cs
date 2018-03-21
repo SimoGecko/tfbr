@@ -48,7 +48,7 @@ namespace BRS.Scripts {
                 pp.Collect(this);
                 owner = p;
 
-                Spawner.instance.RemovePowerup(this);
+                Elements.instance.Remove(this);
                 UserInterface.instance.UpdatePlayerPowerupUI(p.playerIndex, powerupName, true);
 
                 if(!destroyOnUse) gameObject.Active = false;

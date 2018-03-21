@@ -59,20 +59,20 @@ namespace BRS.Scripts {
 
             //MONEY
             Rectangle sourceRect = new Rectangle(ICONSIZE, ICONSIZE, ICONSIZE, ICONSIZE); // bot right
-            foreach (Vector3 pos in Spawner.instance.AllMoneyPosition()) {
+            foreach (Vector3 pos in Elements.instance.AllMoneyPosition()) {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Green, 0, new Vector2(32, 32), .08f, SpriteEffects.None, 1f);
             }
 
             //CRATES
             sourceRect = new Rectangle(ICONSIZE, 0, ICONSIZE, ICONSIZE); // top right
-            foreach (Vector3 pos in Spawner.instance.AllCratePosition()) {
+            foreach (Vector3 pos in Elements.instance.AllCratePosition()) {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Brown, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
 
 
             //POWERUPS
             sourceRect = new Rectangle(0, ICONSIZE, ICONSIZE, ICONSIZE); // bot left
-            foreach (Vector3 pos in Spawner.instance.AllPowerupPosition()) {
+            foreach (Vector3 pos in Elements.instance.AllPowerupPosition()) {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Blue, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
 

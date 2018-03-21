@@ -144,6 +144,7 @@
     <Compile Include="Scripts\Bomb.cs" />
     <Compile Include="Scripts\CameraController.cs" />
     <Compile Include="Scripts\Crate.cs" />
+    <Compile Include="Scripts\Elements.cs" />
     <Compile Include="Scripts\GameManager.cs" />
     <Compile Include="Scripts\GamepadTest.cs" />
     <Compile Include="Scripts\Key.cs" />

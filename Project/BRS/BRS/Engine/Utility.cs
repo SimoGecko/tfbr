@@ -96,7 +96,17 @@ namespace BRS {
             return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
         }
 
-        
+       public static string EvaluateDistribution(Dictionary<string, float> distrib) {
+            float val = MyRandom.Value;
+            foreach(var entry in distrib) {
+                if (val <= entry.Value) return entry.Key;
+                val -= entry.Value;
+            }
+            Debug.LogError("distribution doesn't sum to 1");
+            return "";
+        }
+
+
 
         //TRANSORM METHODS
         /*

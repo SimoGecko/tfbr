@@ -32,7 +32,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            health = 10;
         }
 
         public override void Update() {
@@ -51,6 +51,10 @@ namespace BRS.Scripts {
             openRefTime = 0;
         }
 
+        protected override void Die() {
+            Open();
+            base.Die();
+        }
 
         // queries
         Vector3 pivotPoint { get { return transform.position + transform.Right*pivotOffset; } }

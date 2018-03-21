@@ -72,11 +72,11 @@ namespace BRS.Load {
 
             //MANAGER
             GameObject manager = new GameObject("manager");
-            //manager.AddComponent(new CameraController());
+            manager.AddComponent(new Elements());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
-            manager.AddComponent(new GamepadTest());
+            //manager.AddComponent(new GamepadTest());
 
 
             //TRANSFORM TEST

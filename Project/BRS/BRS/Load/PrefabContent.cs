@@ -21,7 +21,7 @@ namespace BRS {
             GameObject moneyPrefab = new GameObject("moneyPrefab", Content.Load<Model>("cash"));
             moneyPrefab.Transform.Scale(.5f);
             moneyPrefab.Transform.SetStatic();
-            moneyPrefab.AddComponent(new Money(100, 1));
+            moneyPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
             moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(moneyPrefab);
 
@@ -29,7 +29,7 @@ namespace BRS {
             GameObject diamondPrefab = new GameObject("diamondPrefab", Content.Load<Model>("diamond"));
             diamondPrefab.Transform.Scale(1f);
             diamondPrefab.Transform.SetStatic();
-            diamondPrefab.AddComponent(new Money(300, 2));
+            diamondPrefab.AddComponent(new Money(300, 2, Money.Type.Diamond));
             diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(diamondPrefab);
 
@@ -37,7 +37,7 @@ namespace BRS {
             GameObject goldPrefab = new GameObject("goldPrefab", Content.Load<Model>("gold"));
             goldPrefab.Transform.Scale(.5f);
             goldPrefab.Transform.SetStatic();
-            goldPrefab.AddComponent(new Money(1000, 3));
+            goldPrefab.AddComponent(new Money(1000, 3, Money.Type.Gold));
             goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(goldPrefab);
 
