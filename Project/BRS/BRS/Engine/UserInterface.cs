@@ -46,7 +46,9 @@ namespace BRS.Scripts {
         public void DrawGlobal(SpriteBatch spriteBatch) {
             spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(10, 40), Color.White);
 
-            Minimap.instance.Draw(spriteBatch);
+            if (Minimap.instance != null) {
+                Minimap.instance.Draw(spriteBatch);
+            }
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
@@ -66,7 +68,7 @@ namespace BRS.Scripts {
             fgrect.Width = (int)(BARWIDTH * playerUI[index].staminaPercent);
             spriteBatch.Draw(bar, new Vector2(10, 220), bgrect, Color.White);
             spriteBatch.Draw(bar, new Vector2(10, 220), fgrect, Color.Red);
-            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina*100) + "/" + playerUI[index].maxStamina*100, new Vector2(75, 210), Color.White);
+            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina * 100) + "/" + playerUI[index].maxStamina * 100, new Vector2(75, 210), Color.White);
             //capacity
             fgrect.Width = (int)(BARWIDTH * playerUI[index].carryingPercent);
             spriteBatch.Draw(bar, new Vector2(10, 270), bgrect, Color.White);
@@ -86,7 +88,7 @@ namespace BRS.Scripts {
             Content = c;
         }
 
-        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) { 
+        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) {
             // percent
             playerUI[index].healthPercent = health / startingHealth;
             playerUI[index].staminaPercent = stamina / maxStamina;

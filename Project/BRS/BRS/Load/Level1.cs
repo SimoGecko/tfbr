@@ -95,9 +95,7 @@ namespace BRS.Load {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
                 forklift.myTag = "player";
-                forklift.AddComponent(new Player());
-                forklift.GetComponent<Player>().playerIndex = i;
-                forklift.GetComponent<Player>().teamIndex = i%2;
+                forklift.AddComponent(new Player(i, i%2));
 
                 forklift.Transform.position = new Vector3(-5 + 10 * i, 0, 0);
 

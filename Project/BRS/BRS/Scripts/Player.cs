@@ -18,8 +18,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
         enum State { normal, attack, stun, dead};
         //public
-        public int playerIndex = 0; // player index - to select input and camera
-        public int teamIndex = 0;
+        public int PlayerIndex { get; private set; } // player index - to select input and camera
+        public int TeamIndex { get; private set; }
 
         //STAMINA
         const float staminaReloadPerSecond = .2f; // maybe move to its own class?
@@ -53,10 +53,15 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Player(int playerIndex, int teamIndex)
+        {
+            PlayerIndex = playerIndex;
+            TeamIndex = teamIndex;
+        }
         public override void Start() {
             base.Start();
 
-            camController = GameObject.FindGameObjectWithName("camera_" + playerIndex).GetComponent<CameraController>();
+            camController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
 
             //subcomponents
             playerAttack    = gameObject.GetComponent<PlayerAttack>();
@@ -115,7 +120,7 @@ namespace BRS.Scripts {
 
             // Todo: Position to be defined => can be that it is droped from the air and while not reaching the floor it can't drive.
             // For now there is 2 because the bounding-box is not yet correctly translated into the local-space. Will be fixed in the next commit.
-            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0);
+            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0);
         }
 
         void UpdateStamina() {
@@ -139,12 +144,12 @@ namespace BRS.Scripts {
         }
 
         void UpdateUI() {
-            UserInterface.instance.UpdatePlayerUI(playerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight);
+            UserInterface.instance.UpdatePlayerUI(PlayerIndex, health, startingHealth, stamina, maxStamina, playerInventory.Capacity, playerInventory.CarryingValue, playerInventory.CarryingWeight);
         }
 
         // INPUT queries
         bool BoostInput() {
-            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex)) {
+            if (Input.GetKey(Keys.LeftShift) || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)) {
                 if (stamina > 0){//staminaPerBoost * Time.deltatime) {
                     stamina -= staminaPerBoost * Time.deltatime;
                     return true;
@@ -154,28 +159,28 @@ namespace BRS.Scripts {
         }
 
         Vector2 MoveInput() {
-            if (playerIndex == 0)
+            if (PlayerIndex == 0)
                 return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
             else
                 return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
         }
 
         bool PowerUpInput() {
-            if (Input.GetKey(Keys.P) || Input.GetButton(Buttons.X, playerIndex)) {
+            if (Input.GetKey(Keys.P) || Input.GetButton(Buttons.X, PlayerIndex)) {
                 return true;
             }
             return false;
         }
 
         bool DropCashInput() {
-            if (Input.GetKey(Keys.L) || Input.GetButton(Buttons.B, playerIndex)) {
+            if (Input.GetKey(Keys.L) || Input.GetButton(Buttons.B, PlayerIndex)) {
                 return true;
             }
             return false;
         }
 
         bool AttackInput() {
-            bool inputfire = playerIndex == 0 ? Input.Fire1() : Input.Fire2();
+            bool inputfire = PlayerIndex == 0 ? Input.Fire1() : Input.Fire2();
             if (inputfire && state==State.normal && stamina >= staminaPerAttack) {
                 state = State.attack;
                 stamina -= staminaPerAttack;

@@ -83,14 +83,14 @@ namespace BRS.Scripts {
 
             ////move forward
             //float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            //Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+            //Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude);
             //transform.Translate(linearVelocity);
 
             //// Apply forces/changes to physics
             //// Todo: Handle steering correctly
             //RigidBodyComponent rigidBodyComponent = gameObject.GetComponent<RigidBodyComponent>();
             //rigidBodyComponent.RigidBody.LinearVelocity = new JVector(linearVelocity.X, 0, linearVelocity.Z);
-            //rigidBodyComponent.RigidBody.Position = new JVector(rigidBodyComponent.RigidBody.Position.X, 1, rigidBodyComponent.RigidBody.Position.Z);
+            //rigidBodyComponent.RigidBody.Position = new JVector(rigidBodyComponent.RigidBody.Position.X, 1f, rigidBodyComponent.RigidBody.Position.Z);
             //rigidBodyComponent.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
             ////rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
             //rigidBodyComponent.RigidBody.Mass = 10;

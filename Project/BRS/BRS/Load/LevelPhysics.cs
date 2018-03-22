@@ -50,7 +50,7 @@ namespace BRS.Load {
                 forklift.Type = ObjectType.Player;
                 //forklift.Transform.Scale(2);
                 forklift.Transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
-                forklift.AddComponent(new Player());
+                forklift.AddComponent(new Player(i, i%2));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
@@ -106,7 +106,7 @@ namespace BRS.Load {
         }
 
         public void AddWalls() {
-            float y = 0.5f;
+            float y = 1f;
 
             for (int x = 0; x < 40; ++x) {
                 GameObject body = new GameObject("wall_" + (4 * x), Content.Load<Model>("cube"));

@@ -42,7 +42,7 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             Player player = c.gameObject.GetComponent<Player>();
-            if(player != null && player.teamIndex == BaseIndex) {
+            if(player != null && player.TeamIndex == BaseIndex) {
                 DeloadPlayer(player.gameObject.GetComponent<PlayerInventory>());
             }
         }
