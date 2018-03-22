@@ -65,5 +65,13 @@ namespace BRS.Engine.Physics {
                 matrix.M33,
                 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
+
+        public static Quaternion ToXnaQuaternion(JQuaternion quaternion) {
+            return new Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
+        }
+
+        public static JQuaternion ToJitterQuaternion(Quaternion quaternion) {
+            return new JQuaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
+        }
     }
 }

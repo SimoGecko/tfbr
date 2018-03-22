@@ -26,7 +26,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            //players = GameObject.FindGameObjectsWithTag("player");//.GetComponent<Player>();
+            //players = GameObject.FindGameObjectsByType(ObjectType.Player);//.GetComponent<Player>();
             //if (players == null) Debug.LogError("player not found");
             //target = player.transform;
             canPickup = false;

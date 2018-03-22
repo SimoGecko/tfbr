@@ -109,6 +109,7 @@
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
     <Compile Include="Engine\Physics.cs" />
+    <Compile Include="Engine\Physics\ConvexHullHelper.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
@@ -117,14 +118,15 @@
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\ConePrimitive.cs" />
-    <Compile Include="Engine\Physics\Primitives3D\ConvexHullPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CylinderPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\GeometricPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\SpherePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
-    <Compile Include="Engine\Physics\QuadDrawer.cs" />
+    <Compile Include="Engine\Physics\Vehicle\CarObject.cs" />
+    <Compile Include="Engine\Physics\Vehicle\DefaultCar.cs" />
+    <Compile Include="Engine\Physics\Vehicle\Wheel.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Minimap.cs" />
     <Compile Include="Scripts\Money.cs" />
+    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
     <Compile Include="Scripts\PlayerAttack.cs" />
