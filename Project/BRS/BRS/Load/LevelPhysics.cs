@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
 using BRS.Scripts.Physics;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,10 +16,13 @@ namespace BRS.Load {
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private List<GameObject> Players = new List<GameObject>();
+        private CarObject _car = null;
+        private Game1 _game = null;
 
 
-        public LevelPhysics(PhysicsManager physics)
+        public LevelPhysics(Game1 game, PhysicsManager physics)
             : base(physics) {
+            _game = game;
         }
 
 
@@ -35,6 +40,7 @@ namespace BRS.Load {
 
             // Add the ground
             AddGround(rootScene);
+            AddWalls();
 
 
             //PLAYER
@@ -75,6 +81,8 @@ namespace BRS.Load {
                 }
             }
 
+            //AddCar(new JVector(0, 5, -10));
+
             // Dummy object at position (0/0/0) for debug-rendering.
             GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
             dummy.Type = ObjectType.Default;
@@ -91,10 +99,47 @@ namespace BRS.Load {
                     material.KineticFriction = 1.0f;
 
                     GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
-                    groundPlane.Transform.position = new Vector3(x * 10, 0, y*10);
+                    groundPlane.Transform.position = new Vector3(x * 10, 0, y * 10);
                     groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material: material));
                 }
             }
+        }
+
+        public void AddWalls() {
+            float y = 0.5f;
+
+            for (int x = 0; x < 40; ++x) {
+                GameObject body = new GameObject("wall_" + (4 * x), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.Transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.Transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.Transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.Transform.TranslateGlobal(new Vector3(15, y, -25 + x));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+            }
+        }
+
+
+        public void AddCar(JVector position) {
+            _car = new CarObject(_game, PhysicsManager);
+            _game.Components.Add(_car);
+
+            _car.carBody.Position = position;
         }
     }
 }

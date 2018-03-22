@@ -66,27 +66,40 @@ namespace BRS.Scripts {
                 targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
             }
 
-           
-            float rotationOld = rotation;
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            //transform.eulerAngles = new Vector3(0, rotation, 0);
+            transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
             float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude);
-            //transform.Translate(linearVelocity);
+            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
-            RigidBodyComponent rigidBodyComponent = gameObject.GetComponent<RigidBodyComponent>();
-            rigidBodyComponent.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity);
-            rigidBodyComponent.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-            //rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
-            rigidBodyComponent.RigidBody.Mass = 10;
+            //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
+            //gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
 
-            rigidBodyComponent.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
-            Debug.Log(rigidBodyComponent.RigidBody.Position.ToString());
 
-            _previousLinearVelocity = linearVelocity;
+            //rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
+            //transform.eulerAngles = new Vector3(0, rotation, 0);
+
+            ////move forward
+            //float speedboost = boosting ? boostSpeedMultiplier : 1f;
+            //Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+            //transform.Translate(linearVelocity);
+
+            //// Apply forces/changes to physics
+            //// Todo: Handle steering correctly
+            //RigidBodyComponent rigidBodyComponent = gameObject.GetComponent<RigidBodyComponent>();
+            //rigidBodyComponent.RigidBody.LinearVelocity = new JVector(linearVelocity.X, 0, linearVelocity.Z);
+            //rigidBodyComponent.RigidBody.Position = new JVector(rigidBodyComponent.RigidBody.Position.X, 1, rigidBodyComponent.RigidBody.Position.Z);
+            //rigidBodyComponent.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+            ////rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
+            //rigidBodyComponent.RigidBody.Mass = 10;
+
+            //rigidBodyComponent.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
+            ////rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
+            //Debug.Log(rigidBodyComponent.RigidBody.Position.ToString());
+
+            //_previousLinearVelocity = linearVelocity;
         }
 
 

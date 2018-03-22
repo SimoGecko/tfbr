@@ -124,6 +124,9 @@
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
+    <Compile Include="Engine\Physics\Vehicle\CarObject.cs" />
+    <Compile Include="Engine\Physics\Vehicle\DefaultCar.cs" />
+    <Compile Include="Engine\Physics\Vehicle\Wheel.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />

@@ -18,7 +18,8 @@ namespace BRS {
         private DebugDrawer _debugDrawer;
         private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
-        
+        private static bool _usePhysics = false;
+
 
 
         public Game1() {
@@ -28,10 +29,12 @@ namespace BRS {
         }
 
         protected override void Initialize() {
-            _debugDrawer = new DebugDrawer(this);
-            Components.Add(_debugDrawer);
-            _display = new Display(this);
-            Components.Add(_display);
+            if (_usePhysics) {
+                _debugDrawer = new DebugDrawer(this);
+                Components.Add(_debugDrawer);
+                _display = new Display(this);
+                Components.Add(_display);
+            }
 
             base.Initialize();
 
@@ -44,10 +47,13 @@ namespace BRS {
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
+            if (_usePhysics) {
+                _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
+                scene = new LevelPhysics(this, _physicsManager);
+            } else {
+                scene = new Level1(_physicsManager);
+            }
 
-            scene = new LevelPhysics(_physicsManager);
-            //scene = new Level1(_physicsManager);
             ui = new UserInterface();
 
             //LOAD
@@ -80,7 +86,9 @@ namespace BRS {
 
             foreach (GameObject go in GameObject.All) go.Update();
 
-            _physicsManager.Update(gameTime);
+            if (_usePhysics) {
+                _physicsManager.Update(gameTime);
+            }
 
             Physics.CheckOnCollisionEnter();
 
@@ -96,7 +104,11 @@ namespace BRS {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;
-                _physicsManager.Draw();
+
+                if (_usePhysics) {
+                    _physicsManager.Draw();
+                }
+
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
                 //Transform.Draw(camera);
 
