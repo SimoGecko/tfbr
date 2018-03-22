@@ -26,8 +26,8 @@ namespace BRS.Scripts {
         Texture2D[] powerupsPng = new Texture2D[6];
         Texture2D policeCar, policeLight;
         Dictionary<string, int> mapNamePowerupIndexPng = new Dictionary<string, int>();
-        string[] namePowerupsPng = {"bomb", "key", "capacity", "speed", "health", "shield"};
-    
+        string[] namePowerupsPng = { "bomb", "key", "capacity", "speed", "health", "shield" };
+
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
         bool showWinner;
@@ -67,7 +67,7 @@ namespace BRS.Scripts {
             circleFg = Content.Load<Texture2D>("images/circle_fg");
             circleGr = Content.Load<Texture2D>("images/circle_gradient");
             CircleBar.Initialize(circleFg, circleGr, Game1.instance.GraphicsDevice);
-            
+
 
 
         }
@@ -79,21 +79,21 @@ namespace BRS.Scripts {
             //police bar
             Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
             Rectangle bgrect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
-            fgrect.Width = (int)(BARWIDTH * (1-roundtime.span.TotalSeconds / GameManager.roundTime));
+            fgrect.Width = (int)(BARWIDTH * (1 - roundtime.span.TotalSeconds / GameManager.roundTime));
             spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), bgrect, Color.White);
             spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), fgrect, Color.Gray);
-            spriteBatch.Draw(policeCar, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One*64, .6f, SpriteEffects.None, 1);
+            spriteBatch.Draw(policeCar, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One * 64, .6f, SpriteEffects.None, 1);
 
             if (showPolice) {
                 spriteBatch.DrawString(myfont, "Get back to your base!", centerPos + new Vector2(-50, 100), Color.White);
-                if((Time.frame/10)%2==0)
+                if ((Time.frame / 10) % 2 == 0)
                     spriteBatch.Draw(policeLight, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One * 64, .6f, SpriteEffects.None, 1);
             }
 
 
             Minimap.instance.Draw(spriteBatch);
             if (showWinner) {
-                spriteBatch.DrawString(winnerFont,winnerString, new Vector2(Screen.WIDTH / 2 - 200, Screen.HEIGHT/2), Color.White);
+                spriteBatch.DrawString(winnerFont, winnerString, new Vector2(Screen.WIDTH / 2 - 200, Screen.HEIGHT / 2), Color.White);
             }
 
 
@@ -104,8 +104,8 @@ namespace BRS.Scripts {
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
             int offset = index % 2 == 0 ? 0 : +650;
-            spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10+offset, 80), Color.White);
-            spriteBatch.DrawString(myfont, "carrying: " + playerUI[index].carryingMoneyValue, new Vector2(10+offset, 120), Color.White);
+            spriteBatch.DrawString(myfont, "cash: " + playerUI[index].totalMoneyInBase, new Vector2(10 + offset, 80), Color.White);
+            spriteBatch.DrawString(myfont, "carrying: " + playerUI[index].carryingMoneyValue, new Vector2(10 + offset, 120), Color.White);
 
 
             Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
@@ -113,18 +113,18 @@ namespace BRS.Scripts {
 
             //health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].healthPercent);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 170), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 170), fgrect, Color.Green);
-            spriteBatch.DrawString(myfont, playerUI[index].health + "/" + playerUI[index].maxHealth, new Vector2(75+offset, 160), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 170), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 170), fgrect, Color.Green);
+            spriteBatch.DrawString(myfont, playerUI[index].health + "/" + playerUI[index].maxHealth, new Vector2(75 + offset, 160), Color.White);
             //stamina
             fgrect.Width = (int)(BARWIDTH * playerUI[index].staminaPercent);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 220), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 220), fgrect, Color.Red);
-            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina*100) + "/" + playerUI[index].maxStamina*100, new Vector2(75 + offset, 210), Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 220), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 220), fgrect, Color.Red);
+            spriteBatch.DrawString(myfont, Math.Round(playerUI[index].stamina * 100) + "/" + playerUI[index].maxStamina * 100, new Vector2(75 + offset, 210), Color.White);
             //capacity
             fgrect.Width = (int)(BARWIDTH * playerUI[index].carryingPercent);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 270), bgrect, Color.White);
-            spriteBatch.Draw(bar, new Vector2(10+offset, 270), fgrect, Color.Blue);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 270), bgrect, Color.White);
+            spriteBatch.Draw(bar, new Vector2(10 + offset, 270), fgrect, Color.Blue);
             spriteBatch.DrawString(myfont, playerUI[index].carryingWeight + "/" + playerUI[index].maxCarrying, new Vector2(100 + offset, 260), Color.White);
             //base health
             fgrect.Width = (int)(BARWIDTH * playerUI[index].baseHealthPercent);
@@ -140,7 +140,7 @@ namespace BRS.Scripts {
             } else {
                 playerUI[index].currentPowerup = new List<string>();
             }
-            
+
         }
 
         //public void Draw() { }
@@ -156,7 +156,7 @@ namespace BRS.Scripts {
         }
 
         //PLAYER
-        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) { 
+        public void UpdatePlayerUI(int index, float health, float startingHealth, float stamina, float maxStamina, int capacity, int carryingValue, int carryingWeight) {
             // percent
             playerUI[index].healthPercent = health / startingHealth;
             playerUI[index].staminaPercent = stamina / maxStamina;
@@ -177,11 +177,13 @@ namespace BRS.Scripts {
 
         //BASE
         public void UpdateBaseUI(int index, float baseHealth, float baseStartingHealth, int value) {
-            playerUI[index].baseHealthPercent = baseHealth / baseStartingHealth; // TODO make this relative to base, not player!!
-            playerUI[index].baseHealth = baseHealth;
-            playerUI[index].baseMaxHealth = baseStartingHealth;
-            playerUI[index].totalMoneyInBase = value;
-
+            if (playerUI.Length > index) {
+                playerUI[index].baseHealthPercent =
+                    baseHealth / baseStartingHealth; // TODO make this relative to base, not player!!
+                playerUI[index].baseHealth = baseHealth;
+                playerUI[index].baseMaxHealth = baseStartingHealth;
+                playerUI[index].totalMoneyInBase = value;
+            }
         }
 
         //POWERUP

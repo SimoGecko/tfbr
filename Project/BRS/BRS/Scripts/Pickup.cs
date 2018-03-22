@@ -49,7 +49,7 @@ namespace BRS.Scripts {
         /*
         void CheckPickup() {
             foreach(GameObject o in players) {
-                float dist = Vector3.DistanceSquared(transform.position, o.Transform.position);
+                float dist = Vector3.DistanceSquared(transform.position, o.transform.position);
                 if (dist < pickupthreshold) {
                     OnPickup(o);
                 }

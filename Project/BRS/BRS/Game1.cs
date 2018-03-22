@@ -22,6 +22,8 @@ namespace BRS {
         RasterizerState fullRasterizer, wireRasterizer;
         public static Game1 instance;
         
+        private static bool _usePhysics = false;
+
 
 
         public Game1() {
@@ -32,10 +34,12 @@ namespace BRS {
         }
 
         protected override void Initialize() {
-            _debugDrawer = new DebugDrawer(this);
-            //Components.Add(_debugDrawer);
-            _display = new Display(this);
-            //Components.Add(_display);
+            if (_usePhysics) {
+                _debugDrawer = new DebugDrawer(this);
+                Components.Add(_debugDrawer);
+                _display = new Display(this);
+                Components.Add(_display);
+            }
 
             base.Initialize();
 
@@ -48,10 +52,13 @@ namespace BRS {
         protected override void LoadContent() {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
+            if (_usePhysics) {
+                _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
+                scene = new LevelPhysics(this, _physicsManager);
+            } else {
+                scene = new Level1(_physicsManager);
+            }
 
-            //scene = new LevelPhysics(this, _physicsManager);
-            scene = new Level1(_physicsManager);
             ui = new UserInterface();
 
             //LOAD
@@ -89,10 +96,13 @@ namespace BRS {
             Time.Update(gameTime);
             Input.Update();
 
-            _physicsManager.Update(gameTime);
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
+
+            if (_usePhysics) {
+                _physicsManager.Update(gameTime);
+            }
 
             Physics.Update();
 
@@ -108,9 +118,13 @@ namespace BRS {
                 GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
                 graphics.GraphicsDevice.Viewport = cam.viewport;
-                //_physicsManager.Draw();
+
+                if (_usePhysics) {
+                    _physicsManager.Draw();
+                }
+
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
-                //Transform.Draw(camera);
+                //transform.Draw(camera);
 
                 //gizmos (wireframe)
                 GraphicsDevice.RasterizerState = wireRasterizer;

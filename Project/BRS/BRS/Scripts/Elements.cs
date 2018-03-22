@@ -70,19 +70,19 @@ namespace BRS.Scripts {
         //TODO move in their own class
         public Vector3[] AllMoneyPosition() {
             List<Vector3> result = new List<Vector3>();
-            foreach (Money m in moneyList) result.Add(m.gameObject.Transform.position);
+            foreach (Money m in moneyList) result.Add(m.gameObject.transform.position);
             return result.ToArray();
         }
 
         public Vector3[] AllCratePosition() {
             List<Vector3> result = new List<Vector3>();
-            foreach (Crate c in crateList) result.Add(c.gameObject.Transform.position);
+            foreach (Crate c in crateList) result.Add(c.gameObject.transform.position);
             return result.ToArray();
         }
 
         public Vector3[] AllPowerupPosition() {
             List<Vector3> result = new List<Vector3>();
-            foreach (Powerup p in powerupList) result.Add(p.gameObject.Transform.position);
+            foreach (Powerup p in powerupList) result.Add(p.gameObject.transform.position);
             return result.ToArray();
         }
 

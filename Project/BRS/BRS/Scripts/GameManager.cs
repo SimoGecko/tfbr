@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         enum State { playing, paused, finished, menu};
 
         //public
-        public static int numPlayers = 2;
+        public static int numPlayers = 1;
         public static int lvlScene = 3;
         public const int roundTime = 120;
         public const int timeBeforePolice = 20;
@@ -78,7 +78,7 @@ namespace BRS.Scripts {
 
         void FindBases() {
             //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsWithTag("base");
+            GameObject[] basesObject = GameObject.FindGameObjectsByType(ObjectType.Base);
             if (basesObject.Length < 1) {
                 Debug.LogError("could not find the bases"); // avoids tag messup
             } else {

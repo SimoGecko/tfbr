@@ -19,8 +19,8 @@ namespace BRS.Scripts {
         enum State { normal, attack, stun, dead};
 
         //public
-        public int playerIndex = 0; // player index - to select input and camera
-        public int teamIndex = 0; // to differentiate teams
+        public int PlayerIndex { get; private set; } // player index - to select input and camera
+        public int TeamIndex { get; private set; } // to differentiate teams
 
 
         //HIT and STUN
@@ -44,10 +44,15 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
+        public Player(int playerIndex, int teamIndex)
+        {
+            PlayerIndex = playerIndex;
+            TeamIndex = teamIndex;
+        }
         public override void Start() {
             base.Start();
 
-            camController = GameObject.FindGameObjectWithName("camera_" + playerIndex).GetComponent<CameraController>();
+            camController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
 
             //subcomponents (shorten)
             pA = gameObject.GetComponent<PlayerAttack>();
@@ -120,13 +125,13 @@ namespace BRS.Scripts {
         protected override void Respawn() {
             base.Respawn();
             state = State.normal;
-            transform.position = new Vector3(-5 + 10 * playerIndex, 0, 0); // store base position
+            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
         }
 
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
-            UserInterface.instance.UpdatePlayerUI(playerIndex,
+            UserInterface.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
                 pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);
@@ -137,35 +142,35 @@ namespace BRS.Scripts {
         //note: keyboard assumes max 2 players, gamepad works for 4
 
         Vector2 MoveInput() {
-            if (playerIndex == 0)
+            if (PlayerIndex == 0)
                 return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
             else
                 return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
         }
 
         bool AttackInput() {
-            return (playerIndex == 0 ? Input.GetKeyDown(Keys.Space) : Input.GetKeyDown(Keys.Enter))
-                || Input.GetButtonDown(Buttons.A, playerIndex);
+            return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.Space) : Input.GetKeyDown(Keys.Enter))
+                || Input.GetButtonDown(Buttons.A, PlayerIndex);
         }
 
         bool DropCashInput() {
-            return (playerIndex == 0 ? Input.GetKey(Keys.C) : Input.GetKey(Keys.M))
-               || Input.GetButton(Buttons.B, playerIndex);
+            return (PlayerIndex == 0 ? Input.GetKey(Keys.C) : Input.GetKey(Keys.M))
+               || Input.GetButton(Buttons.B, PlayerIndex);
         }
 
         bool PowerupInput() {
-            return (playerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
-               || Input.GetButtonDown(Buttons.X, playerIndex);
+            return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
+               || Input.GetButtonDown(Buttons.X, PlayerIndex);
         }
 
         bool LiftInput() {
-            return (playerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
-               || Input.GetButtonDown(Buttons.Y, playerIndex);
+            return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
+               || Input.GetButtonDown(Buttons.Y, PlayerIndex);
         }
 
         bool BoostInput() {
-            return (playerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
-               || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex);
+            return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
+               || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex);
         }
 
         // other

@@ -30,10 +30,10 @@ namespace BRS.Scripts {
         // --------------------- CUSTOM METHODS ----------------
         public void Lift() {
             lifting = true;
-            //liftStartPos = separatedComponents[0].Transform;
+            //liftStartPos = separatedComponents[0].transform;
             //liftEndPos = liftStartPos.y + liftDistance;
 
-            //separatedComponents[0].Transform = liftEndPos;
+            //separatedComponents[0].transform = liftEndPos;
         }
 
         void separateMesh() {

@@ -65,20 +65,20 @@ namespace BRS.Scripts {
             }
 
             foreach (GameObject go in players) {
-                if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion)
+                if ((go.transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion)
                     go.GetComponent<Player>().TakeHit(damageExplosion);
             }
 
             if (vautlDoor != null) {
                 foreach (GameObject go in vautlDoor) {
-                    if ((go.Transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion) {
+                    if ((go.transform.position - posBomb).LengthSquared() < radiusExplosion * radiusExplosion) {
                         GameObject.Destroy(go);
                     }
 
                 }
             }*/
 
-            Collider[] overlapColliders = Physics.OverlapSphere(transform.position, explosionRadius);
+            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, explosionRadius);
             foreach(Collider c in overlapColliders) {
                 if (c.gameObject.HasComponent<IDamageable>()) {
                     c.gameObject.GetComponent<IDamageable>().TakeDamage(explosionDamage);
@@ -92,7 +92,7 @@ namespace BRS.Scripts {
 
         // queries
         bool InExplosionRange(GameObject o) {
-            return (o.Transform.position - transform.position).LengthSquared() <= explosionRadius * explosionRadius;
+            return (o.transform.position - transform.position).LengthSquared() <= explosionRadius * explosionRadius;
         }
 
 

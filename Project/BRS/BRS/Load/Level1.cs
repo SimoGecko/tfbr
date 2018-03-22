@@ -44,8 +44,8 @@ namespace BRS.Load {
 
                         GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
                         
-                        go.Transform.position = position;
-                        go.Transform.scale = scale;
+                        go.transform.position = position;
+                        go.transform.scale = scale;
                         //go.transform.rotation = rotation; // rotation not parsed correctly
 
                         if (tagName == "Ground")
@@ -99,11 +99,9 @@ namespace BRS.Load {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
                 forklift.myTag = "player";
-                forklift.AddComponent(new Player());
-                forklift.GetComponent<Player>().playerIndex = i;
-                forklift.GetComponent<Player>().teamIndex = i%2;
+                forklift.AddComponent(new Player(i, i%2));
 
-                forklift.Transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 forklift.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
@@ -131,12 +129,10 @@ namespace BRS.Load {
             //VAULT
             GameObject vault = new GameObject("vault", Content.Load<Model>("cylinder"));
             vault.AddComponent(new Vault());
-            vault.Transform.position = new Vector3(5 , 1.5f, -62);
-            vault.Transform.scale = new Vector3(3, .5f, 3);
-            vault.Transform.eulerAngles = new Vector3(90, 0, 0);
+            vault.transform.position = new Vector3(5 , 1.5f, -62);
+            vault.transform.scale = new Vector3(3, .5f, 3);
+            vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
-
-
 
             //LOAD UNITY SCENE
             var task = Task.Run(() => {
@@ -144,13 +140,13 @@ namespace BRS.Load {
             });
             task.Wait();
 
-            GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
+            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
                 //bases[i].AddComponent(new BoxCollider(bases[i]));
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
-                bases[i].Transform.SetStatic();
+                bases[i].transform.SetStatic();
             }
         }
     }

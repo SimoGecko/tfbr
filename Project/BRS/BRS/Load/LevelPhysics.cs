@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
+using BRS.Scripts.Physics;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -13,14 +15,14 @@ namespace BRS.Load {
 
     class LevelPhysics : Scene {
         // Todo: To be refactored
-        private QuadDrawer quadDrawer = null;
-        private Game1 Demo;
         private List<GameObject> Players = new List<GameObject>();
+        private CarObject _car = null;
+        private Game1 _game = null;
 
 
         public LevelPhysics(Game1 game, PhysicsManager physics)
             : base(physics) {
-            Demo = game;
+            _game = game;
         }
 
 
@@ -38,29 +40,23 @@ namespace BRS.Load {
 
             // Add the ground
             AddGround(rootScene);
+            AddWalls();
 
 
             //PLAYER
             for (int i = 0; i < GameManager.numPlayers; i++) {
-                Model model = Content.Load<Model>("forklift");
-                BoundingBox bb = BoundingBoxHelper.Calculate(model);
-                JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min) * 2;
 
-                GameObject forklift = new GameObject("player_" + i, new BoxShape(bbSize), model);
+                GameObject forklift = new GameObject("player_" + i, Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
-                forklift.Transform.Scale(2);
-                forklift.AddComponent(new Player());
+                //forklift.transform.Scale(2);
+                forklift.transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
+                forklift.AddComponent(new Player(i, i%2));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
-                forklift.Transform.TranslateGlobal(Vector3.Right * 30 * i);
-                forklift.Position = Conversion.ToJitterVector(new Vector3(31 * i, 1, 0));
-                forklift.IsStatic = false;
-                //forklift.Tag = BodyTag.DrawMe;
+                forklift.AddComponent(new RigidBodyComponent(PhysicsManager, false));
 
-
-                PhysicsManager.World.AddBody(forklift);
                 Players.Add(forklift);
             }
 
@@ -68,46 +64,83 @@ namespace BRS.Load {
 
             //BASE
             for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_" + i, new BoxShape(new JVector(1, 1, 1)), Content.Load<Model>("cube"));
+                GameObject playerBase = new GameObject("playerBase_" + i, Content.Load<Model>("cube"));
                 playerBase.Type = ObjectType.Base;
+                playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
-                playerBase.Transform.TranslateGlobal(Vector3.Right * 30 * i);
-                playerBase.Position = Conversion.ToJitterVector(new Vector3(30 * i, 1, 0));
-                playerBase.IsStatic = true;
-                PhysicsManager.World.AddBody(playerBase);
+                playerBase.AddComponent(new RigidBodyComponent(PhysicsManager, true));
             }
 
             BoxShape bShape = new BoxShape(0.5f, 4.0f, 2.0f);
 
-            for (int i = 0; i < 10; i++) {
-                GameObject body = new GameObject("domino_" + i, bShape);
-                body.Position = new JVector((i+1) * 2.0f, 2, 0);
-                PhysicsManager.World.AddBody(body);
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 3; ++j) {
+                    GameObject body = new GameObject("domino_" + i, Content.Load<Model>("cube"));
+                    body.Type = ObjectType.Obstacle;
+                    body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
+                    body.AddComponent(new RigidBodyComponent(PhysicsManager, false));
+                }
             }
 
+            //AddCar(new JVector(0, 5, -10));
 
             // Dummy object at position (0/0/0) for debug-rendering.
-            JBBox box = JBBox.SmallBox;
-            GameObject dummy= new GameObject("dummy_object", new BoxShape(1,1,1));
-            dummy.Position = JVector.Zero;
-            dummy.IsStatic = true;
-            dummy.Active = false;
-            PhysicsManager.World.AddBody(dummy);
+            GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
+            dummy.Type = ObjectType.Default;
+            dummy.AddComponent(new RigidBodyComponent(PhysicsManager, true, false));
         }
 
 
         public void AddGround(GameObject parent) {
-            GameObject groundPlane = new GameObject("groundplane", new BoxShape(new JVector(200, 20, 200)), Content.Load<Model>("gplane"));
-            groundPlane.Transform.position = new Vector3(0, 0, 0);
+            for (int x = -2; x < 2; ++x) {
+                for (int y = -2; y < 2; ++y) {
+                    Material material = new Material();
+                    material.Restitution = 0.0f;
+                    material.StaticFriction = 0.4f;
+                    material.KineticFriction = 1.0f;
 
-            groundPlane.Position = new JVector(0, -10, 0);
-            //groundPlane.Tag = BodyTag.DontDrawMe;
-            groundPlane.IsStatic = true;
-            groundPlane.Material.Restitution = 0.0f;
-            groundPlane.Material.StaticFriction = 0.4f;
+                    GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
+                    groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
+                    groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material: material));
+                }
+            }
+        }
 
-            PhysicsManager.World.AddBody(groundPlane);
-            groundPlane.Material.KineticFriction = 0.0f;
+        public void AddWalls() {
+            float y = 1f;
+
+            for (int x = 0; x < 40; ++x) {
+                GameObject body = new GameObject("wall_" + (4 * x), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+
+
+                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
+                body.Type = ObjectType.Obstacle;
+                body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
+                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+            }
+        }
+
+
+        public void AddCar(JVector position) {
+            _car = new CarObject(_game, PhysicsManager);
+            _game.Components.Add(_car);
+
+            _car.carBody.Position = position;
         }
     }
 }

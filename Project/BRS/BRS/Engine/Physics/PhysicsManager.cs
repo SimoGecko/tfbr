@@ -91,19 +91,19 @@ namespace BRS.Engine.Physics {
         }
 
         private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
-            GameObject body1 = arg1 as GameObject;
-            GameObject body2 = arg2 as GameObject;
+            //GameObject body1 = arg1 as GameObject;
+            //GameObject body2 = arg2 as GameObject;
 
-            if (body1 == null || body2 == null) {
-                return;
-            }
+            //if (body1 == null || body2 == null) {
+            //    return;
+            //}
 
-            GameObject player;
-            GameObject gameObject;
+            //GameObject player;
+            //GameObject gameObject;
 
-            if (body1.Type == ObjectType.Player || body2.Type == ObjectType.Player) {
+            //if (body1.Type == ObjectType.Player || body2.Type == ObjectType.Player) {
 
-            }
+            //}
         }
 
         /// <summary>

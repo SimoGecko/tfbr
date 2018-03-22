@@ -41,7 +41,7 @@ namespace BRS {
 
         public bool isStatic { get { return transform.isStatic; } }
 
-        protected Transform Transf { get { if (gameObject != null) return gameObject.Transform; else return Transform.Identity; } }
+        protected Transform Transf { get { if (gameObject != null) return gameObject.transform; else return Transform.Identity; } }
         // other
         //STATIC
         public static List<Collider> allcolliders = new List<Collider>();
@@ -56,7 +56,7 @@ namespace BRS {
         //CONSTRUCTORS
         public BoxCollider(GameObject o) {
             //TODO compute more accurately (using mesh)
-            box = new BoundingBox(-o.Transform.scale / 2, o.Transform.scale / 2);
+            box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
         }
 
         public BoxCollider(Vector3 center, Vector3 size) {

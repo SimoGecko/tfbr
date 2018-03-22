@@ -47,15 +47,15 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.myTag.Equals("player");
+            bool isPlayer = c.gameObject.Type == ObjectType.Player;
+
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
-                if (p.teamIndex == BaseIndex) {
+                if (p.TeamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
             }
-            
         }
 
 
@@ -79,10 +79,10 @@ namespace BRS.Scripts {
         }
 
         public void NotifyRoundEnd() {
-            GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+            GameObject[] players = GameObject.FindGameObjectsByType(ObjectType.Player);
             foreach(var player in players) {
                 Player p = player.GetComponent<Player>();
-                if (p.teamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {
+                if (p.TeamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * moneyPenalty);
                 }
@@ -93,7 +93,7 @@ namespace BRS.Scripts {
 
         // queries
         bool PlayerInsideRange(GameObject p) {
-            return (p.Transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
+            return (p.transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
         }
 
 

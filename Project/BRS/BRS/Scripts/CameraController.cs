@@ -38,7 +38,7 @@ namespace BRS.Scripts {
         public override void Start() {
             Xangle = XangleSmooth = Yangle = YangleSmooth = refVelocityX = refVelocityY = 0;
 
-            player = GameObject.FindGameObjectWithName("player_" + camIndex).Transform;
+            player = GameObject.FindGameObjectWithName("player_" + camIndex).transform;
             if (player == null) Debug.LogError("player not found");
 
             transform.position = player.position + offset;

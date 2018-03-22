@@ -43,7 +43,7 @@ namespace BRS.Scripts {
         }
 
         void OpenVault() {
-            Collider[] overlapColliders = Physics.OverlapSphere(transform.position, openRadius);
+            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, openRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.gameObject.HasComponent<IOpenable>()) {
                     c.gameObject.GetComponent<IOpenable>().Open();
@@ -54,12 +54,12 @@ namespace BRS.Scripts {
         // queries
         bool InOpeningRange(GameObject o) {
             transform.position = owner.transform.position;
-            return (o.Transform.position - transform.position).LengthSquared() <= openRadius * openRadius;
+            return (o.transform.position - transform.position).LengthSquared() <= openRadius * openRadius;
         }
 
         bool ThereIsOneOpenableInRange() {
             transform.position = owner.transform.position;
-            Collider[] overlapColliders = Physics.OverlapSphere(transform.position, openRadius);
+            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, openRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.gameObject.HasComponent<IOpenable>()) return true;
             }
