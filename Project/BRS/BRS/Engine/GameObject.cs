@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectType { Player, Base, Obstacle, Boundary, Default }
+    public enum ObjectType { Ground, Player, Base, Obstacle, Boundary, Default }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -19,7 +19,9 @@ namespace BRS {
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool Active { get; set; } = true;
         public string Name { private set; get; }
+        public string myTag = "";
         public ObjectType Type { set; get; } = ObjectType.Default;
+
 
         static int InstanceCount = 0;
 
@@ -41,6 +43,13 @@ namespace BRS {
             if (Active) {
                 foreach (IComponent c in components) {
                     c.Update();
+                }
+            }
+        }
+        public virtual void LateUpdate() {
+            if (Active) {
+                foreach (IComponent c in components) {
+                    c.LateUpdate();
                 }
             }
         }
@@ -129,15 +138,17 @@ namespace BRS {
         }
 
         //returns all the gameobject that satisfy the tag
-        public static GameObject[] FindGameObjectsWithTag(string tag) {
+        public static GameObject[] FindGameObjectsByType(ObjectType type) {
             List<GameObject> result = new List<GameObject>();
 
             foreach (GameObject o in allGameObjects) {
-                if (o.Type.Equals(tag)) result.Add(o);
+                if (o.Type.Equals(type)) {
+                    result.Add(o);
+                }
             }
 
             if (result.Count == 0) {
-                Debug.LogError("could not find any gameobject with tag " + tag);
+                Debug.LogError("could not find any gameobject with tag " + type);
                 return null;
             }
 

@@ -78,13 +78,14 @@ namespace BRS {
         }
 
         protected override void Update(GameTime gameTime) {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
+            if (/*GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||*/ Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             Time.Update(gameTime);
             Input.Update();
 
 
             foreach (GameObject go in GameObject.All) go.Update();
+            foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             if (_usePhysics) {
                 _physicsManager.Update(gameTime);

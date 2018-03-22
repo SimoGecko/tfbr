@@ -31,8 +31,15 @@ namespace BRS {
 
             kState = Keyboard.GetState();
             mState = Mouse.GetState();
+
             for (int i = 0; i < 4; i++) {
-                oldGstate[i] = gState[i];
+                //I don't know why this is always the same as the new state??
+
+                //oldGstate[i] = gState[i];
+                oldGstate[i] = new GamePadState(gState[i].ThumbSticks, gState[i].Triggers, gState[i].Buttons, gState[i].DPad);
+                //oldGstate[i] = new GamePadState(gState[i].ThumbSticks.Left, gState[i].ThumbSticks.Right, gState[i].Triggers.Left, gState[i].Triggers.Right, gState[i].Buttons);
+            }
+            for (int i = 0; i < 4; i++) {
                 gState[i] = GamePad.GetState(i);
             }
 
@@ -46,6 +53,11 @@ namespace BRS {
                     }
                 }
             }*/
+        }
+
+
+        static void Copy(GamePadState from, ref GamePadState to) {
+            GamePadState newg = new GamePadState(from.ThumbSticks, from.Triggers, from.Buttons, from.DPad);
         }
 
 
@@ -127,9 +139,9 @@ namespace BRS {
         }
 
         //includes dpad -> see schematic
-        public static bool GetButton    (Buttons b, int i = 0) { return gState[i].IsButtonDown(b); }
-        public static bool GetButtonDown(Buttons b, int i = 0) { return gState[i].IsButtonDown(b) && oldGstate[i].IsButtonUp(b); }
-        public static bool GetButtonUp  (Buttons b, int i = 0) { return gState[i].IsButtonUp(b)   && oldGstate[i].IsButtonDown(b); }
+        public static bool GetButton    (Buttons b, int i = 0) { return  gState[i].IsButtonDown(b); }
+        public static bool GetButtonDown(Buttons b, int i = 0) { return  gState[i].IsButtonDown(b) && !oldGstate[i].IsButtonDown(b); }
+        public static bool GetButtonUp  (Buttons b, int i = 0) { return !gState[i].IsButtonDown(b) &&  oldGstate[i].IsButtonDown(b); }
 
         static internal Vector2 GetThumbstick(string v, int i=0) {
             if (v == "Left")  { return gState[i].ThumbSticks.Left; }
@@ -143,19 +155,19 @@ namespace BRS {
             return 0f;
         }
 
+        /*
         const float amountDown = 0.5f; // how much to press to be considered down
         public static bool IsTriggerDown(string v, int i = 0) {
             if (v == "Left")  { return gState[i].Triggers.Left >=amountDown; }
             if (v == "Right") { return gState[i].Triggers.Right>=amountDown; }
             return false;
-        }
+        }*/
 
-        //vibration
+        //VIBRATION
         public static void Vibrate(float left, float right, float time, int i=0) {
             GamePad.SetVibration(i, left, right);
             new Timer(time, () => StopVibration(i));
             vibrating[i] = true;
-            //timer[i] = time;
         }
 
         static void StopVibration(int i=0) {

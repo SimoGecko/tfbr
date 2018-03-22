@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int numPlayers = 1;
+        public static int numPlayers = 2;
         public static int lvlScene = 3;
 
         //private
@@ -50,8 +50,9 @@ namespace BRS.Scripts {
         }
 
         int FindWinner() {
-            GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
+            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
             int winner = 0;
+            
             int maxCash = bases[0].GetComponent<Base>().TotalMoney;
             for (int i = 1; i < numPlayers; i++) {
                 int totmoney = bases[i].GetComponent<Base>().TotalMoney;

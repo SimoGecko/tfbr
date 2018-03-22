@@ -50,7 +50,7 @@ namespace BRS.Load {
                 forklift.Type = ObjectType.Player;
                 //forklift.Transform.Scale(2);
                 forklift.Transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
-                forklift.AddComponent(new Player(i));
+                forklift.AddComponent(new Player());
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());

@@ -14,36 +14,52 @@ namespace BRS.Load {
         public Level1(PhysicsManager physics)
             : base(physics) { }
 
-        public List<GameObject> ReadFile(string pathName, string prefabToUse, string nameObj)
-        {
-            List<GameObject> objects = new List<GameObject>();
-            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)))
-            {
-                string firstLine = reader.ReadLine();
-                int n = int.Parse(firstLine);
+        public void ReadFile(string pathName) {
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+                    if (nameContent == null)
+                        break;
 
-                for (int i = 0; i < n; i++)
-                {
-                    string p = reader.ReadLine();
-                    string r = reader.ReadLine();
-                    string s = reader.ReadLine();
+                    string tagName = reader.ReadLine().Split(' ')[1];
+                    string prefabName = reader.ReadLine().Split(' ')[1];
+      
+                    string lineNoObj = reader.ReadLine();
+                    int n = int.Parse(lineNoObj.Split(' ')[1]);
 
-                    string[] pSplit = p.Split(' ');
-                    string[] rSplit = r.Split(' ');
-                    string[] sSplit = s.Split(' ');
+                    for (int i = 0; i < n; i++) {
+                        string p = reader.ReadLine();
+                        string r = reader.ReadLine();
+                        string s = reader.ReadLine();
 
-                    Vector3 position = new Vector3(float.Parse(pSplit[2]), float.Parse(pSplit[1]), float.Parse(pSplit[0]));
-                    Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[0])), MathHelper.ToRadians(float.Parse(pSplit[2])));
-                    Vector3 scale = new Vector3(float.Parse(sSplit[2]), float.Parse(sSplit[1]), float.Parse(sSplit[0]));
+                        string[] pSplit = p.Split(' '); // pos: x y z in unity coord. system
+                        string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
+                        string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
-                    GameObject playerBase = new GameObject(nameObj + "_" + i.ToString(), Content.Load<Model>(prefabToUse));
-                    playerBase.Transform.position = position;
-                    playerBase.Transform.scale = scale;
-                    //playerBase.transform.rotation = rotation; // rotation not parsed correctly
+                        Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[2])), MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[3])));
+                        Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
-                    objects.Add(playerBase);
+                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
+                        
+                        go.Transform.position = position;
+                        go.Transform.scale = scale;
+                        //go.transform.rotation = rotation; // rotation not parsed correctly
+                        
+                        if (tagName == "Ground")
+                            go.Type = ObjectType.Ground;
+                        else if (tagName == "Base")
+                            go.Type = ObjectType.Base;
+                        else if (tagName == "Obstacle")
+                            go.Type = ObjectType.Obstacle;
+                        else if (tagName == "Boundary")
+                            go.Type = ObjectType.Boundary;
+                    }
+
+                    nameContent = reader.ReadLine();
                 }
-                return objects;
             }
         }
 
@@ -55,11 +71,13 @@ namespace BRS.Load {
             //manager.AddComponent(new CameraController());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
+            manager.AddComponent(new Minimap());
+            manager.AddComponent(new GamepadTest());
 
 
             //TRANSFORM TEST
-            //GameObject testCube = new GameObject("testcube", Content.Load<Model>("cube"));
-            //testCube.AddComponent(new TransformTest());
+            GameObject testCube = new GameObject("testcube", Content.Load<Model>("cube"));
+            testCube.AddComponent(new TransformTest());
 
 
             //GROUND
@@ -76,7 +94,8 @@ namespace BRS.Load {
             for(int i=0; i<GameManager.numPlayers; i++) {
                 GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
-                forklift.AddComponent(new Player(i));
+                forklift.myTag = "player";
+                forklift.AddComponent(new Player());
                 forklift.GetComponent<Player>().playerIndex = i;
                 forklift.GetComponent<Player>().teamIndex = i%2;
 
@@ -87,6 +106,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
+                forklift.AddComponent(new PlayerPowerup());
 
             }
 
@@ -108,33 +128,16 @@ namespace BRS.Load {
             //LOAD UNITY SCENE
             var task = Task.Run(() =>
             {
-                //GROUND
-                List<GameObject> groundPlane = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Ground.txt", "gplane", "groundplane");
-
-                //BASES
-                List<GameObject> bases = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Bases.txt", "cube", "playerBase");
-
-                for (int i = 0; i < GameManager.numPlayers; i++)
-                {
-                    bases[i].Type = ObjectType.Base;
-                    bases[i].AddComponent(new Base(i));
-                    //bases[i].GetComponent<Base>().player = GameObject.FindGameObjectWithName("player_" + i).GetComponent<Player>();
-                    bases[i].AddComponent(new BoxCollider(bases[i]));
-                    bases[i].Transform.SetStatic();
-                }
-
-                //OBSTACLES
-                List<GameObject> obstacles = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Obstacles.txt", "cube", "obstacle");
-                foreach (GameObject go in obstacles)
-                    go.Type = ObjectType.Obstacle;
-
-                //BOUNDARIES
-                List<GameObject> boundaries = ReadFile("Load/UnityScenes/lvl" + GameManager.lvlScene.ToString() + "/Boundaries.txt", "cube", "boundary");
-                foreach (GameObject go in boundaries)
-                    go.Type = ObjectType.Boundary;
+                ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
             });
             task.Wait();
+
+            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
+            for (int i = 0; i < GameManager.numPlayers; i++) {
+                bases[i].AddComponent(new Base(i));
+                bases[i].AddComponent(new BoxCollider(bases[i]));
+                bases[i].Transform.SetStatic();
+            }
         }
     }
-
 }
