@@ -37,7 +37,7 @@ namespace BRS {
             if (Windows.Foundation.Metadata.ApiInformation.IsPropertyPresent("Windows.UI.Xaml.Application", "RequiresPointerMode")) {
 
 
-                ApplicationView.PreferredLaunchViewSize = new Size(Screen.WIDTH, Screen.HEIGHT);
+                ApplicationView.PreferredLaunchViewSize = new Size(Screen.WIDTH, Screen.HEIGHT); // was added here by simo
                 ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
                 //ApplicationView.GetForCurrentView().TitleBar.ForegroundColor = Windows.UI.Colors.White; // messing with this causes unhandled exception
 

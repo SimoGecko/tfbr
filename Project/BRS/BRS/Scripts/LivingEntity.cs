@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
+    public interface IDamageable : IComponent {
+        void TakeDamage(float damage);
+    }
+
     class LivingEntity : Component, IDamageable {
         ////////// base class for entities with health that take damage and die //////////
 
@@ -35,12 +39,7 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void TakeHit(float damage) {
-            //do stuff here
-            TakeDamage(damage);
-        }
-
-        public void TakeDamage(float damage) {
+        public virtual void TakeDamage(float damage) {
             health -= damage;
             if (health <= 0 && !dead) {
                 Die();
@@ -69,6 +68,7 @@ namespace BRS.Scripts {
 
         // queries
         public float HealthPercent { get { return health / startingHealth; } }
+        public float Health { get { return health; } }
 
 
 

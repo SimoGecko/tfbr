@@ -44,18 +44,22 @@ namespace BRS.Load {
 
                         GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
                         
-                        go.Transform.position = position;
-                        go.Transform.scale = scale;
+                        go.transform.position = position;
+                        go.transform.scale = scale;
                         //go.transform.rotation = rotation; // rotation not parsed correctly
-                        
+
                         if (tagName == "Ground")
                             go.Type = ObjectType.Ground;
-                        else if (tagName == "Base")
+                        else if (tagName == "Base") {
                             go.Type = ObjectType.Base;
+                            go.myTag = "base";
+                        }
                         else if (tagName == "Obstacle")
                             go.Type = ObjectType.Obstacle;
                         else if (tagName == "Boundary")
                             go.Type = ObjectType.Boundary;
+                        else if (tagName == "VaultDoor")
+                            go.myTag = "VaultDoor";
                     }
 
                     nameContent = reader.ReadLine();
@@ -68,11 +72,11 @@ namespace BRS.Load {
 
             //MANAGER
             GameObject manager = new GameObject("manager");
-            //manager.AddComponent(new CameraController());
+            manager.AddComponent(new Elements());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
-            manager.AddComponent(new GamepadTest());
+            //manager.AddComponent(new GamepadTest());
 
 
             //TRANSFORM TEST
@@ -97,7 +101,7 @@ namespace BRS.Load {
                 forklift.myTag = "player";
                 forklift.AddComponent(new Player(i, i%2));
 
-                forklift.Transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 forklift.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
@@ -105,7 +109,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerPowerup());
-
+                forklift.AddComponent(new PlayerStamina());
             }
 
 
@@ -122,19 +126,27 @@ namespace BRS.Load {
 
             }*/
 
+            //VAULT
+            GameObject vault = new GameObject("vault", Content.Load<Model>("cylinder"));
+            vault.AddComponent(new Vault());
+            vault.transform.position = new Vector3(5 , 1.5f, -62);
+            vault.transform.scale = new Vector3(3, .5f, 3);
+            vault.transform.eulerAngles = new Vector3(90, 0, 0);
+            vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() =>
-            {
+            var task = Task.Run(() => {
                 ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
             });
             task.Wait();
 
             GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            Debug.Assert(bases.Length == 2, "there should be 2 bases");
+            for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new BoxCollider(bases[i]));
-                bases[i].Transform.SetStatic();
+                //bases[i].AddComponent(new BoxCollider(bases[i]));
+                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
+                bases[i].transform.SetStatic();
             }
         }
     }

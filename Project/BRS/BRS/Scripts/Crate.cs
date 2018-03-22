@@ -5,14 +5,17 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
-    class Crate : Component {
+    class Crate : Component, IDamageable {
         ////////// represents a crate that can be cracked when attacked and reveals money and powerup inside //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float crackSpawnRadius = 1f;
+
         const int minNumCoins = 1;
         const int maxNumCoins = 8;
+        const float probOfPowerup = .3f;
 
 
         //private
@@ -31,11 +34,11 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            Player p = c.gameObject.GetComponent<Player>();
-            if(p!= null) {
-                PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
+            if(c.gameObject.myTag == "player") {
+                PlayerAttack pa = c.gameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
                     CrackCrate();
+
             }
         }
 
@@ -46,11 +49,22 @@ namespace BRS.Scripts {
 
         // commands
         void CrackCrate() {
-            for(int i=0; i<MyRandom.Range(minNumCoins, maxNumCoins+1); i++) {
-                Spawner.instance.SpawnMoneyAround(transform.position);
+            int numCoins = MyRandom.Range(minNumCoins, maxNumCoins + 1);
+            for (int i=0; i<numCoins; i++) {
+                Spawner.instance.SpawnMoneyAround(transform.position, crackSpawnRadius);
             }
-            Spawner.instance.RemoveCrate(this);
+
+            if (MyRandom.Value <= probOfPowerup)
+                Spawner.instance.SpawnPowerupAround(transform.position, crackSpawnRadius);
+
+
+            Elements.instance.Remove(this);
             GameObject.Destroy(gameObject);
+        }
+
+
+        public void TakeDamage(float damage) {
+            CrackCrate();
         }
 
 

@@ -11,21 +11,29 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float rotSpeed = 90;
 
 
         //private
-
+        protected string powerupName;
+        protected bool destroyOnUse = true;
+        protected bool rotate = true;
 
         //reference
-
+        protected Player owner;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
+            destroyOnUse = rotate = true;
+            transform.rotation = MyRandom.YRotation();
         }
 
         public override void Update() {
             base.Update();
+
+            if(rotate)
+                transform.Rotate(Vector3.Up, rotSpeed * Time.deltatime);
         }
 
 
@@ -35,63 +43,33 @@ namespace BRS.Scripts {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
-            if (pi.CanPickUp(this)) {
-                pi.Collect(this);
-                Spawner.instance.RemovePowerup(this);
-                GameObject.Destroy(gameObject);
+            PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
+            if (pp.CanPickUp(this)) {
+                pp.Collect(this);
+                owner = p;
+
+                Elements.instance.Remove(this);
+                UserInterface.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
+
+                if(!destroyOnUse) gameObject.Active = false;
+                else GameObject.Destroy(gameObject);
             }
+            
         }
 
-        public virtual void UsePowerUp(Player p) { }
-
+        public virtual void UsePowerup() {
+            UserInterface.instance.UpdatePlayerPowerupUI(owner.PlayerIndex, powerupName, false);
+        }
 
         // queries
-
+        public virtual bool CanUse() {
+            //fill 
+            return true;
+        }
 
 
         // other
 
     }
-
-    //-------------------------------------------------------------------------------------------------- all simple powerups
-    class HealthPotion : Powerup {
-        float valuePotion = 20;
-
-        public override void UsePowerUp(Player p) {
-            p.AddHealth(valuePotion);
-        }
-    }
-
-    class HealthBoost : Powerup {
-        float valueBoost = 20;
-
-        public override void UsePowerUp(Player p) {
-            p.UpdateMaxHealth(valueBoost);
-        }
-    }
-
-    class StaminaPotion : Powerup {
-        float valuePotion = .2f;
-
-        public override void UsePowerUp(Player p) {
-            p.AddStamina(valuePotion);
-        }
-    }
-
-    class StaminaBoost : Powerup {
-        float valueBoost = .2f;
-
-        public override void UsePowerUp(Player p) {
-            p.UpdateMaxStamina(valueBoost);
-        }
-    }
-
-    class CapacityBoost : Powerup {
-        int valueBoost = 2;
-
-        public override void UsePowerUp(Player p) {
-            p.gameObject.GetComponent<PlayerInventory>().UpdateCapacity(valueBoost);
-        }
-    }
+    
 }

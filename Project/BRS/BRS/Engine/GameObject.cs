@@ -13,13 +13,13 @@ namespace BRS {
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
     public class GameObject {
-        public Transform Transform;
+        public Transform transform;
         List<IComponent> components;
         public Model Model { get; private set; }
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool Active { get; set; } = true;
         public string Name { private set; get; }
-        public string myTag = "";
+        public string myTag = ""; // Make this tag and enum
         public ObjectType Type { set; get; } = ObjectType.Default;
 
 
@@ -27,7 +27,7 @@ namespace BRS {
 
         public GameObject(string name, Model model = null) {
             Name = name;
-            Transform = new Transform();
+            transform = new Transform();
             components = new List<IComponent>();
             Model = model;
             allGameObjects.Add(this);
@@ -62,7 +62,7 @@ namespace BRS {
 
         public virtual void Draw(Camera cam) {
             if (Model != null && Active) {
-                Utility.DrawModel(Model, cam.View, cam.Proj, Transform.World);
+                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World);
             }
         }
 
@@ -76,6 +76,11 @@ namespace BRS {
             allGameObjects.Add(o);
         }
         */
+
+        public static void ClearAll() {
+            foreach (GameObject o in allGameObjects) o.Active = false;
+            //allGameObjects.Clear();
+        }
 
         //INSTANTIATION
         public static GameObject Instantiate(string name) {
@@ -94,9 +99,9 @@ namespace BRS {
             }
 
             GameObject result = (GameObject)tocopy.Clone();
-            result.Transform.position = position;
-            result.Transform.rotation = rotation;
-            if (tocopy.Transform.isStatic) result.Transform.SetStatic();
+            result.transform.position = position;
+            result.transform.rotation = rotation;
+            if (tocopy.transform.isStatic) result.transform.SetStatic();
 
             result.Start();
             return result;
@@ -105,7 +110,7 @@ namespace BRS {
         public virtual object Clone() {
             GameObject newObject = new GameObject(Name + "_clone_" + InstanceCount);// (((GameObject)Activator.CreateInstance(type);
             InstanceCount++;
-            newObject.Transform.CopyFrom(this.Transform);
+            newObject.transform.CopyFrom(this.transform);
             newObject.Type = Type;
             newObject.Active = true;
             foreach (IComponent c in this.components) {
@@ -174,6 +179,13 @@ namespace BRS {
 
             Debug.LogError("component not found " + typeof(T) + " inside " + Name);
             return default(T);
+        }
+
+        public bool HasComponent<T>() where T : IComponent {
+            foreach (IComponent c in components) {
+                if (c is T) return true;
+            }
+            return false;
         }
 
     }

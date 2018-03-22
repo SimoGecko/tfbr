@@ -22,11 +22,11 @@ namespace BRS {
     public class Component : IComponent {
         GameObject m_gameObject; // added member
         public GameObject gameObject { get { return m_gameObject; } set { m_gameObject = value; } }
-        public Transform  transform  { get { return m_gameObject.Transform; } }
+        public Transform  transform  { get { return m_gameObject.transform; } }
 
         public virtual void Start() { }
         public virtual void Update() { }
-        public virtual void LateUpdate() { }
+        public virtual void LateUpdate() { } // really necessary?
         public virtual void OnCollisionEnter(Collider c) { }
 
         public virtual object Clone() {

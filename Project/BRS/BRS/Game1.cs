@@ -7,6 +7,8 @@ using BRS.Load;
 
 namespace BRS {
 
+    //TODO organize
+
     public class Game1 : Game {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -18,11 +20,14 @@ namespace BRS {
         private DebugDrawer _debugDrawer;
         private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
+        public static Game1 instance;
+        
         private static bool _usePhysics = false;
 
 
 
         public Game1() {
+            instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             Screen.Setup(graphics, this); // setup screen and create cameras
@@ -61,17 +66,25 @@ namespace BRS {
             ui.GiveContent(Content);
             scene.GiveContent(Content);
 
+            Start(); // CALL HERE
+
+        }
+
+        public void Reset() {
+            LoadContent();
+        }
+
+        public void Start() {
             //START
             Prefabs.Start();
             ui.Start();
             scene.Start();
             Input.Start();
 
-            foreach (Camera cam in Screen.cameras) cam.Start();
-
+            //foreach (Camera cam in Screen.cameras) cam.Start();
             foreach (GameObject go in GameObject.All) go.Start();
-
         }
+
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
@@ -91,7 +104,7 @@ namespace BRS {
                 _physicsManager.Update(gameTime);
             }
 
-            Physics.CheckOnCollisionEnter();
+            Physics.Update();
 
             base.Update(gameTime);
         }
@@ -111,7 +124,7 @@ namespace BRS {
                 }
 
                 foreach (GameObject go in GameObject.All) go.Draw(cam);
-                //Transform.Draw(camera);
+                //transform.Draw(camera);
 
                 //gizmos (wireframe)
                 GraphicsDevice.RasterizerState = wireRasterizer;
@@ -131,6 +144,7 @@ namespace BRS {
             spriteBatch.Begin();
             ui.DrawGlobal(spriteBatch);
             spriteBatch.End();
+
 
             base.Draw(gameTime);
         }

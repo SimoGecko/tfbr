@@ -10,37 +10,31 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float delayBeforePickup = .5f; // cannot pickup right after spawned
+        //const float pickupDistThreshold = .5f;
 
 
         //private
-        const float delayBeforePickup = .5f; // cannot pickup right after spawned
-        bool canPickup = false;
+        protected bool canPickup;
         public System.Action OnPickup;
-        //string interactabletag = "player";
-        //float pickupthreshold = .5f;
 
         //reference
-        //Transform target;
-        //protected GameObject[] players;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            //players = GameObject.FindGameObjectsByType(ObjectType.Player);//.GetComponent<Player>();
-            //if (players == null) Debug.LogError("player not found");
-            //target = player.transform;
             canPickup = false;
             Invoke(delayBeforePickup, () => canPickup = true);
         }
 
         public override void Update() {
-            //CheckPickup();
+            
         }
 
         public override void OnCollisionEnter(Collider c) {
-            Player player = c.gameObject.GetComponent<Player>();
-            if (player != null && canPickup) {
-                DoPickup(player);
+            bool isPlayer = c.gameObject.myTag == "player";
+            if (isPlayer && canPickup) {
+                DoPickup(c.gameObject.GetComponent<Player>());
                 OnPickup?.Invoke();
             }
             //GameObject.Destroy(gameObject);
@@ -55,7 +49,7 @@ namespace BRS.Scripts {
         /*
         void CheckPickup() {
             foreach(GameObject o in players) {
-                float dist = Vector3.DistanceSquared(transform.position, o.Transform.position);
+                float dist = Vector3.DistanceSquared(transform.position, o.transform.position);
                 if (dist < pickupthreshold) {
                     OnPickup(o);
                 }

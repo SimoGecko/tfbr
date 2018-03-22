@@ -25,6 +25,13 @@ namespace BRS {
         Matrix WorldCached;
         //bool dirty -> recompute only when necessary
 
+        static Transform _identity;
+        public static Transform Identity {
+            get {
+                if (_identity == null) _identity = new Transform(Vector3.Zero, Quaternion.Identity, Vector3.One);
+                return _identity;
+            }
+        }
 
         //constructors
         public Transform(Vector3 p, Quaternion r, Vector3 s) {

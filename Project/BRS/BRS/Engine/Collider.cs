@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS {
     public abstract class Collider : Component  {
-        ////////// generic collider that provides functions //////////
+        ////////// generic collider that provides intersection queries //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -35,41 +35,57 @@ namespace BRS {
         // commands
 
         // queries
-        public abstract float? Intersect(Ray ray);
-        public abstract bool Contains(BoundingSphere other);
-        public abstract float radius { get; set; }
+        public abstract bool Intersects(Ray ray, out float hit);
+        public abstract bool Intersects(Collider other);
+        public abstract float Radius { get; set; }
 
-        public bool Intersects(Ray ray) { return Intersect(ray) != null; }
         public bool isStatic { get { return transform.isStatic; } }
+
+        protected Transform Transf { get { if (gameObject != null) return gameObject.transform; else return Transform.Identity; } }
         // other
         //STATIC
         public static List<Collider> allcolliders = new List<Collider>();
     }
 
-    class BoxCollider : Collider {
+    class BoxCollider : Collider { // it is axis-aligned, cannot be rotated
         BoundingBox box;
+        public BoundingBox worldBox { get { return new BoundingBox(Transf.position - Transf.scale/2, Transf.position + Transf.scale / 2); } }
+        //public BoundingBox worldBox { get { return box; } }
         float radius_cashed;
-
-
 
         //CONSTRUCTORS
         public BoxCollider(GameObject o) {
-            //TODO compute more accurately
-            box = new BoundingBox(-o.Transform.scale / 2, o.Transform.scale / 2);
+            //TODO compute more accurately (using mesh)
+            box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
         }
 
         public BoxCollider(Vector3 center, Vector3 size) {
             box = new BoundingBox(center - size / 2, center + size / 2);
         }
 
-        public override bool Contains(BoundingSphere other) {
-            throw new System.NotImplementedException();
+        //queries
+        public override bool Intersects(Collider other) {
+            ContainmentType result = ContainmentType.Disjoint;
+            if (other is BoxCollider) {
+                result = worldBox.Contains(((BoxCollider)other).worldBox);
+            }
+            else if(other is SphereCollider) {
+                result = worldBox.Contains(((SphereCollider)other).worldSphere);
+            }
+            return result != ContainmentType.Disjoint;
+        }
+        
+        public override bool Intersects(Ray ray, out float t) {
+            t = -1;
+            float? result = ray.Intersects(worldBox); 
+            if (result == null) return false;
+            else {
+                t = (float)result;
+                return true;
+            }
         }
 
-        public override float? Intersect(Ray ray) {
-            return ray.Intersects(box);
-        }
-        public override float radius {
+        public override float Radius {
             get { if(radius_cashed==0) radius_cashed = Vector3.Distance(box.Max, box.Min)/2; return radius_cashed; }
             set { radius_cashed = value; }
         }
@@ -77,34 +93,51 @@ namespace BRS {
 
     class SphereCollider : Collider {
         BoundingSphere sphere;
+        public BoundingSphere worldSphere { get { return sphere.Transform(Transf.World); } }
+        //public BoundingSphere worldSphere { get { return sphere; } }
 
-        //it is not called when copied
+        //it is not called when copied (?)
 
+        //CONSTRUCTOR
         public SphereCollider(GameObject o) {
             sphere = o.mesh.BoundingSphere;
-            //Collider.allcolliders.Add(this);
         }
 
         public SphereCollider(Vector3 center, float _radius) {
             sphere = new BoundingSphere(center, _radius);
-            //Collider.allcolliders.Add(this);
         }
 
-        public override float radius {
+        //QUERIES
+        
+
+        public override bool Intersects(Ray ray, out float t) {
+            t = -1;
+            float? result = ray.Intersects(worldSphere);
+            if (result == null) return false;
+            else {
+                t = (float)result;
+                return true;
+            }
+        }
+
+        public override bool Intersects(Collider other) {
+            ContainmentType result = ContainmentType.Disjoint;
+            if (other is BoxCollider) {
+                result = worldSphere.Contains(((BoxCollider)other).worldBox);
+            } else if (other is SphereCollider) {
+                result = worldSphere.Contains(((SphereCollider)other).worldSphere);
+            }
+            return  result != ContainmentType.Disjoint;
+        }
+
+
+        public override float Radius {
             get { return sphere.Radius; }
             set { sphere.Radius = value; }
         }
-
-        public override float? Intersect(Ray ray) {
-            return ray.Intersects(sphere.Transform(gameObject.Transform.World));
-        }
-
-        public override bool Contains(BoundingSphere other) {
-            ContainmentType result = sphere.Transform(gameObject.Transform.World).Contains(other);
-            return  result!=ContainmentType.Disjoint;
-        }
     }
 
+    /*
     class PlaneCollider : Collider {
         Plane plane;
 
@@ -127,6 +160,6 @@ namespace BRS {
         public override float? Intersect(Ray ray) {
             return ray.Intersects(plane);
         }
-    }
+    }*/
 
 }

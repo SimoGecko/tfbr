@@ -15,7 +15,7 @@ namespace BRS.Scripts {
 
 
         //private
-        List<Buttons> allButtons = new List<Buttons>();
+        List<Buttons> allButtons;
 
 
         //reference
@@ -23,6 +23,8 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            allButtons = new List<Buttons>(); allButtons.Clear();
+
             allButtons.Add(Buttons.A);
             allButtons.Add(Buttons.B);
             allButtons.Add(Buttons.X);
@@ -59,7 +61,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            //TestInput();
+            TestInput();
 
         }
 

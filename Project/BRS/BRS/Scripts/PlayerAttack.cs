@@ -14,24 +14,28 @@ namespace BRS.Scripts {
         const float attackDuration = .2f;
         const float attackDistance = 5;
         const float attackDistanceThreshold = 2f;
+        const float attackDamage = 40;
 
         //private
-        bool attacking = false;
+        bool attacking;
         Vector3 attackStartPos, attackEndPos;
         float attackRefTime;
-        bool hasAppliedDamage = false;
         float attackStartTime;
+        bool hasAppliedDamage;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { }
+        public override void Start() { attacking = false; }
         public override void Update() { }
 
         public override void OnCollisionEnter(Collider c) {
-            Player p = c.gameObject.GetComponent<Player>();
-            if (p != null && attacking) DealWithAttack(p);
+            bool isPlayer = c.gameObject.myTag == "player";
+            if (isPlayer && attacking) {
+                Player p = c.gameObject.GetComponent<Player>();
+                DealWithAttack(p);
+            }
         }
 
 
@@ -66,7 +70,7 @@ namespace BRS.Scripts {
             PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
             if (!hasAppliedDamage && (!pa.attacking || pa.attackStartTime > attackStartTime)) {
                 //if the other is not attacking or started attacking later
-                p.GetHit();
+                p.TakeDamage(attackDamage);
                 hasAppliedDamage = true;
             }
         }

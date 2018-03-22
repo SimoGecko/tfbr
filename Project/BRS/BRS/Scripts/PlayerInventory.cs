@@ -12,8 +12,9 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        int capacity = 20;
         const float timeBetweenDrops = .1f;
+        int capacity = 20;
+        const float dropcashRadius = 1f;
 
         //private
         //MONEY
@@ -22,75 +23,72 @@ namespace BRS.Scripts {
         bool canDropMoney = true;
         Stack<Money> carryingMoney = new Stack<Money>();
 
-        //POWER UP
-        int maxNumberPowerUps = 1;
-        List<Powerup> carryingPowerUp = new List<Powerup>();
-
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            //INIT
+            carryingValue = carryingWeight = 0;
+            carryingMoney = new Stack<Money>(); carryingMoney.Clear();
+            canDropMoney = true;
         }
-
-        public override void Update() {
-
-        }
-
+        public override void Update() { }
 
 
         // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
-        public void Collect(Powerup powerUp) {
-            carryingPowerUp.Add(powerUp);
-        }
         
         public void Collect(Money money) {
-            //carryingWeight += Math.Min(amount, capacity - carryingWeight);
-            carryingWeight += money.Weight;
-            carryingValue += money.Value;
-            carryingMoney.Push(money);
+            if (CanPickUp(money)) {
+                carryingWeight += money.Weight;
+                carryingValue += money.Value;
+                carryingMoney.Push(money);
+            }
         }
 
-        public void Deload() {
+        //deload = leave in base (no spawning)
+        public void DeloadAll() {
             carryingWeight = 0;
             carryingValue = 0;
+            carryingMoney.Clear();
         }
 
+        public void DeloadOne() {
+            Money m = carryingMoney.Pop();
+            carryingWeight -= m.Weight;
+            carryingValue -= m.Value;
+        }
+
+        //drop = leave on ground by choice based on input
         public void DropMoney() {
             if (canDropMoney) {
-                DropMoneyAmount(1);
+                RemoveMoneyAmount(1);
                 canDropMoney = false;
                 new Timer(timeBetweenDrops, () => canDropMoney = true);
             }
         }
 
+        //lose = leave on ground by attack
         public void LoseMoney() {
-            DropMoneyAmount(carryingMoney.Count/3);
+            RemoveMoneyAmount(carryingMoney.Count/3);
         }
 
         public void LoseAllMoney() {
-            DropMoneyAmount(carryingMoney.Count);
+            RemoveMoneyAmount(carryingMoney.Count);
         }
 
-        void DropMoneyAmount(int amount) {
+        //general to remove
+        void RemoveMoneyAmount(int amount) {
             amount = Math.Min(amount, carryingMoney.Count);
             for (int i = 0; i < amount; i++){
                 Money money = carryingMoney.Pop();
                 //Spawn money somewhere
-                Spawner.instance.SpawnMoneyAround(transform.position);
+                Spawner.instance.SpawnMoneyAround(transform.position, dropcashRadius);
                 carryingValue -= money.Value;
                 carryingWeight -= money.Weight;
-            }
-        }
-
-        public void UsePowerUp(Player p) {
-            if (carryingPowerUp.Count > 0) {
-                carryingPowerUp[0].UsePowerUp(p);
-                carryingPowerUp.Remove(carryingPowerUp[0]);
             }
         }
 
@@ -99,17 +97,20 @@ namespace BRS.Scripts {
         }
 
         // queries
-        public bool CanPickUp(Powerup powerUp) {
-            return carryingPowerUp.Count < maxNumberPowerUps;
-        }
         public bool CanPickUp(Money money) {
             return carryingWeight + money.Weight <= capacity;
         }
-        public float MoneyPercent { get { return (float)carryingWeight / capacity; } }
-        public int CarryingValue { get { return carryingValue; } }
-        public int Capacity { get { return capacity; } }
-        public int CarryingWeight { get { return carryingWeight; } }
 
+        /*
+        bool CanDrop() {
+            return canDropMoney && carryingMoney.Count > 0;
+        }*/
+
+        public float MoneyPercent { get { return (float)carryingWeight / capacity; } }
+        public int CarryingValue  { get { return carryingValue; } }
+        public int CarryingWeight { get { return carryingWeight; } }
+        public int Capacity       { get { return capacity; } }
+        public int ValueOnTop     { get { return carryingMoney.Peek().Value; } }
 
         // other
 

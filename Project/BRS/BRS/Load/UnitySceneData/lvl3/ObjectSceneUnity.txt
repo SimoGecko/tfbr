@@ -22,7 +22,7 @@ sca: 1 1 1
 <Obstacles>
 tag: Obstacle
 prefabName: cube
-amount: 31
+amount: 30
 pos: -58.6 0.5 16.88
 rot: 0 0 0
 sca: 3 3 1
@@ -77,9 +77,6 @@ sca: 4.5 1 0.75
 pos: -16 0.5 -3.1
 rot: 0 0 0
 sca: 1 1 1.8
-pos: -63.64634 0.5 3.999365
-rot: 0 0 0
-sca: 0.8 7 3.4
 pos: -51.6 0.5 -3.92
 rot: 0 0 0
 sca: 2 1 8
@@ -135,4 +132,13 @@ pos: -35.34 0.5 -24.75
 rot: 0 0 0
 sca: 80 7 0.625
 </Boundaries>
+
+<VaultDoor>
+tag: VaultDoor
+prefabName: cube
+amount: 1
+pos: -63.64634 0.5 3.999365
+rot: 0 0 0
+sca: 0.8 7 3.4
+</VaultDoor>
 
