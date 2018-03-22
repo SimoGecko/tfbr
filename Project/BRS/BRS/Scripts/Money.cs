@@ -42,10 +42,11 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(Player p) {
+        protected override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
                 pi.Collect(this);
+                Spawner.instance.RemoveMoney(this);
                 GameObject.Destroy(gameObject);
             }
         }

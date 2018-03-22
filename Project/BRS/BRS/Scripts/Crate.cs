@@ -49,6 +49,7 @@ namespace BRS.Scripts {
             for(int i=0; i<MyRandom.Range(minNumCoins, maxNumCoins+1); i++) {
                 Spawner.instance.SpawnMoneyAround(transform.position);
             }
+            Spawner.instance.RemoveCrate(this);
             GameObject.Destroy(gameObject);
         }
 

@@ -27,6 +27,7 @@ namespace BRS.Scripts {
 
         PlayerUI[] playerUI;
 
+
         //reference
         static ContentManager Content;
 
@@ -45,6 +46,7 @@ namespace BRS.Scripts {
         public void DrawGlobal(SpriteBatch spriteBatch) {
             spriteBatch.DrawString(myfont, "round: " + roundtime.span.ToReadableString(), new Vector2(10, 40), Color.White);
 
+            Minimap.instance.Draw(spriteBatch);
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
@@ -104,6 +106,11 @@ namespace BRS.Scripts {
         }
         public void SetPlayerMoneyBase(int v, int index) {
             playerUI[index].totalMoneyInBase = v;
+        }
+
+        //GENERAL ACCESS
+        public Texture2D LoadTexture2D(string name) {
+            return Content.Load<Texture2D>(name);
         }
 
 

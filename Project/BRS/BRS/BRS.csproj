@@ -144,8 +144,10 @@
     <Compile Include="Scripts\CameraController.cs" />
     <Compile Include="Scripts\Crate.cs" />
     <Compile Include="Scripts\GameManager.cs" />
+    <Compile Include="Scripts\GamepadTest.cs" />
     <Compile Include="Scripts\IDamageable.cs" />
     <Compile Include="Scripts\LivingEntity.cs" />
+    <Compile Include="Scripts\Minimap.cs" />
     <Compile Include="Scripts\Money.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
@@ -161,6 +163,8 @@
     <None Include="Content\cash.xnb" />
     <None Include="Content\diamond.xnb" />
     <None Include="Content\gold.xnb" />
+    <None Include="Content\minimap.xnb" />
+    <None Include="Content\minimap_icons.xnb" />
     <None Include="Content\primitives\capsule.xnb" />
     <None Include="Content\primitives\cube.xnb" />
     <None Include="Content\primitives\cylinder.xnb" />
@@ -185,18 +189,9 @@
     <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Load\UnityScenes\lvl1\Bases.txt" />
-    <Content Include="Load\UnityScenes\lvl1\Boundaries.txt" />
-    <Content Include="Load\UnityScenes\lvl1\Ground.txt" />
-    <Content Include="Load\UnityScenes\lvl1\Obstacles.txt" />
-    <Content Include="Load\UnityScenes\lvl2\Bases.txt" />
-    <Content Include="Load\UnityScenes\lvl2\Boundaries.txt" />
-    <Content Include="Load\UnityScenes\lvl2\Ground.txt" />
-    <Content Include="Load\UnityScenes\lvl2\Obstacles.txt" />
-    <Content Include="Load\UnityScenes\lvl3\Bases.txt" />
-    <Content Include="Load\UnityScenes\lvl3\Boundaries.txt" />
-    <Content Include="Load\UnityScenes\lvl3\Ground.txt" />
-    <Content Include="Load\UnityScenes\lvl3\Obstacles.txt" />
+    <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

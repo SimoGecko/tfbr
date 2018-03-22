@@ -9,19 +9,21 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectType { Player, Base, Obstacle, Boundary, Default }
+    public enum ObjectType { Ground, Player, Base, Obstacle, Boundary, Default }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
-    public class GameObject : RigidBody {
+    public class GameObject : RigidBody { // NO RB
         public Transform Transform;
         List<IComponent> components;
         private Model _model;
         public ModelMesh mesh { get { return _model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool Active { get; set; } = true;
         public string Name { private set; get; }
+        public string myTag = "";
         public ObjectType Type { set; get; } = ObjectType.Default;
+
 
         static int InstanceCount = 0;
 
@@ -48,6 +50,13 @@ namespace BRS {
             if (Active) {
                 foreach (IComponent c in components) {
                     c.Update();
+                }
+            }
+        }
+        public virtual void LateUpdate() {
+            if (Active) {
+                foreach (IComponent c in components) {
+                    c.LateUpdate();
                 }
             }
         }
@@ -136,15 +145,15 @@ namespace BRS {
         }
 
         //returns all the gameobject that satisfy the tag
-        public static GameObject[] FindGameObjectsWithTag(string tag) {
+        public static GameObject[] FindGameObjectsWithTag(string _tag) {
             List<GameObject> result = new List<GameObject>();
 
             foreach (GameObject o in allGameObjects) {
-                if (o.Type.Equals(tag)) result.Add(o);
+                if (o.myTag.Equals(_tag)) result.Add(o);
             }
 
             if (result.Count == 0) {
-                Debug.LogError("could not find any gameobject with tag " + tag);
+                Debug.LogError("could not find any gameobject with tag " + _tag);
                 return null;
             }
 

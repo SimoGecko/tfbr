@@ -52,6 +52,7 @@ namespace BRS.Scripts {
         int FindWinner() {
             GameObject[] bases = GameObject.FindGameObjectsWithTag("base");
             int winner = 0;
+            
             int maxCash = bases[0].GetComponent<Base>().TotalMoney;
             for (int i = 1; i < numPlayers; i++) {
                 int totmoney = bases[i].GetComponent<Base>().TotalMoney;
