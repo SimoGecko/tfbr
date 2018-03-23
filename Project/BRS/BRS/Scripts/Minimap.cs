@@ -28,13 +28,14 @@ namespace BRS.Scripts {
 
         //reference
         public static Minimap instance;
+        
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
-            mapSprite = UserInterface.instance.LoadTexture2D("images\\minimap\\level1");
-            mapIcons  = UserInterface.instance.LoadTexture2D("images\\minimap\\icons");
+            mapSprite = UserInterface.instance.LoadTexture2D("Images/minimap/level1");
+            mapIcons  = UserInterface.instance.LoadTexture2D("Images/minimap/icons");
 
             mapArea =  new Rectangle((int)(Screen.WIDTH / 2 - MAPWIDTH / 2 * mapScale), 10, (int)(MAPWIDTH * mapScale), (int)(MAPHEIGHT * mapScale));
             upperLeftPt  = new Vector3(-25, 0, -75); 

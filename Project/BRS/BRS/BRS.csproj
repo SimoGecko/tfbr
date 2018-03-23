@@ -104,6 +104,7 @@
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Collider.cs" />
     <Compile Include="Engine\Component.cs" />
+    <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
     <Compile Include="Engine\Input.cs" />
