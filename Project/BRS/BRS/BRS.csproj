@@ -170,26 +170,6 @@
     <Compile Include="Scripts\Vault.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\cash.xnb" />
-    <None Include="Content\diamond.xnb" />
-    <None Include="Content\gold.xnb" />
-    <None Include="Content\minimap.xnb" />
-    <None Include="Content\minimap_icons.xnb" />
-    <None Include="Content\primitives\capsule.xnb" />
-    <None Include="Content\primitives\cube.xnb" />
-    <None Include="Content\primitives\cylinder.xnb" />
-    <None Include="Content\empty.xnb" />
-    <None Include="Content\font1.xnb" />
-    <None Include="Content\forklift.xnb" />
-    <None Include="Content\gplane.xnb" />
-    <None Include="Content\ground.xnb" />
-    <None Include="Content\money_bar.xnb" />
-    <None Include="Content\primitives\plane.xnb" />
-    <None Include="Content\primitives\quad.xnb" />
-    <None Include="Content\primitives\sphere.xnb" />
-    <None Include="Content\progress_bar_fat.xnb" />
-    <None Include="Content\wirecube.xnb" />
-    <None Include="Content\wiresphere.xnb" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -199,8 +179,6 @@
     <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\policecar.png" />
-    <Content Include="Content\policecar_lights.png" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />

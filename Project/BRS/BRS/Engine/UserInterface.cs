@@ -49,23 +49,23 @@ namespace BRS.Scripts {
         public void Start() {
             showWinner = showPolice = false;
             instance = this;
-            myfont = Content.Load<SpriteFont>("font1");
-            winnerFont = Content.Load<SpriteFont>("font2");
-            bar = Content.Load<Texture2D>("progress_bar");
-            policeCar = Content.Load<Texture2D>("images/policecar");
-            policeLight = Content.Load<Texture2D>("images/policecar_lights");
+            myfont = Content.Load<SpriteFont>("Other/font/font1");
+            winnerFont = Content.Load<SpriteFont>("Other/font/font2");
+            bar = Content.Load<Texture2D>("Images/UI/progress_bar");
+            policeCar = Content.Load<Texture2D>("Images/UI/policeCar");
+            policeLight = Content.Load<Texture2D>("Images/UI/policeCar_lights");
 
             playerUI = new PlayerUI[GameManager.numPlayers];
 
             for (int i = 0; i < namePowerupsPng.Length; ++i) {
-                powerupsPng[i] = Content.Load<Texture2D>("images/" + namePowerupsPng[i] + "_pic");
+                powerupsPng[i] = Content.Load<Texture2D>("Images/powerup/" + namePowerupsPng[i] + "_pic");
                 if (!mapNamePowerupIndexPng.ContainsKey(namePowerupsPng[i]))
                     mapNamePowerupIndexPng.Add(namePowerupsPng[i], i);
             }
 
-            circleBg = Content.Load<Texture2D>("images/circle_bg");
-            circleFg = Content.Load<Texture2D>("images/circle_fg");
-            circleGr = Content.Load<Texture2D>("images/circle_gradient");
+            circleBg = Content.Load<Texture2D>("Images/UI/circle_bg");
+            circleFg = Content.Load<Texture2D>("Images/UI/circle_fg");
+            circleGr = Content.Load<Texture2D>("Images/UI/circle_gradient");
             CircleBar.Initialize(circleFg, circleGr, Game1.instance.GraphicsDevice);
 
 
