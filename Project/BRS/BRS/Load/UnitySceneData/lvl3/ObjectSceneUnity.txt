@@ -1,6 +1,6 @@
 <Ground>
 tag: Ground
-prefabName: gplane
+prefabName: plane
 amount: 1
 pos: -35 0 0
 rot: 0 0 0

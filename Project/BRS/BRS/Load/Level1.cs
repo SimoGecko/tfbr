@@ -42,7 +42,7 @@ namespace BRS.Load {
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[2])), MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
-                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>(prefabName));
+                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>("Models/primitives/" + prefabName));
                         
                         go.transform.position = position;
                         go.transform.scale = scale;
@@ -80,7 +80,7 @@ namespace BRS.Load {
 
 
             //TRANSFORM TEST
-            GameObject testCube = new GameObject("testcube", Content.Load<Model>("cube"));
+            GameObject testCube = new GameObject("testcube", Content.Load<Model>("Models/primitives/cube"));
             testCube.AddComponent(new TransformTest());
 
 
@@ -96,7 +96,7 @@ namespace BRS.Load {
 
             //PLAYER
             for(int i=0; i<GameManager.numPlayers; i++) {
-                GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("forklift"));
+                GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("Models/vehicles/forklift"));
                 forklift.Type = ObjectType.Player;
                 forklift.myTag = "player";
                 forklift.AddComponent(new Player(i, i%2));
@@ -127,7 +127,7 @@ namespace BRS.Load {
             }*/
 
             //VAULT
-            GameObject vault = new GameObject("vault", Content.Load<Model>("cylinder"));
+            GameObject vault = new GameObject("vault", Content.Load<Model>("Models/primitives/cylinder"));
             vault.AddComponent(new Vault());
             vault.transform.position = new Vector3(5 , 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
@@ -135,10 +135,11 @@ namespace BRS.Load {
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             //LOAD UNITY SCENE
+            /*
             var task = Task.Run(() => {
                 ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
             });
-            task.Wait();
+            task.Wait();*/
 
             GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
