@@ -46,7 +46,7 @@ namespace BRS.Load {
             //PLAYER
             for (int i = 0; i < GameManager.numPlayers; i++) {
 
-                GameObject forklift = new GameObject("player_" + i, Content.Load<Model>("Models/vehicles/forklift"));
+                GameObject forklift = new GameObject("player_" + i, File.Load<Model>("Models/vehicles/forklift"));
                 forklift.Type = ObjectType.Player;
                 //forklift.transform.Scale(2);
                 forklift.transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
@@ -64,7 +64,7 @@ namespace BRS.Load {
 
             //BASE
             for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_" + i, Content.Load<Model>("Models/primitives/cube"));
+                GameObject playerBase = new GameObject("playerBase_" + i, File.Load<Model>("Models/primitives/cube"));
                 playerBase.Type = ObjectType.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
@@ -75,7 +75,7 @@ namespace BRS.Load {
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 3; ++j) {
-                    GameObject body = new GameObject("domino_" + i, Content.Load<Model>("Models/primitives/cube"));
+                    GameObject body = new GameObject("domino_" + i, File.Load<Model>("Models/primitives/cube"));
                     body.Type = ObjectType.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
                     body.AddComponent(new RigidBodyComponent(PhysicsManager, false));
@@ -85,7 +85,7 @@ namespace BRS.Load {
             //AddCar(new JVector(0, 5, -10));
 
             // Dummy object at position (0/0/0) for debug-rendering.
-            GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("Models/primitives/cube"));
+            GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
             dummy.Type = ObjectType.Default;
             dummy.AddComponent(new RigidBodyComponent(PhysicsManager, true, false));
         }
@@ -99,7 +99,7 @@ namespace BRS.Load {
                     material.StaticFriction = 0.4f;
                     material.KineticFriction = 1.0f;
 
-                    GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("Models/vehicles/gplane"));
+                    GameObject groundPlane = new GameObject("groundplane", File.Load<Model>("Models/vehicles/gplane"));
                     groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
                     groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material: material));
                 }
@@ -110,25 +110,25 @@ namespace BRS.Load {
             float y = 1f;
 
             for (int x = 0; x < 40; ++x) {
-                GameObject body = new GameObject("wall_" + (4 * x), Content.Load<Model>("Models/primitives/cube"));
+                GameObject body = new GameObject("wall_" + (4 * x), File.Load<Model>("Models/primitives/cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
                 body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
 
 
-                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("Models/primitives/cube"));
+                body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
                 body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
 
 
-                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("Models/primitives/cube"));
+                body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
                 body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
 
 
-                body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("Models/primitives/cube"));
+                body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
                 body.AddComponent(new RigidBodyComponent(PhysicsManager, true));

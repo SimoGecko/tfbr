@@ -62,10 +62,6 @@ namespace BRS {
 
             ui = new UserInterface();
 
-            //LOAD
-            Prefabs.GiveContent(Content); // do not put in initialize: Todo: Why?
-            ui.GiveContent(Content);
-            scene.GiveContent(Content);
 
             Start(); // CALL HERE
 

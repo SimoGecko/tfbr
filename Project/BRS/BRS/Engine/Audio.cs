@@ -80,13 +80,13 @@ namespace BRS {
         //=============================================================================================================
         // AUDIO AND SONGS IN THE GAME
         static void BuildAudioLibrary() {
-            //SoundEffect sound1 = Content.Load<SoundEffect>("sound1");
+            //SoundEffect sound1 = File.Load<SoundEffect>("sound1");
             //sounds.Add("sound1", sound1);
             //instance.Add("sound1", sound1.CreateInstance());
         }
 
         static void BuildSongLibrary() {
-            //songs.Add("song1", Content.Load<Song>("song1"));
+            //songs.Add("song1", File.Load<Song>("song1"));
         }
 
         

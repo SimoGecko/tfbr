@@ -12,14 +12,13 @@ namespace BRS {
         ////////// static class that contains all GameObjects stored as prefabs and allows access to instantiate them //////////
 
         static Dictionary<string, GameObject> allprefabs = new Dictionary<string, GameObject>();
-        static ContentManager Content;
         public static Model emptymodel; // to represent a small transform without mesh - debug
         public static Model cubeModel, sphereModel;
 
         public static void Start() {
-            emptymodel = Content.Load<Model>("Models/primitives/empty");
-            cubeModel = Content.Load<Model>("Models/primitives/cube");
-            sphereModel = Content.Load<Model>("Models/primitives/sphere");
+            emptymodel = File.Load<Model>("Models/primitives/empty");
+            cubeModel = File.Load<Model>("Models/primitives/cube");
+            sphereModel = File.Load<Model>("Models/primitives/sphere");
             BuildPrefabs();
         }
 
@@ -40,10 +39,6 @@ namespace BRS {
                 return null;
             }
             return allprefabs[name];
-        }
-
-        public static void GiveContent(ContentManager c) {
-            Content = c;
         }
         
     }

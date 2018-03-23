@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-namespace BRS.Scripts {
+namespace BRS {
     class File : Component {
         ////////// class used to load files from disk and providing safeguard agains null files //////////
 

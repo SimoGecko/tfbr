@@ -42,7 +42,7 @@ namespace BRS.Load {
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[2])), MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
-                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), Content.Load<Model>("Models/primitives/" + prefabName));
+                        GameObject go =  new GameObject(tagName + "_" + i.ToString(), File.Load<Model>("Models/primitives/" + prefabName));
                         
                         go.transform.position = position;
                         go.transform.scale = scale;
@@ -80,14 +80,14 @@ namespace BRS.Load {
 
 
             //TRANSFORM TEST
-            GameObject testCube = new GameObject("testcube", Content.Load<Model>("Models/primitives/cube"));
+            GameObject testCube = new GameObject("testcube", File.Load<Model>("Models/primitives/cube"));
             testCube.AddComponent(new TransformTest());
 
 
             //GROUND
             /*for (int x = 0; x < 2; x++) {
                 for (int y = 0; y < 3; y++) {
-                    GameObject groundPlane = new GameObject("groundplane_" + x.ToString() + "_" + y.ToString(), Content.Load<Model>("gplane"));
+                    GameObject groundPlane = new GameObject("groundplane_" + x.ToString() + "_" + y.ToString(), File.Load<Model>("gplane"));
                     groundPlane.transform.position = new Vector3(x * 10-5, 0, -y * 10);
                     groundPlane.transform.SetStatic();
                 }
@@ -96,7 +96,7 @@ namespace BRS.Load {
 
             //PLAYER
             for(int i=0; i<GameManager.numPlayers; i++) {
-                GameObject forklift = new GameObject("player_"+i.ToString(), Content.Load<Model>("Models/vehicles/forklift"));
+                GameObject forklift = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 forklift.Type = ObjectType.Player;
                 forklift.myTag = "player";
                 forklift.AddComponent(new Player(i, i%2));
@@ -115,7 +115,7 @@ namespace BRS.Load {
 
             //BASE
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), Content.Load<Model>("cube"));
+                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
                 playerBase.tag = "base";
                 playerBase.AddComponent(new Base());
                 playerBase.GetComponent<Base>().baseIndex = i;
@@ -127,7 +127,7 @@ namespace BRS.Load {
             }*/
 
             //VAULT
-            GameObject vault = new GameObject("vault", Content.Load<Model>("Models/primitives/cylinder"));
+            GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
             vault.AddComponent(new Vault());
             vault.transform.position = new Vector3(5 , 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);

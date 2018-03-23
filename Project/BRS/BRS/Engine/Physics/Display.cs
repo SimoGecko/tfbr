@@ -40,10 +40,10 @@ namespace BRS.Engine.Physics {
             GraphicsDevice_DeviceReset(null, null);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _font1 = _content.Load<SpriteFont>("debugFont");
-            _font2 = _content.Load<SpriteFont>("debugFont");
+            _font1 = File.Load<SpriteFont>("debugFont");
+            _font2 = File.Load<SpriteFont>("debugFont");
 
-            _texture = _content.Load<Texture2D>("images\\icon");
+            _texture = File.Load<Texture2D>("images\\icon");
         }
 
         protected override void UnloadContent() {
