@@ -18,7 +18,7 @@ namespace BRS.Scripts {
 
 
         //reference
-        static ContentManager content;
+        public static ContentManager content;
 
 
         // --------------------- BASE METHODS ------------------
@@ -36,8 +36,10 @@ namespace BRS.Scripts {
 
 
         // commands
-        public static void Load(string s) {
-            //content.Load<T>(s);
+        public static T Load<T>(string s) {
+            T result = content.Load<T>(s);
+            if (result == null) Debug.LogError("incorrect path to file: " + s);
+            return result;
         }
 
 
