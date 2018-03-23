@@ -135,11 +135,11 @@ namespace BRS.Load {
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             //LOAD UNITY SCENE
-            /*
-            var task = Task.Run(() => {
-                ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
-            });
-            task.Wait();*/
+
+            //var task = Task.Run(() => {
+            //    ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
+            //});
+            //task.Wait();
 
             GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");

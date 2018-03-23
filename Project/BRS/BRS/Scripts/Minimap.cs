@@ -33,8 +33,8 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
-            mapSprite = UserInterface.instance.LoadTexture2D("minimap");
-            mapIcons  = UserInterface.instance.LoadTexture2D("minimap_icons");
+            mapSprite = UserInterface.instance.LoadTexture2D("images\\minimap\\level1");
+            mapIcons  = UserInterface.instance.LoadTexture2D("images\\minimap\\icons");
 
             mapArea =  new Rectangle((int)(Screen.WIDTH / 2 - MAPWIDTH / 2 * mapScale), 10, (int)(MAPWIDTH * mapScale), (int)(MAPHEIGHT * mapScale));
             upperLeftPt  = new Vector3(-25, 0, -75); 
