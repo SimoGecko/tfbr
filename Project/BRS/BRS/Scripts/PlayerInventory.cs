@@ -14,7 +14,7 @@ namespace BRS.Scripts {
         //public
         const float timeBetweenDrops = .1f;
         int capacity = 20;
-        const float dropcashRadius = 1f;
+        const float dropcashRadius = .5f;
 
         //private
         //MONEY

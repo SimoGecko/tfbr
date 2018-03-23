@@ -291,6 +291,12 @@ namespace BRS {
             return f < min ? min : f > max ? max : f;
         }
 
+        public static float Angle(this Vector3 a, Vector3 b) {
+            //returns angle in degree between a and b
+            float cos = Vector3.Dot(a.normalized(), b.normalized());
+            return MathHelper.ToDegrees((float) Math.Acos(cos));
+        }
+
     }
 
 

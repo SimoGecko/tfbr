@@ -110,7 +110,13 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerPowerup());
                 forklift.AddComponent(new PlayerStamina());
+
+                //arrow
+                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
+                arrow.AddComponent(new Arrow(forklift.transform, null));
+                arrow.transform.Scale(.1f);
             }
+
 
 
             //BASE
