@@ -168,6 +168,7 @@
     <Compile Include="Scripts\Potions.cs" />
     <Compile Include="Scripts\Powerup.cs" />
     <Compile Include="Scripts\Spawner.cs" />
+    <Compile Include="Scripts\SpeedPad.cs" />
     <Compile Include="Scripts\TransformTest.cs" />
     <Compile Include="Scripts\Vault.cs" />
   </ItemGroup>

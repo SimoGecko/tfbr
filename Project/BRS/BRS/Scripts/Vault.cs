@@ -18,8 +18,10 @@ namespace BRS.Scripts {
         //public
         const float openingDuration = 2f;
         const float openingAnge = -90f;
-        //static Vector3 pivotOffset = new Vector3(-1.5f, 0, 0);
         const float pivotOffset = -1.5f;
+
+        public static Rectangle vaultArea = new Rectangle(-9, -72, 19, 8);
+
 
         //private
         bool open = false; // at end of animation

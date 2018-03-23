@@ -19,6 +19,7 @@ namespace BRS.Scripts {
         static Rectangle spawnArea = new Rectangle(-25, 5, 50, -80);
 
         const int moneyAmount = 50;
+        const int vaultGold = 20;
         const int crateAmount = 10;
         const int powerupAmount = 5;
 
@@ -48,6 +49,7 @@ namespace BRS.Scripts {
             instance = this;
             
             SpawnInitialMoney();
+            SpawnInitialVaultGold();
             SpawnInitialCrates();
             SpawnInitialPowerup();
 
@@ -72,6 +74,7 @@ namespace BRS.Scripts {
             for (int i = 0; i < moneyAmount; i++)
                 SpawnOneMoneyRandom();
         }
+        
 
         void SpawnOneMoneyRandom() {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
@@ -89,6 +92,14 @@ namespace BRS.Scripts {
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
             Elements.instance.Add(newmoney.GetComponent<Money>());
+        }
+
+        void SpawnInitialVaultGold() {
+            for (int i = 0; i < vaultGold; i++) {
+                Vector2 position = MyRandom.InsideRectangle(Vault.vaultArea);
+                GameObject newGold = GameObject.Instantiate("goldPrefab", position.To3(), MyRandom.YRotation());
+                Elements.instance.Add(newGold.GetComponent<Money>());
+            }
         }
 
         // CRATE
