@@ -22,7 +22,7 @@ namespace BRS {
         RasterizerState fullRasterizer, wireRasterizer;
         public static Game1 instance;
         
-        private static bool _usePhysics = false;
+        private static bool _usePhysics = true;
 
 
 

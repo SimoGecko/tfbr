@@ -90,8 +90,10 @@ namespace BRS.Scripts {
                     spriteBatch.Draw(policeLight, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One * 64, .6f, SpriteEffects.None, 1);
             }
 
+            if (Minimap.instance != null) {
+                Minimap.instance.Draw(spriteBatch);
+            }
 
-            Minimap.instance.Draw(spriteBatch);
             if (showWinner) {
                 spriteBatch.DrawString(winnerFont, winnerString, new Vector2(Screen.WIDTH / 2 - 200, Screen.HEIGHT / 2), Color.White);
             }

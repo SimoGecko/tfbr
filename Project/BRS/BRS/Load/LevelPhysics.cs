@@ -49,13 +49,14 @@ namespace BRS.Load {
                 GameObject forklift = new GameObject("player_" + i, Content.Load<Model>("forklift"));
                 forklift.Type = ObjectType.Player;
                 //forklift.transform.Scale(2);
-                forklift.transform.TranslateGlobal(new Vector3(30 * i, 0, 0));
+                forklift.transform.TranslateGlobal(new Vector3(30 * i, 1f, 0));
                 forklift.AddComponent(new Player(i, i%2));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
-                forklift.AddComponent(new RigidBodyComponent(PhysicsManager, false));
+                forklift.AddComponent(new PlayerStamina());
+                forklift.AddComponent(new DynamicRigidBody(PhysicsManager));
 
                 Players.Add(forklift);
             }
@@ -68,7 +69,7 @@ namespace BRS.Load {
                 playerBase.Type = ObjectType.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
-                playerBase.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+                playerBase.AddComponent(new StaticRigidBody(PhysicsManager));
             }
 
             BoxShape bShape = new BoxShape(0.5f, 4.0f, 2.0f);
@@ -78,7 +79,7 @@ namespace BRS.Load {
                     GameObject body = new GameObject("domino_" + i, Content.Load<Model>("cube"));
                     body.Type = ObjectType.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
-                    body.AddComponent(new RigidBodyComponent(PhysicsManager, false));
+                    body.AddComponent(new DynamicRigidBody(PhysicsManager));
                 }
             }
 
@@ -87,7 +88,7 @@ namespace BRS.Load {
             // Dummy object at position (0/0/0) for debug-rendering.
             GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
             dummy.Type = ObjectType.Default;
-            dummy.AddComponent(new RigidBodyComponent(PhysicsManager, true, false));
+            dummy.AddComponent(new StaticRigidBody(PhysicsManager));
         }
 
 
@@ -101,7 +102,7 @@ namespace BRS.Load {
 
                     GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
                     groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
-                    groundPlane.AddComponent(new RigidBodyComponent(PhysicsManager, true, material: material));
+                    groundPlane.AddComponent(new StaticRigidBody(PhysicsManager, true, material: material));
                 }
             }
         }
@@ -110,28 +111,28 @@ namespace BRS.Load {
             float y = 1f;
 
             for (int x = 0; x < 40; ++x) {
-                GameObject body = new GameObject("wall_" + (4 * x), Content.Load<Model>("cube"));
+                GameObject body = new GameObject("wall_" + (4 * x + 0), Content.Load<Model>("cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
-                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+                body.AddComponent(new StaticRigidBody(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
-                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+                body.AddComponent(new StaticRigidBody(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
-                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+                body.AddComponent(new StaticRigidBody(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), Content.Load<Model>("cube"));
                 body.Type = ObjectType.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
-                body.AddComponent(new RigidBodyComponent(PhysicsManager, true));
+                body.AddComponent(new StaticRigidBody(PhysicsManager));
             }
         }
 
