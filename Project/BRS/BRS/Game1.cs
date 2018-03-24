@@ -21,7 +21,7 @@ namespace BRS {
         private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
         public static Game1 instance;
-        
+
         private static bool _usePhysics = true;
 
 
@@ -123,7 +123,11 @@ namespace BRS {
                     _physicsManager.Draw();
                 }
 
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
+                foreach (GameObject go in GameObject.All) {
+                    if (go.Type == ObjectType.Player) {
+                        go.Draw(cam);
+                    }
+                }
                 //transform.Draw(camera);
 
                 //gizmos (wireframe)

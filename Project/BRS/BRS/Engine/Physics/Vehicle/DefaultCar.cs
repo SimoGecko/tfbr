@@ -34,6 +34,10 @@ namespace BRS.Engine.Physics.Vehicle {
         private float steering = 0.0f;
         private float accelerate = 0.0f;
 
+        // don't damp perfect, allow some bounciness.
+        private const float dampingFrac = 0.5f;
+        private const float springFrac = 0.1f;
+
         /// <summary>
         /// The maximum steering angle in degrees
         /// for both front wheels
@@ -56,10 +60,6 @@ namespace BRS.Engine.Physics.Vehicle {
         /// </summary>
         public float SteerRate { get; set; }
 
-        // don't damp perfect, allow some bounciness.
-        private const float dampingFrac = 0.5f;
-        private const float springFrac = 0.1f;
-
         //World.WorldStep postStep;
 
         /// <summary>
@@ -78,6 +78,7 @@ namespace BRS.Engine.Physics.Vehicle {
             this.SteerAngle = 20.0f;
             this.DriveTorque = 50.0f;
             this.SteerRate = 5.0f;
+            Mass = 100;
 
             // create default wheels
             wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);

@@ -68,11 +68,11 @@ namespace BRS.Scripts {
             }
 
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            transform.eulerAngles = new Vector3(0, rotation, 0);
-
-            //move forward
             float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+
+            //// move
+            //transform.eulerAngles = new Vector3(0, rotation, 0);
+            //transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             // Apply forces/changes to physics
             //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
@@ -85,20 +85,24 @@ namespace BRS.Scripts {
             //move forward
             //float speedboost = boosting ? boostSpeedMultiplier : 1f;
             Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude);
-            transform.Translate(linearVelocity);
+            //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
             DynamicRigidBody rigidBody = gameObject.GetComponent<DynamicRigidBody>();
-            rigidBody.RigidBody.LinearVelocity = new JVector(linearVelocity.X, 0, linearVelocity.Z);
-            rigidBody.RigidBody.Position = new JVector(rigidBody.RigidBody.Position.X, 1f, rigidBody.RigidBody.Position.Z);
-            rigidBody.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-            //rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
-            rigidBody.RigidBody.Mass = 10;
 
-            rigidBody.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
-            //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
-            Debug.Log(rigidBody.RigidBody.Position.ToString());
+            if (rigidBody != null) {
+                rigidBody.RigidBody.LinearVelocity = new JVector(linearVelocity.X, 0, linearVelocity.Z);
+                rigidBody.RigidBody.Position = new JVector(rigidBody.RigidBody.Position.X, 1f,
+                    rigidBody.RigidBody.Position.Z);
+                rigidBody.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+                //rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
+                rigidBody.RigidBody.Mass = 10;
+
+                rigidBody.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
+                //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
+                Debug.Log(rigidBody.RigidBody.Position.ToString());
+            }
 
             _previousLinearVelocity = linearVelocity;
         }

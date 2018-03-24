@@ -118,6 +118,7 @@
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\ConePrimitive.cs" />
+    <Compile Include="Engine\Physics\Primitives3D\ConvexHullPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CylinderPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\GeometricPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\SpherePrimitive.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Minimap.cs" />
     <Compile Include="Scripts\Money.cs" />
+    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
     <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
     <Compile Include="Scripts\Pickup.cs" />

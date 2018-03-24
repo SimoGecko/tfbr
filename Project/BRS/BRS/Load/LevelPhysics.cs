@@ -34,7 +34,8 @@ namespace BRS.Load {
             GameObject rootScene = new GameObject("manager", null);
             rootScene.AddComponent(new CameraController());
             rootScene.AddComponent(new GameManager());
-            //rootScene.AddComponent(new Spawner());
+            rootScene.AddComponent(new Elements());
+            rootScene.AddComponent(new Spawner());
 
 
 
@@ -50,7 +51,7 @@ namespace BRS.Load {
                 forklift.Type = ObjectType.Player;
                 //forklift.transform.Scale(2);
                 forklift.transform.TranslateGlobal(new Vector3(30 * i, 1f, 0));
-                forklift.AddComponent(new Player(i, i%2));
+                forklift.AddComponent(new Player(i, i % 2));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
@@ -71,8 +72,7 @@ namespace BRS.Load {
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new StaticRigidBody(PhysicsManager));
             }
-
-            BoxShape bShape = new BoxShape(0.5f, 4.0f, 2.0f);
+            
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 3; ++j) {
@@ -83,7 +83,8 @@ namespace BRS.Load {
                 }
             }
 
-            //AddCar(new JVector(0, 5, -10));
+            AddCar(new JVector(0, 5, -10));
+            AddSoftBody();
 
             // Dummy object at position (0/0/0) for debug-rendering.
             GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
@@ -142,6 +143,34 @@ namespace BRS.Load {
             _game.Components.Add(_car);
 
             _car.carBody.Position = position;
+        }
+
+        public void AddSoftBody() {
+            SoftBody cloth = new SoftBody(20, 20, 0.1f);
+
+            // ##### Uncomment for selfcollision, all 3 lines
+            //cloth.SelfCollision = true;
+            //cloth.TriangleExpansion = 0.05f;
+            //cloth.VertexExpansion = 0.05f;
+
+            cloth.Translate(new JVector(0, 2, 0));
+
+            cloth.Material.KineticFriction = 0.9f;
+            cloth.Material.StaticFriction = 0.95f;
+
+            cloth.VertexBodies[0].IsStatic = true;
+            //cloth.VertexBodies[380].IsStatic = true;
+            cloth.VertexBodies[19].IsStatic = true;
+            //cloth.VertexBodies[399].IsStatic = true;
+
+            cloth.SetSpringValues(SoftBody.SpringType.EdgeSpring, 0.1f, 0.01f);
+            cloth.SetSpringValues(SoftBody.SpringType.ShearSpring, 0.1f, 0.03f);
+            cloth.SetSpringValues(SoftBody.SpringType.BendSpring, 0.1f, 0.03f);
+
+            // ###### Uncomment here for a better visualization
+            // Demo.Components.Add(new ClothObject(Demo, cloth));
+
+            PhysicsManager.World.AddBody(cloth);
         }
     }
 }

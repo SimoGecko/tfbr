@@ -1,4 +1,5 @@
-﻿using BRS.Load;
+﻿using BRS.Engine.Physics.Primitives3D;
+using BRS.Load;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;
@@ -32,6 +33,7 @@ namespace BRS.Engine.Physics {
 
             World = new World(collision);
             World.AllowDeactivation = true;
+            World.Gravity = new JVector(0, -20, 0);
 
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
 
@@ -43,6 +45,7 @@ namespace BRS.Engine.Physics {
             _primitives[(int)PrimitiveTypes.Cone] = new Primitives3D.ConePrimitive(graphicsDevice);
             _primitives[(int)PrimitiveTypes.Cylinder] = new Primitives3D.CylinderPrimitive(graphicsDevice);
             _primitives[(int)PrimitiveTypes.Sphere] = new Primitives3D.SpherePrimitive(graphicsDevice);
+            //_primitives[(int)PrimitiveTypes.Convex] = new ConvexHullPrimitive(graphicsDevice);
 
             BasicEffect = new BasicEffect(graphicsDevice);
             BasicEffect.EnableDefaultLighting();
@@ -130,7 +133,7 @@ namespace BRS.Engine.Physics {
                 foreach (RigidBody body in island.Bodies) {
                     box = JBBox.CreateMerged(box, body.BoundingBox);
                 }
-                
+
                 DebugDrawer.DrawAabb(box.Min, box.Max, island.IsActive() ? Color.Green : Color.Yellow);
             }
         }
@@ -158,6 +161,10 @@ namespace BRS.Engine.Physics {
                 ConeShape cs = shape as ConeShape;
                 scaleMatrix = Matrix.CreateScale(cs.Radius, cs.Height, cs.Radius);
                 primitive = _primitives[(int)PrimitiveTypes.Cone];
+            } else if (shape is ConvexHullShape) {
+                ConvexHullShape cs = shape as ConvexHullShape;
+                primitive = _primitives[(int)PrimitiveTypes.Box];
+                scaleMatrix = Matrix.CreateScale(Conversion.ToXnaVector(cs.BoundingBox.Max - cs.BoundingBox.Min));
             }
 
             if (primitive != null)
