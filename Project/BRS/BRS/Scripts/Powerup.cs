@@ -33,7 +33,7 @@ namespace BRS.Scripts {
             base.Update();
 
             if(rotate)
-                transform.Rotate(Vector3.Up, rotSpeed * Time.deltatime);
+                transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
         }
 
 

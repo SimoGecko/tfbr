@@ -65,7 +65,7 @@ namespace BRS.Scripts {
         // other
         void OpenCoroutine() {
             if (openRefTime <= 1) {
-                float amount = Time.deltatime / openingDuration;
+                float amount = Time.deltaTime / openingDuration;
                 openRefTime += amount;
                 //float t = Curve.EvaluateSqrt(openRefTime);
                 transform.RotateAround(pivotPoint, Vector3.Up, amount*openingAnge);

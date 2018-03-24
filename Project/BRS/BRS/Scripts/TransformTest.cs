@@ -25,7 +25,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            transform.RotateAround(new Vector3(-5, 0, -1), Vector3.Up, 180 * Time.deltatime);
+            transform.RotateAround(new Vector3(-5, 0, -1), Vector3.Up, 180 * Time.deltaTime);
         }
 
 

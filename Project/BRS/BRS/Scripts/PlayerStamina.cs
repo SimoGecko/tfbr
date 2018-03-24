@@ -40,7 +40,7 @@ namespace BRS.Scripts {
                 stamina = 0;
                 Timer t = new Timer(1, () => canReloadStamina = true);
             }
-            if (canReloadStamina) AddStamina(staminaReloadPerSecond * Time.deltatime);
+            if (canReloadStamina) AddStamina(staminaReloadPerSecond * Time.deltaTime);
         }
 
         public void AddStamina(float amount) {
@@ -53,7 +53,7 @@ namespace BRS.Scripts {
 
         //USAGE
         public void UseStaminaForBoost() {
-            stamina -= staminaPerBoost * Time.deltatime;
+            stamina -= staminaPerBoost * Time.deltaTime;
         }
         public void UseStaminaForAttack() {
             stamina -= staminaPerAttack;

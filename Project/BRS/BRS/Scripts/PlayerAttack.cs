@@ -54,7 +54,7 @@ namespace BRS.Scripts {
 
         public void AttackCoroutine() {
             if (attackRefTime <= 1) {
-                attackRefTime += Time.deltatime / attackDuration;
+                attackRefTime += Time.deltaTime / attackDuration;
                 float t = Curve.EvaluateSqrt(attackRefTime);
                 transform.position = Vector3.LerpPrecise(this.attackStartPos, attackEndPos, t);
             } else {

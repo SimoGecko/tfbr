@@ -72,7 +72,7 @@ namespace BRS.Scripts {
 
             //move forward
             float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
+            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltaTime);
 
             // Apply forces/changes to physics
             //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);

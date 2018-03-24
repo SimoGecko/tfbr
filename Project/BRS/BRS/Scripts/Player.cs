@@ -85,6 +85,7 @@ namespace BRS.Scripts {
                     state = State.attack;
                     pS.UseStaminaForAttack();
                     pA.BeginAttack();
+                    camController.Shake(.5f);
                 }
 
                 if (LiftInput()) {
@@ -99,6 +100,10 @@ namespace BRS.Scripts {
 
             pS.UpdateStamina();
             UpdateUI();
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            //camController.Shake(.3f);
         }
 
 

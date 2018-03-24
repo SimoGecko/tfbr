@@ -37,6 +37,7 @@ namespace BRS {
 
         // commands
         public static T Load<T>(string s) {
+            //TODO check first if file exists
             T result = content.Load<T>(s);
             if (result == null) Debug.LogError("incorrect path to file: " + s);
             return result;

@@ -39,7 +39,7 @@ namespace BRS {
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
-            float deltaTime = Time.deltatime;
+            float deltaTime = Time.deltaTime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
             float num = 2f / smoothTime;
@@ -319,15 +319,25 @@ namespace BRS {
             return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
         }
 
+        public static Vector2 insideUnitSquare() {
+            return new Vector2(Value*2-1, Value * 2 - 1);
+        }
+        public static Vector3 insideUnitCube() {
+            return new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
+        }
+
         public static Vector2 insideUnitCircle() {
             double r = Math.Sqrt(rand.NextDouble());
             double phi = rand.NextDouble() * 2 * Math.PI;
             return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
         }
-
-        public static Vector2 insideUnitSquare() {
-            return new Vector2(Value, Value);
+        public static Vector3 insideUnitSphere() {
+            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            while(sample.LengthSquared()>1)
+                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            return sample;
         }
+        
 
         public static Quaternion YRotation() {
             Color c;
@@ -372,5 +382,10 @@ namespace BRS {
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
         }
+
+        //see notes on notebook for shape
+        public static float EvaluateA(float t) { return t * t; }
+        public static float EvaluateB(float t) { return (float)Math.Sqrt(t); }
+        public static float EvaluateC(float t) { return (float)Math.Sin((t-.5f)*Math.PI)/2+.5f; }
     }
 }

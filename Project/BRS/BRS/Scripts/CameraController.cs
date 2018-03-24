@@ -24,11 +24,16 @@ namespace BRS.Scripts {
         static Vector3 angles = new Vector3(-40, 0, 0);
         static Vector2 angleRange = new Vector2(-10, 10); // -40, 40
 
+        const float shakeAmount = .3f;
+
         //private
         float Xangle = 0, XangleSmooth=0;
         float Yangle = 0, YangleSmooth=0;
         float refVelocityX = 0, refVelocityY = 0;
         public int camIndex;
+
+        float shakeDuration = 0;
+        Vector3 shake;
 
         //reference
         Transform player;
@@ -46,8 +51,20 @@ namespace BRS.Scripts {
         }
 
         public override void LateUpdate() { // after player has moved
-            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
-            float inputY = (Input.mouseDelta.Y*mouseSensitivity.Y).Clamp(-100, 100);
+            ProcessInput();
+            FollowSmoothAndRotate();
+            ProcessShake();
+        }
+
+
+
+        // --------------------- CUSTOM METHODS ----------------
+
+
+        // commands
+        void ProcessInput() {
+            float inputX = (Input.mouseDelta.X * mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
+            float inputY = (Input.mouseDelta.Y * mouseSensitivity.Y).Clamp(-100, 100);
 
             inputX += Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity.X;
             inputY += Input.GetThumbstick("Right", camIndex).Y * gamepadSensitivity.Y;
@@ -58,6 +75,9 @@ namespace BRS.Scripts {
             Yangle += inputX;
             YangleSmooth = Utility.SmoothDamp(YangleSmooth, Yangle, ref refVelocityY, smoothTime);
 
+        }
+
+        void FollowSmoothAndRotate() {
             transform.position = player.position + offset;
             transform.eulerAngles = angles;
 
@@ -65,12 +85,20 @@ namespace BRS.Scripts {
             transform.RotateAround(player.position, transform.Right, XangleSmooth);
         }
 
+        void ProcessShake() {
+            if (shakeDuration > 0) {
+                shake = MyRandom.insideUnitSphere() * shakeAmount * Curve.EvaluateC(shakeDuration);
+                shakeDuration -= Time.deltaTime;
+                transform.position += shake;
+            } else {
+                shake = Vector3.Zero;
+                shakeDuration = 0;
+            }
+        }
 
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
+        public void Shake(float d) { // call this when you want to shake the camera for some duration
+            shakeDuration = d;
+        }
 
 
 

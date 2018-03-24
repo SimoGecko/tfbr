@@ -16,7 +16,7 @@ namespace BRS {
         public static List<Timer> timers = new List<Timer>();
 
         public static float time      { get { return (float)gt.TotalGameTime.TotalSeconds; } }
-        public static float deltatime { get { return (float)gt.ElapsedGameTime.TotalSeconds; } }
+        public static float deltaTime { get { return (float)gt.ElapsedGameTime.TotalSeconds; } }
         public static int OneFrame  { get { return gt.ElapsedGameTime.Milliseconds; } }
 
         public static void Update(GameTime _gt) {
