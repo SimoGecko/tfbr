@@ -34,7 +34,7 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if(c.gameObject.myTag == "player") {
+            if(c.gameObject.tag == ObjectTag.Player) {
                 PlayerAttack pa = c.gameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
                     CrackCrate();

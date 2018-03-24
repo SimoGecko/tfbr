@@ -40,7 +40,7 @@ namespace BRS.Scripts.Physics {
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = _isStatic,
                 IsActive = _isActive,
-                Tag = gameObject.Type == ObjectType.Player ? BodyTag.DrawMe : BodyTag.DontDrawMe
+                Tag = gameObject.tag == ObjectTag.Player ? BodyTag.DrawMe : BodyTag.DontDrawMe
             };
             RigidBody.Tag = BodyTag.DontDrawMe;
 

@@ -51,7 +51,7 @@ namespace BRS.Scripts {
                 Elements.instance.Remove(this);
                 UserInterface.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
 
-                if(!destroyOnUse) gameObject.Active = false;
+                if(!destroyOnUse) gameObject.active = false;
                 else GameObject.Destroy(gameObject);
             }
             

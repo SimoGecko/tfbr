@@ -32,7 +32,7 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.myTag == "player";
+            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
             if (isPlayer && canPickup) {
                 DoPickup(c.gameObject.GetComponent<Player>());
                 OnPickup?.Invoke();

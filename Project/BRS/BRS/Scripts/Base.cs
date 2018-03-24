@@ -47,7 +47,7 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.Type == ObjectType.Player;
+            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
 
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
@@ -79,7 +79,7 @@ namespace BRS.Scripts {
         }
 
         public void NotifyRoundEnd() {
-            GameObject[] players = GameObject.FindGameObjectsByType(ObjectType.Player);
+            GameObject[] players = GameObject.FindGameObjectsByType(ObjectTag.Player);
             foreach(var player in players) {
                 Player p = player.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {

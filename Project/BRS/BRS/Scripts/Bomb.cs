@@ -44,7 +44,7 @@ namespace BRS.Scripts {
             transform.position = owner.transform.position + Vector3.Up;
             canPickup = false;
             planted = true; 
-            gameObject.Active = true;
+            gameObject.active = true;
             rotate = false;
 
             //Powerup pu = Spawner.instance.SpawnOnePowerupAt(p.transform.position, "bombPrefab");

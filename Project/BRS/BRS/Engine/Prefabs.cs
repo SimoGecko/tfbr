@@ -28,9 +28,9 @@ namespace BRS {
 
         //COMMANDS (do not modify)
         static void AddPrefab(GameObject o) {
-            allprefabs.Add(o.Name, o);
+            allprefabs.Add(o.name, o);
             //o.Start(); // no need as already called from gameobject
-            o.Active = false;
+            o.active = false;
         }
 
         public static GameObject GetPrefab(string name) {

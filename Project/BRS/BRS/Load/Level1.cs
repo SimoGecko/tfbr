@@ -49,17 +49,17 @@ namespace BRS.Load {
                         //go.transform.rotation = rotation; // rotation not parsed correctly
 
                         if (tagName == "Ground")
-                            go.Type = ObjectType.Ground;
+                            go.tag = ObjectTag.Ground;
                         else if (tagName == "Base") {
-                            go.Type = ObjectType.Base;
-                            go.myTag = "base";
+                            go.tag = ObjectTag.Base;
+                            //go.myTag = "base";
                         }
                         else if (tagName == "Obstacle")
-                            go.Type = ObjectType.Obstacle;
+                            go.tag = ObjectTag.Obstacle;
                         else if (tagName == "Boundary")
-                            go.Type = ObjectType.Boundary;
+                            go.tag = ObjectTag.Boundary;
                         else if (tagName == "VaultDoor")
-                            go.myTag = "VaultDoor";
+                            go.tag = ObjectTag.Vault;
                     }
 
                     nameContent = reader.ReadLine();
@@ -80,8 +80,8 @@ namespace BRS.Load {
 
 
             //TRANSFORM TEST
-            GameObject testCube = new GameObject("testcube", File.Load<Model>("Models/primitives/cube"));
-            testCube.AddComponent(new TransformTest());
+            //GameObject testCube = new GameObject("testcube", File.Load<Model>("Models/primitives/cube"));
+            //testCube.AddComponent(new TransformTest());
 
 
             //GROUND
@@ -97,8 +97,8 @@ namespace BRS.Load {
             //PLAYER
             for(int i=0; i<GameManager.numPlayers; i++) {
                 GameObject forklift = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
-                forklift.Type = ObjectType.Player;
-                forklift.myTag = "player";
+                forklift.tag = ObjectTag.Player;
+                //forklift.myTag = "player";
                 forklift.AddComponent(new Player(i, i%2));
 
                 forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
@@ -147,7 +147,7 @@ namespace BRS.Load {
             });
             task.Wait();
 
-            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectType.Base);
+            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));

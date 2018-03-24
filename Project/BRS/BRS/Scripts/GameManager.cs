@@ -64,7 +64,7 @@ namespace BRS.Scripts {
 
         void Restart() { // TODO fix this shit
             //UserInterface.instance.Start();
-            GameObject.ClearAll();
+            //GameObject.ClearAll();
             //Game1.instance.Reset();
 
             //scene.Start();
@@ -75,10 +75,17 @@ namespace BRS.Scripts {
             }*/
         }
 
+        void RestartCustom() {
+            Elements.instance.Start();
+            Spawner.instance.Start();
+            foreach (Base b in bases) b.Start();
+            //GameObject[] players = GameObject.FindGameObjectsByType("player")
+        }
+
 
         void FindBases() {
             //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsByType(ObjectType.Base);
+            GameObject[] basesObject = GameObject.FindGameObjectsByType(ObjectTag.Base);
             if (basesObject.Length < 1) {
                 Debug.LogError("could not find the bases"); // avoids tag messup
             } else {
