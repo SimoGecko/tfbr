@@ -12,11 +12,10 @@ namespace BRS.Scripts {
 
         //public
         const float margin = .4f;
-
+        public int playerIndex;
 
         //private
-        Vector3 point;
-        public int playerIndex;
+        Vector3 point; // in case the point is fixed
 
         //reference
         Transform target;
@@ -35,7 +34,6 @@ namespace BRS.Scripts {
 
         public override void Update() {
             LookAtPoi();
-
         }
 
 
@@ -48,7 +46,6 @@ namespace BRS.Scripts {
             transform.position = follow.position;
             Vector3 direction = poi - transform.position;
             float angle = MathHelper.ToDegrees((float) System.Math.Atan2(direction.Z, direction.X));
-            //float angle = Vector3.Right.Angle(direction);
             transform.eulerAngles = new Vector3(0, -angle, 0);
             transform.Translate(Vector3.Right * margin);
         }

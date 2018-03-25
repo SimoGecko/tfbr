@@ -9,8 +9,8 @@ namespace BRS.Scripts {
         ////////// represents an amount of money that can be collected  //////////
 
         // --------------------- VARIABLES ---------------------
-        public enum Type { Cash, Diamond, Gold };
         //public
+        public enum Type { Cash, Diamond, Gold };
         public const float randomizer = .1f; // how much to deviate from actual value
 
 

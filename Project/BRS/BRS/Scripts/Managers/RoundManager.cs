@@ -7,12 +7,13 @@ using Microsoft.Xna.Framework;
 namespace BRS.Scripts {
     class RoundManager : Component {
         ////////// deals with round stuff, ie time, current winner of rounds and score, ... (just for one round) //////////
+        ////////// also stores the mode of the round, ie BOMBER / SPEEDER / SUPERCASH / POWERUP RUSH / ... //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 10;
-        public const int timeBeforePolice = 20;
+        public const int roundTime = 100;
+        public const int timeBeforePolice = 10;
 
 
         //private

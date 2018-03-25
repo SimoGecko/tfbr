@@ -22,8 +22,6 @@ namespace BRS.Scripts {
 
 
         //reference
-        //Player player; // should be array
-        //PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
@@ -34,21 +32,15 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
-
-            //player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
-            //if (player == null) Debug.LogError("player not found");
+            UpdateUI();
         }
 
         public override void Update() {
-            /*if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
-                DeloadPlayer();
-            }*/
-            UpdateUI();
+            //UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.gameObject.tag == ObjectTag.Player;
-
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex) {
@@ -67,7 +59,7 @@ namespace BRS.Scripts {
         public void DeloadPlayer(PlayerInventory pi) {
             TotalMoney += pi.CarryingValue;
             pi.DeloadAll();
-            //UpdateUI();
+            UpdateUI();
         }
 
         void UpdateUI() {
@@ -75,19 +67,21 @@ namespace BRS.Scripts {
         }
 
         protected override void Die() {
-            
+            //TODO show gameover because base exploded
+        }
+
+        public override void TakeDamage(float damage) {
+            base.TakeDamage(damage);
+            UpdateUI();
         }
 
         public void NotifyRoundEnd() {
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach(var player in players) {
-                Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {
+            foreach(var p in TeamPlayers()) {
+                if (!PlayerInsideRange(gameObject)) {
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * moneyPenalty);
                 }
             }
-            
         }
 
 
@@ -96,13 +90,23 @@ namespace BRS.Scripts {
             return (p.transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
         }
 
+        Player[] TeamPlayers() {
+            List<Player> result = new List<Player>();
+            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
+            foreach (var player in players) {
+                Player p = player.GetComponent<Player>();
+                if (p.TeamIndex == BaseIndex) result.Add(p);
+            }
+            return result.ToArray();
+        }
+
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
-                //UpdateUI();
+                UpdateUI();
                 await Time.WaitForSeconds(timeBetweenUnloads);
             }
         }

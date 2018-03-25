@@ -18,7 +18,6 @@ namespace BRS.Scripts {
         const float mapScale = .6f;
         //const float iconScale = .3f;
 
-
         //private
         static Rectangle mapArea;
         static Vector3 upperLeftPt, lowerRightPt; // corners of physical map
@@ -53,9 +52,6 @@ namespace BRS.Scripts {
 
         // commands
         public void Draw(SpriteBatch spriteBatch) {
-
-            //TODO create class that stores prefabs and positions
-
             spriteBatch.Draw(mapSprite, mapArea, Color.White);
 
             //MONEY
@@ -70,13 +66,11 @@ namespace BRS.Scripts {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Brown, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
 
-
             //POWERUPS
             sourceRect = new Rectangle(0, ICONSIZE, ICONSIZE, ICONSIZE); // bot left
             foreach (Vector3 pos in Elements.instance.AllPowerupPosition()) {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Blue, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
-
 
             //PLAYERS
             sourceRect = new Rectangle(0, 0, ICONSIZE, ICONSIZE); // top left

@@ -48,20 +48,12 @@ namespace BRS.Load {
                         go.transform.scale = scale;
                         //go.transform.rotation = rotation; // rotation not parsed correctly
 
-                        if (tagName == "Ground")
-                            go.tag = ObjectTag.Ground;
-                        else if (tagName == "Base") {
-                            go.tag = ObjectTag.Base;
-                            //go.myTag = "base";
-                        }
-                        else if (tagName == "Obstacle")
-                            go.tag = ObjectTag.Obstacle;
-                        else if (tagName == "Boundary")
-                            go.tag = ObjectTag.Boundary;
-                        else if (tagName == "VaultDoor")
-                            go.tag = ObjectTag.Vault;
+                        if      (tagName == "Ground")    go.tag = ObjectTag.Ground;
+                        else if (tagName == "Base")      go.tag = ObjectTag.Base;
+                        else if (tagName == "Obstacle")  go.tag = ObjectTag.Obstacle;
+                        else if (tagName == "Boundary")  go.tag = ObjectTag.Boundary;
+                        else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
                     }
-
                     nameContent = reader.ReadLine();
                 }
             }
@@ -77,13 +69,6 @@ namespace BRS.Load {
             manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
-            //manager.AddComponent(new GamepadTest());
-
-
-            //TRANSFORM TEST
-            //GameObject testCube = new GameObject("testcube", File.Load<Model>("Models/primitives/cube"));
-            //testCube.AddComponent(new TransformTest());
-
 
             //GROUND
             /*for (int x = 0; x < 2; x++) {
@@ -97,31 +82,28 @@ namespace BRS.Load {
 
             //PLAYER
             for(int i=0; i<GameManager.numPlayers; i++) {
-                GameObject forklift = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
-                forklift.tag = ObjectTag.Player;
-                //forklift.myTag = "player";
-                forklift.AddComponent(new Player(i, i%2));
-
-                forklift.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-
-                forklift.AddComponent(new SphereCollider(Vector3.Zero, .7f));
+                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
+                player.tag = ObjectTag.Player;
+                player.AddComponent(new Player(i, i%2));
+                player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
-                forklift.AddComponent(new PlayerMovement());
-                forklift.AddComponent(new PlayerAttack());
-                forklift.AddComponent(new PlayerInventory());
-                forklift.AddComponent(new PlayerPowerup());
-                forklift.AddComponent(new PlayerStamina());
-                forklift.AddComponent(new PlayerLift());
+                player.AddComponent(new PlayerMovement());
+                player.AddComponent(new PlayerAttack());
+                player.AddComponent(new PlayerInventory());
+                player.AddComponent(new PlayerPowerup());
+                player.AddComponent(new PlayerStamina());
+                player.AddComponent(new PlayerLift());
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(forklift.transform, null, i));
+                arrow.AddComponent(new Arrow(player.transform, null, i));
                 arrow.transform.Scale(.1f);
             }
 
 
 
-            //BASE
+            //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
                 playerBase.tag = "base";
@@ -142,11 +124,10 @@ namespace BRS.Load {
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
-            //
+            //other elements
             GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
 
             //LOAD UNITY SCENE
-
             var task = Task.Run(() => {
                 ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt");
             });
@@ -156,7 +137,6 @@ namespace BRS.Load {
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                //bases[i].AddComponent(new BoxCollider(bases[i]));
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
                 bases[i].transform.SetStatic();
             }

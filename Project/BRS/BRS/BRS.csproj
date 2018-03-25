@@ -151,7 +151,6 @@
     <Compile Include="Scripts\Elements\Crate.cs" />
     <Compile Include="Scripts\Managers\Elements.cs" />
     <Compile Include="Scripts\Managers\GameManager.cs" />
-    <Compile Include="Scripts\GamepadTest.cs" />
     <Compile Include="Scripts\Elements\Key.cs" />
     <Compile Include="Scripts\Player\LivingEntity.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
@@ -170,7 +169,6 @@
     <Compile Include="Scripts\Managers\RoundManager.cs" />
     <Compile Include="Scripts\Managers\Spawner.cs" />
     <Compile Include="Scripts\Elements\SpeedPad.cs" />
-    <Compile Include="Scripts\TransformTest.cs" />
     <Compile Include="Scripts\Elements\Trap.cs" />
     <Compile Include="Scripts\Elements\Vault.cs" />
   </ItemGroup>
@@ -181,7 +179,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
