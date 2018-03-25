@@ -28,13 +28,13 @@ namespace BRS.Scripts {
         public override void Start() {
             instance = this;
             rt = new Timer(0, roundTime, OnRoundEnd);
-            UserInterface.instance.roundtime = rt;
+            GameUI.instance.roundtime = rt;
             //FindBases();
         }
 
         public override void Update() {
             if (rt.span.TotalSeconds < timeBeforePolice) {
-                UserInterface.instance.UpdatePoliceComing();
+                GameUI.instance.UpdatePoliceComing();
             }
         }
 
@@ -48,7 +48,7 @@ namespace BRS.Scripts {
             FindBases();
             NotifyBases();
             int winner = FindWinner();
-            UserInterface.instance.UpdateGameWinnerUI(winner);
+            GameUI.instance.UpdateGameWinnerUI(winner);
             GameManager.instance.OnRoundEnd(winner);
         }
 

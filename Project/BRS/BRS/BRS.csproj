@@ -147,12 +147,14 @@
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
     <Compile Include="Scripts\Player\CameraController.cs" />
+    <Compile Include="Scripts\UI\BaseUI.cs" />
     <Compile Include="Scripts\UI\CircleBar.cs" />
     <Compile Include="Scripts\Elements\Crate.cs" />
     <Compile Include="Scripts\Managers\Elements.cs" />
     <Compile Include="Scripts\Managers\GameManager.cs" />
     <Compile Include="Scripts\Elements\Key.cs" />
     <Compile Include="Scripts\Player\LivingEntity.cs" />
+    <Compile Include="Scripts\UI\GameUI.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
     <Compile Include="Scripts\Elements\Money.cs" />
     <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
@@ -171,6 +173,8 @@
     <Compile Include="Scripts\Elements\SpeedPad.cs" />
     <Compile Include="Scripts\Elements\Trap.cs" />
     <Compile Include="Scripts\Elements\Vault.cs" />
+    <Compile Include="Scripts\UI\PlayerUI.cs" />
+    <Compile Include="Scripts\UI\PowerupUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

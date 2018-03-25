@@ -136,7 +136,7 @@ namespace BRS.Scripts {
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
-            UserInterface.instance.UpdatePlayerUI(PlayerIndex,
+            PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
                 pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);

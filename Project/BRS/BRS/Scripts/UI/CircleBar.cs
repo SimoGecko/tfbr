@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts {
     class CircleBar : Component {
-        ////////// DESCRIPTION //////////
+        ////////// represents a circle bar //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -21,13 +21,17 @@ namespace BRS.Scripts {
         static Color clear;
 
         public static Texture2D result;
+        public Texture2D circleBg;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            circleBg = File.Load<Texture2D>("Images/UI/circle_bg");
+            Texture2D circleFg = File.Load<Texture2D>("Images/UI/circle_fg");
+            Texture2D circleGr = File.Load<Texture2D>("Images/UI/circle_gradient");
+            Initialize(circleFg, circleGr, Game1.instance.GraphicsDevice);
         }
 
         public override void Update() {
@@ -39,6 +43,11 @@ namespace BRS.Scripts {
 
 
         // commands
+        public void Draw(SpriteBatch spriteBatch, float percent) {
+            spriteBatch.Draw(circleBg, new Vector2(300, 200), Color.White);
+            spriteBatch.Draw(Mix(percent), new Vector2(300, 200), Color.White);
+        }
+
         public static void Initialize(Texture2D fg, Texture2D gr, GraphicsDevice gd) {
             gradient = new float[width * height];
             wheel = new Color[width * height];

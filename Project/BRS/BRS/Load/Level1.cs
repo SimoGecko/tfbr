@@ -63,12 +63,22 @@ namespace BRS.Load {
             ////////// scene setup for level1 //////////
 
             //MANAGER
+            GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
+            UIManager.AddComponent(new BaseUI());
+            UIManager.AddComponent(new PlayerUI());
+            UIManager.AddComponent(new PowerupUI());
+            UIManager.AddComponent(new GameUI());
+
             GameObject manager = new GameObject("manager");
             manager.AddComponent(new Elements());
             manager.AddComponent(new GameManager());
             manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
+
+            
+
+
 
             //GROUND
             /*for (int x = 0; x < 2; x++) {
@@ -81,7 +91,7 @@ namespace BRS.Load {
 
 
             //PLAYER
-            for(int i=0; i<GameManager.numPlayers; i++) {
+            for (int i=0; i<GameManager.numPlayers; i++) {
                 GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
                 player.AddComponent(new Player(i, i%2));

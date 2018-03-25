@@ -49,7 +49,7 @@ namespace BRS.Scripts {
                 owner = p;
 
                 Elements.instance.Remove(this);
-                UserInterface.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
+                PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
 
                 if(!destroyOnUse) gameObject.active = false;
                 else GameObject.Destroy(gameObject);
@@ -58,7 +58,7 @@ namespace BRS.Scripts {
         }
 
         public virtual void UsePowerup() {
-            UserInterface.instance.UpdatePlayerPowerupUI(owner.PlayerIndex, powerupName, false);
+            PowerupUI.instance.UpdatePlayerPowerupUI(owner.PlayerIndex, powerupName, false);
         }
 
         // queries

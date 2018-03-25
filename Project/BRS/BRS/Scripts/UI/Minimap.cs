@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts {
     class Minimap : Component {
-        ////////// minimap. stores position of important stuff and draws it on screen //////////
+        ////////// draws the minimap including game elements at the correct location //////////
 
         // --------------------- VARIABLES ---------------------
 

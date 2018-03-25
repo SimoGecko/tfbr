@@ -63,7 +63,7 @@ namespace BRS.Scripts {
         }
 
         void UpdateUI() {
-            UserInterface.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
+            BaseUI.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
         }
 
         protected override void Die() {
