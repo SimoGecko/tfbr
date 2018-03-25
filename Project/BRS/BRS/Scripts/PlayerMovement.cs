@@ -20,6 +20,9 @@ namespace BRS.Scripts {
         const float maxTurningRate = 360; // deg/sec
         const float boostSpeedMultiplier = 1.5f;
 
+        const float slowdownMalus = .3f;
+        const float speedPadMultiplier = 2f;
+
         //private
         float rotation;
         float smoothMagnitude, refMagnitude;
@@ -28,9 +31,15 @@ namespace BRS.Scripts {
         float targetRotation;
         private Vector3 _previousLinearVelocity = Vector3.Zero;
 
+        
+
         //BOOST
         public bool boosting;
         public bool powerupBoosting;
+
+        //SLOWDOWN
+        bool slowdown = false;
+        bool speedPad = false;
 
         //reference
         PlayerInventory playerInventory;
@@ -71,8 +80,15 @@ namespace BRS.Scripts {
             transform.eulerAngles = new Vector3(0, rotation, 0);
 
             //move forward
+            //compute final speed
             float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
-            transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltaTime);
+            speedboost *= slowdown ? slowdownMalus : 1f;
+            if (speedPad) { // override and force to move at max speed
+                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
+            } else {
+                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude * Time.deltaTime);
+            }
+
 
             // Apply forces/changes to physics
             //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
@@ -103,9 +119,16 @@ namespace BRS.Scripts {
             //_previousLinearVelocity = linearVelocity;
         }
 
+        public void SetSlowdown(bool b) {
+            slowdown = b;
+        }
+        internal void SetSpeedPad(bool b) {
+            speedPad = b;
+        }
+
 
         // queries
-        float currentSpeed { get { return MathHelper.Lerp(maxSpeed, minSpeed, playerInventory.MoneyPercent); } }
+        float capacityBasedSpeed { get { return MathHelper.Lerp(maxSpeed, minSpeed, playerInventory.MoneyPercent); } }
 
 
 

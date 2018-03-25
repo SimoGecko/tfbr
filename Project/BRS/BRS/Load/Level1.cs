@@ -74,6 +74,7 @@ namespace BRS.Load {
             GameObject manager = new GameObject("manager");
             manager.AddComponent(new Elements());
             manager.AddComponent(new GameManager());
+            manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
             //manager.AddComponent(new GamepadTest());
@@ -110,6 +111,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerPowerup());
                 forklift.AddComponent(new PlayerStamina());
+                forklift.AddComponent(new PlayerLift());
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
@@ -139,6 +141,9 @@ namespace BRS.Load {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+
+            //
+            GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
 
             //LOAD UNITY SCENE
 

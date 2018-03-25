@@ -20,32 +20,29 @@ namespace BRS.Scripts {
         //public
         public static int numPlayers = 2;
         public static int lvlScene = 3;
-        public const int roundTime = 3;
-        public const int timeBeforePolice = 20;
+        public const int numRounds = 3;
+
+
 
         //private
+        int roundNumber = 0;
+        int[] teamWins;
+
         public static bool gameActive;
-        Timer rt;
 
         //reference
         public static GameManager instance;
-        Base[] bases;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
             gameActive = true;
-            rt = new Timer(0, roundTime, OnRoundEnd);
-            UserInterface.instance.roundtime = rt;
-
-            FindBases();
+            teamWins = new int[2];
         }
 
         public override void Update() {
-            if (rt.span.TotalSeconds < timeBeforePolice) {
-                UserInterface.instance.UpdatePoliceComing();
-            }
+            
         }
 
 
@@ -54,13 +51,12 @@ namespace BRS.Scripts {
 
 
         // commands
-        void OnRoundEnd() {
+        public void OnRoundEnd(int winner) {
+            teamWins[winner]++;
             gameActive = false;
-            NotifyBases();
-            int winner = FindWinner();
-            UserInterface.instance.UpdateGameWinnerUI(winner);
             new Timer(1f, () => RestartCustom());
         }
+
 
         void Restart() { // TODO fix this shit
             //UserInterface.instance.Start();
@@ -79,7 +75,8 @@ namespace BRS.Scripts {
             Elements.instance.Restart(); 
             Elements.instance.Start();
             Spawner.instance.Start();
-            foreach (Base b in bases) b.Start();
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
+            foreach (var b in bases) b.Start();
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var p in players) p.Start();
             GameObject vault = GameObject.FindGameObjectWithName("vault");
@@ -90,39 +87,13 @@ namespace BRS.Scripts {
         }
 
 
-        void FindBases() {
-            //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            if (basesObject.Length < 1) {
-                Debug.LogError("could not find the bases"); // avoids tag messup
-            } else {
-                bases = new Base[basesObject.Length];
-                for (int i = 0; i < bases.Length; i++)
-                    bases[i] = basesObject[i].GetComponent<Base>();
-            }
-        }
-
-        void NotifyBases() {
-            for (int i = 0; i < bases.Length; i++)
-                bases[i].NotifyRoundEnd();
-        }
+        
 
 
 
 
         // queries
-        int FindWinner() {
-            int winner = 0;
-            int maxCash = bases[0].TotalMoney;
-            for (int i = 1; i < numPlayers; i++) {
-                int totmoney = bases[i].TotalMoney;
-                if (totmoney > maxCash) { // TODO deal with tie
-                    winner = i;
-                    maxCash = totmoney;
-                }
-            }
-            return winner;
-        }
+        
 
 
         // other

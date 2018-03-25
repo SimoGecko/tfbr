@@ -21,7 +21,7 @@ namespace BRS.Scripts {
         const int moneyAmount = 50;
         const int vaultGold = 20;
         const int crateAmount = 10;
-        const int powerupAmount = 5;
+        const int powerupAmount = 30;
 
         const float timeBetweenCashSpawn = 1f;
         const float timeBetweenCrateSpawn = 5f;
@@ -31,7 +31,7 @@ namespace BRS.Scripts {
 
         //prob distributions
         static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .3f }, { "gold", .1f } };
-        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .3f }, { "capacity", .2f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f } };
+        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .2f }, { "capacity", .2f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f }, { "trap", .1f } };
         
 
 

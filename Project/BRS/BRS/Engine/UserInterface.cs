@@ -23,10 +23,10 @@ namespace BRS.Scripts {
         SpriteFont myfont;
         SpriteFont winnerFont;
         Texture2D bar;
-        Texture2D[] powerupsPng = new Texture2D[6];
+        Texture2D[] powerupsPng = new Texture2D[7];
         Texture2D policeCar, policeLight;
         Dictionary<string, int> mapNamePowerupIndexPng = new Dictionary<string, int>();
-        string[] namePowerupsPng = { "bomb", "key", "capacity", "speed", "health", "shield" };
+        string[] namePowerupsPng = { "bomb", "key", "capacity", "speed", "health", "shield", "trap" };
 
         const int BARWIDTH = 256; const int BARHEIGHT = 16;
         public Timer roundtime;
@@ -78,7 +78,7 @@ namespace BRS.Scripts {
             //police bar
             Rectangle fgrect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
             Rectangle bgrect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
-            fgrect.Width = (int)(BARWIDTH * (1 - roundtime.span.TotalSeconds / GameManager.roundTime));
+            fgrect.Width = (int)(BARWIDTH * (1 - roundtime.span.TotalSeconds / RoundManager.roundTime));
             spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), bgrect, Color.White);
             spriteBatch.Draw(bar, centerPos + new Vector2(0, 60), fgrect, Color.Gray);
             spriteBatch.Draw(policeCar, centerPos + new Vector2(fgrect.Width, 67), null, Color.White, 0, Vector2.One * 64, .6f, SpriteEffects.None, 1);
@@ -97,8 +97,10 @@ namespace BRS.Scripts {
 
 
             //TRY CIRCLE
+            /*
             spriteBatch.Draw(circleBg, new Vector2(300, 200), Color.White);
             spriteBatch.Draw(CircleBar.Mix(playerUI[0].stamina), new Vector2(300, 200), Color.White);
+            */
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {

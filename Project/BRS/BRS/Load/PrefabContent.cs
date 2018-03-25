@@ -51,13 +51,14 @@ namespace BRS {
             AddPrefab(cratePrefab);
 
 
-            //POWER UPS
+            //POWERUPS
 
             //bomb
             GameObject bombPrefab = new GameObject("bombPrefab", File.Load<Model>("Models/powerups/bomb"));
             bombPrefab.transform.Scale(.3f);
             bombPrefab.AddComponent(new Bomb());
             bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            bombPrefab.transform.SetStatic();
             AddPrefab(bombPrefab);
 
             //capacity
@@ -65,6 +66,7 @@ namespace BRS {
             capacityPrefab.transform.Scale(.3f);
             capacityPrefab.AddComponent(new CapacityBoost());
             capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            capacityPrefab.transform.SetStatic();
             AddPrefab(capacityPrefab);
 
             //key
@@ -72,6 +74,7 @@ namespace BRS {
             keyPrefab.transform.Scale(.3f);
             keyPrefab.AddComponent(new Key());
             keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            keyPrefab.transform.SetStatic();
             AddPrefab(keyPrefab);
 
             //health
@@ -79,6 +82,7 @@ namespace BRS {
             healthPrefab.transform.Scale(.3f);
             healthPrefab.AddComponent(new HealthPotion());
             healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            healthPrefab.transform.SetStatic();
             AddPrefab(healthPrefab);
 
             //shield
@@ -86,6 +90,7 @@ namespace BRS {
             shieldPrefab.transform.Scale(.3f);
             shieldPrefab.AddComponent(new StaminaPotion());
             shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            shieldPrefab.transform.SetStatic();
             AddPrefab(shieldPrefab);
 
             //speed
@@ -93,7 +98,37 @@ namespace BRS {
             speedPrefab.transform.Scale(.3f);
             speedPrefab.AddComponent(new SpeedBoost());
             speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            speedPrefab.transform.SetStatic();
             AddPrefab(speedPrefab);
+
+            //trap
+            GameObject trapPrefab = new GameObject("trapPrefab", File.Load<Model>("Models/powerups/trap"));
+            trapPrefab.transform.Scale(.3f);
+            trapPrefab.AddComponent(new Trap());
+            trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            trapPrefab.transform.SetStatic();
+            AddPrefab(trapPrefab);
+
+
+            //GAME ELEMENTS
+
+            //oil
+            GameObject oilPrefab = new GameObject("oilPrefab", File.Load<Model>("Models/elements/oil_trap"));
+            oilPrefab.transform.Scale(.6f);
+            oilPrefab.transform.SetStatic();
+            oilPrefab.AddComponent(new OilTrap());
+            oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
+            AddPrefab(oilPrefab);
+
+            //speed boost
+            GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/platform"));
+            speedpadPrefab.transform.Scale(1f);
+            speedpadPrefab.transform.SetStatic();
+            speedpadPrefab.AddComponent(new SpeedPad());
+            speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
+            AddPrefab(speedpadPrefab);
+
+
 
         }
 
