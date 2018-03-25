@@ -58,7 +58,7 @@ namespace BRS {
             bombPrefab.transform.Scale(.3f);
             bombPrefab.AddComponent(new Bomb());
             bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            bombPrefab.transform.SetStatic();
+            //bombPrefab.transform.SetStatic();
             AddPrefab(bombPrefab);
 
             //capacity

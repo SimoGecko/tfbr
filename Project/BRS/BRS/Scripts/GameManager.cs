@@ -25,7 +25,7 @@ namespace BRS.Scripts {
 
 
         //private
-        int roundNumber = 0;
+        int roundNumber;
         int[] teamWins;
 
         public static bool gameActive;
@@ -39,6 +39,7 @@ namespace BRS.Scripts {
             instance = this;
             gameActive = true;
             teamWins = new int[2];
+            roundNumber = 1;
         }
 
         public override void Update() {
@@ -73,27 +74,31 @@ namespace BRS.Scripts {
 
         void RestartCustom() { // it still slows down for some reason
             Elements.instance.Restart(); 
-            Elements.instance.Start();
             Spawner.instance.Start();
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
+            UserInterface.instance.Start();
+            RoundManager.instance.Start();
+
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             foreach (var b in bases) b.Start();
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var p in players) p.Start();
+
             GameObject vault = GameObject.FindGameObjectWithName("vault");
             if (vault != null) vault.Start();
-            UserInterface.instance.Start();
 
-            Start();
+            gameActive = true;
+            roundNumber++;
+            //Start();
         }
 
 
-        
+
 
 
 
 
         // queries
-        
+
 
 
         // other

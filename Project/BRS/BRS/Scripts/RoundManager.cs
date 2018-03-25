@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 120;
+        public const int roundTime = 10;
         public const int timeBeforePolice = 20;
 
 
@@ -20,13 +20,15 @@ namespace BRS.Scripts {
 
         //reference
         Base[] bases;
+        public static RoundManager instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            instance = this;
             rt = new Timer(0, roundTime, OnRoundEnd);
             UserInterface.instance.roundtime = rt;
-            FindBases();
+            //FindBases();
         }
 
         public override void Update() {
@@ -37,16 +39,16 @@ namespace BRS.Scripts {
 
 
 
-        // --------------------- CUSTOM METHODS ----------------
+        // --------------------- CUSTOM METHODS ---------b -------
 
 
         // commands
         void OnRoundEnd() {
+            FindBases();
             NotifyBases();
             int winner = FindWinner();
             UserInterface.instance.UpdateGameWinnerUI(winner);
             GameManager.instance.OnRoundEnd(winner);
-            
         }
 
         void FindBases() {

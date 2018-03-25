@@ -13,8 +13,10 @@ namespace BRS.Scripts {
         //public
         const float margin = .4f;
 
+
         //private
         Vector3 point;
+        public int playerIndex;
 
         //reference
         Transform target;
@@ -22,13 +24,13 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public Arrow(Transform _follow, Transform _target) {
-            target = _target; follow = _follow;
+        public Arrow(Transform _follow, Transform _target, int _index) {
+            target = _target; follow = _follow; playerIndex = _index;
         }
 
         public override void Start() {
             point = Vector3.Zero;
-            target = GameObject.FindGameObjectWithName("player_1").transform;
+            target = GameObject.FindGameObjectWithName("player_"+(1-playerIndex)).transform;
         }
 
         public override void Update() {

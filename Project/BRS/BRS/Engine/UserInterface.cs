@@ -195,7 +195,7 @@ namespace BRS.Scripts {
 
         //WINNER
         public void UpdateGameWinnerUI(int winner) {
-            winnerString = "Player " + winner + " won!";
+            winnerString = "Player " + (winner+1) + " won!";
             showWinner = true;
         }
 

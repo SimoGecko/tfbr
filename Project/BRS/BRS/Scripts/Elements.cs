@@ -92,6 +92,7 @@ namespace BRS.Scripts {
             foreach (var g in moneyList) GameObject.Destroy(g.gameObject);
             foreach (var g in crateList) GameObject.Destroy(g.gameObject);
             foreach (var g in powerupList) GameObject.Destroy(g.gameObject);
+            Start();
         }
 
     }
