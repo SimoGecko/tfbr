@@ -1,4 +1,5 @@
 ﻿using BRS.Engine.Physics;
+using BRS.Load;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
@@ -9,6 +10,7 @@ namespace BRS.Scripts.Physics {
             IsStatic = false;
             IsActive = isActive;
             Material = material;
+            Tag = BodyTag.DontDrawMe;
         }
 
         /// <summary>

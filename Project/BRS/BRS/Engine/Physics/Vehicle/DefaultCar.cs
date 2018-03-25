@@ -1,4 +1,5 @@
-﻿using Jitter;
+﻿using BRS.Load;
+using Jitter;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -67,24 +68,25 @@ namespace BRS.Engine.Physics.Vehicle {
         /// </summary>
         /// <param name="world">The world the car should be in.</param>
         /// <param name="shape">The shape of the car. Recommend is a box shape.</param>
-        public DefaultCar(World world, Shape shape) : base(shape) {
+        public DefaultCar(World world, Shape shape, float size = 1.0f) : base(shape) {
             this.world = world;
             //postStep = new World.WorldStep(world_PostStep);
 
             //world.Events.PostStep += postStep;
 
             // set some default values
-            this.AccelerationRate = 5.0f;
-            this.SteerAngle = 20.0f;
-            this.DriveTorque = 50.0f;
+            this.AccelerationRate = .5f;
+            this.SteerAngle = 40.0f;
+            this.DriveTorque = 5.0f;
             this.SteerRate = 5.0f;
             Mass = 100;
+            Tag = BodyTag.DrawMe;
 
             // create default wheels
-            wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);
-            wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down, 0.4f);
-            wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
-            wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down, 0.4f);
+            wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, size * (JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, size * (JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, size * (JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, size * (JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down), size * 0.4f);
 
             AdjustWheelValues();
         }

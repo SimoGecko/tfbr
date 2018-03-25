@@ -15,9 +15,9 @@ namespace BRS.Load {
 
     class LevelPhysics : Scene {
         // Todo: To be refactored
-        private List<GameObject> Players = new List<GameObject>();
-        private CarObject _car = null;
-        private Game1 _game = null;
+        private readonly List<GameObject> Players = new List<GameObject>();
+        private CarObject _car;
+        private readonly Game1 _game;
 
 
         public LevelPhysics(Game1 game, PhysicsManager physics)
@@ -31,7 +31,7 @@ namespace BRS.Load {
         /// </summary>
         protected override void Build() {
             // Add top-level manager
-            GameObject rootScene = new GameObject("manager", null);
+            GameObject rootScene = new GameObject("manager");
             rootScene.AddComponent(new CameraController());
             rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new Elements());
@@ -57,7 +57,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
                 forklift.AddComponent(new PlayerStamina());
-                forklift.AddComponent(new DynamicRigidBody(PhysicsManager));
+                forklift.AddComponent(new MovingRigidBody(PhysicsManager));
 
                 Players.Add(forklift);
             }
@@ -72,7 +72,7 @@ namespace BRS.Load {
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new StaticRigidBody(PhysicsManager));
             }
-            
+
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 3; ++j) {
@@ -83,33 +83,41 @@ namespace BRS.Load {
                 }
             }
 
-            AddCar(new JVector(0, 5, -10));
+            AddCar(new JVector(-2, 1.5f, -5));
             AddSoftBody();
 
             // Dummy object at position (0/0/0) for debug-rendering.
             GameObject dummy = new GameObject("dummy_object", Content.Load<Model>("cube"));
             dummy.Type = ObjectType.Default;
-            dummy.AddComponent(new StaticRigidBody(PhysicsManager));
+            dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
 
 
         public void AddGround(GameObject parent) {
+            Material material = new Material();
+            material.Restitution = 1.0f;
+            material.StaticFriction = 0.4f;
+            material.KineticFriction = 10.0f;
+
             for (int x = -2; x < 2; ++x) {
                 for (int y = -2; y < 2; ++y) {
-                    Material material = new Material();
-                    material.Restitution = 0.0f;
-                    material.StaticFriction = 0.4f;
-                    material.KineticFriction = 1.0f;
 
                     GameObject groundPlane = new GameObject("groundplane", Content.Load<Model>("gplane"));
                     groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
-                    groundPlane.AddComponent(new StaticRigidBody(PhysicsManager, true, material: material));
+                    //groundPlane.AddComponent(new StaticRigidBody(PhysicsManager, true, material: material));
                 }
             }
+
+            RigidBody rbGround = new RigidBody(new BoxShape(5*10, 10, 5*10));
+            rbGround.Position = new JVector(0, -5, 0);
+            rbGround.IsStatic = true;
+            rbGround.Material = material;
+            rbGround.Tag = BodyTag.DontDrawMe;
+            PhysicsManager.World.AddBody(rbGround);
         }
 
         public void AddWalls() {
-            float y = 1f;
+            float y = 0.5f;
 
             for (int x = 0; x < 40; ++x) {
                 GameObject body = new GameObject("wall_" + (4 * x + 0), Content.Load<Model>("cube"));

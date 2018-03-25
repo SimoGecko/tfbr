@@ -120,11 +120,11 @@ namespace BRS {
                 graphics.GraphicsDevice.Viewport = cam.viewport;
 
                 if (_usePhysics) {
-                    _physicsManager.Draw();
+                    _physicsManager.Draw(cam);
                 }
 
                 foreach (GameObject go in GameObject.All) {
-                    if (go.Type == ObjectType.Player) {
+                    if (true || go.Type == ObjectType.Player) {
                         go.Draw(cam);
                     }
                 }

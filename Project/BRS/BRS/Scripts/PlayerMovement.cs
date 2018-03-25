@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using BRS.Engine.Physics;
 using BRS.Scripts.Physics;
+using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
@@ -21,7 +22,7 @@ namespace BRS.Scripts {
         const float boostSpeedMultiplier = 1.5f;
 
         //private
-        float rotation;
+        float rotation, rotationOld;
         float smoothMagnitude, refMagnitude;
         float refangle, refangle2;
         float inputAngle;
@@ -84,27 +85,43 @@ namespace BRS.Scripts {
 
             //move forward
             //float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            Vector3 linearVelocity = transform.toLocalRotation(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude);
+            Vector3 linearVelocity = Vector3.Forward * currentSpeed * speedboost * smoothMagnitude;
             //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
-            DynamicRigidBody rigidBody = gameObject.GetComponent<DynamicRigidBody>();
+            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
 
-            if (rigidBody != null) {
-                rigidBody.RigidBody.LinearVelocity = new JVector(linearVelocity.X, 0, linearVelocity.Z);
-                rigidBody.RigidBody.Position = new JVector(rigidBody.RigidBody.Position.X, 1f,
-                    rigidBody.RigidBody.Position.Z);
-                rigidBody.RigidBody.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-                //rigidBodyComponent.RigidBody.AngularVelocity = new JVector(0, (-rotationOld + rotation), 0);
-                rigidBody.RigidBody.Mass = 10;
+            if (dynamicRigidBody != null) {
+                RigidBody rb = dynamicRigidBody.RigidBody;
+                
+                JVector lv = JVector.Transform(Conversion.ToJitterVector(linearVelocity), rb.Orientation);
+                
+                rb.LinearVelocity = new JVector(lv.X, 0, lv.Z);
 
-                rigidBody.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity));
+                rb.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+
+                //rb.LinearVelocity = (new JVector(0, 0, 10));
                 //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
-                Debug.Log(rigidBody.RigidBody.Position.ToString());
+                Debug.Log(rb.Position.ToString());
+
+                string ori = String.Format("{9:0.00} results in:\n{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
+                    rb.Orientation.M11,
+                    rb.Orientation.M12,
+                    rb.Orientation.M13,
+                    rb.Orientation.M21,
+                    rb.Orientation.M22,
+                    rb.Orientation.M23,
+                    rb.Orientation.M31,
+                    rb.Orientation.M32,
+                    rb.Orientation.M33,
+                    rotation * MathHelper.Pi / 180.0f
+                    );
+                Debug.Log(ori);
             }
 
             _previousLinearVelocity = linearVelocity;
+            rotationOld = rotation;
         }
 
 

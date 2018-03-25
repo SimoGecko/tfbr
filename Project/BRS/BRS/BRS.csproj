@@ -155,9 +155,11 @@
     <Compile Include="Scripts\LivingEntity.cs" />
     <Compile Include="Scripts\Minimap.cs" />
     <Compile Include="Scripts\Money.cs" />
+    <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
     <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
     <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
+    <Compile Include="Scripts\Physics\SteerableRigidBody.cs" />
     <Compile Include="Scripts\Pickup.cs" />
     <Compile Include="Scripts\Player.cs" />
     <Compile Include="Scripts\PlayerLift.cs" />

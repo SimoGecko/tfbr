@@ -23,7 +23,7 @@ namespace BRS.Engine.Physics {
         private int _activeBodies;
         public BasicEffect BasicEffect { private set; get; }
 
-        private Primitives3D.GeometricPrimitive[] _primitives = new Primitives3D.GeometricPrimitive[5];
+        private GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
 
         /// <summary>
         /// Initialize the physics with the collision-setup
@@ -34,17 +34,18 @@ namespace BRS.Engine.Physics {
             World = new World(collision);
             World.AllowDeactivation = true;
             World.Gravity = new JVector(0, -20, 0);
+            World.ContactSettings.AllowedPenetration = 0.0f;
 
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
 
             DebugDrawer = debugDrawer;
             Display = display;
 
-            _primitives[(int)PrimitiveTypes.Box] = new Primitives3D.BoxPrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Capsule] = new Primitives3D.CapsulePrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Cone] = new Primitives3D.ConePrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Cylinder] = new Primitives3D.CylinderPrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Sphere] = new Primitives3D.SpherePrimitive(graphicsDevice);
+            _primitives[(int)PrimitiveTypes.Box] = new BoxPrimitive(graphicsDevice);
+            _primitives[(int)PrimitiveTypes.Capsule] = new CapsulePrimitive(graphicsDevice);
+            _primitives[(int)PrimitiveTypes.Cone] = new ConePrimitive(graphicsDevice);
+            _primitives[(int)PrimitiveTypes.Cylinder] = new CylinderPrimitive(graphicsDevice);
+            _primitives[(int)PrimitiveTypes.Sphere] = new SpherePrimitive(graphicsDevice);
             //_primitives[(int)PrimitiveTypes.Convex] = new ConvexHullPrimitive(graphicsDevice);
 
             BasicEffect = new BasicEffect(graphicsDevice);
@@ -64,9 +65,7 @@ namespace BRS.Engine.Physics {
             World.Step(step, true);
         }
 
-        public void Draw() {
-            Camera camera = Screen.cameras[0];
-            BasicEffect.GraphicsDevice.Viewport = Screen.fullViewport;
+        public void Draw(Camera camera) {
             BasicEffect.View = camera.View;
             BasicEffect.Projection = camera.Proj;
 
@@ -82,7 +81,7 @@ namespace BRS.Engine.Physics {
             }
 
 
-            foreach (Primitives3D.GeometricPrimitive prim in _primitives) {
+            foreach (GeometricPrimitive prim in _primitives) {
                 prim.Draw(BasicEffect);
             }
 
@@ -140,7 +139,7 @@ namespace BRS.Engine.Physics {
 
         #region add draw matrices to the different primitives
         private void AddShapeToDrawList(Shape shape, JMatrix ori, JVector pos) {
-            Primitives3D.GeometricPrimitive primitive = null;
+            GeometricPrimitive primitive = null;
             Matrix scaleMatrix = Matrix.Identity;
 
             if (shape is BoxShape) {
