@@ -143,7 +143,7 @@ namespace BRS {
         }
 
         //returns all the gameobject that satisfy the tag
-        public static GameObject[] FindGameObjectsByType(ObjectTag _tag) {
+        public static GameObject[] FindGameObjectsWithTag(ObjectTag _tag) {
             List<GameObject> result = new List<GameObject>();
 
             foreach (GameObject o in allGameObjects) {

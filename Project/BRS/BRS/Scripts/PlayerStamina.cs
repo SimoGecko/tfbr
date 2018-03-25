@@ -25,7 +25,10 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { }
+        public override void Start() {
+            maxStamina = stamina = 1f;
+            canReloadStamina = true;
+        }
         public override void Update() { }
 
 

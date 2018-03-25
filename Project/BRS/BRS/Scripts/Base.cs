@@ -79,7 +79,7 @@ namespace BRS.Scripts {
         }
 
         public void NotifyRoundEnd() {
-            GameObject[] players = GameObject.FindGameObjectsByType(ObjectTag.Player);
+            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach(var player in players) {
                 Player p = player.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {

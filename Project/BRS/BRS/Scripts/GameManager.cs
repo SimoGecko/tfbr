@@ -20,7 +20,7 @@ namespace BRS.Scripts {
         //public
         public static int numPlayers = 2;
         public static int lvlScene = 3;
-        public const int roundTime = 120;
+        public const int roundTime = 3;
         public const int timeBeforePolice = 20;
 
         //private
@@ -59,7 +59,7 @@ namespace BRS.Scripts {
             NotifyBases();
             int winner = FindWinner();
             UserInterface.instance.UpdateGameWinnerUI(winner);
-            new Timer(5f, () => Restart());
+            new Timer(1f, () => RestartCustom());
         }
 
         void Restart() { // TODO fix this shit
@@ -75,17 +75,24 @@ namespace BRS.Scripts {
             }*/
         }
 
-        void RestartCustom() {
+        void RestartCustom() { // it still slows down for some reason
+            Elements.instance.Restart(); 
             Elements.instance.Start();
             Spawner.instance.Start();
             foreach (Base b in bases) b.Start();
-            //GameObject[] players = GameObject.FindGameObjectsByType("player")
+            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
+            foreach (var p in players) p.Start();
+            GameObject vault = GameObject.FindGameObjectWithName("vault");
+            if (vault != null) vault.Start();
+            UserInterface.instance.Start();
+
+            Start();
         }
 
 
         void FindBases() {
             //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsByType(ObjectTag.Base);
+            GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             if (basesObject.Length < 1) {
                 Debug.LogError("could not find the bases"); // avoids tag messup
             } else {

@@ -100,7 +100,7 @@ namespace BRS.Scripts {
 
         Transform[] Players() {
             List<Transform> result = new List<Transform>();
-            GameObject[] players = GameObject.FindGameObjectsByType(ObjectTag.Player);
+            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (GameObject o in players) result.Add(o.transform);
             return result.ToArray();
         }

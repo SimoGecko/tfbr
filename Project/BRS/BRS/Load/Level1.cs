@@ -147,7 +147,7 @@ namespace BRS.Load {
             });
             task.Wait();
 
-            GameObject[] bases = GameObject.FindGameObjectsByType(ObjectTag.Base);
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
