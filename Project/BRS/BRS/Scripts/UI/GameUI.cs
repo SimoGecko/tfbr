@@ -62,14 +62,14 @@ namespace BRS.Scripts {
             UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeCar, Vector2.One * 64, .6f);
 
             if (showPolice) {
-                UserInterface.instance.DrawString(centerPos + new Vector2(-50, 100), "Get back to your base!");
+                UserInterface.instance.DrawString(centerPos + new Vector2(-160, 50), "Get back to your base!");
                 if ((Time.frame / 10) % 2 == 0) {
                     UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeLight, Vector2.One * 64, .6f);
                 }
             }
 
             if (showWinner) {
-                UserInterface.instance.DrawStringBig(centerPos + new Vector2(-100, 200), winnerString);
+                UserInterface.instance.DrawStringBig(centerPos + new Vector2(-250, 150), winnerString);
             }
         }
 

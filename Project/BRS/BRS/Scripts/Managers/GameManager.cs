@@ -52,7 +52,7 @@ namespace BRS.Scripts {
         // --------------------- CUSTOM METHODS ----------------
 
 
-        // commands
+        // commands 
         void CheckForPause() {
             if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
                 paused = !paused;
