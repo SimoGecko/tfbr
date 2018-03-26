@@ -83,6 +83,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\PolygonHeist\model_list.txt" />
+    <None Include="Assets\PolygonHeist\model_list_erroneous.txt" />
+    <None Include="Assets\PolygonHeist\removed_list.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />

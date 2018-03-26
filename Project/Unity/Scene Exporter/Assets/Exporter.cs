@@ -67,7 +67,23 @@ public class Exporter : MonoBehaviour {
 
     //note it doesn't work with composite meshes
 
+    void SimplifyTransform(Transform t) {
+        t.position = SimplifyVector(t.position);
+        t.eulerAngles = SimplifyVector(t.eulerAngles);
+        //t.localScale = SimplifyVector(t.localScale);
+    }
 
+    Vector3 SimplifyVector(Vector3 v) {
+        const float threshold = .001f;
+
+        if (Mathf.Abs(v.x  ) < threshold) v.x = 0;
+        if (Mathf.Abs(v.x-1) < threshold) v.x = 1;
+        if (Mathf.Abs(v.y  ) < threshold) v.y = 0;
+        if (Mathf.Abs(v.y-1) < threshold) v.y = 1;
+        if (Mathf.Abs(v.z  ) < threshold) v.z = 0;
+        if (Mathf.Abs(v.z-1) < threshold) v.z = 1;
+        return v;
+    }
 
 
 
@@ -89,13 +105,12 @@ public class Exporter : MonoBehaviour {
                 file.WriteLine("<begin>");
                 file.WriteLine("prefabName: " + elem.Key);
                 file.WriteLine("amount: " + elem.Value.Count);
-                file.WriteLine("");
 
                 foreach (Transform t in elem.Value) {
+                    SimplifyTransform(t);
                     file.WriteLine("pos: " + t.position.x +    " " + t.position.y +    " " + t.position.z);
                     file.WriteLine("rot: " + t.eulerAngles.x + " " + t.eulerAngles.y + " " + t.eulerAngles.z);
                     file.WriteLine("sca: " + t.lossyScale.x +  " " + t.lossyScale.y +  " " + t.lossyScale.z);
-                    file.WriteLine("");
                 }
 
                 file.WriteLine("<end>");

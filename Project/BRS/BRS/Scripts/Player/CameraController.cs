@@ -22,7 +22,7 @@ namespace BRS.Scripts {
         static Vector2 gamepadSensitivity = new Vector2(-3f, -3f);
         static Vector3 offset = new Vector3(0, 10, 10);
         static Vector3 angles = new Vector3(-40, 0, 0);
-        static Vector2 angleRange = new Vector2(-10, 10); // -40, 40
+        static Vector2 angleRange = new Vector2(-40, 40); // -40, 40
 
         const float shakeAmount = .3f;
 

@@ -185,6 +185,8 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Load\UnitySceneData\export1.txt" />
+    <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
