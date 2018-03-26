@@ -17,6 +17,8 @@ namespace BRS.Scripts {
         //private
         BaseUIStruct[] baseUI;
         Texture2D baseIcon;
+        int[] baseUIwins = new int[2];
+
 
         //reference
         public static BaseUI instance;
@@ -27,7 +29,6 @@ namespace BRS.Scripts {
             instance = this;
             baseUI = new BaseUIStruct[2];
             baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
-
         }
 
         public override void Update() {
@@ -56,7 +57,7 @@ namespace BRS.Scripts {
             string baseValueString = "$" + baseUI[index].totalMoneyInBase.ToString("N0");//ToString("#,##0")
             UserInterface.instance.DrawString(position + new Vector2(50, -20), baseValueString);
             //wins
-            string winsString = "wins: " + baseUI[index].numWins;
+            string winsString = "wins: " + baseUIwins[index];
             UserInterface.instance.DrawString(position + new Vector2(-70, 50), winsString);
         }
 
@@ -70,8 +71,8 @@ namespace BRS.Scripts {
             }
         }
 
-        public void UpdateBaseUIWins(int index, int wins) {
-            baseUI[index].numWins = wins;
+        public void UpdateBaseUIWins(int index) {
+            baseUIwins[index]++;
         }
 
         void DrawOld(int index) {
@@ -99,7 +100,6 @@ namespace BRS.Scripts {
 
     public struct BaseUIStruct {
         public int totalMoneyInBase;
-        public int numWins;
         public float baseHealth;
         public float baseMaxHealth;
     }

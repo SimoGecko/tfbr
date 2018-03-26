@@ -27,8 +27,9 @@ namespace BRS.Scripts {
         //private
         int roundNumber;
         int[] teamWins;
+        static State gameState; // CONTROLS STATE OF THE GAME
+        bool paused;
 
-        public static bool gameActive;
 
         //reference
         public static GameManager instance;
@@ -37,13 +38,13 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
-            gameActive = true;
+            gameState = State.playing;
             teamWins = new int[2];
             roundNumber = 1;
         }
 
         public override void Update() {
-            
+            CheckForPause();
         }
 
 
@@ -52,10 +53,18 @@ namespace BRS.Scripts {
 
 
         // commands
+        void CheckForPause() {
+            if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
+                paused = !paused;
+                gameState = paused ? State.paused : State.playing;
+            }
+        }
+
         public void OnRoundEnd(int winner) {
             teamWins[winner]++;
-            gameActive = false;
-            new Timer(1f, () => RestartCustom());
+            gameState = State.finished;
+            new Timer(1f, () => RestartCustom(), true);
+            BaseUI.instance.UpdateBaseUIWins(winner);
         }
 
 
@@ -77,6 +86,7 @@ namespace BRS.Scripts {
             Spawner.instance.Start();
             UserInterface.instance.Start();
             RoundManager.instance.Start();
+            PowerupUI.instance.Start();
 
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             foreach (var b in bases) b.Start();
@@ -86,9 +96,8 @@ namespace BRS.Scripts {
             GameObject vault = GameObject.FindGameObjectWithName("vault");
             if (vault != null) vault.Start();
 
-            gameActive = true;
+            gameState = State.playing;
             roundNumber++;
-            //Start();
         }
 
 
@@ -98,6 +107,9 @@ namespace BRS.Scripts {
 
 
         // queries
+        public int RoundNumber { get { return roundNumber; } }
+        public static bool GameActive { get { return gameState == State.playing; } }
+        public static bool GamePaused { get { return gameState == State.paused; } }
 
 
 

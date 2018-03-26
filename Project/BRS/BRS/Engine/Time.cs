@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using BRS.Scripts;
 
 namespace BRS {
     static class Time {
@@ -25,6 +26,7 @@ namespace BRS {
 
             //process timers
             for(int i=0; i<timers.Count; i++) {
+                if (!GameManager.GameActive && !timers[i].alwaysRun) continue;
                 timers[i].span = timers[i].span.Subtract(gt.ElapsedGameTime);
                 if(timers[i].span.TotalSeconds<0) {
                     timers[i].callback();
@@ -47,14 +49,16 @@ namespace BRS {
     class Timer {
         public TimeSpan span;
         public System.Action callback;
-        public Timer(int minutes, int seconds, int milliseconds, System.Action _callback) {
+        public bool alwaysRun; // update the timer even outside of game playing
+        public Timer(int minutes, int seconds, int milliseconds, System.Action _callback, bool _alwaysRun = false) {
             span = new TimeSpan(0, 0, minutes, seconds, milliseconds);
             callback = _callback;
+            alwaysRun = _alwaysRun;
             Time.timers.Add(this);
         }
         //shorter constructors
-        public Timer(int seconds, System.Action _callback) : this(0, seconds, 0, _callback) { }
-        public Timer(int minutes, int seconds, System.Action _callback) : this(minutes, seconds, 0, _callback) { }
-        public Timer(float seconds, System.Action _callback) : this(0, 0, (int)(1000*seconds), _callback) { }
+        public Timer(int seconds, System.Action _callback, bool _alwaysRun = false) : this(0, seconds, 0, _callback, _alwaysRun) { }
+        public Timer(int minutes, int seconds, System.Action _callback, bool _alwaysRun = false) : this(minutes, seconds, 0, _callback, _alwaysRun) { }
+        public Timer(float seconds, System.Action _callback, bool _alwaysRun = false) : this(0, 0, (int)(1000*seconds), _callback, _alwaysRun) { }
     }
 }

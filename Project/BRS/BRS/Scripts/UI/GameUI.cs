@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         //private
         Texture2D policeCar, policeLight;
 
-        public Timer roundtime;
+        Timer roundtime;
         bool showWinner;
         bool showPolice;
         string winnerString = "";
@@ -45,28 +45,31 @@ namespace BRS.Scripts {
 
         // commands
         public void Draw() {
-            Vector2 centerPos = new Vector2(Screen.WIDTH / 2 - 100, Screen.HEIGHT / 2 - 100);
+            Vector2 centerPos = new Vector2(Screen.WIDTH / 2, Screen.HEIGHT / 2);
 
-            string roundTimeString = "round: " + roundtime.span.ToReadableString();
-            UserInterface.instance.DrawString(centerPos, roundTimeString);
+            string roundNumber = "round: " + GameManager.instance.RoundNumber + "/" + GameManager.numRounds;
+            UserInterface.instance.DrawString(centerPos + new Vector2(-100, -100), roundNumber);
+
+            string roundTimeString = "time: " + roundtime.span.ToReadableString();
+            UserInterface.instance.DrawString(centerPos + new Vector2(-100, -50), roundTimeString);
 
             //police bar
             float barPercent = (float)(1 - roundtime.span.TotalSeconds / RoundManager.roundTime);
-            UserInterface.instance.DrawBar(centerPos + new Vector2(0, 60), barPercent, Color.Gray);
+            UserInterface.instance.DrawBarBig(centerPos + new Vector2(-128, 0), barPercent, Color.Gray);
 
             //TODO show blinking police
-            int fgRectWidth = (int)(UserInterface.BARWIDTH * barPercent);
-            UserInterface.instance.DrawPicture(centerPos + new Vector2(fgRectWidth, 67), policeCar, Vector2.One * 64, .6f);
+            int fgRectWidth = (int)(UserInterface.BARBIGWIDTH * barPercent);
+            UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeCar, Vector2.One * 64, .6f);
 
             if (showPolice) {
                 UserInterface.instance.DrawString(centerPos + new Vector2(-50, 100), "Get back to your base!");
                 if ((Time.frame / 10) % 2 == 0) {
-                    UserInterface.instance.DrawPicture(centerPos + new Vector2(fgRectWidth, 67), policeLight, Vector2.One * 64, .6f);
+                    UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeLight, Vector2.One * 64, .6f);
                 }
             }
 
             if (showWinner) {
-                UserInterface.instance.DrawString(centerPos + new Vector2(-100, 100), winnerString);
+                UserInterface.instance.DrawStringBig(centerPos + new Vector2(-100, 200), winnerString);
             }
         }
 
@@ -77,6 +80,11 @@ namespace BRS.Scripts {
 
         public void UpdatePoliceComing() {
             showPolice = true;
+        }
+
+        public void StartMatch(Timer rt) {
+            roundtime = rt;
+            showWinner = showPolice = false;
         }
 
         // queries

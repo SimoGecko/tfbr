@@ -12,8 +12,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 100;
-        public const int timeBeforePolice = 10;
+        public const int roundTime = 10;
+        public const int timeBeforePolice = 5;
 
 
         //private
@@ -28,8 +28,8 @@ namespace BRS.Scripts {
         public override void Start() {
             instance = this;
             rt = new Timer(0, roundTime, OnRoundEnd);
-            GameUI.instance.roundtime = rt;
-            //FindBases();
+            GameUI.instance.StartMatch(rt);
+            //FindBases(); // data race
         }
 
         public override void Update() {
@@ -47,6 +47,7 @@ namespace BRS.Scripts {
         void OnRoundEnd() {
             FindBases();
             NotifyBases();
+            Debug.Log("notified bases");
             int winner = FindWinner();
             GameUI.instance.UpdateGameWinnerUI(winner);
             GameManager.instance.OnRoundEnd(winner);

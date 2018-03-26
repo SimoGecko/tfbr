@@ -65,7 +65,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if (!GameManager.gameActive) {
+            if (!GameManager.GameActive) {
                 pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
