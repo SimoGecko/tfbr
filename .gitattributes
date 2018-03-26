@@ -46,4 +46,6 @@
 *.odp filter=lfs diff=lfs merge=lfs -text
 *.obj filter=lfs diff=lfs merge=lfs -text
 *.xnb filter=lfs diff=lfs merge=lfs -text
+*.unity filter=lfs diff=lfs merge=lfs -text
+*.prefab filter=lfs diff=lfs merge=lfs -text
 
