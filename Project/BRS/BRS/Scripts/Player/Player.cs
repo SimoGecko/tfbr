@@ -21,7 +21,7 @@ namespace BRS.Scripts {
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
-
+        string playerName;
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -44,10 +44,11 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex)
+        public Player(int playerIndex, int teamIndex, string _name = "Player")
         {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
+            playerName = _name + (playerIndex + 1).ToString();
         }
         public override void Start() {
             base.Start();
@@ -139,7 +140,7 @@ namespace BRS.Scripts {
             PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------

@@ -283,6 +283,9 @@ namespace BRS {
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
         }
+        public static Vector2 GetCenter(this Rectangle rect) {
+            return new Vector2(rect.X + .5f*rect.Width, rect.Y + .5f*rect.Height);
+        }
 
         public static Vector2 Round(this Vector2 v) { // Makes it Point2
             return new Vector2((int)v.X, (int)v.Y);
@@ -340,7 +343,6 @@ namespace BRS {
         
 
         public static Quaternion YRotation() {
-            Color c;
             return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
         }
 

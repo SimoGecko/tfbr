@@ -29,7 +29,9 @@ namespace BRS.Scripts {
 
         public override void Start() {
             point = Vector3.Zero;
-            target = GameObject.FindGameObjectWithName("player_"+(1-playerIndex)).transform;
+            GameObject playerT = GameObject.FindGameObjectWithName("player_" + (1 - playerIndex));
+            if (playerT!=null)
+                target = playerT.transform;
         }
 
         public override void Update() {

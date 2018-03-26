@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         //private
         Dictionary<string, int> powerupStringToIndex = new Dictionary<string, int>();
         Texture2D[] powerupsPng = new Texture2D[7];
-
+        Texture2D slot;
 
         //reference
         PowerupUIStruct[] powerupUI;
@@ -36,6 +36,7 @@ namespace BRS.Scripts {
                 if (!powerupStringToIndex.ContainsKey(pngNames[i]))
                      powerupStringToIndex.Add(pngNames[i], i);
             }
+            slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
         }
 
         public override void Update() {
@@ -49,15 +50,16 @@ namespace BRS.Scripts {
 
         // commands
         public void Draw(int index) { // TODO clean out this code
-            int offset = UserInterface.instance.GetOffset(index);
-            Rectangle destRect = new Rectangle(10 + offset, 370, 50, 50);
+            Vector2 position = new Vector2(300, 100);
+            position += Vector2.UnitX * UserInterface.instance.GetOffset(index);
+            Rectangle destRect = new Rectangle((int)position.X, (int)position.Y, 50, 50);
 
-            if (powerupUI[index].currentPowerup != null) {
+            UserInterface.instance.DrawPicture(destRect, slot);
+
+            if (powerupUI[index].currentPowerup.Count>0) {
                 foreach (string name in powerupUI[index].currentPowerup) {
                     UserInterface.instance.DrawPicture(destRect, powerupsPng[powerupStringToIndex[name]]);
                 }
-            } else {
-                powerupUI[index].currentPowerup = new List<string>();
             }
         }
 
