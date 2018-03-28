@@ -227,12 +227,15 @@ namespace BRS {
 
 
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, bool lit = false) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    //NOTE: lighting staff must be put here
 
-                    effect.EnableDefaultLighting();
+                    if (lit) {
+                        //NOTE: lighting stuff must be put here
+
+                        effect.EnableDefaultLighting();
+                    } 
                     //effects
                     effect.World = world;
                     effect.View = view;
