@@ -63,12 +63,13 @@ namespace BRS {
             }
 
             ui = new UserInterface();
+            ui.Start();
 
             menuManager = new MenuManager();
             menuManager.LoadContent();
             menuDisplay = true;
 
-            Start(); // CALL HERE
+            //Start(); // CALL HERE
 
         }
 
@@ -79,7 +80,6 @@ namespace BRS {
         public void Start() {
             //START
             Prefabs.Start();
-            ui.Start();
             scene.Start();
             Input.Start();
 
