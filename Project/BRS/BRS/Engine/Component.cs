@@ -15,6 +15,7 @@ namespace BRS {
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
+        void Draw();
 
         object Clone();
     }
@@ -28,6 +29,7 @@ namespace BRS {
         public virtual void Update() { }
         public virtual void LateUpdate() { } // really necessary?
         public virtual void OnCollisionEnter(Collider c) { }
+        public virtual void Draw() { }
 
         public virtual object Clone() {
             return this.MemberwiseClone(); // MUST DO DEEP COPY!

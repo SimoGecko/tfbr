@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using BRS.Load;
+using BRS.Menu;
 
 namespace BRS {
 
@@ -24,7 +25,8 @@ namespace BRS {
         
         private static bool _usePhysics = false;
 
-
+        MenuManager menuManager;
+        public bool menuDisplay;
 
         public Game1() {
             instance = this;
@@ -62,6 +64,9 @@ namespace BRS {
 
             ui = new UserInterface();
 
+            menuManager = new MenuManager();
+            menuManager.LoadContent();
+            menuDisplay = true;
 
             Start(); // CALL HERE
 
@@ -91,58 +96,71 @@ namespace BRS {
             if (/*GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||*/ Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             Time.Update(gameTime);
-            Input.Update();
+
+            menuManager.Update();
+
+            if (!menuDisplay) {
+
+                Input.Update();
 
 
-            foreach (GameObject go in GameObject.All) go.Update();
-            foreach (GameObject go in GameObject.All) go.LateUpdate();
+                foreach (GameObject go in GameObject.All) go.Update();
+                foreach (GameObject go in GameObject.All) go.LateUpdate();
 
-            if (_usePhysics) {
-                _physicsManager.Update(gameTime);
+                if (_usePhysics) {
+                    _physicsManager.Update(gameTime);
+                }
+
+                Physics.Update();            
             }
-
-            Physics.Update();
-
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //foreach camera
-            int i = 0;
-            foreach (Camera cam in Screen.cameras) {
-                GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
-
-                graphics.GraphicsDevice.Viewport = cam.viewport;
-
-                if (_usePhysics) {
-                    _physicsManager.Draw();
-                }
-
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
-                //transform.Draw(camera);
-
-                //gizmos (wireframe)
-                GraphicsDevice.RasterizerState = wireRasterizer;
-                Gizmos.Draw(cam);
-                GraphicsDevice.RasterizerState = fullRasterizer;
-
-                //splitscreen UI
-                spriteBatch.Begin();
-                ui.DrawSplitscreen(spriteBatch, i++);
-                spriteBatch.End();
-            }
-            Gizmos.ClearOrders();
-
-            graphics.GraphicsDevice.Viewport = Screen.fullViewport;
-
-            //fullscreen UI
             spriteBatch.Begin();
-            ui.DrawGlobal(spriteBatch);
+            ui.DrawMenu(spriteBatch);
+            //UserInterface.instance.sB = spriteBatch;           
+            //menuManager.Draw();
             spriteBatch.End();
 
+            if (!menuDisplay) {
 
+                //foreach camera
+                int i = 0;
+                foreach (Camera cam in Screen.cameras) {
+                    GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+
+                    graphics.GraphicsDevice.Viewport = cam.viewport;
+
+                    if (_usePhysics) {
+                        _physicsManager.Draw();
+                    }
+
+                    foreach (GameObject go in GameObject.All) go.Draw(cam);
+                    //transform.Draw(camera);
+
+                    //gizmos (wireframe)
+                    GraphicsDevice.RasterizerState = wireRasterizer;
+                    Gizmos.Draw(cam);
+                    GraphicsDevice.RasterizerState = fullRasterizer;
+
+                    //splitscreen UI
+                    spriteBatch.Begin();
+                    ui.DrawSplitscreen(spriteBatch, i++);
+                    spriteBatch.End();
+                }
+                Gizmos.ClearOrders();
+
+                graphics.GraphicsDevice.Viewport = Screen.fullViewport;
+
+                //fullscreen UI
+                spriteBatch.Begin();
+                ui.DrawGlobal(spriteBatch);
+                spriteBatch.End();
+
+            }
             base.Draw(gameTime);
         }
     }
