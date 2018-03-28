@@ -108,6 +108,7 @@
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
     <Compile Include="Engine\Input.cs" />
+    <Compile Include="Engine\Material.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
     <Compile Include="Engine\Physics.cs" />
     <Compile Include="Engine\Physics\ConvexHullHelper.cs" />

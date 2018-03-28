@@ -19,9 +19,9 @@ namespace BRS {
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool active { get; set; } = true;
         public string name { private set; get; }
-        public bool lit = false;
         //public string myTag = ""; // Make this tag and enum
         public ObjectTag tag { set; get; } = ObjectTag.Default;
+        public EffectMaterial mat = null;
 
 
         static int InstanceCount = 0;
@@ -63,7 +63,7 @@ namespace BRS {
 
         public virtual void Draw(Camera cam) {
             if (Model != null && active) {
-                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World, lit);
+                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
             }
         }
 
