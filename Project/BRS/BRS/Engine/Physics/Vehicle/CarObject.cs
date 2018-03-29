@@ -20,6 +20,8 @@ namespace BRS.Engine.Physics.Vehicle {
 
         private World _world;
 
+        private JVector _centerOfMass;
+
         public CarObject(Game game, PhysicsManager physics)
             : base(game) {
             _world = physics.World;
@@ -30,20 +32,36 @@ namespace BRS.Engine.Physics.Vehicle {
         private void BuildCar() {
             float size = 0.5f;
             JVector lowerSize = new JVector(2.5f, 1.0f, 6.0f);
-            CompoundShape.TransformedShape lower = new CompoundShape.TransformedShape(
-                new BoxShape(lowerSize * size), JMatrix.Identity, JVector.Zero);
+            //CompoundShape.TransformedShape lower = new CompoundShape.TransformedShape(
+            //    new BoxShape(lowerSize * size), JMatrix.Identity, JVector.Zero);
 
-            CompoundShape.TransformedShape upper = new CompoundShape.TransformedShape(
-                new BoxShape(2.0f, 0.5f, 3.0f), JMatrix.Identity, JVector.Up * 0.75f + JVector.Backward * 1.0f);
             //CompoundShape.TransformedShape upper = new CompoundShape.TransformedShape(
-            //    new BoxShape(0.4f, 0.1f, 0.6f), JMatrix.Identity, (JVector.Up * 0.75f + JVector.Backward * 1.0f) * 0.5f);
+            //    new BoxShape(2.0f, 0.5f, 3.0f), JMatrix.Identity, JVector.Up * 0.75f + JVector.Backward * 1.0f);
+            ////CompoundShape.TransformedShape upper = new CompoundShape.TransformedShape(
+            ////    new BoxShape(0.4f, 0.1f, 0.6f), JMatrix.Identity, (JVector.Up * 0.75f + JVector.Backward * 1.0f) * 0.5f);
 
-            //CompoundShape.TransformedShape[] subShapes = { lower, upper };
-            CompoundShape.TransformedShape[] subShapes = { lower };
+            ////CompoundShape.TransformedShape[] subShapes = { lower, upper };
+            //CompoundShape.TransformedShape[] subShapes = { lower };
 
-            Shape chassis = new CompoundShape(subShapes);
+            //Shape chassis = new CompoundShape(subShapes);
 
             //chassis = new BoxShape(2.5f, 1f, 6.0f);
+            Model model = chassisModel;
+            BoundingBox bb = BoundingBoxHelper.Calculate(model);
+            JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
+            bbSize = JVector.Transform(bbSize, JMatrix.CreateRotationZ(MathHelper.PiOver2) *
+                                               JMatrix.CreateRotationY(MathHelper.Pi) *
+                                               JMatrix.CreateRotationX(MathHelper.PiOver2));
+
+            //JMatrix tmp = JMatrix.CreateRotationZ(MathHelper.PiOver2) *
+            //              JMatrix.CreateRotationY(MathHelper.Pi) *
+            //              JMatrix.CreateRotationX(MathHelper.PiOver2);
+            Shape chassis = new BoxShape(bbSize);
+            chassis.CalculateMassInertia();
+            JVector support;
+            chassis.SupportCenter(out support);
+
+            _centerOfMass = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
 
             carBody = new DefaultCar(_world, chassis, size);
 
@@ -51,16 +69,18 @@ namespace BRS.Engine.Physics.Vehicle {
 
             // adjust some driving values
             carBody.SteerAngle = 45;
-            carBody.DriveTorque = 300;
-            carBody.AccelerationRate = 15;
-            carBody.SteerRate = 15f;
+            carBody.DriveTorque = .1f;
+            carBody.AccelerationRate = 1;
+            carBody.SteerRate = 5f;
+            //carBody.Mass = 100;
+
             carBody.AdjustWheelValues();
 
             carBody.Tag = BodyTag.DrawMe;
             carBody.AllowDeactivation = false;
 
             // place the car two units above the ground.
-            carBody.Position = new JVector(0, 2, 0);
+            //carBody.Position = new JVector(0, 5, 0);
 
             _world.AddBody(carBody);
         }
@@ -78,7 +98,7 @@ namespace BRS.Engine.Physics.Vehicle {
             else steer = 0.0f;
 
             carBody.SetInput(accelerate, steer);
-
+            Debug.Log(carBody.Position);
             base.Update(gameTime);
         }
 
@@ -93,7 +113,7 @@ namespace BRS.Engine.Physics.Vehicle {
                     foreach (BasicEffect effect in mesh.Effects) {
                         Matrix addOrienation;
 
-                        if (i % 2 != 0) addOrienation = Matrix.CreateRotationX(MathHelper.Pi);
+                        if (i % 2 == 0) addOrienation = Matrix.CreateRotationX(MathHelper.Pi);
                         else addOrienation = Matrix.Identity;
 
                         //effect.World =
@@ -104,8 +124,8 @@ namespace BRS.Engine.Physics.Vehicle {
                         //    Conversion.ToXnaMatrix(carBody.Orientation) *
                         //    Matrix.CreateTranslation(position);
                         effect.World =
-                            //addOrienation *
-                            //Matrix.CreateRotationX(MathHelper.PiOver2) *
+                            addOrienation *
+                            Matrix.CreateRotationX(MathHelper.PiOver2) *
                             Matrix.CreateRotationZ(MathHelper.ToRadians(-wheel.WheelRotation)) *
                             Matrix.CreateRotationY(MathHelper.ToRadians(wheel.SteerAngle + 90)) *
                             Conversion.ToXnaMatrix(carBody.Orientation) *
@@ -116,20 +136,22 @@ namespace BRS.Engine.Physics.Vehicle {
                         effect.View = Screen.cameras[0].View;
                         effect.Projection = Screen.cameras[0].Proj;
                     }
+
                     mesh.Draw();
                 }
-
             }
-
         }
         #endregion
 
         private void DrawChassis() {
             foreach (ModelMesh mesh in chassisModel.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    Matrix matrix = Matrix.CreateRotationY(MathHelper.ToRadians(90)) * Conversion.ToXnaMatrix(carBody.Orientation);
-                    matrix.Translation = Conversion.ToXnaVector(carBody.Position) -
-                        Vector3.Transform(new Vector3(0, 1.0f, 0), matrix);
+                    Matrix matrix =
+                        Matrix.CreateRotationZ(MathHelper.PiOver2) *
+                        Matrix.CreateRotationY(MathHelper.Pi) *
+                        Matrix.CreateRotationX(MathHelper.PiOver2) *
+                        Conversion.ToXnaMatrix(carBody.Orientation);
+                    matrix.Translation = Conversion.ToXnaVector(carBody.Position+_centerOfMass);
 
                     //effect.EnableDefaultLighting();
                     effect.Alpha = 1.0f;
@@ -142,15 +164,15 @@ namespace BRS.Engine.Physics.Vehicle {
         }
 
         protected override void LoadContent() {
-            chassisModel = this.Game.Content.Load<Model>("jitter\\car_small");
-            tireModel = this.Game.Content.Load<Model>("jitter\\wheel_small");
+            chassisModel = this.Game.Content.Load<Model>("forklift_chassis");
+            tireModel = this.Game.Content.Load<Model>("forklift_wheel");
 
             base.LoadContent();
         }
 
         public override void Draw(GameTime gameTime) {
             DrawWheels();
-            //DrawChassis();
+            DrawChassis();
             base.Draw(gameTime);
         }
 

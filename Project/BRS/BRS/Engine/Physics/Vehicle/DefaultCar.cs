@@ -36,8 +36,8 @@ namespace BRS.Engine.Physics.Vehicle {
         private float accelerate = 0.0f;
 
         // don't damp perfect, allow some bounciness.
-        private const float dampingFrac = 0.5f;
-        private const float springFrac = 0.1f;
+        private const float dampingFrac = 1f; // 0.5f
+        private const float springFrac = 1f; // 0.1f
 
         /// <summary>
         /// The maximum steering angle in degrees
@@ -75,18 +75,20 @@ namespace BRS.Engine.Physics.Vehicle {
             //world.Events.PostStep += postStep;
 
             // set some default values
-            this.AccelerationRate = .5f;
-            this.SteerAngle = 40.0f;
-            this.DriveTorque = 5.0f;
-            this.SteerRate = 5.0f;
-            Mass = 100;
+            //this.AccelerationRate = .5f;
+            //this.SteerAngle = 40.0f;
+            //this.DriveTorque = 5.0f;
+            //this.SteerRate = 5.0f;
+            //Mass = 100;
             Tag = BodyTag.DrawMe;
 
             // create default wheels
-            wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, size * (JVector.Left + 1.8f * JVector.Forward + 0.8f * JVector.Down), size * 0.4f);
-            wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, size * (JVector.Right + 1.8f * JVector.Forward + 0.8f * JVector.Down), size * 0.4f);
-            wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, size * (JVector.Left + 1.8f * JVector.Backward + 0.8f * JVector.Down), size * 0.4f);
-            wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, size * (JVector.Right + 1.8f * JVector.Backward + 0.8f * JVector.Down), size * 0.4f);
+            float height = 0.8f;
+            float side = 0.2f;
+            wheels[(int)WheelPosition.FrontLeft] = new Wheel(world, this, size * (side * JVector.Left + 0.5f * JVector.Forward + height * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.FrontRight] = new Wheel(world, this, size * (side * JVector.Right + 0.5f * JVector.Forward + height * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.BackLeft] = new Wheel(world, this, size * (side * JVector.Left + 0.5f * JVector.Backward + height * JVector.Down), size * 0.4f);
+            wheels[(int)WheelPosition.BackRight] = new Wheel(world, this, size * (side * JVector.Right + 0.5f * JVector.Backward + height * JVector.Down), size * 0.4f);
 
             AdjustWheelValues();
         }
@@ -97,7 +99,7 @@ namespace BRS.Engine.Physics.Vehicle {
         /// after manipulating wheel data.
         /// </summary>
         public void AdjustWheelValues() {
-            float mass = this.Mass / 4;
+            float mass = this.Mass;
 
             foreach (Wheel w in wheels) {
                 w.Inertia = 0.5f * (w.Radius * w.Radius) * mass;

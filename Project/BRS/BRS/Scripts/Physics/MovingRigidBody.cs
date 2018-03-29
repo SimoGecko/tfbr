@@ -34,12 +34,12 @@ namespace BRS.Scripts.Physics {
 
             Material = new Material {KineticFriction = 0, Restitution = 0, StaticFriction = 0};
 
-            RigidBody = new RigidBody(CollisionShape) {
+            RigidBody = new SteerableRigidBody(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
-                Tag = BodyTag.DrawMe,
+                Tag = BodyTag.DontDrawMe,
                 Mass = 20.0f
             };
 

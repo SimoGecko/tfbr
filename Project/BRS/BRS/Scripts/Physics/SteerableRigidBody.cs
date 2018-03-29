@@ -13,10 +13,9 @@ namespace BRS.Scripts.Physics {
         public SteerableRigidBody(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
         }
 
-        public override void PreStep(float timestep)
-        {
+        public override void PreStep(float timestep) {
             float height = BoundingBox.Max.Y - BoundingBox.Min.Y;
-            
+
             if (Position.Y - height * .5f < 0.0f) {
                 Position = new JVector(Position.X, height * .5f, Position.Z);
                 LinearVelocity = new JVector(LinearVelocity.X, 0, LinearVelocity.Z);
@@ -28,7 +27,7 @@ namespace BRS.Scripts.Physics {
         public override void PostStep(float timestep) {
             float height = BoundingBox.Max.Y - BoundingBox.Min.Y;
 
-            if (Position.Y - height * .5f < 0.0f) {
+            if (true || Position.Y - height * .5f < 0.0f) {
                 Position = new JVector(Position.X, height * .5f, Position.Z);
                 LinearVelocity = new JVector(LinearVelocity.X, 0, LinearVelocity.Z);
             }

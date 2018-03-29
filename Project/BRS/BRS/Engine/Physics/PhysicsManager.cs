@@ -25,6 +25,8 @@ namespace BRS.Engine.Physics {
 
         private GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
 
+        private bool _doDrawings = false;
+
         /// <summary>
         /// Initialize the physics with the collision-setup
         /// </summary>
@@ -66,6 +68,10 @@ namespace BRS.Engine.Physics {
         }
 
         public void Draw(Camera camera) {
+            if (_doDrawings == false) {
+                return;
+            }
+
             BasicEffect.View = camera.View;
             BasicEffect.Projection = camera.Proj;
 

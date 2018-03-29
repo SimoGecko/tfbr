@@ -83,7 +83,7 @@ namespace BRS.Load {
                 }
             }
 
-            AddCar(new JVector(-2, 1.5f, -5));
+            //AddCar(new JVector(-2, 0.8f, -2));
             AddSoftBody();
 
             // Dummy object at position (0/0/0) for debug-rendering.

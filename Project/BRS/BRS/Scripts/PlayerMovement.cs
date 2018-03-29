@@ -103,21 +103,21 @@ namespace BRS.Scripts {
 
                 //rb.LinearVelocity = (new JVector(0, 0, 10));
                 //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
-                Debug.Log(rb.Position.ToString());
+                //Debug.Log(rb.Position.ToString());
 
-                string ori = String.Format("{9:0.00} results in:\n{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
-                    rb.Orientation.M11,
-                    rb.Orientation.M12,
-                    rb.Orientation.M13,
-                    rb.Orientation.M21,
-                    rb.Orientation.M22,
-                    rb.Orientation.M23,
-                    rb.Orientation.M31,
-                    rb.Orientation.M32,
-                    rb.Orientation.M33,
-                    rotation * MathHelper.Pi / 180.0f
-                    );
-                Debug.Log(ori);
+                //string ori = String.Format("{9:0.00} results in:\n{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
+                //    rb.Orientation.M11,
+                //    rb.Orientation.M12,
+                //    rb.Orientation.M13,
+                //    rb.Orientation.M21,
+                //    rb.Orientation.M22,
+                //    rb.Orientation.M23,
+                //    rb.Orientation.M31,
+                //    rb.Orientation.M32,
+                //    rb.Orientation.M33,
+                //    rotation * MathHelper.Pi / 180.0f
+                //    );
+                //Debug.Log(ori);
             }
 
             _previousLinearVelocity = linearVelocity;
