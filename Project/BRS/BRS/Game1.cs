@@ -121,9 +121,7 @@ namespace BRS {
                 }
 
                 foreach (GameObject go in GameObject.All) {
-                    if (true || go.tag == ObjectTag.Player) {
-                        go.Draw(cam);
-                    }
+                    go.Draw(cam);
                 }
                 //transform.Draw(camera);
 

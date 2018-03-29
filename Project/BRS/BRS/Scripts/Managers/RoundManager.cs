@@ -12,8 +12,6 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int numPlayers = 1;
-        public static int lvlScene = 3;
         public const int roundTime = 100;
         public const int timeBeforePolice = 5;
 
