@@ -120,6 +120,7 @@
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\ConePrimitive.cs" />
+    <Compile Include="Engine\Physics\Primitives3D\ConvexHullPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CylinderPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\GeometricPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\SpherePrimitive.cs" />
@@ -147,6 +148,10 @@
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
+    <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
+    <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
+    <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
+    <Compile Include="Scripts\Physics\SteerableRigidBody.cs" />
     <Compile Include="Scripts\Player\CameraController.cs" />
     <Compile Include="Scripts\UI\BaseUI.cs" />
     <Compile Include="Scripts\UI\CircleBar.cs" />

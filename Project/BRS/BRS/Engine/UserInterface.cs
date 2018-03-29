@@ -55,7 +55,6 @@ namespace BRS.Scripts {
             //callbacks
             Minimap.instance.Draw(sB);
             GameUI.instance.Draw();
-            
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
