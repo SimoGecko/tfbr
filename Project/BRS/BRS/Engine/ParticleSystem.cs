@@ -39,7 +39,7 @@ namespace BRS {
         }
 
         public override void Update() {
-            int numNewParticles = (int)(EmitRate*Time.deltatime);
+            int numNewParticles = (int)(EmitRate*Time.deltaTime);
 
             for (int i = 0; i < numNewParticles; i++) {
                 particles.Add(GenerateNewParticle());
@@ -138,7 +138,7 @@ namespace BRS {
             }
 
             public void Update() {
-                Lifetime -= Time.deltatime;
+                Lifetime -= Time.deltaTime;
                 Position += Velocity;
                 Angle += AngularVelocity;
             }

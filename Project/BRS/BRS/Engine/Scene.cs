@@ -11,7 +11,6 @@ namespace BRS {
     class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 
-        protected ContentManager Content;
         //can create scene graph
 
         protected PhysicsManager PhysicsManager { get; set; }
@@ -28,10 +27,6 @@ namespace BRS {
 
         protected virtual void Build() { // levels inherit and fill this
 
-        }
-
-        public void GiveContent(ContentManager c) {
-            Content = c;
         }
 
     }

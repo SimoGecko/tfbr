@@ -15,25 +15,25 @@ namespace BRS {
         }
 
         //QUERIES
-        public static Collider[] OverlapSphere(Vector3 position, float radius, string collisionmask = "") {
+        public static Collider[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
             List<Collider> result = new List<Collider>();
             SphereCollider sphere = new SphereCollider(position, radius);
 
             //find all the colliders that intersect this sphere
             foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
-                if ( (!collisionmask.Equals("") && !c.gameObject.myTag.Equals(collisionmask)) || !c.gameObject.Active) continue;
+                if ( (collisionTag != ObjectTag.Default && c.gameObject.tag !=collisionTag) || !c.gameObject.active) continue;
 
                 if (c.Intersects(sphere)) result.Add(c);
             }
             return result.ToArray();
         }
 
-        public static bool Raycast(Ray ray, out RaycastHit hit, float tmax, string collisionmask="") {
+        public static bool Raycast(Ray ray, out RaycastHit hit, float tmax, ObjectTag collisionTag = ObjectTag.Default) {
             float tmin = tmax;
             bool collided = false;
             Collider bestsofar = null;
             foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
-                if ( (!collisionmask.Equals("") && !c.gameObject.myTag.Equals(collisionmask)) || !c.gameObject.Active) continue;
+                if ((collisionTag != ObjectTag.Default && c.gameObject.tag != collisionTag) || !c.gameObject.active) continue;
 
                 bool intersects = c.Intersects(ray, out float p);
                 if (intersects && p <= tmin) {
@@ -81,7 +81,7 @@ namespace BRS {
                     float rad2 = (float)Math.Pow(colD.Radius +colS.Radius, 2);
                     if (dist2 < rad2) {
                         //call on collision enter on both objects only if not previously colliding
-                        string collisionstring = colD.gameObject.Name + colS.gameObject.Name;
+                        string collisionstring = colD.gameObject.name + colS.gameObject.name;
                         bool previouslyCollided = previousCollisions.Contains(collisionstring);
 
                         if (!previouslyCollided) {
@@ -102,7 +102,7 @@ namespace BRS {
                     float rad2 = (float)Math.Pow(colD0.Radius + colD1.Radius, 2);
                     if (dist2 < rad2) {
                         //call on collision enter on both objects only if not previously colliding
-                        string collisionstring = colD0.gameObject.Name + colD1.gameObject.Name;
+                        string collisionstring = colD0.gameObject.name + colD1.gameObject.name;
                         bool previouslyCollided = previousCollisions.Contains(collisionstring);
 
                         if (!previouslyCollided) {

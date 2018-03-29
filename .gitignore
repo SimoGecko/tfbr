@@ -288,3 +288,7 @@ __pycache__/
 
 
 .DS_Store
+
+Project/Unity/Scene Exporter/Temp
+Project/Unity/Scene Exporter/Library
+Project/Unity/Scene Exporter/Temp

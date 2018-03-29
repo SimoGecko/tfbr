@@ -164,8 +164,10 @@ namespace BRS.Engine.Physics.Vehicle {
         }
 
         protected override void LoadContent() {
-            chassisModel = this.Game.Content.Load<Model>("forklift_chassis");
-            tireModel = this.Game.Content.Load<Model>("forklift_wheel");
+            //chassisModel = this.Game.Content.Load<Model>("forklift_chassis");
+            //tireModel = this.Game.Content.Load<Model>("forklift_wheel");
+            chassisModel = File.Load<Model>("Models/vehicles/car");
+            tireModel = File.Load<Model>("Models/vehicles/wheel");
 
             base.LoadContent();
         }
