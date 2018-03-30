@@ -32,7 +32,7 @@ namespace BRS.Load {
             manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
-
+            manager.AddComponent(new AudioTest());
 
             //TEST lighting
             GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));

@@ -77,6 +77,7 @@ namespace BRS {
             ui.Start();
             scene.Start();
             Input.Start();
+            Audio.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start();
             foreach (GameObject go in GameObject.All) go.Start();

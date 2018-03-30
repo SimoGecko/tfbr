@@ -232,7 +232,7 @@ namespace BRS {
                 foreach (BasicEffect effect in mesh.Effects) {
                     if (mat == null) {
                         //default settings
-                        //effect.EnableDefaultLighting();
+                        effect.EnableDefaultLighting();
                     } else {
                         effect.EnableDefaultLighting();
                         //effect.LightingEnabled = mat.lit;

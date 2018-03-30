@@ -5279,3 +5279,21 @@
 /processorParam:TextureFormat=Color
 /build:Models/test/plant_reuv.png
 
+#begin Audio/test/boing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/test/boing.wav
+
+#begin Audio/test/boom.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/test/boom.wav
+
+#begin Audio/test/phi.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/test/phi.wav
+

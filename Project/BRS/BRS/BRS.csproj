@@ -145,6 +145,7 @@
     <Compile Include="Load\LevelPhysics.cs" />
     <Compile Include="Load\PrefabContent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
