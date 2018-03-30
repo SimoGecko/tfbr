@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -54,10 +55,10 @@ namespace BRS.Scripts {
         }
 
         void Explode() {
-            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, explosionRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, explosionRadius);
             foreach(Collider c in overlapColliders) {
-                if (c.gameObject.HasComponent<IDamageable>()) {
-                    c.gameObject.GetComponent<IDamageable>().TakeDamage(explosionDamage);
+                if (c.GameObject.HasComponent<IDamageable>()) {
+                    c.GameObject.GetComponent<IDamageable>().TakeDamage(explosionDamage);
                 }
             }
             GameObject.Destroy(gameObject);

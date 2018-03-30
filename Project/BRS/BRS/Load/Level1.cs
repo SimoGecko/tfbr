@@ -1,24 +1,31 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
-using System.IO;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Vehicle;
+using BRS.Scripts.Physics;
+using Jitter.LinearMath;
 
 namespace BRS.Load {
     class Level1 : Scene {
-        public Level1(PhysicsManager physics)
-            : base(physics) { }
+        private readonly Game1 _game;
 
-        
+        // TODO: game-parameter will be removed as soon as the car is rewritten to our framework
+        public Level1(PhysicsManager physics, Game1 game)
+            : base(physics) {
+            _game = game;
+        }
 
+
+
+        /// <summary>
+        /// Scene setup for level1
+        /// </summary>
         protected override void Build() {
-            ////////// scene setup for level1 //////////
-
             //MANAGER
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());
@@ -41,7 +48,7 @@ namespace BRS.Load {
 
             GameObject monkeyScene2 = new GameObject("monkeyScene2", File.Load<Model>("Models/test/plant"));
             monkeyScene2.transform.Scale(3);
-            monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right*2;
+            monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right * 2;
 
 
             //GROUND
@@ -55,12 +62,12 @@ namespace BRS.Load {
 
 
             //PLAYER
-            for (int i=0; i<GameManager.numPlayers; i++) {
-                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+            for (int i = 0; i < GameManager.numPlayers; i++) {
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.AddComponent(new Player(i, i%2));
-                player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
+                player.AddComponent(new Player(i, i % 2));
+                player.transform.position = new Vector3(-5 + 10 * i, 0, 1);
+                //player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
@@ -68,6 +75,7 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerPowerup());
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
+                player.AddComponent(new MovingRigidBody(PhysicsManager));
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
@@ -95,16 +103,17 @@ namespace BRS.Load {
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
             vault.AddComponent(new Vault());
-            vault.transform.position = new Vector3(5 , 1.5f, -62);
+            vault.transform.position = new Vector3(5, 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            vault.AddComponent(new StaticRigidBody(PhysicsManager));
+            //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             //other elements
             GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene + "/ObjectSceneUnity.txt", PhysicsManager); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
@@ -114,9 +123,20 @@ namespace BRS.Load {
             //Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
+                bases[i].AddComponent(new StaticRigidBody(PhysicsManager));
+                //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
             }
+
+            //var _car = new CarObject(_game, PhysicsManager);
+            //_game.Components.Add(_car);
+
+            //_car.carBody.Position = new JVector(-2, 0.8f, -2);
+
+            // Dummy object at position (0/0/0) for debug-rendering.
+            GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
+            dummy.tag = ObjectTag.Default;
+            dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
     }
 }

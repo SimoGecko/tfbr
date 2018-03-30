@@ -87,6 +87,7 @@ namespace BRS.Scripts {
 
             //move forward
             //compute final speed
+            // Todo: Apply speedPad in physics...
             //if (speedPad) { // override and force to move at max speed
             //    transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
             //} else {
@@ -119,24 +120,18 @@ namespace BRS.Scripts {
                 rb.LinearVelocity = new JVector(lv.X, 0, lv.Z);
 
                 rb.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
+                
+                SteerableRigidBody srb =rb as SteerableRigidBody;
 
+                if (srb != null)
+                {
+                    srb.RotationY = rotation * MathHelper.Pi / 180.0f;
+                }
                 //rb.LinearVelocity = (new JVector(0, 0, 10));
                 //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
-                //Debug.Log(rb.Position.ToString());
 
-                //string ori = String.Format("{9:0.00} results in:\n{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
-                //    rb.Orientation.M11,
-                //    rb.Orientation.M12,
-                //    rb.Orientation.M13,
-                //    rb.Orientation.M21,
-                //    rb.Orientation.M22,
-                //    rb.Orientation.M23,
-                //    rb.Orientation.M31,
-                //    rb.Orientation.M32,
-                //    rb.Orientation.M33,
-                //    rotation * MathHelper.Pi / 180.0f
-                //    );
-                //Debug.Log(ori);
+                //Debug.Log(rb.Position);
+                //Debug.Log(rb.Orientation, "PlayerMovement:\n");
             }
 
             _previousLinearVelocity = linearVelocity;

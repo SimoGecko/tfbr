@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using BRS.Engine.Physics;
+using BRS.Scripts.Physics;
 
 namespace BRS {
     class File : Component {
@@ -51,12 +53,19 @@ namespace BRS {
 
 
         // other
-        public static void ReadFile(string pathName) {
+
+        /// <summary>
+        /// Read the scene-file and build the game- and physic-objects for it
+        /// </summary>
+        /// <param name="pathName">Path to the scene-file</param>
+        /// <param name="physics">PhysicsManager for the physics-simulation</param>
+        public static void ReadFile(string pathName, PhysicsManager physics) {
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
                     while (nameContent == "")
                         nameContent = reader.ReadLine();
+
                     if (nameContent == null)
                         break;
 
@@ -90,7 +99,14 @@ namespace BRS {
                         else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
                         else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
                         else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
+
+                        if (go.tag == ObjectTag.Ground) {
+                            go.AddComponent(new StaticRigidBody(physics));
+                        } else {
+                            go.AddComponent(new StaticRigidBody(physics));
+                        }
                     }
+
                     nameContent = reader.ReadLine();
                 }
             }
@@ -118,8 +134,8 @@ namespace BRS {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
-                        Vector3 position   = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
-                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]),  float.Parse(rSplit[3]));
+                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
+                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
@@ -129,6 +145,7 @@ namespace BRS {
                         go.transform.scale = scale;
                         go.transform.rotation = rotation; // rotation not parsed correctly?
                     }
+
                     nameContent = reader.ReadLine(); // <end>
                 }
             }

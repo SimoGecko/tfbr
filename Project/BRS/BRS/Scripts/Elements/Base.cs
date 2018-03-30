@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -40,9 +41,9 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
-                Player p = c.gameObject.GetComponent<Player>();
+                Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());

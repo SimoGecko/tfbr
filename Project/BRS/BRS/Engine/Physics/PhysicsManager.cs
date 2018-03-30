@@ -1,4 +1,5 @@
-﻿using BRS.Engine.Physics.Primitives3D;
+﻿using System.Collections.Generic;
+using BRS.Engine.Physics.Primitives3D;
 using BRS.Load;
 using Jitter;
 using Jitter.Collision;
@@ -11,6 +12,15 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics {
     public class PhysicsManager {
+        public static PhysicsManager Instance { get; private set; }
+
+        public static void SetUpPhysics(DebugDrawer debugDrawer, Display display, GraphicsDevice graphicsDevice) {
+            Instance = new PhysicsManager(debugDrawer, display, graphicsDevice);
+        }
+
+        public int Status { get; set; }
+        public List<Collider> _coliders;
+
         // Stores the physical world
         public World World { private set; get; }
 
@@ -30,13 +40,13 @@ namespace BRS.Engine.Physics {
         /// <summary>
         /// Initialize the physics with the collision-setup
         /// </summary>
-        public PhysicsManager(DebugDrawer debugDrawer, Display display, GraphicsDevice graphicsDevice) {
+        private PhysicsManager(DebugDrawer debugDrawer, Display display, GraphicsDevice graphicsDevice) {
             CollisionSystem collision = new CollisionSystemPersistentSAP();
 
             World = new World(collision);
             World.AllowDeactivation = true;
             World.Gravity = new JVector(0, -20, 0);
-            World.ContactSettings.AllowedPenetration = 0.0f;
+            //World.ContactSettings.AllowedPenetration = 0.0f;
 
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
 
@@ -65,6 +75,35 @@ namespace BRS.Engine.Physics {
             }
 
             World.Step(step, true);
+        }
+
+        public static Collider[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
+            List<Collider> result = new List<Collider>();
+            SphereShape sphere = new SphereShape(radius);
+            RigidBody rbSphere = new RigidBody(sphere);
+            rbSphere.Position = Conversion.ToJitterVector(position);
+
+            //SphereCollider sphere = new SphereCollider(position, radius);
+
+            //find all the colliders that intersect this sphere
+            Instance.Status = 1;
+            Instance._coliders = new List<Collider>();
+            foreach (RigidBody rb in Instance.World.RigidBodies) {
+                Collider c = rb as Collider;
+                if (c != null && ((collisionTag != ObjectTag.Default && c.GameObject.tag != collisionTag) || !c.GameObject.active)) continue;
+
+                Instance.World.CollisionSystem.Detect(rbSphere, rb);
+
+            }
+            Instance.Status = 2;
+
+
+            //foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
+            //    if ((collisionTag != ObjectTag.Default && c.gameObject.tag != collisionTag) || !c.gameObject.active) continue;
+
+            //    if (c.Intersects(sphere)) result.Add(c);
+            //}
+            return Instance._coliders.ToArray();
         }
 
         public void Draw(Camera camera) {
@@ -99,19 +138,19 @@ namespace BRS.Engine.Physics {
         }
 
         private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
-            //GameObject body1 = arg1 as GameObject;
-            //GameObject body2 = arg2 as GameObject;
+            Collider body1 = arg1 as Collider;
+            Collider body2 = arg2 as Collider;
 
-            //if (body1 == null || body2 == null) {
-            //    return;
-            //}
+            if (Instance.Status == 1) {
+                if (body1 != null)
+                    Instance._coliders.Add(body1);
 
-            //GameObject player;
-            //GameObject gameObject;
-
-            //if (body1.Type == ObjectType.Player || body2.Type == ObjectType.Player) {
-
-            //}
+                if (body2 != null)
+                    Instance._coliders.Add(body2);
+            } else {
+                body1?.GameObject.OnCollisionEnter(body2);
+                body2?.GameObject.OnCollisionEnter(body1);
+            }
         }
 
         /// <summary>

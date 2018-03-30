@@ -2,10 +2,12 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using BRS.Scripts;
+using BRS.Scripts.Physics;
 
 namespace BRS {
     static partial class Prefabs {
@@ -15,14 +17,16 @@ namespace BRS {
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
         static void BuildPrefabs() {
-
+            PhysicsManager physics = PhysicsManager.Instance;
+            
             //VALUABLES
             //cash
             GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
             moneyPrefab.transform.Scale(.5f);
             moneyPrefab.transform.SetStatic();
             moneyPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
-            moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            moneyPrefab.AddComponent(new StaticRigidBody(physics));
+            //moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(moneyPrefab);
 
             //diamond
@@ -30,7 +34,8 @@ namespace BRS {
             diamondPrefab.transform.Scale(1f);
             diamondPrefab.transform.SetStatic();
             diamondPrefab.AddComponent(new Money(300, 2, Money.Type.Diamond));
-            diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            diamondPrefab.AddComponent(new StaticRigidBody(physics));
+            //diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(diamondPrefab);
 
             //gold
@@ -38,7 +43,8 @@ namespace BRS {
             goldPrefab.transform.Scale(.5f);
             goldPrefab.transform.SetStatic();
             goldPrefab.AddComponent(new Money(1000, 3, Money.Type.Gold));
-            goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            goldPrefab.AddComponent(new StaticRigidBody(physics));
+            //goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(goldPrefab);
 
 
@@ -47,7 +53,8 @@ namespace BRS {
             cratePrefab.transform.Scale(.5f);
             cratePrefab.transform.SetStatic();
             cratePrefab.AddComponent(new Crate());
-            cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
+            cratePrefab.AddComponent(new StaticRigidBody(physics));
+            //cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
             AddPrefab(cratePrefab);
 
 
@@ -57,7 +64,8 @@ namespace BRS {
             GameObject bombPrefab = new GameObject("bombPrefab", File.Load<Model>("Models/powerups/bomb"));
             bombPrefab.transform.Scale(.3f);
             bombPrefab.AddComponent(new Bomb());
-            bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            bombPrefab.AddComponent(new StaticRigidBody(physics));
+            //bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             //bombPrefab.transform.SetStatic();
             AddPrefab(bombPrefab);
 
@@ -65,7 +73,8 @@ namespace BRS {
             GameObject capacityPrefab = new GameObject("capacityPrefab", File.Load<Model>("Models/powerups/capacity"));
             capacityPrefab.transform.Scale(.3f);
             capacityPrefab.AddComponent(new CapacityBoost());
-            capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            capacityPrefab.AddComponent(new StaticRigidBody(physics));
+            //capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             capacityPrefab.transform.SetStatic();
             AddPrefab(capacityPrefab);
 
@@ -73,7 +82,8 @@ namespace BRS {
             GameObject keyPrefab = new GameObject("keyPrefab", File.Load<Model>("Models/powerups/key"));
             keyPrefab.transform.Scale(.3f);
             keyPrefab.AddComponent(new Key());
-            keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            keyPrefab.AddComponent(new StaticRigidBody(physics));
+            //keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             keyPrefab.transform.SetStatic();
             AddPrefab(keyPrefab);
 
@@ -81,7 +91,8 @@ namespace BRS {
             GameObject healthPrefab = new GameObject("healthPrefab", File.Load<Model>("Models/powerups/health"));
             healthPrefab.transform.Scale(.3f);
             healthPrefab.AddComponent(new HealthPotion());
-            healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            healthPrefab.AddComponent(new StaticRigidBody(physics));
+            //healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             healthPrefab.transform.SetStatic();
             AddPrefab(healthPrefab);
 
@@ -89,7 +100,8 @@ namespace BRS {
             GameObject shieldPrefab = new GameObject("shieldPrefab", File.Load<Model>("Models/powerups/shield"));
             shieldPrefab.transform.Scale(.3f);
             shieldPrefab.AddComponent(new StaminaPotion());
-            shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            shieldPrefab.AddComponent(new StaticRigidBody(physics));
+            //shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             shieldPrefab.transform.SetStatic();
             AddPrefab(shieldPrefab);
 
@@ -97,7 +109,8 @@ namespace BRS {
             GameObject speedPrefab = new GameObject("speedPrefab", File.Load<Model>("Models/powerups/speed"));
             speedPrefab.transform.Scale(.3f);
             speedPrefab.AddComponent(new SpeedBoost());
-            speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            speedPrefab.AddComponent(new StaticRigidBody(physics));
+            //speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             speedPrefab.transform.SetStatic();
             AddPrefab(speedPrefab);
 
@@ -105,7 +118,8 @@ namespace BRS {
             GameObject trapPrefab = new GameObject("trapPrefab", File.Load<Model>("Models/powerups/trap"));
             trapPrefab.transform.Scale(.3f);
             trapPrefab.AddComponent(new Trap());
-            trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            trapPrefab.AddComponent(new StaticRigidBody(physics));
+            //trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             trapPrefab.transform.SetStatic();
             AddPrefab(trapPrefab);
 
@@ -117,7 +131,8 @@ namespace BRS {
             oilPrefab.transform.Scale(.6f);
             oilPrefab.transform.SetStatic();
             oilPrefab.AddComponent(new OilTrap());
-            oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
+            oilPrefab.AddComponent(new StaticRigidBody(physics));
+            //oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
             AddPrefab(oilPrefab);
 
             //speed boost
@@ -125,7 +140,8 @@ namespace BRS {
             speedpadPrefab.transform.Scale(1f);
             speedpadPrefab.transform.SetStatic();
             speedpadPrefab.AddComponent(new SpeedPad());
-            speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
+            speedpadPrefab.AddComponent(new StaticRigidBody(physics));
+            //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
             AddPrefab(speedpadPrefab);
 
 

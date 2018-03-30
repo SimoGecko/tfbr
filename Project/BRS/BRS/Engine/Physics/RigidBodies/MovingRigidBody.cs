@@ -39,8 +39,9 @@ namespace BRS.Scripts.Physics {
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
-                Tag = BodyTag.DontDrawMe,
-                Mass = 20.0f
+                Tag = BodyTag.DrawMe,
+                Mass = 20.0f,
+                GameObject = gameObject
             };
 
             if (Material != null) {
@@ -57,6 +58,8 @@ namespace BRS.Scripts.Physics {
             // Apply position and rotation from physics-world to the game-object
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
             transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
+           
+            //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
 
             base.Update();
         }

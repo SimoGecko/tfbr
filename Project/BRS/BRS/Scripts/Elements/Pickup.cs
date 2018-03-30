@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -32,9 +33,9 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && canPickup) {
-                DoPickup(c.gameObject.GetComponent<Player>());
+                DoPickup(c.GameObject.GetComponent<Player>());
                 OnPickup?.Invoke();
             }
             //GameObject.Destroy(gameObject);

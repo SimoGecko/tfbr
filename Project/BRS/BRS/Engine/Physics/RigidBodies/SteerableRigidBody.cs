@@ -1,9 +1,11 @@
-﻿using Jitter.Collision.Shapes;
+﻿using BRS.Engine.Physics;
+using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
 namespace BRS.Scripts.Physics {
-    class SteerableRigidBody : RigidBody {
+    class SteerableRigidBody : Collider {
+        public float RotationY { get; set; }
         public SteerableRigidBody(Shape shape) : base(shape) {
         }
 
@@ -20,6 +22,7 @@ namespace BRS.Scripts.Physics {
                 Position = new JVector(Position.X, height * .5f, Position.Z);
                 LinearVelocity = new JVector(LinearVelocity.X, 0, LinearVelocity.Z);
             }
+            //Debug.Log(Orientation, "SteerableBody - Pre:\n");
 
             base.PreStep(timestep);
         }
@@ -30,7 +33,9 @@ namespace BRS.Scripts.Physics {
             if (true || Position.Y - height * .5f < 0.0f) {
                 Position = new JVector(Position.X, height * .5f, Position.Z);
                 LinearVelocity = new JVector(LinearVelocity.X, 0, LinearVelocity.Z);
+                Orientation = JMatrix.CreateRotationY(RotationY);
             }
+            //Debug.Log(Orientation, "SteerableBody - Post:\n");
 
             base.PostStep(timestep);
         }

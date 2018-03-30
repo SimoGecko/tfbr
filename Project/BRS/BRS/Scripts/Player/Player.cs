@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -16,7 +17,7 @@ namespace BRS.Scripts {
         ////////// it manages the state, team, calls relative functions with input BUT NOTHING ELSE //////////
 
         // --------------------- VARIABLES ---------------------
-        enum State { normal, attack, stun, dead};
+        enum State { normal, attack, stun, dead };
 
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
@@ -33,19 +34,18 @@ namespace BRS.Scripts {
         //reference
 
         //subcomponents
-        PlayerAttack    pA;
-        PlayerMovement  pM;
+        PlayerAttack pA;
+        PlayerMovement pM;
         PlayerInventory pI;
-        PlayerPowerup   pP;
-        PlayerStamina   pS;
-        PlayerLift      pL;
+        PlayerPowerup pP;
+        PlayerStamina pS;
+        PlayerLift pL;
 
         CameraController camController;
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string _name = "Player")
-        {
+        public Player(int playerIndex, int teamIndex, string _name = "Player") {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             playerName = _name + (playerIndex + 1).ToString();
@@ -76,10 +76,10 @@ namespace BRS.Scripts {
                 pM.boosting = boosting;
                 if (boosting) pS.UseStaminaForBoost();
 
-                Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
+                Vector2 moveInput = MoveInput().Rotate(camController.YRotation);
                 pM.Move(moveInput.To3());
 
-                if (PowerupInput())  pP.UsePowerup(this);
+                if (PowerupInput()) pP.UsePowerup(this);
                 if (DropCashInput()) pI.DropMoney();
 
                 if (AttackInput() && pS.HasStaminaForAttack()) {
@@ -93,8 +93,16 @@ namespace BRS.Scripts {
                     pL.Lift();
                 }
 
-            }
-            else if (state == State.attack) {
+                if (Input.GetKeyDown(Keys.V)) {
+                    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
+
+                    string tmp = "Contained: ";
+                    foreach (Collider collider in test) {
+                        tmp += collider.GameObject.tag + ",";
+                    }
+                    Debug.Log(tmp);
+                }
+            } else if (state == State.attack) {
                 pA.AttackCoroutine();
                 if (pA.AttackEnded) state = State.normal;
             }

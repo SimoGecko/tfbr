@@ -98,7 +98,7 @@ namespace BRS.Engine.Physics.Vehicle {
             else steer = 0.0f;
 
             carBody.SetInput(accelerate, steer);
-            Debug.Log(carBody.Position);
+            //Debug.Log(carBody.Position);
             base.Update(gameTime);
         }
 
@@ -166,8 +166,8 @@ namespace BRS.Engine.Physics.Vehicle {
         protected override void LoadContent() {
             //chassisModel = this.Game.Content.Load<Model>("forklift_chassis");
             //tireModel = this.Game.Content.Load<Model>("forklift_wheel");
-            chassisModel = File.Load<Model>("Models/vehicles/car");
-            tireModel = File.Load<Model>("Models/vehicles/wheel");
+            chassisModel = File.Load<Model>("Models/vehicles/forklift_chassis");
+            tireModel = File.Load<Model>("Models/vehicles/forklift_wheel");
 
             base.LoadContent();
         }

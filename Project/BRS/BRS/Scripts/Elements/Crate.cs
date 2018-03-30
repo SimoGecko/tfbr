@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -34,8 +35,8 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if(c.gameObject.tag == ObjectTag.Player) {
-                PlayerAttack pa = c.gameObject.GetComponent<PlayerAttack>();
+            if(c.GameObject.tag == ObjectTag.Player) {
+                PlayerAttack pa = c.GameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
                     CrackCrate();
             }

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 using System.IO;
+using Jitter.LinearMath;
 
 namespace BRS {
     static class Utility {
@@ -63,7 +64,7 @@ namespace BRS {
 
         public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) { // TODO fix wrt currentvelocity
             //takes in degrees
-            if(Math.Abs(current - target) > 180) {
+            if (Math.Abs(current - target) > 180) {
                 if (target < current) target += 360;
                 else target -= 360;
             }
@@ -73,14 +74,14 @@ namespace BRS {
         }
 
         public static Vector3 SmoothDamp(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float smoothTime) {
-            return new Vector3( SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
+            return new Vector3(SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
                                 SmoothDamp(current.Y, target.Y, ref currentVelocity.Y, smoothTime),
                                 SmoothDamp(current.Z, target.Z, ref currentVelocity.Z, smoothTime));
         }
 
         public static float WrapAngle(float angle) {//in degrees, return angle in range -180, 180
             if (angle < -180) while (angle < -180) angle += 360;
-            if (angle >  180) while (angle >  180) angle -= 360;
+            if (angle > 180) while (angle > 180) angle -= 360;
             return angle;
         }
 
@@ -93,12 +94,12 @@ namespace BRS {
 
 
         public static float InverseCDF(float x, float a) {
-            return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
+            return (x - (float)Math.Sqrt(-4 * a * x + 4 + a + x * x)) / (2 * (x - 1));
         }
 
-       public static string EvaluateDistribution(Dictionary<string, float> distrib) {
+        public static string EvaluateDistribution(Dictionary<string, float> distrib) {
             float val = MyRandom.Value;
-            foreach(var entry in distrib) {
+            foreach (var entry in distrib) {
                 if (val <= entry.Value) return entry.Key;
                 val -= entry.Value;
             }
@@ -182,11 +183,11 @@ namespace BRS {
         public static float ArcTanAngle(float X, float Y) {
             if (X == 0) {
                 if (Y == 1) return (float)MathHelper.PiOver2;
-                else        return (float)-MathHelper.PiOver2;
+                else return (float)-MathHelper.PiOver2;
             } else if (X > 0) return (float)Math.Atan(Y / X);
             else if (X < 0) {
                 if (Y > 0) return (float)Math.Atan(Y / X) + MathHelper.Pi;
-                else       return (float)Math.Atan(Y / X) - MathHelper.Pi;
+                else return (float)Math.Atan(Y / X) - MathHelper.Pi;
             } else return 0;
         }
 
@@ -227,7 +228,7 @@ namespace BRS {
 
 
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat =null) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat = null) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
                     if (mat == null) {
@@ -300,7 +301,7 @@ namespace BRS {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
         }
         public static Vector2 GetCenter(this Rectangle rect) {
-            return new Vector2(rect.X + .5f*rect.Width, rect.Y + .5f*rect.Height);
+            return new Vector2(rect.X + .5f * rect.Width, rect.Y + .5f * rect.Height);
         }
 
         public static Vector2 Round(this Vector2 v) { // Makes it Point2
@@ -313,7 +314,7 @@ namespace BRS {
         public static float Angle(this Vector3 a, Vector3 b) {
             //returns angle in degree between a and b
             float cos = Vector3.Dot(a.normalized(), b.normalized());
-            return MathHelper.ToDegrees((float) Math.Acos(cos));
+            return MathHelper.ToDegrees((float)Math.Acos(cos));
         }
 
     }
@@ -331,7 +332,7 @@ namespace BRS {
             return min + rand.Next(max - min);
         }
         public static float Range(float min, float max) { // random float in [min, max[
-            return (float)(min + rand.NextDouble()*(max - min));
+            return (float)(min + rand.NextDouble() * (max - min));
         }
 
         public static Vector2 InsideRectangle(Rectangle rect) {
@@ -339,7 +340,7 @@ namespace BRS {
         }
 
         public static Vector2 insideUnitSquare() {
-            return new Vector2(Value*2-1, Value * 2 - 1);
+            return new Vector2(Value * 2 - 1, Value * 2 - 1);
         }
         public static Vector3 insideUnitCube() {
             return new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
@@ -351,12 +352,12 @@ namespace BRS {
             return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
         }
         public static Vector3 insideUnitSphere() {
-            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
-            while(sample.LengthSquared()>1)
-                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            Vector3 sample = new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
+            while (sample.LengthSquared() > 1)
+                sample = new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
             return sample;
         }
-        
+
 
         public static Quaternion YRotation() {
             return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
@@ -373,9 +374,25 @@ namespace BRS {
             System.Diagnostics.Debug.WriteLine(o.ToString());
         }
 
+        public static void Log(JMatrix m, string info = "") {
+            string text = String.Format(
+                "{9}{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
+                m.M11, m.M12, m.M13,
+                m.M21, m.M22, m.M23,
+                m.M31, m.M32, m.M33,
+                info
+            );
+            Log(text);
+        }
+
+        public static void Log(JVector v, string info = "") {
+            string text = String.Format("{3}{0:0.00} {1:0.00} {2:0.00}", v.X, v.Y, v.Z, info);
+            Log(text);
+        }
+
         public static void LogError(string s) {
             //Console.WriteLine("//ERROR//: "+s);
-            System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);
+            System.Diagnostics.Debug.WriteLine("//ERROR//: " + s);
         }
 
         public static void Assert(bool b, string s) {
@@ -389,13 +406,13 @@ namespace BRS {
             return (float)(Math.Tanh((t - 0.5f) * 5.2f) + 1) / 2;
         }
         public static float EvaluateSqrt(float t) {
-            return (float)Math.Sqrt(t*1.5f);
+            return (float)Math.Sqrt(t * 1.5f);
         }
         public static float EvaluatePingPong(float t) {
             return (-t * t + t) * 4;
         }
         public static float EvaluateUp(float t) {
-            return t*t;
+            return t * t;
         }
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
@@ -404,6 +421,6 @@ namespace BRS {
         //see notes on notebook for shape
         public static float EvaluateA(float t) { return t * t; }
         public static float EvaluateB(float t) { return (float)Math.Sqrt(t); }
-        public static float EvaluateC(float t) { return (float)Math.Sin((t-.5f)*Math.PI)/2+.5f; }
+        public static float EvaluateC(float t) { return (float)Math.Sin((t - .5f) * Math.PI) / 2 + .5f; }
     }
 }

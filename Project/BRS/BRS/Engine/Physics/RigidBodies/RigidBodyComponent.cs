@@ -26,14 +26,18 @@ namespace BRS.Scripts.Physics {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
+            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
+                bbSize.Y * gameObject.transform.scale.Y,
+                bbSize.Z * gameObject.transform.scale.Z);
             CollisionShape = new BoxShape(bbSize);
 
-            RigidBody = new RigidBody(CollisionShape) {
+            RigidBody = new Collider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
-                Tag = Tag
+                Tag = Tag,
+                GameObject = gameObject
             };
 
             if (Material != null) {

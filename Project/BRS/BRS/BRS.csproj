@@ -116,6 +116,7 @@
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
+    <Compile Include="Engine\Physics\Collider.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
@@ -148,10 +149,10 @@
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
-    <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
-    <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
-    <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
-    <Compile Include="Scripts\Physics\SteerableRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\DynamicRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\MovingRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\StaticRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\SteerableRigidBody.cs" />
     <Compile Include="Scripts\Player\CameraController.cs" />
     <Compile Include="Scripts\UI\BaseUI.cs" />
     <Compile Include="Scripts\UI\CircleBar.cs" />
@@ -163,7 +164,7 @@
     <Compile Include="Scripts\UI\GameUI.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
     <Compile Include="Scripts\Elements\Money.cs" />
-    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\Player\Player.cs" />
     <Compile Include="Scripts\Player\PlayerLift.cs" />
