@@ -82,16 +82,17 @@ namespace BRS.Scripts {
             speedboost *= slowdown ? slowdownMalus : 1f;
 
             //// move
-            //transform.eulerAngles = new Vector3(0, rotation, 0);
+            transform.eulerAngles = new Vector3(0, rotation, 0);
             //transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             //move forward
             //compute final speed
-            //if (speedPad) { // override and force to move at max speed
-            //    transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
-            //} else {
-            //    transform.Translate(Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude * Time.deltaTime);
-            //}
+            if (speedPad) { // override and force to move at max speed
+                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
+            } else {
+                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude * Time.deltaTime);
+            }
+            return;
 
 
             // Apply forces/changes to physics

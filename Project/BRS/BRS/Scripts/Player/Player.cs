@@ -131,7 +131,7 @@ namespace BRS.Scripts {
         protected override void Respawn() {
             base.Respawn();
             state = State.normal;
-            transform.position = new Vector3(-5 + 10 * PlayerIndex, 2, 0); // store base position
+            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
         }
 
         void UpdateUI() {
