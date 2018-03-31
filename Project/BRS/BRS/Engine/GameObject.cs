@@ -21,6 +21,7 @@ namespace BRS {
         public string name { private set; get; }
         //public string myTag = ""; // Make this tag and enum
         public ObjectTag tag { set; get; } = ObjectTag.Default;
+        public EffectMaterial mat = null;
 
 
         static int InstanceCount = 0;
@@ -62,7 +63,7 @@ namespace BRS {
 
         public virtual void Draw(Camera cam) {
             if (Model != null && active) {
-                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World);
+                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
             }
         }
 

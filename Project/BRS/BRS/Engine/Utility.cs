@@ -227,12 +227,24 @@ namespace BRS {
 
 
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat =null) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    //NOTE: lighting staff must be put here
+                    if (mat == null) {
+                        //default settings
+                        //effect.EnableDefaultLighting();
+                    } else {
+                        effect.EnableDefaultLighting();
+                        //effect.LightingEnabled = mat.lit;
+                        //effect.DiffuseColor = mat.diffuse.ToVector3();
+                        effect.Alpha = mat.diffuse.A;
+                        //effect.CurrentTechnique = EffectTechnique
+                        //effect.Texture
+                    }
+                    //effect.Alpha = .5f;
+                    //effect.di
+                    //effect.EnableDefaultLighting();
 
-                    effect.EnableDefaultLighting();
                     //effects
                     effect.World = world;
                     effect.View = view;
@@ -251,6 +263,10 @@ namespace BRS {
                     colors2D[x, y] = colors1D[x + y * texture.Width];
             return colors2D;
         }
+        /*
+        public static Vector3 ColorTo3(this Color c) {
+            return new Vector3((float)c.R/255, (float)c.G/255, (float)c.B/255);
+        }*/
 
         //==============================================================
         //EXTENSION METHODS

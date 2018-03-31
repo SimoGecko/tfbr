@@ -33,8 +33,15 @@ namespace BRS.Load {
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
 
-            
 
+            //TEST lighting
+            GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
+            monkeyScene.transform.Scale(3);
+            monkeyScene.transform.position += Vector3.Up * .1f;
+
+            GameObject monkeyScene2 = new GameObject("monkeyScene2", File.Load<Model>("Models/test/plant"));
+            monkeyScene2.transform.Scale(3);
+            monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right*2;
 
 
             //GROUND
@@ -66,6 +73,8 @@ namespace BRS.Load {
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.AddComponent(new Arrow(player.transform, null, i));
                 arrow.transform.Scale(.1f);
+                //player.mat = new EffectMaterial(true, Color.White);
+
             }
 
 

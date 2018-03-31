@@ -15,7 +15,6 @@ namespace BRS.Scripts {
         public const int roundTime = 100;
         public const int timeBeforePolice = 5;
 
-
         //private
         Timer rt;
 
