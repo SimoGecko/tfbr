@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         //public
         const float minSpeed = 5f;
         const float maxSpeed = 10f;
-        const float maxTurningRate = 360; // deg/sec
+        const float maxTurningRate = 720; // deg/sec
         const float boostSpeedMultiplier = 1.5f;
 
         const float slowdownMalus = .3f;

@@ -3,7 +3,6 @@
 
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
@@ -14,6 +13,14 @@ namespace BRS {
         static Dictionary<string, SoundEffectInstance> sounds;
         static Dictionary<string, Song> songs;
 
+        //static Transform listener = GameObject.FindGameObjectWithName("player_0").transform;
+        static Transform listenerTransf = Camera.main.transform;
+        static AudioListener listener = new AudioListener();
+
+        static AudioEmitter em = new AudioEmitter();
+
+        //-------------------------------------------------------------------------------
+
         public static void Start() {
             //sounds    = new Dictionary<string, SoundEffect>();
             sounds = new Dictionary<string, SoundEffectInstance>(); // allows to pause and stop
@@ -21,9 +28,15 @@ namespace BRS {
 
             BuildAudioLibrary();
             BuildSongLibrary();
+
+            //PlaySong("Happy Happy Game Show");
+            SetMusicVolume(.05f);
+            SetSoundVolume(1f);
         }
 
+
         public static void Update() {
+            sounds["mono/phi"].Apply3D(Listener(), em);
 
         }
 
@@ -43,22 +56,26 @@ namespace BRS {
 
 
         //MASTER SETTINGS
-        public static void SetMusicVolume(float v) {
-
+        public static void SetSoundVolume(float v) {
+            SoundEffect.MasterVolume = v;
         }
-        public static void SetSoundsVolume(float v) {
-
+        public static void SetMusicVolume(float v) {
+            MediaPlayer.Volume = v;
         }
 
 
         //EFFECTS
-        public static void Play(string name, Vector3 position) {
+        public static void Play(string name, Vector3 position, float volume = 1) {
             if (!sounds.ContainsKey(name)) { Debug.LogError("No sound " + name); return; }
 
-            AudioEmitter em = new AudioEmitter();
+            em = new AudioEmitter();
             em.Position = position;
+            em.Forward = Vector3.Forward;
+            em.Up = Vector3.Up;
 
             sounds[name].Apply3D(Listener(), em);
+            //sounds[name].Pan = -sounds[name].Pan;
+            //sounds[name].Volume = volume;
             sounds[name].Play();
         }
 
@@ -86,6 +103,10 @@ namespace BRS {
             MediaPlayer.Play(songs[name]);
         }
 
+        public static void PauseSong()  { MediaPlayer.Pause(); }
+        public static void ResumeSong() { MediaPlayer.Resume(); }
+        public static void StopSong()   { MediaPlayer.Stop(); }
+
         public static void SetSongLoop(bool b) {
             MediaPlayer.IsRepeating = b;
         }
@@ -95,14 +116,12 @@ namespace BRS {
         }
 
 
-
         //queries
         static AudioListener Listener() {
-            AudioListener result = new AudioListener();
-            result.Forward  = Camera.main.transform.Forward;
-            result.Up       = Camera.main.transform.Up;
-            result.Position = Camera.main.transform.position;
-            return result;
+            listener.Forward  = listenerTransf.Forward;
+            listener.Up       = listenerTransf.Up;
+            listener.Position = listenerTransf.position;
+            return listener;
         }
 
 
@@ -111,20 +130,21 @@ namespace BRS {
         //=============================================================================================================
         // AUDIO AND SONGS IN THE GAME
         static void BuildAudioLibrary() {
-            //extend this string array with all the sounds
-            string[] soundsString = new string[] { "phi", "boing" };
+            //extend this string array with all the sounds (use correct names)
+            string[] soundsString = new string[] { "mono/phi", "boing" };
 
             foreach(string s in soundsString) {
                 SoundEffect soundEffect = File.Load<SoundEffect>("Audio/test/" + s);
                 sounds.Add(s, soundEffect.CreateInstance());
+                //sounds[s].IsLooped = true;
             }
         }
 
         static void BuildSongLibrary() {
-            string[] songsString = new string[] { };
+            string[] songsString = new string[] { "Happy Happy Game Show" };
 
             foreach (string s in songsString) {
-                Song song = File.Load<Song>("Audio/test/" + s);
+                Song song = File.Load<Song>("Audio/songs/" + s);
                 songs.Add(s, song);
             }
         }

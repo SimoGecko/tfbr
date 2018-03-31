@@ -18,8 +18,9 @@ namespace BRS {
 
             //VALUABLES
             //cash
-            GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
-            moneyPrefab.transform.Scale(.5f);
+            //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
+            GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_05"));
+            moneyPrefab.transform.Scale(2f);
             moneyPrefab.transform.SetStatic();
             moneyPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
             moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
@@ -66,15 +67,23 @@ namespace BRS {
             capacityPrefab.transform.Scale(.3f);
             capacityPrefab.AddComponent(new CapacityBoost());
             capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            capacityPrefab.transform.SetStatic();
+            //capacityPrefab.transform.SetStatic();
             AddPrefab(capacityPrefab);
+
+            //trap
+            GameObject staminaPrefab = new GameObject("staminaPrefab", File.Load<Model>("Models/powerups/stamina"));
+            staminaPrefab.transform.Scale(.3f);
+            staminaPrefab.AddComponent(new StaminaPotion());
+            staminaPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            //staminaPrefab.transform.SetStatic();
+            AddPrefab(staminaPrefab);
 
             //key
             GameObject keyPrefab = new GameObject("keyPrefab", File.Load<Model>("Models/powerups/key"));
             keyPrefab.transform.Scale(.3f);
             keyPrefab.AddComponent(new Key());
             keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            keyPrefab.transform.SetStatic();
+            //keyPrefab.transform.SetStatic();
             AddPrefab(keyPrefab);
 
             //health
@@ -82,7 +91,7 @@ namespace BRS {
             healthPrefab.transform.Scale(.3f);
             healthPrefab.AddComponent(new HealthPotion());
             healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            healthPrefab.transform.SetStatic();
+            //healthPrefab.transform.SetStatic();
             AddPrefab(healthPrefab);
 
             //shield
@@ -90,7 +99,7 @@ namespace BRS {
             shieldPrefab.transform.Scale(.3f);
             shieldPrefab.AddComponent(new StaminaPotion());
             shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            shieldPrefab.transform.SetStatic();
+            //shieldPrefab.transform.SetStatic();
             AddPrefab(shieldPrefab);
 
             //speed
@@ -98,7 +107,7 @@ namespace BRS {
             speedPrefab.transform.Scale(.3f);
             speedPrefab.AddComponent(new SpeedBoost());
             speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            speedPrefab.transform.SetStatic();
+            //speedPrefab.transform.SetStatic();
             AddPrefab(speedPrefab);
 
             //trap
@@ -106,7 +115,7 @@ namespace BRS {
             trapPrefab.transform.Scale(.3f);
             trapPrefab.AddComponent(new Trap());
             trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            trapPrefab.transform.SetStatic();
+            //trapPrefab.transform.SetStatic();
             AddPrefab(trapPrefab);
 
 

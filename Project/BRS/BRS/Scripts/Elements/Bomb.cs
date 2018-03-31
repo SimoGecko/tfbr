@@ -26,7 +26,7 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             destroyOnUse = false;
-            powerupName = "bomb";
+            powerupType = PowerupType.bomb;
         }
 
         public override void Update() {

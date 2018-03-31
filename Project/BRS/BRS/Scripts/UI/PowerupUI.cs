@@ -12,16 +12,18 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        string[] pngNames = { "bomb", "key", "capacity", "speed", "health", "shield", "trap" };
+        //string[] pngNames = { "bomb", "key", "capacity", "speed", "health", "shield", "trap" };
 
 
         //private
-        Dictionary<string, int> powerupStringToIndex = new Dictionary<string, int>();
-        Texture2D[] powerupsPng = new Texture2D[7];
+        //Dictionary<string, int> powerupStringToIndex = new Dictionary<string, int>();
+        int numPowerups = System.Enum.GetValues(typeof(PowerupType)).Length;
+        Texture2D[] powerupsPng;// = new Texture2D[numPowerups];
         Texture2D slot;
 
-        //reference
         PowerupUIStruct[] powerupUI;
+
+        //reference
         public static PowerupUI instance;
 
 
@@ -29,12 +31,13 @@ namespace BRS.Scripts {
         public override void Start() {
             instance = this;
             powerupUI = new PowerupUIStruct[GameManager.numPlayers];
-            for (int i = 0; i < GameManager.numPlayers; i++) powerupUI[i].currentPowerup = new List<string>();
+            for (int i = 0; i < GameManager.numPlayers; i++) powerupUI[i].currentPowerups = new int[0];
 
-            for (int i = 0; i < pngNames.Length; ++i) {
-                powerupsPng[i] = File.Load<Texture2D>("Images/powerup/" + pngNames[i] + "_pic");
-                if (!powerupStringToIndex.ContainsKey(pngNames[i]))
-                     powerupStringToIndex.Add(pngNames[i], i);
+            //load pngs
+            powerupsPng = new Texture2D[numPowerups];
+            for (int i = 0; i < numPowerups; ++i) {
+                powerupsPng[i] = File.Load<Texture2D>("Images/powerup/" + ((PowerupType)i).ToString() + "_pic");
+                //if (!powerupStringToIndex.ContainsKey(pngNames[i])) powerupStringToIndex.Add(pngNames[i], i);
             }
             slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
         }
@@ -56,16 +59,16 @@ namespace BRS.Scripts {
 
             UserInterface.instance.DrawPicture(destRect, slot);
 
-            if (powerupUI[index].currentPowerup.Count>0) {
-                foreach (string name in powerupUI[index].currentPowerup) {
-                    UserInterface.instance.DrawPicture(destRect, powerupsPng[powerupStringToIndex[name]]);
+            if (powerupUI[index].currentPowerups.Length>0) { // it's going to draw just one
+                foreach (int powerup in powerupUI[index].currentPowerups) {
+                    UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
                 }
             }
         }
 
-        public void UpdatePlayerPowerupUI(int index, string name, bool add) {
-            if (add) powerupUI[index].currentPowerup.Add(name);
-            else     powerupUI[index].currentPowerup.Remove(name);
+        public void UpdatePlayerPowerupUI(int index, int[] powerupList) {
+            powerupUI[index].currentPowerups = powerupList;//.Add(name);
+            //else     powerupUI[index].currentPowerup.Remove(name);
         }
 
 
@@ -79,7 +82,7 @@ namespace BRS.Scripts {
     }
     public struct PowerupUIStruct {
         //power ups
-        public List<string> currentPowerup;
+        public int[] currentPowerups;
 
     }
 }

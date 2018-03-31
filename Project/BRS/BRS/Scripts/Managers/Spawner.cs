@@ -21,17 +21,17 @@ namespace BRS.Scripts {
         const int moneyAmount = 50;
         const int vaultGold = 20;
         const int crateAmount = 10;
-        const int powerupAmount = 30;
+        const int powerupAmount = 5;
 
-        const float timeBetweenCashSpawn = 1f;
-        const float timeBetweenCrateSpawn = 5f;
-        const float timeBetweenPowerupSpawn = 10f;
+        const float timeBetweenCashSpawn = 10f;
+        const float timeBetweenCrateSpawn = 30f;
+        const float timeBetweenPowerupSpawn = 30;
 
         const float timeRandomizer = .2f;
 
-        //prob distributions
-        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .3f }, { "gold", .1f } };
-        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .2f }, { "capacity", .1f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f }, { "trap", .2f } };
+        //prob distributions (no need to sum up to 1)
+        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .2f }, { "gold", .1f } };
+        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f }, { "trap", .1f } };
         
 
 
@@ -53,6 +53,7 @@ namespace BRS.Scripts {
             SpawnInitialCrates();
             SpawnInitialPowerup();
 
+            
             SpawnCashContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
@@ -119,6 +120,7 @@ namespace BRS.Scripts {
         void SpawnInitialPowerup() {
             for (int i = 0; i < powerupAmount; i++)
                 SpawnOnePowerupRandom();
+                //SpawnOnePowerupAt(new Vector3(i * 3, 0, -10));
         }
 
         void SpawnOnePowerupRandom() {

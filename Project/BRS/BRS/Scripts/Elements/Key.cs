@@ -23,7 +23,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            powerupName = "key";
+            powerupType = PowerupType.key;
         }
 
         public override void Update() {

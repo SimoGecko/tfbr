@@ -60,7 +60,7 @@ namespace BRS.Load {
                 player.tag = ObjectTag.Player;
                 player.AddComponent(new Player(i, i%2));
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
+                player.AddComponent(new SphereCollider(Vector3.Zero, .7f, false));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());

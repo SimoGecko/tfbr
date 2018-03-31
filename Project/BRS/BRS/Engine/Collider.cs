@@ -39,7 +39,8 @@ namespace BRS {
         public abstract bool Intersects(Collider other);
         public abstract float Radius { get; set; }
 
-        public bool isStatic { get { return transform.isStatic; } }
+        //public bool isStatic { get { return transform.isStatic; } }
+        public bool isStatic = true;
 
         protected Transform Transf { get { if (gameObject != null) return gameObject.transform; else return Transform.Identity; } }
         // other
@@ -54,13 +55,15 @@ namespace BRS {
         float radius_cashed;
 
         //CONSTRUCTORS
-        public BoxCollider(GameObject o) {
+        public BoxCollider(GameObject o, bool _static = true) {
             //TODO compute more accurately (using mesh)
             box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
+            isStatic = _static;
         }
 
-        public BoxCollider(Vector3 center, Vector3 size) {
+        public BoxCollider(Vector3 center, Vector3 size, bool _static = true) {
             box = new BoundingBox(center - size / 2, center + size / 2);
+            isStatic = _static;
         }
 
         //queries
@@ -99,16 +102,18 @@ namespace BRS {
         //it is not called when copied (?)
 
         //CONSTRUCTOR
-        public SphereCollider(GameObject o) {
+        public SphereCollider(GameObject o, bool _static = true) {
             sphere = o.mesh.BoundingSphere;
+            isStatic = _static;
         }
 
-        public SphereCollider(Vector3 center, float _radius) {
+        public SphereCollider(Vector3 center, float _radius, bool _static = true) {
             sphere = new BoundingSphere(center, _radius);
+            isStatic = _static;
         }
 
         //QUERIES
-        
+
 
         public override bool Intersects(Ray ray, out float t) {
             t = -1;

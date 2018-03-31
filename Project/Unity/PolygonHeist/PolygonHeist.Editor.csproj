@@ -120,13 +120,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="PolygonHeist.Plugins.csproj">
-      <Project>{238C4678-93AF-8480-AC5B-9CA41296AA58}</Project>
-      <Name>PolygonHeist.Plugins</Name>
-    </ProjectReference>
     <ProjectReference Include="PolygonHeist.csproj">
       <Project>{D1CBEACA-C687-DC87-7B3D-D6FB4288EFF5}</Project>
       <Name>PolygonHeist</Name>
+    </ProjectReference>
+    <ProjectReference Include="PolygonHeist.Plugins.csproj">
+      <Project>{238C4678-93AF-8480-AC5B-9CA41296AA58}</Project>
+      <Name>PolygonHeist.Plugins</Name>
     </ProjectReference>
     <ProjectReference Include="PolygonHeist.Editor.Plugins.csproj">
       <Project>{1A6C5668-8722-BAEC-79D4-E32EF1275251}</Project>

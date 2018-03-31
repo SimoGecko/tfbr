@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts {
     class AudioTest : Component {
@@ -12,7 +13,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-
+        Vector3 position = new Vector3(5, 0, -5);
 
         //private
 
@@ -22,12 +23,13 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            GameObject sound = new GameObject("sphereaudio", File.Load<Model>("models/primitives/sphere"));
+            sound.transform.position = position;
         }
 
         public override void Update() {
             if (Input.GetKeyDown(Keys.H)) {
-                Audio.Play("phi", Vector3.Zero);
+                Audio.Play("mono/phi", position);
             }
         }
 

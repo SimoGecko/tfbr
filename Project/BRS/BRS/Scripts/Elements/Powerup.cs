@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
+
+    public enum PowerupType { bomb, key, trap, capacity, speed, health, stamina, shield };
+
     class Powerup : Pickup {
         ////////// base class for all powerups in the game //////////
 
@@ -13,14 +16,13 @@ namespace BRS.Scripts {
         //public
         const float rotSpeed = 90;
 
-
         //private
-        protected string powerupName;
+        public PowerupType powerupType;
         protected bool destroyOnUse = true;
         protected bool rotate = true;
 
         //reference
-        protected Player owner;
+        public Player owner { get; protected set; }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -31,9 +33,8 @@ namespace BRS.Scripts {
 
         public override void Update() {
             base.Update();
-
-            if(rotate)
-                transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+            //if(rotate)
+            transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
         }
 
 
@@ -45,21 +46,17 @@ namespace BRS.Scripts {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                pp.Collect(this);
                 owner = p;
+                pp.Collect(this);
 
                 Elements.instance.Remove(this);
-                PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
 
                 if(!destroyOnUse) gameObject.active = false;
                 else GameObject.Destroy(gameObject);
             }
-            
         }
 
-        public virtual void UsePowerup() {
-            PowerupUI.instance.UpdatePlayerPowerupUI(owner.PlayerIndex, powerupName, false);
-        }
+        public virtual void UsePowerup() { }
 
         // queries
         public virtual bool CanUse() {

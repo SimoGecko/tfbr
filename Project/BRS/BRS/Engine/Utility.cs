@@ -97,7 +97,10 @@ namespace BRS {
         }
 
        public static string EvaluateDistribution(Dictionary<string, float> distrib) {
-            float val = MyRandom.Value;
+            float sum = 0;
+            foreach (var entry in distrib) sum += entry.Value;
+
+            float val = MyRandom.Value*sum;
             foreach(var entry in distrib) {
                 if (val <= entry.Value) return entry.Key;
                 val -= entry.Value;
@@ -315,6 +318,7 @@ namespace BRS {
             float cos = Vector3.Dot(a.normalized(), b.normalized());
             return MathHelper.ToDegrees((float) Math.Acos(cos));
         }
+
 
     }
 

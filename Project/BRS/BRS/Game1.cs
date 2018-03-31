@@ -93,6 +93,7 @@ namespace BRS {
 
             Time.Update(gameTime);
             Input.Update();
+            Audio.Update();
 
 
             foreach (GameObject go in GameObject.All) go.Update();
@@ -128,8 +129,9 @@ namespace BRS {
 
                 //gizmos (wireframe)
                 GraphicsDevice.RasterizerState = wireRasterizer;
-                Gizmos.Draw(cam);
+                Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = fullRasterizer;
+                Gizmos.DrawFull(cam);
 
                 //splitscreen UI
                 spriteBatch.Begin();
