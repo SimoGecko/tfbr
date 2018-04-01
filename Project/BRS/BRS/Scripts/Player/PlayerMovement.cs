@@ -128,7 +128,7 @@ namespace BRS.Scripts {
                     srb.RotationY = rotation * MathHelper.Pi / 180.0f;
                 }
                 //rb.LinearVelocity = (new JVector(0, 0, 10));
-                //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
+                rb.AddForce(lv);
 
                 //Debug.Log(rb.Position);
                 //Debug.Log(rb.Orientation, "PlayerMovement:\n");
