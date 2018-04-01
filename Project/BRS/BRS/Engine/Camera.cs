@@ -58,6 +58,12 @@ namespace BRS {
             return new Ray(nearPoint, direction);
         }
 
+        public Vector2 WorldToScreenPoint(Vector3 world) {
+            Vector3 view = Vector3.Transform(world, View);
+            Vector3 result = Vector3.Transform(view, Proj);
+            return new Vector2(result.X, result.Y);
+        }
+
         public static Camera GetCamera(int i) {
             return camList[i];
         }

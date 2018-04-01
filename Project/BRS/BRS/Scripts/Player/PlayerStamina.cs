@@ -11,10 +11,10 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float staminaReloadPerSecond = .2f;
-        const float staminaPerBoost = .4f;
-        const float staminaPerAttack = .6f;
-        const float staminaReloadDelay = .3f;
+        const float staminaReloadPerSecond = .1f;
+        const float staminaPerBoost = .2f;
+        const float staminaPerAttack = .3f;
+        const float staminaReloadDelay = .2f;
 
         //private
         public float maxStamina = 1;

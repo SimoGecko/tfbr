@@ -101,12 +101,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Engine\Audio.cs" />
+    <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Collider.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
+    <Compile Include="Engine\Graphics.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="Scripts\Elements\Vault.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />
+    <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

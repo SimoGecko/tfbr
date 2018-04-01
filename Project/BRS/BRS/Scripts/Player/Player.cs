@@ -22,6 +22,7 @@ namespace BRS.Scripts {
         public int playerIndex { get; private set; } // player index - to select input and camera
         public int teamIndex { get; private set; } // to differentiate teams
         string playerName;
+        public Color playerColor;
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -41,18 +42,25 @@ namespace BRS.Scripts {
         PlayerLift      pL;
 
         CameraController camController;
-
+        Player other;
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string _name = "Player")
+        public Player(int playerIndex, int teamIndex, string _name = "Simo")
         {
             this.playerIndex = playerIndex;
             this.teamIndex = teamIndex;
             playerName = _name + (playerIndex + 1).ToString();
+            playerColor = Graphics.ColorIndex(playerIndex);
+            //TODO make mesh have this color
+            
         }
         public override void Start() {
             base.Start();
+
+            GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - playerIndex));
+            if (po != null) other = po.GetComponent<Player>();
+           
 
             camController = GameObject.FindGameObjectWithName("camera_" + playerIndex).GetComponent<CameraController>();
 
@@ -138,10 +146,15 @@ namespace BRS.Scripts {
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
+            bool playerInRange = false;
+            if (other != null) {
+                playerInRange = Vector3.DistanceSquared(transform.position, other.transform.position) <= Math.Pow(PlayerAttack.attackDistance, 2);
+            }
+            bool canAttack = pS.HasStaminaForAttack() && playerInRange;
             PlayerUI.instance.UpdatePlayerUI(playerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------

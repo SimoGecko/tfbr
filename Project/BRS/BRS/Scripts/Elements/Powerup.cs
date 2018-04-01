@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
 
-    public enum PowerupType { bomb, key, trap, capacity, speed, health, stamina, shield };
+    //public enum PowerupType { bomb, key, trap, capacity, speed, health, stamina, shield };
+    public enum PowerupType { health, capacity, speed, stamina, bomb, key, shield, trap };
 
     class Powerup : Pickup {
         ////////// base class for all powerups in the game //////////

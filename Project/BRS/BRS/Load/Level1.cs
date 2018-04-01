@@ -19,12 +19,13 @@ namespace BRS.Load {
         protected override void Build() {
             ////////// scene setup for level1 //////////
 
-            //MANAGER
+            //MANAGERS
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());
             UIManager.AddComponent(new PlayerUI());
             UIManager.AddComponent(new PowerupUI());
             UIManager.AddComponent(new GameUI());
+            UIManager.AddComponent(new Suggestions());
 
             GameObject manager = new GameObject("manager");
             manager.AddComponent(new Elements());
@@ -35,6 +36,7 @@ namespace BRS.Load {
             manager.AddComponent(new AudioTest());
 
             //TEST lighting
+            /*
             GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
             monkeyScene.transform.Scale(3);
             monkeyScene.transform.position += Vector3.Up * .1f;
@@ -42,7 +44,7 @@ namespace BRS.Load {
             GameObject monkeyScene2 = new GameObject("monkeyScene2", File.Load<Model>("Models/test/plant"));
             monkeyScene2.transform.Scale(3);
             monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right*2;
-
+            */
 
             //GROUND
             /*for (int x = 0; x < 2; x++) {
@@ -54,13 +56,14 @@ namespace BRS.Load {
             }*/
 
 
-            //PLAYER
+            //PLAYERS
             for (int i=0; i<GameManager.numPlayers; i++) {
-                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.AddComponent(new Player(i, i%2));
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-                player.AddComponent(new SphereCollider(Vector3.Zero, .7f, false));
+                player.AddComponent(new SphereCollider(Vector3.Zero, .8f, false));
+                
+                player.AddComponent(new Player(i, i%2));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
@@ -69,11 +72,19 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
 
+                Elements.instance.Add(player.GetComponent<Player>());
+
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.AddComponent(new Arrow(player.transform, null, i));
                 arrow.transform.Scale(.1f);
                 //player.mat = new EffectMaterial(true, Color.White);
+
+                
+                GameObject billboard = new GameObject("billboard_"+i, File.Load<Model>("Models/primitives/cube"));
+                billboard.AddComponent(new Billboard(player.transform));
+                //billboard.transform.SetParent(player.transform);
+                billboard.transform.Scale(.3f);
 
             }
 
@@ -101,7 +112,7 @@ namespace BRS.Load {
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             //other elements
-            GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
+            GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
 
             //LOAD UNITY SCENE
             var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
@@ -111,11 +122,12 @@ namespace BRS.Load {
             task2.Wait();
 
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            //Debug.Assert(bases.Length == 2, "there should be 2 bases");
+            Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
                 bases[i].transform.SetStatic();
+                Elements.instance.Add(bases[i].GetComponent<Base>());
             }
         }
     }

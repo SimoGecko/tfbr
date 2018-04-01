@@ -63,7 +63,7 @@ namespace BRS {
 
         public virtual void Draw(Camera cam) {
             if (Model != null && active) {
-                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
             }
         }
 

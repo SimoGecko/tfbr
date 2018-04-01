@@ -55,6 +55,7 @@ namespace BRS.Scripts {
             //callbacks
             Minimap.instance.Draw(sB);
             GameUI.instance.Draw();
+            Billboard.instance.Draw();
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) {
@@ -63,6 +64,8 @@ namespace BRS.Scripts {
             BaseUI.instance.Draw(index%2);
             PlayerUI.instance.Draw(index);
             PowerupUI.instance.Draw(index);
+            Suggestions.instance.Draw(index);
+
         }
 
 
@@ -101,12 +104,23 @@ namespace BRS.Scripts {
             sB.DrawString(bigFont, text, position, Color.White);
         }
 
+        //PICTURE
         public void DrawPicture(Rectangle destination, Texture2D pic) {
             sB.Draw(pic, destination, Color.White);
         }
         public void DrawPicture(Vector2 position, Texture2D pic, Vector2 origin, float scale) {
             sB.Draw(pic, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1);
         }
+
+        public void DrawPicture(Rectangle destination, Texture2D pic, Rectangle source) {
+            sB.Draw(pic, destination, source, Color.White);
+        }
+        public void DrawPicture(Rectangle dest, Texture2D pic, Rectangle src, float rotation) {
+            Vector2 origin = new Vector2(src.Width / 2, src.Height / 2);
+            sB.Draw(pic, dest, src, Color.White, MathHelper.ToRadians(rotation), origin, SpriteEffects.None, 1);
+        }
+
+        //queries
 
         public int GetOffset(int index) { return index % 2 == 0 ? 0 : +680; }
 

@@ -58,6 +58,11 @@ namespace BRS.Scripts {
             //stamina
             float staminaPercent = playerUI[index].stamina / playerUI[index].maxStamina;
             UserInterface.instance.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
+            if (playerUI[index].canAttack) {
+                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
+            } else if (staminaPercent == 1) {
+                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.RT);
+            }
 
             //capacity
             float capacityPercent = (float)playerUI[index].carryingWeight / playerUI[index].maxCapacity;
@@ -69,7 +74,7 @@ namespace BRS.Scripts {
 
         }
 
-        public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name) {
+        public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack) {
             // current
             playerUI[index].carryingValue = carryingValue;
 
@@ -82,6 +87,7 @@ namespace BRS.Scripts {
             playerUI[index].maxCapacity = maxCapacity;
 
             playerUI[index].name = name;
+            playerUI[index].canAttack = canAttack;
 
         }
 
@@ -89,7 +95,7 @@ namespace BRS.Scripts {
 
         // queries
         public void DrawOldUI(int index) {
-            /*
+            
             int offset = UserInterface.instance.GetOffset(index);
 
             string playerValueString = "carrying: " + playerUI[index].carryingValue;
@@ -112,7 +118,7 @@ namespace BRS.Scripts {
             UserInterface.instance.DrawBarBig(new Vector2(10 + offset, 270), capacityPercent, Color.Blue);
             string capacityString = playerUI[index].carryingWeight + "/" + playerUI[index].maxCapacity;
             UserInterface.instance.DrawString(new Vector2(100 + offset, 260), capacityString);
-            */
+            
         }
 
 
@@ -132,5 +138,8 @@ namespace BRS.Scripts {
         public float maxHealth;
         public float maxStamina;
         public int maxCapacity;
+
+        //helper
+        public bool canAttack;
     }
 }

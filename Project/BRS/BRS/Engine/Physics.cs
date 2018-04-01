@@ -69,7 +69,7 @@ namespace BRS {
                 if (c.isStatic) staticCollider.Add(c);
                 else dynamicCollider.Add(c);
             }
-            int D = dynamicCollider.Count;
+            int D = dynamicCollider.Count; // THIS CAUSES SLOWDOWN
             int S = staticCollider.Count;
 
             //do static-dynamic check
