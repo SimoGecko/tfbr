@@ -21,6 +21,7 @@ namespace BRS.Scripts {
 
         //private
         SpriteFont smallFont;
+        SpriteFont comicFont;
         SpriteFont bigFont;
         Texture2D bar;
         Texture2D barBig;
@@ -28,7 +29,7 @@ namespace BRS.Scripts {
         public const int BARBIGWIDTH = 256;
         public const int BARHEIGHT = 16;
 
-        Rectangle barRect, bigRect;
+        Rectangle barRect, bigRect, smallRect;
 
         //reference
         public static UserInterface instance;
@@ -40,12 +41,14 @@ namespace BRS.Scripts {
         public void Start() {
             instance = this;
             smallFont = File.Load<SpriteFont>("Other/font/font1");
+            comicFont = File.Load<SpriteFont>("Other/font/comicFont");
             bigFont   = File.Load<SpriteFont>("Other/font/font2");
             bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
             barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
 
             barRect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
             bigRect = new Rectangle(0, 0, BARBIGWIDTH, BARHEIGHT);
+            smallRect = new Rectangle(0, 0, BARBIGWIDTH/4, BARHEIGHT/4);
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
         }
 
@@ -95,10 +98,19 @@ namespace BRS.Scripts {
             bigRect.Width = (int)(BARBIGWIDTH * percent);
             sB.Draw(barBig, position, bigRect, color);
         }
+        public void DrawBarSmall(Vector2 position, float percent, Color color) {
+            bigRect.Width = BARBIGWIDTH;
+            sB.Draw(barBig, position, bigRect, Color.LightGray, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
+            bigRect.Width = (int)(BARBIGWIDTH * percent);
+            sB.Draw(barBig, position, bigRect, color, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
+        }
 
 
         public void DrawString(Vector2 position, string text) {
             sB.DrawString(smallFont, text, position, Color.White);
+        }
+        public void DrawStringBlack(Vector2 position, string text) {
+            sB.DrawString(comicFont, text, position, Color.Black);
         }
         public void DrawStringBig(Vector2 position, string text) {
             sB.DrawString(bigFont, text, position, Color.White);

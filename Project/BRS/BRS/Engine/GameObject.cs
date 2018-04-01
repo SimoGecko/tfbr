@@ -118,11 +118,13 @@ namespace BRS {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
+            //TODO copy material
             return newObject;
         }
 
         public static void Destroy(GameObject o) {
             o.active = false;
+            if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
         }

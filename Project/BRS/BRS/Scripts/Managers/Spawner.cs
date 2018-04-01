@@ -30,7 +30,7 @@ namespace BRS.Scripts {
         const float timeRandomizer = .2f;
 
         //prob distributions (no need to sum up to 1)
-        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money", .6f }, { "diamond", .2f }, { "gold", .1f } };
+        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> { { "money1", .6f }, { "money3", .4f }, { "money10", .2f }, { "gold", .1f } };
         static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f }, { "trap", .1f } };
         
 
@@ -47,6 +47,10 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
+
+            for(int k=1; k<=10; k++) {
+                SpawnKCashAt(new Vector3(k*4, 0, 0), k);
+            }
             
             SpawnInitialMoney();
             SpawnInitialVaultGold();
@@ -93,6 +97,18 @@ namespace BRS.Scripts {
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
             Elements.instance.Add(newmoney.GetComponent<Money>());
+        }
+
+        void SpawnKCashAt(Vector3 position, int k) {
+            //spqwns a stack of cash
+            float radius = .5f;
+            float thickness = .1f;
+            for(int i=0; i<k; i++) {
+                int lvl = (int)Math.Log(i);
+                Vector3 pos = MyRandom.insideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
+                GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
+                Elements.instance.Add(newmoney.GetComponent<Money>());
+            }
         }
 
         void SpawnInitialVaultGold() {

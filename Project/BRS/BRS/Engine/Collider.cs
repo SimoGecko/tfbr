@@ -20,7 +20,8 @@ namespace BRS {
         // --------------------- BASE METHODS ------------------
         
         public override void Start() {
-            allcolliders.Add(this); //TODO implement when destroyed to be removed from here
+            if(!allcolliders.Contains(this))
+                allcolliders.Add(this);
         }
 
         public override void Update() {
@@ -59,11 +60,13 @@ namespace BRS {
             //TODO compute more accurately (using mesh)
             box = new BoundingBox(-o.transform.scale / 2, o.transform.scale / 2);
             isStatic = _static;
+            //allcolliders.Add(this);
         }
 
         public BoxCollider(Vector3 center, Vector3 size, bool _static = true) {
             box = new BoundingBox(center - size / 2, center + size / 2);
             isStatic = _static;
+            //allcolliders.Add(this);
         }
 
         //queries
@@ -105,11 +108,13 @@ namespace BRS {
         public SphereCollider(GameObject o, bool _static = true) {
             sphere = o.mesh.BoundingSphere;
             isStatic = _static;
+            //allcolliders.Add(this);
         }
 
         public SphereCollider(Vector3 center, float _radius, bool _static = true) {
             sphere = new BoundingSphere(center, _radius);
             isStatic = _static;
+            //allcolliders.Add(this);
         }
 
         //QUERIES

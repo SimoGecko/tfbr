@@ -11,7 +11,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float crackSpawnRadius = 1f;
+        const float crackSpawnRadius = 2f;
 
         const int minNumCoins = 1;
         const int maxNumCoins = 8;

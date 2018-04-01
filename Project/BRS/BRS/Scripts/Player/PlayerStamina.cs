@@ -12,7 +12,7 @@ namespace BRS.Scripts {
 
         //public
         const float staminaReloadPerSecond = .1f;
-        const float staminaPerBoost = .2f;
+        const float staminaPerBoost = .3f;
         const float staminaPerAttack = .3f;
         const float staminaReloadDelay = .2f;
 

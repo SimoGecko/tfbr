@@ -19,26 +19,32 @@ namespace BRS {
             //VALUABLES
             //cash
             //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
-            GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_05"));
-            moneyPrefab.transform.Scale(2f);
-            moneyPrefab.transform.SetStatic();
-            moneyPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
-            moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(moneyPrefab);
+            string[] models = new string[] { "SM_Prop_Money_Note_07", "../polygonheist2/SM_Prop_Money_Stack_04", "SM_Prop_Money_Stack_03" };
+            int[] values = new int[] { 1, 3, 10 };
+            for (int i=0; i<3; i++) {
+                GameObject moneyPrefab = new GameObject("money"+values[i]+"Prefab", File.Load<Model>("Models/polygonheist/" + models[i]));
+                moneyPrefab.transform.Scale(2f);
+                moneyPrefab.transform.SetStatic();
+                moneyPrefab.AddComponent(new Money(100*values[i], values[i], Money.Type.Cash));
+                moneyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+                AddPrefab(moneyPrefab);
+            }
+            
 
             //diamond
+            /*
             GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/valuables/diamond"));
             diamondPrefab.transform.Scale(1f);
             diamondPrefab.transform.SetStatic();
             diamondPrefab.AddComponent(new Money(300, 2, Money.Type.Diamond));
             diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(diamondPrefab);
+            AddPrefab(diamondPrefab);*/
 
             //gold
-            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/valuables/gold"));
-            goldPrefab.transform.Scale(.5f);
+            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
+            goldPrefab.transform.Scale(2f);
             goldPrefab.transform.SetStatic();
-            goldPrefab.AddComponent(new Money(1000, 3, Money.Type.Gold));
+            goldPrefab.AddComponent(new Money(3000, 3, Money.Type.Gold));
             goldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(goldPrefab);
 

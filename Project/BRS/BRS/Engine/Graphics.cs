@@ -13,10 +13,17 @@ namespace BRS {
 
         //public
         //some default colors (same as microsoft)
+        /*
         public static Color red    = new Color(246, 83, 20);
         public static Color green  = new Color(124, 187, 0);
         public static Color blue   = new Color(0, 161, 241);
         public static Color yellow = new Color(255, 187, 0);
+        */
+        //some default colors (same as google)
+        public static Color red    = new Color(234, 67, 53);
+        public static Color green  = new Color(52, 168, 83);
+        public static Color blue   = new Color(66, 133, 244);
+        public static Color yellow = new Color(251, 188, 5);
 
 
         //private

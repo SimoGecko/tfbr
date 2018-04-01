@@ -31,7 +31,6 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            Debug.Log(7 / 4);
             instance = this;
             powerupUI = new PowerupUIStruct[GameManager.numPlayers];
             for (int i = 0; i < GameManager.numPlayers; i++) powerupUI[i].currentPowerups = new int[0];
@@ -50,7 +49,6 @@ namespace BRS.Scripts {
                 int row = i/4;
                 powerupsRectangle[i] = new Rectangle(column*atlasWidth, row*atlasWidth, atlasWidth, atlasWidth);
             }
-
 
             slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
         }

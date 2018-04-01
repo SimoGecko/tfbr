@@ -18,7 +18,7 @@ namespace BRS.Load {
 
         protected override void Build() {
             ////////// scene setup for level1 //////////
-
+            Debug.Log("BUILD SCENE!!");
             //MANAGERS
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());
@@ -76,18 +76,15 @@ namespace BRS.Load {
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player.transform, null, i));
+                arrow.AddComponent(new Arrow(player, null, i));
                 arrow.transform.Scale(.1f);
                 //player.mat = new EffectMaterial(true, Color.White);
-
-                
-                GameObject billboard = new GameObject("billboard_"+i, File.Load<Model>("Models/primitives/cube"));
-                billboard.AddComponent(new Billboard(player.transform));
-                //billboard.transform.SetParent(player.transform);
-                billboard.transform.Scale(.3f);
-
             }
 
+            GameObject billboard = new GameObject("billboard", File.Load<Model>("Models/primitives/cube"));
+            billboard.AddComponent(new Billboard(Elements.instance.Player(1).transform));
+            //billboard.transform.SetParent(player.transform);
+            billboard.transform.Scale(.3f);
 
 
             //BASE // TODO have this code make the base

@@ -46,9 +46,9 @@ namespace BRS.Scripts {
 
         // commands
         public void Draw() {
-            Vector2 position = Camera.main.WorldToScreenPoint(transform.position);
+            //Vector2 position = Camera.main.WorldToScreenPoint(transform.position);
             //Debug.Log("pos=" + position);
-            UserInterface.instance.DrawString(position, "OOO");
+            //UserInterface.instance.DrawString(position, "OOO");
         }
 
 

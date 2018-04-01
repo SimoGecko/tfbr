@@ -94,6 +94,8 @@ namespace BRS.Scripts {
             if (i < 0 || i >= baseList.Count) { Debug.LogError("Base index out of range"); return null; }
             return baseList[i];
         }
+        public Player[] Players() { return playerList.ToArray(); }
+        public Base[] Bases()     { return baseList.ToArray(); }
 
 
         // other

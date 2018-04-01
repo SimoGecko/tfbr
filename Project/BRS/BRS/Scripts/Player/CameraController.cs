@@ -19,10 +19,11 @@ namespace BRS.Scripts {
         //public
         const float smoothTime = .3f;
         static Vector2 mouseSensitivity =new Vector2(-.3f, -.3f); // set those (also with sign) into options menu
-        static Vector2 gamepadSensitivity = new Vector2(-3f, -3f);
+        static Vector2 gamepadSensitivity = new Vector2(-2f, -2f);
         static Vector3 offset = new Vector3(0, 10, 10);
-        static Vector3 angles = new Vector3(-40, 0, 0);
-        static Vector2 angleRange = new Vector2(-10, 10); // -40, 40
+        static Vector3 angles = new Vector3(-45, 0, 0);
+        const int angleVariation = 40;
+        static Vector2 angleRange = new Vector2(-angleVariation, angleVariation); // -40, 40
 
         const float shakeAmount = .3f;
 

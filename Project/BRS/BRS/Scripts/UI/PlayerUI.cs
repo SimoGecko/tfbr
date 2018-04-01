@@ -44,6 +44,7 @@ namespace BRS.Scripts {
         public void Draw(int index) {
             Vector2 position = new Vector2(130, 130);
             position += Vector2.UnitX * UserInterface.instance.GetOffset(index);
+            Vector2 screenPosition = Camera.main.WorldToScreenPoint(Elements.instance.Player(index).transform.position);
 
             UserInterface.instance.DrawPicture(position, forkliftIcon, forkliftIcon.Bounds.GetCenter(), .5f);
 
@@ -54,10 +55,14 @@ namespace BRS.Scripts {
             //health
             float healthPercent = playerUI[index].health / playerUI[index].maxHealth;
             UserInterface.instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Green);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -60), healthPercent, Color.Green);
 
             //stamina
             float staminaPercent = playerUI[index].stamina / playerUI[index].maxStamina;
             UserInterface.instance.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -55), staminaPercent, Color.Red);
+
+            //stamina button suggestions
             if (playerUI[index].canAttack) {
                 Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
             } else if (staminaPercent == 1) {

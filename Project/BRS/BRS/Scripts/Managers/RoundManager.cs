@@ -12,14 +12,13 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 200;
-        public const int timeBeforePolice = 5;
+        public const int roundTime = 300;
+        public const int timeBeforePolice = 10;
 
         //private
         Timer rt;
 
         //reference
-        Base[] bases;
         public static RoundManager instance;
 
 
@@ -44,7 +43,7 @@ namespace BRS.Scripts {
 
         // commands
         void OnRoundEnd() {
-            FindBases();
+            //FindBases();
             NotifyBases();
             Debug.Log("notified bases");
             int winner = FindWinner();
@@ -52,6 +51,7 @@ namespace BRS.Scripts {
             GameManager.instance.OnRoundEnd(winner);
         }
 
+        /*
         void FindBases() {
             //find bases
             GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
@@ -62,15 +62,17 @@ namespace BRS.Scripts {
                 for (int i = 0; i < bases.Length; i++)
                     bases[i] = basesObject[i].GetComponent<Base>();
             }
-        }
+        }*/
 
         void NotifyBases() {
-            for (int i = 0; i < bases.Length; i++)
-                bases[i].NotifyRoundEnd();
+            //for (int i = 0; i < bases.Length; i++)
+            //bases[i].NotifyRoundEnd();
+            foreach (Base b in Elements.instance.Bases()) b.NotifyRoundEnd();
         }
 
         // queries
         int FindWinner() {
+            Base[] bases = Elements.instance.Bases();
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
             for (int i = 1; i < bases.Length; i++) {
