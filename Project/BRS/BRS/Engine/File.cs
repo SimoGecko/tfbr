@@ -134,6 +134,24 @@ namespace BRS {
                 }
             }
         }
+
+        public static List<Tuple<string, string>> ReadRanking(string pathName) {
+            List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string line;
+                while ((line = reader.ReadLine()) != null) {
+                    if (line == "")
+                        break;
+
+                    //string aPerson = reader.ReadLine();
+
+                    string[] pSplit = line.Split(' ');
+                    listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+
+                }
+            }
+            return listPerson;
+        }
     }
 
 }

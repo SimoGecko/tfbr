@@ -108,6 +108,20 @@ namespace BRS.Menu {
 
         }
 
+        public void SwitchRankingDisplay(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            foreach (var elem in rankingMenu.components) {
+                if (elem is ListComponents listComp) {
+                    if (listComp.nameIdentifier == "rankings_game") {
+                        foreach (var lC in listComp.listComponents)
+                            lC.active = false;
+                        listComp.listComponents[button.index].active = true;
+                    }
+                }
+            }
+        }
+
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
  

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BRS;
 
 namespace BRS.Menu {
     class Menu {
@@ -93,7 +94,7 @@ namespace BRS.Menu {
             var startGameButton = new Button(textureButton, positionNextButton) { Text = "Start Game" };
             startGameButton.Click += MenuManager.instance.StartGameFunction;
 
-            var backButton2 = new Button(textureButton, positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
+            var backButton2 = new Button(textureButton, positionBackButton) { Text = "go back", NameMenuToSwitchTo = "play1" };
             backButton2.Click += MenuManager.instance.SwitchToMenu;
 
             MenuManager.instance.playMenu2.AddComponent(startGameButton);
@@ -129,6 +130,52 @@ namespace BRS.Menu {
         }
 
         public void BuildRankingMenu() {
+
+            ListComponents rankings = new ListComponents("rankings_game");
+            string[] pathRankings = { "ranking2min.txt", "ranking3min.txt", "ranking5min.txt" };
+            Vector2[] offsetStart = { new Vector2(-200, -200), new Vector2(100, -200) };
+
+            for (int i=0; i<pathRankings.Length; ++i) {
+                List<Tuple<string, string>> rankinglist;
+                rankinglist = File.ReadRanking("Load/Rankings/" + pathRankings[i]);
+
+                ListComponents listPersons = new ListComponents("rankings_" + i.ToString());
+                int count = 0;
+                foreach (var aPerson in rankinglist) {
+                    var NamePerson = new TextBox() {
+                        InitPos = middleScreen + offsetStart[0] + new Vector2(0, count*100),
+                        Text = aPerson.Item1
+                    };
+
+                    var Score = new TextBox() {
+                        InitPos = middleScreen + offsetStart[1] + new Vector2(0, count * 100),
+                        Text = aPerson.Item2 
+                    };
+
+                    listPersons.AddComponent(NamePerson); listPersons.AddComponent(Score);
+                    count++;
+                }
+
+                if (i != 0) listPersons.active = false;
+                rankings.AddComponent(listPersons);
+            }
+
+            MenuManager.instance.rankingMenu.AddComponent(rankings);
+
+
+            Vector2[] offset = { new Vector2(-175, -300), new Vector2(88, -300), new Vector2(350, -300) };
+            string[] textButtons = { "2 min", "3 min", "5 min" };
+
+            for (int i = 0; i < textButtons.Length; ++i) {
+                var playButton = new Button(textureButton, middleScreen + offset[i]) {
+                    Text = textButtons[i],
+                    index = i,
+                };
+                playButton.Click += MenuManager.instance.SwitchRankingDisplay;
+                playButton.ScaleWidth = .5f;
+                MenuManager.instance.rankingMenu.AddComponent(playButton);
+            }
+
             var backButton = new Button(textureButton, positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
             backButton.Click += MenuManager.instance.SwitchToMenu;
             MenuManager.instance.rankingMenu.AddComponent(backButton);

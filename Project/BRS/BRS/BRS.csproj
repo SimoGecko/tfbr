@@ -192,6 +192,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Load\Rankings\ranking2min.txt" />
+    <Content Include="Load\Rankings\ranking3min.txt" />
+    <Content Include="Load\Rankings\ranking5min.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />

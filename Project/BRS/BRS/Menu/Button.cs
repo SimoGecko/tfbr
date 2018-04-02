@@ -35,6 +35,7 @@ namespace BRS.Menu {
         public string Text { get; set; }
 
         public bool isClicked;
+        public int index { get; set; }
 
         public Rectangle Rectangle {
             get {
