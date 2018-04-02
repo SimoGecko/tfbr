@@ -23,19 +23,31 @@ namespace BRS.Menu {
         public Texture2D texture;
 
         public EventHandler Click;
-        public Vector2 Position { get; set; }
+
+        public float ScaleWidth { get; set; } = 1;
+        public float ScaleHeight { get; set; } = 1;
+
+        public Vector2 offsetTexture = new Vector2(0,0);
+        public Vector2 initPos;
+        private Vector2 Position { get { return initPos - offsetTexture; } }
+
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
 
+        public bool isClicked;
+
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)Position.X, (int)Position.Y, texture.Width, texture.Height);
+                return new Rectangle((int)Position.X, (int)Position.Y, (int)(texture.Width * ScaleWidth), (int)(texture.Height * ScaleHeight));
             }
         }
 
         // --------------------- BASE METHODS ------------------
-        public Button(Texture2D t) {
+        public Button(Texture2D t, Vector2 pos) {
             texture = t;
+            initPos = pos;
+            offsetTexture = new Vector2(t.Width / 2, t.Height / 2);
+            isClicked = false;
         }
 
         public override void Start() {
@@ -53,7 +65,8 @@ namespace BRS.Menu {
             isHovering = false;
             if (mouseRectangle.Intersects(Rectangle)) {
                 isHovering = true;
-                if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed) {
+                if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed
+                    || Input.GetButtonUp(Buttons.A)) {
                     Click?.Invoke(this, new EventArgs());
                 }
             }

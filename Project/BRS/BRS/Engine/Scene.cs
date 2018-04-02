@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 using BRS.Scripts;
 
 namespace BRS {
-    class Scene {
+    public class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 
         //can create scene graph
@@ -25,7 +25,7 @@ namespace BRS {
 
         public void Update() { }
 
-        protected virtual void Build() { // levels inherit and fill this
+        public virtual void Build() { // levels inherit and fill this
 
         }
 

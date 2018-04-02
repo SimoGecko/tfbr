@@ -5289,7 +5289,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/xBox_ controller.jpg
 
-#begin Images/minimap/minimapDisplay.PNG
+#begin Images/UI/minimapDisplay.PNG
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -5299,5 +5299,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/minimap/minimapDisplay.PNG
+/build:Images/UI/minimapDisplay.PNG
+
+#begin Images/UI/powerups.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/powerups.png
 

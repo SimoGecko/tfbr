@@ -14,10 +14,9 @@ namespace BRS.Load {
         public Level1(PhysicsManager physics)
             : base(physics) { }
 
-        
-
-        protected override void Build() {
+        public override void Build() {
             ////////// scene setup for level1 //////////
+            base.Build();
 
             //MANAGER
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
@@ -25,6 +24,11 @@ namespace BRS.Load {
             UIManager.AddComponent(new PlayerUI());
             UIManager.AddComponent(new PowerupUI());
             UIManager.AddComponent(new GameUI());
+            UIManager.Start();
+
+
+
+            List<GameObject> addedGO = new List<GameObject>();
 
             GameObject manager = new GameObject("manager");
             manager.AddComponent(new Elements());
@@ -32,7 +36,7 @@ namespace BRS.Load {
             manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
-
+            addedGO.Add(manager);
             
 
 
@@ -66,6 +70,9 @@ namespace BRS.Load {
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.AddComponent(new Arrow(player.transform, null, i));
                 arrow.transform.Scale(.1f);
+
+                addedGO.Add(player);
+                addedGO.Add(arrow);
             }
 
 
@@ -90,6 +97,7 @@ namespace BRS.Load {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            addedGO.Add(vault);
 
             //other elements
             GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
@@ -108,6 +116,9 @@ namespace BRS.Load {
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
                 bases[i].transform.SetStatic();
             }
+
+            foreach (GameObject go in addedGO)
+                go.Start();
         }
     }
 }

@@ -48,25 +48,25 @@ namespace BRS.Menu {
                 buttonSlider.isHovering = true;
                 if (currentMouse.LeftButton == ButtonState.Pressed) {
                     moveButton = true;
-                    offset = currentMouse.Position.X - buttonSlider.Position.X;
+                    offset = currentMouse.Position.X - buttonSlider.initPos.X;
                 }
             }
 
             if (moveButton) {
                 buttonSlider.isHovering = true;
-                buttonSlider.Position = new Vector2(currentMouse.Position.X - offset, buttonSlider.Position.Y);
-                if (buttonSlider.Position.X + buttonSlider.texture.Width / 2 < Position.X)
-                    buttonSlider.Position = new Vector2(Position.X - buttonSlider.texture.Width / 2, buttonSlider.Position.Y);
-                if (buttonSlider.Position.X > Position.X + UserInterface.BARBIGWIDTH - buttonSlider.texture.Width / 2)
-                    buttonSlider.Position = new Vector2(Position.X + UserInterface.BARBIGWIDTH - buttonSlider.texture.Width / 2, buttonSlider.Position.Y);
+                buttonSlider.initPos = new Vector2(currentMouse.Position.X - offset, buttonSlider.initPos.Y);
+                if (buttonSlider.initPos.X + buttonSlider.texture.Width / 2 < Position.X)
+                    buttonSlider.initPos = new Vector2(Position.X - buttonSlider.texture.Width / 2, buttonSlider.initPos.Y);
+                if (buttonSlider.initPos.X > Position.X + UserInterface.BARBIGWIDTH - buttonSlider.texture.Width / 2)
+                    buttonSlider.initPos = new Vector2(Position.X + UserInterface.BARBIGWIDTH - buttonSlider.texture.Width / 2, buttonSlider.initPos.Y);
             }
         }
 
         public override void Draw() {
             base.Draw();
 
-            float percentPosButon =  ((buttonSlider.Position.X - Position.X + buttonSlider.texture.Width/2) / UserInterface.BARBIGWIDTH);
-            UserInterface.instance.DrawBarBig(new Vector2(Position.X, Position.Y), percentPosButon,  Color.Yellow);
+            float percentPosButon =  ((buttonSlider.initPos.X - Position.X + buttonSlider.texture.Width/2) / UserInterface.BARBIGWIDTH);
+            UserInterface.instance.DrawBarBig(new Vector2(Position.X, Position.Y) - buttonSlider.offsetTexture, percentPosButon,  Color.Yellow);
 
             buttonSlider.Draw();
         }

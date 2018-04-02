@@ -29,7 +29,7 @@ namespace BRS.Load {
         /// <summary>
         /// Set up the scene for the physics-prototype
         /// </summary>
-        protected override void Build() {
+        public override void Build() {
             // Add top-level manager
             GameObject rootScene = new GameObject("manager", null);
             rootScene.AddComponent(new CameraController());

@@ -14,7 +14,7 @@ namespace BRS {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Scene scene;
+        public Scene scene;
         UserInterface ui;
 
         private Display _display;
@@ -22,7 +22,7 @@ namespace BRS {
         private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
         public static Game1 instance;
-        
+
         private static bool _usePhysics = false;
 
         MenuManager menuManager;
@@ -58,7 +58,8 @@ namespace BRS {
             if (_usePhysics) {
                 _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
                 scene = new LevelPhysics(this, _physicsManager);
-            } else {
+            }
+            else {
                 scene = new Level1(_physicsManager);
             }
 
@@ -69,7 +70,7 @@ namespace BRS {
             menuManager.LoadContent();
             menuDisplay = true;
 
-            //Start(); // CALL HERE
+            Start(); // CALL HERE
 
         }
 
@@ -80,13 +81,16 @@ namespace BRS {
         public void Start() {
             //START
             Prefabs.Start();
-            scene.Start();
+            //scene.Start();
             Input.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start();
             foreach (GameObject go in GameObject.All) go.Start();
         }
 
+        public void ScreenAdditionalSetup() {
+            Screen.AdditionalSetup(graphics, this);
+        }
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
@@ -111,7 +115,7 @@ namespace BRS {
                     _physicsManager.Update(gameTime);
                 }
 
-                Physics.Update();            
+                Physics.Update();
             }
             base.Update(gameTime);
         }
@@ -121,8 +125,6 @@ namespace BRS {
 
             spriteBatch.Begin();
             ui.DrawMenu(spriteBatch);
-            //UserInterface.instance.sB = spriteBatch;           
-            //menuManager.Draw();
             spriteBatch.End();
 
             if (!menuDisplay) {

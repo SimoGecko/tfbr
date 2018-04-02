@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using System;
 
 namespace BRS {
     class File : Component {
@@ -118,8 +119,8 @@ namespace BRS {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
-                        Vector3 position   = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
-                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]),  float.Parse(rSplit[3]));
+                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
+                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
@@ -133,7 +134,6 @@ namespace BRS {
                 }
             }
         }
-
     }
 
 }
