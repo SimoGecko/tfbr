@@ -89,7 +89,8 @@ namespace BRS {
         }
 
         public static GameObject Instantiate(string name, Transform t) {
-            return Instantiate(name, t.World.Translation, t.World.Rotation);
+            //return Instantiate(name, t.World.Translation, t.World.Rotation);
+            return Instantiate(name, t.position, t.rotation);
         }
 
         public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation) {

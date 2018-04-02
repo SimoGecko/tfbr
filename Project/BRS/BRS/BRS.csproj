@@ -151,6 +151,9 @@
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
+    <Compile Include="Scripts\Elements\ExplodingBox.cs" />
+    <Compile Include="Scripts\Elements\Magnet.cs" />
+    <Compile Include="Scripts\Elements\Weight.cs" />
     <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
     <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
     <Compile Include="Scripts\Physics\StaticRigidBody.cs" />

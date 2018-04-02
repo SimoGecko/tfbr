@@ -164,8 +164,10 @@ namespace BRS.Scripts {
         Vector2 MoveInput() {
             if (playerIndex == 0)
                 return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
-            else
+            else if (playerIndex == 1)
                 return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
+            else
+                return Input.GetThumbstick("Left", playerIndex);
         }
 
         bool AttackInput() {
@@ -190,7 +192,8 @@ namespace BRS.Scripts {
 
         bool BoostInput() {
             return (playerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
-               || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex);
+               || Input.GetButton(Buttons.RightShoulder, playerIndex) || Input.GetButton(Buttons.RightTrigger, playerIndex)
+               || Input.GetButton(Buttons.LeftShoulder , playerIndex) || Input.GetButton(Buttons.LeftTrigger , playerIndex);
         }
 
         // other

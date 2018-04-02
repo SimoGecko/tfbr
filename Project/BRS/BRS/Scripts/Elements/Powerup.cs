@@ -6,8 +6,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
 
-    //public enum PowerupType { bomb, key, trap, capacity, speed, health, stamina, shield };
-    public enum PowerupType { health, capacity, speed, stamina, bomb, key, shield, trap };
+    public enum PowerupType { health, capacity, speed, stamina, bomb, key, shield, trap, explodingbox, weight, magnet };
 
     class Powerup : Pickup {
         ////////// base class for all powerups in the game //////////
@@ -19,7 +18,7 @@ namespace BRS.Scripts {
 
         //private
         public PowerupType powerupType;
-        protected bool destroyOnUse = true;
+        //protected bool destroyOnUse = true;
         protected bool rotate = true;
 
         //reference
@@ -28,7 +27,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            destroyOnUse = rotate = true;
+            rotate = true;
             transform.rotation = MyRandom.YRotation();
         }
 
@@ -52,8 +51,8 @@ namespace BRS.Scripts {
 
                 Elements.instance.Remove(this);
 
-                if(!destroyOnUse) gameObject.active = false;
-                else GameObject.Destroy(gameObject);
+                //if(!destroyOnUse) gameObject.active = false;
+                GameObject.Destroy(gameObject);
             }
         }
 

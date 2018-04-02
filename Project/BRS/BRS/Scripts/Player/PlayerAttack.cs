@@ -50,6 +50,7 @@ namespace BRS.Scripts {
             attackEndPos = transform.position + transform.Forward * attackDistance;
             hasAppliedDamage = false;
             attackStartTime = Time.time;
+            Invoke(attackDuration, () => attacking = false);
         }
 
         public void AttackCoroutine() {
@@ -58,13 +59,13 @@ namespace BRS.Scripts {
                 float t = Curve.EvaluateSqrt(attackRefTime);
                 transform.position = Vector3.LerpPrecise(this.attackStartPos, attackEndPos, t);
             } else {
-                EndAttack();
+                attacking = false;
             }
         }
-
+        /*
         void EndAttack() {
             attacking = false;
-        }
+        }*/
 
         void DealWithAttack(Player p) {
             PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();

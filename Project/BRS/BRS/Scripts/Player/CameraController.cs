@@ -17,12 +17,13 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float smoothTime = .3f;
+        const float smoothTime = .2f;
+        const float positionSmoothTime = .1f;
         static Vector2 mouseSensitivity =new Vector2(-.3f, -.3f); // set those (also with sign) into options menu
         static Vector2 gamepadSensitivity = new Vector2(-2f, -2f);
         static Vector3 offset = new Vector3(0, 10, 10);
-        static Vector3 angles = new Vector3(-45, 0, 0);
-        const int angleVariation = 40;
+        static Vector3 startAngle = new Vector3(-45, 0, 0);
+        const int angleVariation = 5;
         static Vector2 angleRange = new Vector2(-angleVariation, angleVariation); // -40, 40
 
         const float shakeAmount = .3f;
@@ -32,6 +33,8 @@ namespace BRS.Scripts {
         float Yangle = 0, YangleSmooth=0;
         float refVelocityX = 0, refVelocityY = 0;
         public int camIndex;
+        Vector3 targetPosRef;
+
 
         float shakeDuration = 0;
         Vector3 shake;
@@ -48,7 +51,7 @@ namespace BRS.Scripts {
             if (player == null) Debug.LogError("player not found");
 
             transform.position = player.position + offset;
-            transform.eulerAngles = angles;
+            transform.eulerAngles = startAngle;
         }
 
         public override void LateUpdate() { // after player has moved
@@ -79,11 +82,16 @@ namespace BRS.Scripts {
         }
 
         void FollowSmoothAndRotate() {
+            Vector3 currentPosition = transform.position;
+
             transform.position = player.position + offset;
-            transform.eulerAngles = angles;
+            transform.eulerAngles = startAngle;
 
             transform.RotateAround(player.position, Vector3.Up, YangleSmooth);
             transform.RotateAround(player.position, transform.Right, XangleSmooth);
+            Vector3 targetPos = transform.position;
+            //transform.position = Utility.SmoothDamp(currentPosition, targetPos, ref targetPosRef, positionSmoothTime);
+
         }
 
         void ProcessShake() {

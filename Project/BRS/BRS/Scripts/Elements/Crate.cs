@@ -18,15 +18,20 @@ namespace BRS.Scripts {
         const float probOfPowerup = .2f;
 
 
-        //private
+        //for rigged boxes
+        const float explosionRadius = 1f;
+        const float explosionDamage = 30;
+        bool cracked = false;
 
+        //private
+        bool explosionRigged = false;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            explosionRigged = cracked = false;
         }
 
         public override void Update() {
@@ -48,22 +53,41 @@ namespace BRS.Scripts {
 
         // commands
         void CrackCrate() {
+            cracked = true;
+            if (explosionRigged) Explode();
+            else SpawnValuables();
+            
+            Elements.instance.Remove(this);
+            GameObject.Destroy(gameObject);
+        }
+
+        void SpawnValuables() {
             int numCoins = MyRandom.Range(minNumCoins, maxNumCoins + 1);
-            for (int i=0; i<numCoins; i++) {
+            for (int i = 0; i < numCoins; i++) {
                 Spawner.instance.SpawnMoneyAround(transform.position, crackSpawnRadius);
             }
 
             if (MyRandom.Value <= probOfPowerup) {
                 Spawner.instance.SpawnPowerupAround(transform.position, crackSpawnRadius);
             }
-            Elements.instance.Remove(this);
-            GameObject.Destroy(gameObject);
+        }
+
+        void Explode() {
+            //same code as in bomb
+            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, explosionRadius);
+            foreach (Collider c in overlapColliders) {
+                if (c.gameObject.HasComponent<IDamageable>()) {
+                    c.gameObject.GetComponent<IDamageable>().TakeDamage(explosionDamage);
+                }
+            }
         }
 
 
-        public void TakeDamage(float damage) {
-            CrackCrate();
+        public void TakeDamage(float damage) { // TODO is it necessary to have both?
+            if(!cracked)CrackCrate();
         }
+
+        public void SetExplosionRigged() { explosionRigged = true; }
 
 
         // queries

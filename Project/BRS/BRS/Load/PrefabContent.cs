@@ -59,7 +59,18 @@ namespace BRS {
 
 
             //POWERUPS
+            //expand these two arrays to add new powerups with a particular name and a powerup script
+            string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
+            Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
 
+            for(int i=0; i<powerupName.Length; i++) {
+                GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
+                powerupPrefab.transform.Scale(.3f);
+                powerupPrefab.AddComponent(powerupcomponents[i]);
+                powerupPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+                AddPrefab(powerupPrefab);
+            }
+            /*
             //bomb
             GameObject bombPrefab = new GameObject("bombPrefab", File.Load<Model>("Models/powerups/bomb"));
             bombPrefab.transform.Scale(.3f);
@@ -103,7 +114,7 @@ namespace BRS {
             //shield
             GameObject shieldPrefab = new GameObject("shieldPrefab", File.Load<Model>("Models/powerups/shield"));
             shieldPrefab.transform.Scale(.3f);
-            shieldPrefab.AddComponent(new StaminaPotion());
+            shieldPrefab.AddComponent(new ShieldPotion());
             shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             //shieldPrefab.transform.SetStatic();
             AddPrefab(shieldPrefab);
@@ -124,6 +135,30 @@ namespace BRS {
             //trapPrefab.transform.SetStatic();
             AddPrefab(trapPrefab);
 
+            //explodingbox
+            GameObject explodingbox = new GameObject("explodingboxPrefab", File.Load<Model>("Models/powerups/box"));
+            explodingbox.transform.Scale(.3f);
+            explodingbox.AddComponent(new ExplodingBox());
+            explodingbox.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            //trapPrefab.transform.SetStatic();
+            AddPrefab(explodingbox);
+
+            //weight
+            GameObject weight = new GameObject("weightPrefab", File.Load<Model>("Models/powerups/weight"));
+            weight.transform.Scale(.3f);
+            weight.AddComponent(new Weight());
+            weight.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            //trapPrefab.transform.SetStatic();
+            AddPrefab(weight);
+
+            //magnet
+            GameObject magnet = new GameObject("magnetPrefab", File.Load<Model>("Models/powerups/magnet"));
+            magnet.transform.Scale(.3f);
+            magnet.AddComponent(new Magnet());
+            magnet.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            //trapPrefab.transform.SetStatic();
+            AddPrefab(magnet);
+            */
 
             //GAME ELEMENTS
 
@@ -134,6 +169,28 @@ namespace BRS {
             oilPrefab.AddComponent(new OilTrap());
             oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
             AddPrefab(oilPrefab);
+
+            //planted bomb
+            GameObject plantedBombPrefab = new GameObject("plantedBombPrefab", File.Load<Model>("Models/elements/bomb"));
+            plantedBombPrefab.transform.Scale(.3f);
+            plantedBombPrefab.transform.SetStatic();
+            plantedBombPrefab.AddComponent(new PlantedBomb());
+            plantedBombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
+            AddPrefab(plantedBombPrefab);
+
+            //falling weight
+            GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/elements/weight"));
+            fallingWeight.transform.Scale(.5f);
+            fallingWeight.AddComponent(new FallingWeight());
+            fallingWeight.AddComponent(new SphereCollider(Vector3.Zero, .6f));
+            AddPrefab(fallingWeight);
+
+            //planted magnet
+            GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/elements/magnet"));
+            plantedMagnet.transform.Scale(.3f);
+            plantedMagnet.AddComponent(new PlantedMagnet());
+            plantedMagnet.AddComponent(new SphereCollider(Vector3.Zero, .6f));
+            AddPrefab(plantedMagnet);
 
             //speed boost
             GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/platform"));

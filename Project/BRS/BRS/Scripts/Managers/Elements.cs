@@ -90,6 +90,19 @@ namespace BRS.Scripts {
             if (i < 0 || i >= playerList.Count) { Debug.LogError("Player index out of range"); return null; }
             return playerList[i];
         }
+        public Player[] Team(int team) {
+            Debug.Assert(team < 2, "Invalid team index");
+            List<Player> result = new List<Scripts.Player>();
+            foreach (Player p in playerList)
+                if (p.teamIndex == team) result.Add(p);
+            return result.ToArray();
+        }
+        public Player Enemy(int myteam) {
+            //returns a random enemy in the other team
+            Player[] enemyTeam = Team(1 - myteam);
+            return enemyTeam[MyRandom.Range(0, enemyTeam.Length)];
+        }
+
         public Base Base(int i) {
             if (i < 0 || i >= baseList.Count) { Debug.LogError("Base index out of range"); return null; }
             return baseList[i];

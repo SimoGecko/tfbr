@@ -72,6 +72,7 @@ namespace BRS.Scripts {
             //capacity
             float capacityPercent = (float)playerUI[index].carryingWeight / playerUI[index].maxCapacity;
             UserInterface.instance.DrawBarVertical(position + new Vector2(-95 , 60), capacityPercent, Color.Blue);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -50), capacityPercent, Color.Blue);
 
             //cash
             string playerValueString = "$" + playerUI[index].carryingValue.ToString("N0");//ToString("#,##0")

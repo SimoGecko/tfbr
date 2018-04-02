@@ -12,7 +12,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 300;
+        public const int roundTime = 180;
         public const int timeBeforePolice = 10;
 
         //private
