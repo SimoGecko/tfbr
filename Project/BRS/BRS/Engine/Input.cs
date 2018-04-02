@@ -109,14 +109,17 @@ namespace BRS {
         public static int mouseWheel      { get { return mState.ScrollWheelValue; } }
         public static int mouseWheelDelta { get { return mState.ScrollWheelValue-oldMstate.ScrollWheelValue; } }
 
-        public static bool GetMouseButton(int index) {
+        static bool GetMouseButton(int index, MouseState state) {
             switch (index) {
-                case 0: return mState.LeftButton   == ButtonState.Pressed;
-                case 1: return mState.RightButton  == ButtonState.Pressed;
-                case 2: return mState.MiddleButton == ButtonState.Pressed;
+                case 0: return state.LeftButton   == ButtonState.Pressed;
+                case 1: return state.RightButton  == ButtonState.Pressed;
+                case 2: return state.MiddleButton == ButtonState.Pressed;
             }
             return false;
         }
+        public static bool GetMouseButton(int index) { return GetMouseButton(index, mState); }
+        public static bool GetMouseButtonDown(int index) { return  GetMouseButton(index, mState) && !GetMouseButton(index, oldMstate); }
+        public static bool GetMouseButtonUp  (int index) { return !GetMouseButton(index, mState) &&  GetMouseButton(index, oldMstate); }
 
 
         //GAMEPAD
