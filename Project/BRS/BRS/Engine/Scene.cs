@@ -29,6 +29,10 @@ namespace BRS {
 
         }
 
+        public virtual void CreatePlayers() {
+
+        }
+
     }
 
 }

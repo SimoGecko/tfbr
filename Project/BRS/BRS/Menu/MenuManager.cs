@@ -25,6 +25,8 @@ namespace BRS.Menu {
         public GameObject rankingMenu = new GameObject("ranking");
         public GameObject optionsMenu = new GameObject("options");
         public GameObject creditsMenu = new GameObject("credits");
+        public GameObject playerInfoMenu = new GameObject("playerInfos");
+
 
         public static MenuManager instance;
 
@@ -34,8 +36,14 @@ namespace BRS.Menu {
         const float rotSpeed = 90;
         public List<GameObject> characterToChoose = new List<GameObject>();
 
+        public Dictionary<string, Tuple<string, Model>> playersInfo; // playerName -> userName, Model 
+        public string namePlayerInfosToChange;
+
         public void LoadContent() {
             instance = this;
+
+            playersInfo = new Dictionary<string, Tuple<string, Model>>();
+            namePlayerInfosToChange = "player_0";
 
             menuGame.LoadContent();
 
@@ -60,6 +68,7 @@ namespace BRS.Menu {
             Menu.instance.BuildRankingMenu();
             Menu.instance.BuildOptionsMenu();
             Menu.instance.BuildCreditsMenu();
+            Menu.instance.BuildPlayerInfoMenu();
             
 
             //// Create Menu's dictionary
@@ -73,6 +82,7 @@ namespace BRS.Menu {
             menuRect.Add(optionsMenu.name, optionsMenu);
             menuRect.Add(creditsMenu.name, creditsMenu);
             menuRect.Add(rankingMenu.name, rankingMenu);
+            menuRect.Add(playerInfoMenu.name, playerInfoMenu);
         }
 
         public void HighlightBorders(object sender, EventArgs e) {
@@ -89,6 +99,72 @@ namespace BRS.Menu {
             GameManager.numPlayers = Int32.Parse(button.Text);
         }
 
+        public void CreatePlayers(object sender, EventArgs e) {
+            Game1.instance.scene.CreatePlayers();
+        }
+
+        public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            foreach (var elem in playerInfoMenu.components) {
+                if (elem is TextBox textBox) {
+                    if (textBox.NameIdentifier == "name_player") {
+                        if (button.Text == "remove") {
+                            if (textBox.Text.Length > 0)
+                                textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
+                        }
+                        else
+                            textBox.Text += button.Text;    
+                    }
+                }
+            }
+        }
+
+        public void UpdatePlayersChangeTo(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            foreach (var elem in playMenu2.components) {
+                if (elem is ListComponents listComp) {
+                    if (listComp.nameIdentifier == "playerInfoToChange") {
+                        int count = 0;
+                        foreach (var lC in listComp.listComponents) {
+                            if (count < GameManager.numPlayers)
+                                lC.active = true;
+                            else
+                                lC.active = false;
+                            ++count;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void ChangeNamePlayer(object sender, EventArgs e) {
+            foreach (var elem in playerInfoMenu.components) {
+                if (elem is TextBox textBox) {
+                    if (textBox.NameIdentifier == "name_player") {
+                        if (playersInfo.ContainsKey(namePlayerInfosToChange))
+                            playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, playersInfo[namePlayerInfosToChange].Item2);
+                        else
+                            playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>("testNicoName", null));
+                    }
+                }
+            }
+
+        }
+
+        public void ChangeModelPlayer(object sender, EventArgs e) {
+            Model test = File.Load<Model>("Models/vehicles/forklift_tex");
+            if (playersInfo.ContainsKey(namePlayerInfosToChange))
+                playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(playersInfo[namePlayerInfosToChange].Item1, test);
+            else
+                playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>("testNicoName", null));
+        }
+
+        public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
+            Button button = (Button)sender;
+            namePlayerInfosToChange = "player_" + button.index.ToString();
+        }
         public void StartGameFunction(object sender, EventArgs e) {
             Game1.instance.menuDisplay = false;
             currentMenu.active = false;
@@ -101,6 +177,9 @@ namespace BRS.Menu {
 
             Game1.instance.ScreenAdditionalSetup();
             Game1.instance.scene.Build();
+            Game1.instance.scene.CreatePlayers();
+
+
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
                 camObject.Start();

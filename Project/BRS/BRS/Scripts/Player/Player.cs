@@ -22,6 +22,7 @@ namespace BRS.Scripts {
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
         string playerName;
+        public string nameUser;
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -49,6 +50,7 @@ namespace BRS.Scripts {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             playerName = _name + (playerIndex + 1).ToString();
+            nameUser = playerName;
         }
         public override void Start() {
             base.Start();

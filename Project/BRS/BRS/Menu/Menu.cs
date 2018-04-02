@@ -50,7 +50,7 @@ namespace BRS.Menu {
 
             string text = "Number of players";
             var chooseNumberPlayerText = new TextBox() {
-                InitPos = middleScreen - new Vector2(0,-200),
+                InitPos = middleScreen + new Vector2(0,-200),
                 Text = text
             };
 
@@ -79,6 +79,8 @@ namespace BRS.Menu {
                 Text = "next", NameMenuToSwitchTo = "play2"
             };
             nextButton.Click += MenuManager.instance.SwitchToMenu;
+            nextButton.Click += MenuManager.instance.UpdatePlayersChangeTo;
+
 
             var backButton1 = new Button(textureButton, positionBackButton) {
                 Text = "go back", NameMenuToSwitchTo = "main"
@@ -99,7 +101,85 @@ namespace BRS.Menu {
 
             MenuManager.instance.playMenu2.AddComponent(startGameButton);
             MenuManager.instance.playMenu2.AddComponent(backButton2);
+
+            var changeNamePlayerButton = new Button(textureButton, positionNextButton + new Vector2(0,100)) { Text = "Test Change name" };
+            changeNamePlayerButton.Click += MenuManager.instance.ChangeNamePlayer;
+            MenuManager.instance.playMenu2.AddComponent(changeNamePlayerButton);
+
+            ListComponents buttonPlayersChanges = new ListComponents("playerInfoToChange");
+            Vector2[] offsetPlayersChanges = { new Vector2(-275, -300), new Vector2(-12, -300), new Vector2(250, -300), new Vector2(512, -300) };
+            string[] textButtonsPlayersChanges = { "player 1", "player 2", "player 3", "player 4" };
+
+            for (int i = 0; i < textButtonsPlayersChanges.Length; ++i) {
+                var playerChangeButton = new Button(textureButton, middleScreen + offsetPlayersChanges[i]) {
+                    Text = textButtonsPlayersChanges[i],
+                    index = i,
+                    NameMenuToSwitchTo = "playerInfos",
+                };
+                playerChangeButton.Click += MenuManager.instance.UpdatePlayersNameInfosToChange;
+                playerChangeButton.Click += MenuManager.instance.SwitchToMenu;
+                playerChangeButton.ScaleWidth = .5f;
+                buttonPlayersChanges.AddComponent(playerChangeButton);
+            }
+
+            MenuManager.instance.playMenu2.AddComponent(buttonPlayersChanges);
             MenuManager.instance.playMenu2.active = false;
+
+        }
+
+        internal void BuildPlayerInfoMenu() {
+
+            var namePlayer = new TextBox() {
+                InitPos = middleScreen + new Vector2(0, -400),
+                Text = "test",
+                NameIdentifier = "name_player"
+            };
+            MenuManager.instance.playerInfoMenu.AddComponent(namePlayer);
+
+            string[] firstLine = { "q", "w", "e", "r", "t", "z", "u", "i", "o", "p" };
+            string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
+            string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
+            string[][] keyboard = { firstLine, secondLine, thirdLine};
+            Vector2[] startoffset = { new Vector2(-500, -300), new Vector2(-400,-200), new Vector2(-200,-100) };
+
+            for (int i = 0; i < keyboard.Length; i++) {
+                int count = 0;
+                foreach (var elem in keyboard[i]) {
+                    var letterButton = new Button(textureButton, middleScreen + startoffset[i] + count * new Vector2(.5f * textureButton.Width, 0)) {
+                        Text = elem,
+                        ScaleWidth = .5f
+                    };
+                    letterButton.Click += MenuManager.instance.UpdateTemporaryNamePlayer;
+                    ++count;
+                    MenuManager.instance.playerInfoMenu.AddComponent(letterButton);
+                }
+                if (i == keyboard.Length - 1) {
+                    var letterButton = new Button(textureButton, middleScreen + startoffset[i] + count * new Vector2(.5f * textureButton.Width, 0)) {
+                        Text = "remove",
+                        //ScaleWidth = .5f
+                    };
+                    letterButton.Click += MenuManager.instance.UpdateTemporaryNamePlayer;
+                    MenuManager.instance.playerInfoMenu.AddComponent(letterButton);
+                }
+            }
+
+            var saveButton = new Button(textureButton, positionNextButton) {
+                Text = "Save changes",
+                NameMenuToSwitchTo = "play2"
+            };
+            saveButton.Click += MenuManager.instance.ChangeNamePlayer;
+            saveButton.Click += MenuManager.instance.SwitchToMenu;
+            MenuManager.instance.playerInfoMenu.AddComponent(saveButton);
+
+            var backButton = new Button(textureButton, positionBackButton) {
+                Text = "go back",
+                NameMenuToSwitchTo = "play2"
+            };
+            backButton.Click += MenuManager.instance.SwitchToMenu;
+            MenuManager.instance.playerInfoMenu.AddComponent(backButton);
+
+            MenuManager.instance.playerInfoMenu.active = false;
+
         }
 
         public void BuildTutorialMenu() {

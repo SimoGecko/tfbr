@@ -49,6 +49,7 @@ namespace BRS.Menu {
             initPos = pos;
             offsetTexture = new Vector2(t.Width / 2, t.Height / 2);
             isClicked = false;
+            active = true;
         }
 
         public override void Start() {
@@ -56,36 +57,40 @@ namespace BRS.Menu {
         }
 
         public override void Update() {
-            base.Update();
+            if (active) {
+                base.Update();
 
-            previousMouse = currentMouse;
-            currentMouse = Mouse.GetState();
+                previousMouse = currentMouse;
+                currentMouse = Mouse.GetState();
 
-            var mouseRectangle = new Rectangle(currentMouse.X, currentMouse.Y, 1, 1);
+                var mouseRectangle = new Rectangle(currentMouse.X, currentMouse.Y, 1, 1);
 
-            isHovering = false;
-            if (mouseRectangle.Intersects(Rectangle)) {
-                isHovering = true;
-                if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed
-                    || Input.GetButtonUp(Buttons.A)) {
-                    Click?.Invoke(this, new EventArgs());
+                isHovering = false;
+                if (mouseRectangle.Intersects(Rectangle)) {
+                    isHovering = true;
+                    if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed
+                        || Input.GetButtonUp(Buttons.A)) {
+                        Click?.Invoke(this, new EventArgs());
+                    }
                 }
             }
         }
 
         public override void Draw() {
-            var colour = Color.White;
-            if (isHovering)
-                colour = Color.Gray;
+            if (active) {
+                var colour = Color.White;
+                if (isHovering)
+                    colour = Color.Gray;
 
-            if (texture != null)
-                UserInterface.instance.DrawPicture(Rectangle, texture, colour);
+                if (texture != null)
+                    UserInterface.instance.DrawPicture(Rectangle, texture, colour);
 
-            if (!string.IsNullOrEmpty(Text)) {
-                var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.instance.smallFont.MeasureString(Text).X/2);
-                var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.instance.smallFont.MeasureString(Text).Y / 2);
-                                
-                UserInterface.instance.DrawString(new Vector2(x,y), Text, Color.Black);   
+                if (!string.IsNullOrEmpty(Text)) {
+                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.instance.smallFont.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.instance.smallFont.MeasureString(Text).Y / 2);
+
+                    UserInterface.instance.DrawString(new Vector2(x, y), Text, Color.Black);
+                }
             }
         }
 
