@@ -8,11 +8,12 @@ namespace BRS.Engine.Physics.RigidBodies {
     class StaticRigidBody : RigidBodyComponent {
         private readonly bool _isGround;
 
-        public StaticRigidBody(PhysicsManager physicsManager, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box) {
+        public StaticRigidBody(PhysicsManager physicsManager, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             PhysicsManager = physicsManager;
             IsStatic = true;
             IsActive = isActive;
             ShapeType = shapeType;
+            PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
 
             _isGround = isGround;

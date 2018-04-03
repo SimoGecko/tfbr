@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -94,16 +95,28 @@ namespace BRS {
                         go.transform.scale = scale;
                         //go.transform.rotation = rotation; // rotation not parsed correctly // <- of course it doesn't parse correctly, you use pSplit instead of rSplit!
 
-                        if (tagName == "Ground") go.tag = ObjectTag.Ground;
-                        else if (tagName == "Base") go.tag = ObjectTag.Base;
-                        else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
-                        else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
-                        else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
+                        try {
+                            go.tag = (ObjectTag)Enum.Parse(typeof(ObjectTag), tagName, true);
+                        } catch {
+                            go.tag = ObjectTag.Default;
+                        }
 
-                        if (go.tag == ObjectTag.Ground) {
-                            go.AddComponent(new StaticRigidBody(physics, isGround:true));
-                        } else {
-                            go.AddComponent(new StaticRigidBody(physics));
+                        //if (tagName == "Ground") go.tag = ObjectTag.Ground;
+                        //else if (tagName == "Base") go.tag = ObjectTag.Base;
+                        //else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
+                        //else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
+                        //else if (tagName == "VaultDoor") go.tag = ObjectTag.VaultDoor;
+
+                        switch (go.tag) {
+                            case ObjectTag.Base:
+                                //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
+                                break;
+                            case ObjectTag.Ground:
+                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
+                                break;
+                            default:
+                                go.AddComponent(new StaticRigidBody(physics));
+                                break;
                         }
                     }
 

@@ -36,10 +36,6 @@ namespace BRS.Engine.Physics.RigidBodies {
                 GameObject = gameObject
             };
 
-            if (!IsActive) {
-                RigidBody.PureCollider = true;
-            }
-
             RigidBody.Material = new Material { Restitution = 0.0f };
 
             PhysicsManager.World.AddBody(RigidBody);

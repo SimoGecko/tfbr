@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, Vault }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -104,7 +104,7 @@ namespace BRS {
             GameObject result = (GameObject)tocopy.Clone();
             result.transform.position = position;
             result.transform.rotation = rotation;
-            if (tocopy.transform.isStatic) result.transform.SetStatic();
+            //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
             result.Start();
             return result;

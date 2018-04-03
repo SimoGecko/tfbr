@@ -16,7 +16,7 @@ namespace BRS.Engine.Physics {
         private int _frameCounter;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
 
-        private bool _doDrawings = true;
+        private bool _doDrawings = false;
 
         private int _bbWidth, _bbHeight;
         private const int PaddingTop = 300;

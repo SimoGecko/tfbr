@@ -89,7 +89,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnOneMoneyAt(Vector3 pos) {
-            pos += new Vector3(0, 2, 0);
+            pos += new Vector3(0, 5, 0);
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
             Elements.instance.Add(newmoney.GetComponent<Money>());
@@ -132,7 +132,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnOnePowerupAt(Vector3 position) {
-            //position += new Vector3(0, 2, 0);
+            position += new Vector3(0, 2, 0);
             GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity);
             Elements.instance.Add(newPowerup.GetComponent<Powerup>());
         }

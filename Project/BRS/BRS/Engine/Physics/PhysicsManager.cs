@@ -39,7 +39,7 @@ namespace BRS.Engine.Physics {
 
         private GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
 
-        private bool _doDrawings = true;
+        private bool _doDrawings = false;
 
         /// <summary>
         /// Initialize the physics with the collision-setup
