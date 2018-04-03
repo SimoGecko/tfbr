@@ -44,6 +44,7 @@ namespace BRS.Scripts {
 
         public void Collect(Powerup powerup) {
             // If player has already one powerup, it will simply be exchanged
+            // Todo: Update also the UI
             carryingPowerup.Clear();
             carryingPowerup.Add(powerup);
         }

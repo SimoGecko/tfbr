@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         ////////// it manages the state, team, calls relative functions with input BUT NOTHING ELSE //////////
 
         // --------------------- VARIABLES ---------------------
-        enum State { normal, attack, stun, dead };
+        enum State { normal, attack, stun, dead, collided };
 
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
@@ -105,6 +105,8 @@ namespace BRS.Scripts {
             } else if (state == State.attack) {
                 pA.AttackCoroutine();
                 if (pA.AttackEnded) state = State.normal;
+            } else if (state == State.collided) {
+                
             }
 
             pS.UpdateStamina();
@@ -112,7 +114,9 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            //camController.Shake(.3f);
+            if (c.IsStatic) {
+                camController.Shake(.3f);
+            }
         }
 
 

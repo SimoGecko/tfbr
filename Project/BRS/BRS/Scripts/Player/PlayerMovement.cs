@@ -25,13 +25,11 @@ namespace BRS.Scripts {
         const float speedPadMultiplier = 2f;
 
         //private
-        float rotation, rotationOld;
+        float rotation;
         float smoothMagnitude, refMagnitude;
         float refangle, refangle2;
         float inputAngle;
         float targetRotation;
-        private Vector3 _previousLinearVelocity = Vector3.Zero;
-
 
 
         //BOOST
@@ -105,7 +103,13 @@ namespace BRS.Scripts {
 
             //move forward
             //float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            Vector3 linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
+            Vector3 linearVelocity;
+            if (speedPad) { // override and force to move at max speed
+                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedPadMultiplier;
+            } else {
+                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
+            }
+
             //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
@@ -113,28 +117,13 @@ namespace BRS.Scripts {
             MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
 
             if (dynamicRigidBody != null) {
-                RigidBody rb = dynamicRigidBody.RigidBody;
-
-                JVector lv = JVector.Transform(Conversion.ToJitterVector(linearVelocity), rb.Orientation);
-
-                rb.LinearVelocity = new JVector(lv.X, 0, lv.Z);
-
-                rb.Orientation = JMatrix.CreateRotationY(MathHelper.ToRadians(rotation));
-
-                SteerableRigidBody srb = rb as SteerableRigidBody;
+                SteerableRigidBody srb = dynamicRigidBody.RigidBody as SteerableRigidBody;
 
                 if (srb != null) {
-                    srb.RotationY = rotation * MathHelper.Pi / 180.0f;
+                    srb.RotationY = MathHelper.ToRadians(rotation);
+                    srb.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity), srb.Orientation);
                 }
-                //rb.LinearVelocity = (new JVector(0, 0, 10));
-                rb.AddForce(lv);
-
-                //Debug.Log(rb.Position);
-                //Debug.Log(rb.Orientation, "PlayerMovement:\n");
             }
-
-            _previousLinearVelocity = linearVelocity;
-            rotationOld = rotation;
         }
 
         public void SetSlowdown(bool b) {

@@ -20,7 +20,7 @@ namespace BRS {
             PhysicsManager physics = PhysicsManager.Instance;
 
             ShapeType valuableShapeType = ShapeType.BoxUniform;
-            ShapeType powerupShapeType = ShapeType.BoxUniform;
+            ShapeType powerupShapeType = ShapeType.Sphere;
 
             //VALUABLES
             //cash
@@ -63,7 +63,7 @@ namespace BRS {
             GameObject bombPrefab = new GameObject("bombPrefab", File.Load<Model>("Models/powerups/bomb"));
             bombPrefab.transform.Scale(.3f);
             bombPrefab.AddComponent(new Bomb());
-            bombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            bombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             //bombPrefab.transform.SetStatic();
             AddPrefab(bombPrefab);
@@ -72,7 +72,7 @@ namespace BRS {
             GameObject capacityPrefab = new GameObject("capacityPrefab", File.Load<Model>("Models/powerups/capacity"));
             capacityPrefab.transform.Scale(.3f);
             capacityPrefab.AddComponent(new CapacityBoost());
-            capacityPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            capacityPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(capacityPrefab);
 
@@ -80,7 +80,7 @@ namespace BRS {
             GameObject keyPrefab = new GameObject("keyPrefab", File.Load<Model>("Models/powerups/key"));
             keyPrefab.transform.Scale(.3f);
             keyPrefab.AddComponent(new Key());
-            keyPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            keyPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(keyPrefab);
 
@@ -88,7 +88,7 @@ namespace BRS {
             GameObject healthPrefab = new GameObject("healthPrefab", File.Load<Model>("Models/powerups/health"));
             healthPrefab.transform.Scale(.3f);
             healthPrefab.AddComponent(new HealthPotion());
-            healthPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            healthPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(healthPrefab);
 
@@ -96,7 +96,7 @@ namespace BRS {
             GameObject shieldPrefab = new GameObject("shieldPrefab", File.Load<Model>("Models/powerups/shield"));
             shieldPrefab.transform.Scale(.3f);
             shieldPrefab.AddComponent(new StaminaPotion());
-            shieldPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            shieldPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(shieldPrefab);
 
@@ -104,7 +104,7 @@ namespace BRS {
             GameObject speedPrefab = new GameObject("speedPrefab", File.Load<Model>("Models/powerups/speed"));
             speedPrefab.transform.Scale(.3f);
             speedPrefab.AddComponent(new SpeedBoost());
-            speedPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            speedPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(speedPrefab);
 
@@ -112,7 +112,7 @@ namespace BRS {
             GameObject trapPrefab = new GameObject("trapPrefab", File.Load<Model>("Models/powerups/trap"));
             trapPrefab.transform.Scale(.3f);
             trapPrefab.AddComponent(new Trap());
-            trapPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            trapPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
             //trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
             AddPrefab(trapPrefab);
 

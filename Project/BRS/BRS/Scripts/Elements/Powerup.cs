@@ -37,10 +37,11 @@ namespace BRS.Scripts {
 
             if (rotate) {
                 _rotationAngle += rotSpeed * Time.deltaTime;
-                // todo: refactor
+
                 RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
-                if (rbc != null)
-                rbc.RigidBody.Orientation = JMatrix.CreateRotationY(_rotationAngle);
+                if (rbc != null) {
+                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                }
 
                 //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
             }

@@ -50,9 +50,12 @@ namespace BRS.Engine.Physics {
             World = new World(collision);
             World.AllowDeactivation = true;
             World.Gravity = new JVector(0, -20, 0);
-            //World.ContactSettings.AllowedPenetration = 0.0f;
+            //World.ContactSettings.BreakThreshold = 0.5f;
+            //World.ContactSettings.AllowedPenetration = -0.1f;
+            //World.ContactSettings.MinimumVelocity = 2.0f;
 
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
+            World.Events.ContactCreated += Events_ContactCreated;
 
             DebugDrawer = debugDrawer;
             Display = display;
@@ -167,9 +170,31 @@ namespace BRS.Engine.Physics {
                     Instance._colliders.Add(body2);
                 }
             } else {
-                Debug.Log("Collision between: " + body1?.GameObject.tag + " " + body2?.GameObject.tag);
                 body1?.GameObject.OnCollisionEnter(body2);
                 body2?.GameObject.OnCollisionEnter(body1);
+            }
+        }
+
+        private void Events_ContactCreated(Contact obj) {
+            Collider body1 = obj.Body1 as Collider;
+            Collider body2 = obj.Body2 as Collider;
+
+            bool body1IsPlayer = body1?.GameObject.tag == ObjectTag.Player;
+            bool body2IsPLayer = body2?.GameObject.tag == ObjectTag.Player;
+
+            bool body1IsPureCollider = body1?.PureCollider == true;
+            bool body2IsPureCollider = body2?.PureCollider == true;
+
+            if (body1IsPlayer && !body2IsPureCollider) {
+                //body1.AddForce(obj.Normal * 100);
+                //body1.LinearVelocity -= obj.Normal * 5;
+                //Debug.Log(obj.Normal, "Force to body 1: ");
+                body1.Position -= obj.Normal * 0.1f;
+            } else if (body2IsPLayer && !body1IsPureCollider) {
+                //body2.AddForce(obj.Normal * -100);
+                //body2.LinearVelocity += obj.Normal * 5;
+                //Debug.Log(obj.Normal, "Force to body 2: ");
+                body2.Position += obj.Normal * 0.1f;
             }
         }
 
@@ -240,7 +265,7 @@ namespace BRS.Engine.Physics {
             if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
 
             Collider c = rb as Collider;
-            if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;
+            //if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;
 
             bool isCompoundShape = (rb.Shape is CompoundShape);
 
