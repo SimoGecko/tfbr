@@ -16,8 +16,8 @@ namespace BRS {
         public static Model cubeModel, sphereModel;
 
         public static void Start() {
-            emptymodel = File.Load<Model>("Models/primitives/empty");
-            cubeModel = File.Load<Model>("Models/primitives/cube");
+            emptymodel  = File.Load<Model>("Models/primitives/emptyCol");
+            cubeModel   = File.Load<Model>("Models/primitives/cube");
             sphereModel = File.Load<Model>("Models/primitives/sphere");
             BuildPrefabs();
         }
