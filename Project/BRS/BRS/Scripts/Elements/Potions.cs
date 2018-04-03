@@ -13,7 +13,7 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
-            powerupName = "health"; // TODO distinguish
+            powerupType = PowerupType.health; // TODO distinguish
         }
 
         public override void UsePowerup() {
@@ -22,19 +22,20 @@ namespace BRS.Scripts {
         }
     }
 
+    /*
     class HealthBoost : Powerup {
         const int valueBoost = 20;
 
         public override void Start() {
             base.Start();
-            powerupName = "health";
+            powerupType = PowerupType.health;
         }
 
         public override void UsePowerup() {
             base.UsePowerup();
             owner.UpdateMaxHealth(valueBoost);
         }
-    }
+    }*/
 
     //STAMINA
     class StaminaPotion : Powerup {
@@ -42,7 +43,7 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
-            powerupName = "shield"; // not shield
+            powerupType = PowerupType.stamina;
         }
 
         public override void UsePowerup() {
@@ -51,19 +52,38 @@ namespace BRS.Scripts {
         }
     }
 
+    //SHIELD
+    class ShieldPotion : Powerup {
+        const float valuePotion = 20f;
+
+        public override void Start() {
+            base.Start();
+            powerupType = PowerupType.shield;
+        }
+
+        public override void UsePowerup() {
+            base.UsePowerup();
+            GameObject b = GameObject.FindGameObjectWithName("base_" + owner.teamIndex);
+            if (b != null) {
+                b.GetComponent<Base>().AddHealth(valuePotion);
+            }
+        }
+    }
+
+    /*
     class StaminaBoost : Powerup {
         const float valueBoost = .2f;
 
         public override void Start() {
             base.Start();
-            powerupName = "stamina";
+            powerupType = PowerupType.stamina;
         }
 
         public override void UsePowerup() {
             base.UsePowerup();
             owner.gameObject.GetComponent<PlayerStamina>().UpdateMaxStamina(valueBoost);
         }
-    }
+    }*/
 
 
     //CAPACITY
@@ -72,7 +92,7 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
-            powerupName = "capacity";
+            powerupType = PowerupType.capacity;
         }
 
         public override void UsePowerup() {
@@ -86,7 +106,7 @@ namespace BRS.Scripts {
 
         public override void Start() {
             base.Start();
-            powerupName = "speed";
+            powerupType = PowerupType.speed;
         }
 
         public override void UsePowerup() {

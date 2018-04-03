@@ -63,7 +63,7 @@ namespace BRS.Scripts {
             //CRATES
             sourceRect = new Rectangle(ICONSIZE, 0, ICONSIZE, ICONSIZE); // top right
             foreach (Vector3 pos in Elements.instance.AllCratePosition()) {
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Brown, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
+                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.SaddleBrown, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
 
             //POWERUPS
@@ -72,13 +72,24 @@ namespace BRS.Scripts {
                 spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, Color.Blue, 0, new Vector2(32, 32), .12f, SpriteEffects.None, 1f);
             }
 
+            //BASES
+            sourceRect = new Rectangle(2*ICONSIZE, 0, ICONSIZE, ICONSIZE); // top left
+            int i = 0;
+            foreach (Vector3 pos in Bases()) {
+                Color c = Graphics.ColorIndex(i++);
+                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), sourceRect, c, 0, new Vector2(32, 32), .3f, SpriteEffects.None, 1f);
+            }
+
             //PLAYERS
             sourceRect = new Rectangle(0, 0, ICONSIZE, ICONSIZE); // top left
-            foreach (Transform player in Players()) {
-                Vector3 position = player.position;
-                float Yrot = -player.eulerAngles.Y;
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(position), sourceRect, Color.Orange, MathHelper.ToRadians(Yrot), new Vector2(32, 32), .3f, SpriteEffects.None, 1f);
+            foreach (GameObject player in GameObject.FindGameObjectsWithTag(ObjectTag.Player)) {
+                Vector3 position = player.transform.position;
+                float Yrot = -player.transform.eulerAngles.Y;
+                Color c = player.GetComponent<Player>().playerColor;
+                spriteBatch.Draw(mapIcons, Pos3D2Pix(position), sourceRect, c, MathHelper.ToRadians(Yrot), new Vector2(32, 32), .3f, SpriteEffects.None, 1f);
             }
+
+            
         }
 
 
@@ -96,6 +107,13 @@ namespace BRS.Scripts {
             List<Transform> result = new List<Transform>();
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (GameObject o in players) result.Add(o.transform);
+            return result.ToArray();
+        }
+
+        Vector3[] Bases() {
+            List<Vector3> result = new List<Vector3>();
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
+            foreach (GameObject o in bases) result.Add(o.transform.position);
             return result.ToArray();
         }
 

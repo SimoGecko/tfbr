@@ -15,6 +15,7 @@ namespace BRS.Scripts {
         const float timeBetweenDrops = .1f;
         int capacity = 20;
         const float dropcashRadius = .5f;
+        const float losecashRadius = 2f;
 
         //private
         //MONEY
@@ -65,7 +66,7 @@ namespace BRS.Scripts {
         //drop = leave on ground by choice based on input
         public void DropMoney() {
             if (canDropMoney) {
-                RemoveMoneyAmount(1);
+                RemoveMoneyAmount(1, dropcashRadius);
                 canDropMoney = false;
                 new Timer(timeBetweenDrops, () => canDropMoney = true);
             }
@@ -73,20 +74,20 @@ namespace BRS.Scripts {
 
         //lose = leave on ground by attack
         public void LoseMoney() {
-            RemoveMoneyAmount(carryingMoney.Count/3);
+            RemoveMoneyAmount(Math.Max(carryingMoney.Count/2, 3), losecashRadius);
         }
 
         public void LoseAllMoney() {
-            RemoveMoneyAmount(carryingMoney.Count);
+            RemoveMoneyAmount(carryingMoney.Count, losecashRadius);
         }
 
         //general to remove
-        void RemoveMoneyAmount(int amount) {
+        void RemoveMoneyAmount(int amount, float radius) {
             amount = Math.Min(amount, carryingMoney.Count);
             for (int i = 0; i < amount; i++){
                 Money money = carryingMoney.Pop();
                 //Spawn money somewhere
-                Spawner.instance.SpawnMoneyAround(transform.position, dropcashRadius);
+                Spawner.instance.SpawnMoneyAround(transform.position, radius);
                 carryingValue -= money.Value;
                 carryingWeight -= money.Weight;
             }
@@ -99,6 +100,10 @@ namespace BRS.Scripts {
         // queries
         public bool CanPickUp(Money money) {
             return carryingWeight + money.Weight <= capacity;
+        }
+
+        public bool IsFull() {
+            return carryingWeight >= capacity-3;
         }
 
         /*

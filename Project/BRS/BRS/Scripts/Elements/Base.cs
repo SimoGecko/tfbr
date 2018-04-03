@@ -12,7 +12,7 @@ namespace BRS.Scripts {
 
         //public
         const float deloadDistanceThreshold = 4f;
-        const float timeBetweenUnloads = .1f;
+        const float timeBetweenUnloads = .05f;
         const float moneyPenalty = .5f; // percent
 
         //private
@@ -43,7 +43,7 @@ namespace BRS.Scripts {
             bool isPlayer = c.gameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex) {
+                if (p.teamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
@@ -82,6 +82,7 @@ namespace BRS.Scripts {
                     TotalMoney -= (int)(TotalMoney * moneyPenalty);
                 }
             }
+            UpdateUI();
         }
 
 
@@ -95,7 +96,7 @@ namespace BRS.Scripts {
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var player in players) {
                 Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex) result.Add(p);
+                if (p.teamIndex == BaseIndex) result.Add(p);
             }
             return result.ToArray();
         }
