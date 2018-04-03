@@ -188,7 +188,9 @@ namespace Jitter.Dynamics
             //return;
 
             if (treatBody1AsStatic && treatBody2AsStatic) return;
-            if (body1.PureCollider && treatBody2AsStatic || body2.PureCollider && treatBody1AsStatic) return;
+
+            // Andy: Added pure-collider principle => pure colliders are only used for collision-events-activators
+            if (body1.PureCollider && !treatBody2AsStatic || body2.PureCollider && !treatBody1AsStatic) return;
 
             float dvx, dvy, dvz;
 
