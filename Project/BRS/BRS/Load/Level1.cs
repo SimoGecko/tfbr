@@ -8,16 +8,16 @@ using BRS.Scripts;
 using System.IO;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Menu;
 
 namespace BRS.Load {
     class Level1 : Scene {
         public Level1(PhysicsManager physics)
             : base(physics) { }
 
-        
-
-        protected override void Build() {
+        public override void Build() {
             ////////// scene setup for level1 //////////
+            base.Build();
 
             //MANAGER
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
@@ -25,6 +25,11 @@ namespace BRS.Load {
             UIManager.AddComponent(new PlayerUI());
             UIManager.AddComponent(new PowerupUI());
             UIManager.AddComponent(new GameUI());
+            UIManager.Start();
+
+
+
+            List<GameObject> addedGO = new List<GameObject>();
 
             GameObject manager = new GameObject("manager");
             manager.AddComponent(new Elements());
@@ -32,6 +37,9 @@ namespace BRS.Load {
             manager.AddComponent(new RoundManager());
             manager.AddComponent(new Spawner());
             manager.AddComponent(new Minimap());
+
+            addedGO.Add(manager);
+            
 
 
             //TEST lighting
@@ -53,32 +61,6 @@ namespace BRS.Load {
                 }
             }*/
 
-
-            //PLAYER
-            for (int i=0; i<GameManager.numPlayers; i++) {
-                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the _tex version is much less shiny
-                player.tag = ObjectTag.Player;
-                player.AddComponent(new Player(i, i%2));
-                player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
-                //subcomponents
-                player.AddComponent(new PlayerMovement());
-                player.AddComponent(new PlayerAttack());
-                player.AddComponent(new PlayerInventory());
-                player.AddComponent(new PlayerPowerup());
-                player.AddComponent(new PlayerStamina());
-                player.AddComponent(new PlayerLift());
-
-                //arrow
-                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player.transform, null, i));
-                arrow.transform.Scale(.1f);
-                //player.mat = new EffectMaterial(true, Color.White);
-
-            }
-
-
-
             //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
@@ -99,6 +81,7 @@ namespace BRS.Load {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            addedGO.Add(vault);
 
             //other elements
             GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
@@ -117,6 +100,44 @@ namespace BRS.Load {
                 bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
                 bases[i].transform.SetStatic();
             }
+
+            foreach (GameObject go in addedGO)
+                go.Start();
+        }
+
+        public override void CreatePlayers() {
+            //PLAYER
+            for (int i = 0; i < GameManager.numPlayers; i++) {
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+                player.tag = ObjectTag.Player;
+                player.AddComponent(new Player(i, i % 2));
+                player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
+                //subcomponents
+                player.AddComponent(new PlayerMovement());
+                player.AddComponent(new PlayerAttack());
+                player.AddComponent(new PlayerInventory());
+                player.AddComponent(new PlayerPowerup());
+                player.AddComponent(new PlayerStamina());
+                player.AddComponent(new PlayerLift());
+
+                if (MenuManager.instance.playersInfo.ContainsKey("player_" + i.ToString())) {
+                    string userName = MenuManager.instance.playersInfo["player_" + i.ToString()].Item1;
+                    Model userModel = MenuManager.instance.playersInfo["player_" + i.ToString()].Item2;
+
+                    if (userName != null) player.GetComponent<Player>().nameUser = userName;
+                    if (userModel != null) player.Model = userModel;
+                }
+
+                //arrow
+                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
+                arrow.AddComponent(new Arrow(player.transform, null, i));
+                arrow.transform.Scale(.1f);
+
+                player.Start();
+                arrow.Start();
+            }
+
         }
     }
 }

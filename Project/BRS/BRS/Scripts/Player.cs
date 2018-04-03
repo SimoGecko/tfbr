@@ -21,8 +21,7 @@ namespace BRS.Scripts {
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
-        string playerName;
-        public string nameUser;
+
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -45,12 +44,10 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string _name = "Player")
+        public Player(int playerIndex, int teamIndex)
         {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
-            playerName = _name + (playerIndex + 1).ToString();
-            nameUser = playerName;
         }
         public override void Start() {
             base.Start();
@@ -67,7 +64,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if (!GameManager.GameActive) {
+            if (!GameManager.gameActive) {
                 pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
@@ -88,7 +85,6 @@ namespace BRS.Scripts {
                     state = State.attack;
                     pS.UseStaminaForAttack();
                     pA.BeginAttack();
-                    camController.Shake(.5f);
                 }
 
                 if (LiftInput()) {
@@ -103,10 +99,6 @@ namespace BRS.Scripts {
 
             pS.UpdateStamina();
             UpdateUI();
-        }
-
-        public override void OnCollisionEnter(Collider c) {
-            //camController.Shake(.3f);
         }
 
 
@@ -139,10 +131,10 @@ namespace BRS.Scripts {
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
-            PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
+            UserInterface.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------

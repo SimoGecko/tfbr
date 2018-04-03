@@ -29,7 +29,7 @@ namespace BRS.Load {
         /// <summary>
         /// Set up the scene for the physics-prototype
         /// </summary>
-        protected override void Build() {
+        public override void Build() {
             // Add top-level manager
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());

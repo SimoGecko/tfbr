@@ -1,60 +1,84 @@
-// (c) Simone Guggiari 2018
+﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
-    class RoundManager : Component {
-        ////////// deals with round stuff, ie time, current winner of rounds and score, ... (just for one round) //////////
-        ////////// also stores the mode of the round, ie BOMBER / SPEEDER / SUPERCASH / POWERUP RUSH / ... //////////
+    class GameManager : Component {
+        ////////// controls the game state, ie round time, ... //////////
 
         // --------------------- VARIABLES ---------------------
+        enum State { playing, paused, finished, menu};
 
         //public
-        public static int roundTime = 100;
-        public const int timeBeforePolice = 5;
+        public static int numPlayers = 2;
+        public static int lvlScene = 3;
+        public const int roundTime = 120;
+        public const int timeBeforePolice = 20;
 
         //private
+        public static bool gameActive;
         Timer rt;
 
         //reference
+        public static GameManager instance;
         Base[] bases;
-        public static RoundManager instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             instance = this;
+            gameActive = true;
             rt = new Timer(0, roundTime, OnRoundEnd);
-            GameUI.instance.StartMatch(rt);
-            //FindBases(); // data race
+            UserInterface.instance.roundtime = rt;
+
+            FindBases();
         }
 
         public override void Update() {
             if (rt.span.TotalSeconds < timeBeforePolice) {
-                GameUI.instance.UpdatePoliceComing();
+                UserInterface.instance.UpdatePoliceComing();
             }
         }
 
 
 
-        // --------------------- CUSTOM METHODS ---------b -------
+        // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
         void OnRoundEnd() {
-            FindBases();
+            gameActive = false;
             NotifyBases();
-            Debug.Log("notified bases");
             int winner = FindWinner();
-            GameUI.instance.UpdateGameWinnerUI(winner);
-            GameManager.instance.OnRoundEnd(winner);
+            UserInterface.instance.UpdateGameWinnerUI(winner);
+            new Timer(5f, () => Restart());
         }
+
+        void Restart() { // TODO fix this shit
+            //UserInterface.instance.Start();
+            GameObject.ClearAll();
+            //Game1.instance.Reset();
+
+            //scene.Start();
+            /*
+            foreach (GameObject go in GameObject.All) {
+                Debug.Log("restart " + go.Name);
+                go.Start();
+            }*/
+        }
+
 
         void FindBases() {
             //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
+            GameObject[] basesObject = GameObject.FindGameObjectsByType(ObjectType.Base);
             if (basesObject.Length < 1) {
                 Debug.LogError("could not find the bases"); // avoids tag messup
             } else {
@@ -69,11 +93,14 @@ namespace BRS.Scripts {
                 bases[i].NotifyRoundEnd();
         }
 
+
+
+
         // queries
         int FindWinner() {
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
-            for (int i = 1; i < bases.Length; i++) {
+            for (int i = 1; i < numPlayers; i++) {
                 int totmoney = bases[i].TotalMoney;
                 if (totmoney > maxCash) { // TODO deal with tie
                     winner = i;
@@ -87,4 +114,5 @@ namespace BRS.Scripts {
         // other
 
     }
+
 }
