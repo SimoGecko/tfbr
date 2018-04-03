@@ -77,7 +77,7 @@ namespace BRS {
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
                         Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[1])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
                         GameObject go = new GameObject(tagName + "_" + i.ToString(), File.Load<Model>("Models/primitives/" + prefabName));
