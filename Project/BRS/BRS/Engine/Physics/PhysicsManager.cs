@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BRS.Engine.Physics.Primitives3D;
 using BRS.Load;
 using Jitter;
@@ -9,6 +10,7 @@ using Jitter.Dynamics.Constraints;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Physics {
     public class PhysicsManager {
@@ -18,8 +20,10 @@ namespace BRS.Engine.Physics {
             Instance = new PhysicsManager(debugDrawer, display, graphicsDevice);
         }
 
-        public int Status { get; set; }
-        public List<Collider> _coliders;
+        public enum CollisionState { Propagate, SaveInList }
+
+        private CollisionState Status { get; set; }
+        private List<Collider> _colliders;
 
         // Stores the physical world
         public World World { private set; get; }
@@ -68,34 +72,47 @@ namespace BRS.Engine.Physics {
         public void Update(GameTime gameTime) {
             UpdateDisplayText(gameTime);
 
+            if (Input.GetKeyDown(Keys.F1)) {
+                _doDrawings = !_doDrawings;
+            }
+
             float step = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (step > 1.0f / 100.0f) {
                 step = 1.0f / 100.0f;
             }
 
-            World.Step(step, true);
+            World.Step(step, false);
         }
 
+        /// <summary>
+        /// Find all the colliders that intersect the given sphere.
+        /// </summary>
+        /// <param name="position">Absolute position of the sphere-center.</param>
+        /// <param name="radius">Radius of the sphere.</param>
+        /// <param name="collisionTag">Only check for a specific tag.</param>
+        /// <returns>List of all colliders which are contained in the given sphere.</returns>
         public static Collider[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
-            List<Collider> result = new List<Collider>();
             SphereShape sphere = new SphereShape(radius);
-            RigidBody rbSphere = new RigidBody(sphere);
-            rbSphere.Position = Conversion.ToJitterVector(position);
+            RigidBody rbSphere = new RigidBody(sphere) {
+                Position = Conversion.ToJitterVector(position),
+                PureCollider = true
+            };
 
-            //SphereCollider sphere = new SphereCollider(position, radius);
+            // Prepare the instance to handle the detected collisions correctly
+            Instance.Status = CollisionState.SaveInList;
+            Instance._colliders = new List<Collider>();
 
-            //find all the colliders that intersect this sphere
-            Instance.Status = 1;
-            Instance._coliders = new List<Collider>();
             foreach (RigidBody rb in Instance.World.RigidBodies) {
                 Collider c = rb as Collider;
-                if (c != null && ((collisionTag != ObjectTag.Default && c.GameObject.tag != collisionTag) || !c.GameObject.active)) continue;
+                if (c != null && ((collisionTag != ObjectTag.Default && c.GameObject.tag != collisionTag) || !c.GameObject.active)) {
+                    continue;
+                }
 
                 Instance.World.CollisionSystem.Detect(rbSphere, rb);
-
             }
-            Instance.Status = 2;
+
+            Instance.Status = CollisionState.Propagate;
 
 
             //foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
@@ -103,7 +120,7 @@ namespace BRS.Engine.Physics {
 
             //    if (c.Intersects(sphere)) result.Add(c);
             //}
-            return Instance._coliders.ToArray();
+            return Instance._colliders.ToArray();
         }
 
         public void Draw(Camera camera) {
@@ -133,7 +150,7 @@ namespace BRS.Engine.Physics {
             BasicEffect.PreferPerPixelLighting = false;
             BasicEffect.LightingEnabled = false;
             DebugDrawer.SetBasicEffect(BasicEffect);
-            DrawIslands();
+            //DrawIslands();
             DrawDebugInfo();
         }
 
@@ -141,13 +158,16 @@ namespace BRS.Engine.Physics {
             Collider body1 = arg1 as Collider;
             Collider body2 = arg2 as Collider;
 
-            if (Instance.Status == 1) {
-                if (body1 != null)
-                    Instance._coliders.Add(body1);
+            if (Instance.Status == CollisionState.SaveInList) {
+                if (body1 != null) {
+                    Instance._colliders.Add(body1);
+                }
 
-                if (body2 != null)
-                    Instance._coliders.Add(body2);
+                if (body2 != null) {
+                    Instance._colliders.Add(body2);
+                }
             } else {
+                Debug.Log("Collision between: " + body1?.GameObject.tag + " " + body2?.GameObject.tag);
                 body1?.GameObject.OnCollisionEnter(body2);
                 body2?.GameObject.OnCollisionEnter(body1);
             }
@@ -170,17 +190,17 @@ namespace BRS.Engine.Physics {
             }
         }
 
-        public void DrawIslands() {
-            foreach (CollisionIsland island in World.Islands) {
-                JBBox box = JBBox.SmallBox;
+        //public void DrawIslands() {
+        //    foreach (CollisionIsland island in World.Islands) {
+        //        JBBox box = JBBox.SmallBox;
 
-                foreach (RigidBody body in island.Bodies) {
-                    box = JBBox.CreateMerged(box, body.BoundingBox);
-                }
+        //        foreach (RigidBody body in island.Bodies) {
+        //            box = JBBox.CreateMerged(box, body.BoundingBox);
+        //        }
 
-                DebugDrawer.DrawAabb(box.Min, box.Max, island.IsActive() ? Color.Green : Color.Yellow);
-            }
-        }
+        //        DebugDrawer.DrawAabb(box.Min, box.Max, island.IsActive() ? Color.Green : Color.Yellow);
+        //    }
+        //}
 
         #region add draw matrices to the different primitives
         private void AddShapeToDrawList(Shape shape, JMatrix ori, JVector pos) {
@@ -218,6 +238,9 @@ namespace BRS.Engine.Physics {
 
         private void AddBodyToDrawList(RigidBody rb) {
             if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
+
+            Collider c = rb as Collider;
+            if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;
 
             bool isCompoundShape = (rb.Shape is CompoundShape);
 
@@ -285,12 +308,9 @@ namespace BRS.Engine.Physics {
             Display.DisplayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
             Display.DisplayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
 
-#if (WINDOWS)
-                    Display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
-                        "  gen1: " + GC.CollectionCount(1).ToString() +
-                        "  gen2: " + GC.CollectionCount(2).ToString();
-#endif
-
+            Display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
+                "  gen1: " + GC.CollectionCount(1).ToString() +
+                "  gen2: " + GC.CollectionCount(2).ToString();
         }
         #endregion
     }

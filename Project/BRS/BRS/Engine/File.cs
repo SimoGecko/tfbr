@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using BRS.Engine.Physics;
-using BRS.Scripts.Physics;
+using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS {
     class File : Component {
@@ -101,7 +101,7 @@ namespace BRS {
                         else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
 
                         if (go.tag == ObjectTag.Ground) {
-                            go.AddComponent(new StaticRigidBody(physics));
+                            go.AddComponent(new StaticRigidBody(physics, isGround:true));
                         } else {
                             go.AddComponent(new StaticRigidBody(physics));
                         }

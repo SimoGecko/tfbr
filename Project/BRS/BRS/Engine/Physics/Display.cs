@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Physics {
     public class Display : DrawableGameComponent {
@@ -14,6 +15,8 @@ namespace BRS.Engine.Physics {
         private int _frameRate;
         private int _frameCounter;
         private TimeSpan _elapsedTime = TimeSpan.Zero;
+
+        private bool _doDrawings = true;
 
         private int _bbWidth, _bbHeight;
         private const int PaddingTop = 300;
@@ -53,6 +56,10 @@ namespace BRS.Engine.Physics {
         public override void Update(GameTime gameTime) {
             _elapsedTime += gameTime.ElapsedGameTime;
 
+            if (Input.GetKeyDown(Keys.F2)) {
+                _doDrawings = !_doDrawings;
+            }
+
             if (_elapsedTime > TimeSpan.FromSeconds(1)) {
                 _elapsedTime -= TimeSpan.FromSeconds(1);
                 _frameRate = _frameCounter;
@@ -61,6 +68,10 @@ namespace BRS.Engine.Physics {
         }
 
         public override void Draw(GameTime gameTime) {
+            if (_doDrawings == false) {
+                return;
+            }
+
             _frameCounter++;
 
             string fps = _frameRate.ToString();

@@ -1,9 +1,8 @@
-﻿using BRS.Engine.Physics;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
-namespace BRS.Scripts.Physics {
+namespace BRS.Engine.Physics.RigidBodies {
     class SteerableRigidBody : Collider {
         public float RotationY { get; set; }
         public SteerableRigidBody(Shape shape) : base(shape) {

@@ -43,11 +43,15 @@ namespace BRS.Scripts {
         }
 
         public void Collect(Powerup powerup) {
+            // If player has already one powerup, it will simply be exchanged
+            carryingPowerup.Clear();
             carryingPowerup.Add(powerup);
         }
 
         public bool CanPickUp(Powerup powerup) {
-            return carryingPowerup.Count < maxNumberPowerups;
+            //return carryingPowerup.Count < maxNumberPowerups;
+            // If player has already one powerup, it will simply be exchanged
+            return true;
         }
 
         // queries

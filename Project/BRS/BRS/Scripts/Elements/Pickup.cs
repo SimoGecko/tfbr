@@ -17,7 +17,7 @@ namespace BRS.Scripts {
 
         //private
         protected bool canPickup;
-        public System.Action OnPickup;
+        //public System.Action OnPickup;
 
         //reference
 
@@ -36,9 +36,8 @@ namespace BRS.Scripts {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && canPickup) {
                 DoPickup(c.GameObject.GetComponent<Player>());
-                OnPickup?.Invoke();
+                //OnPickup?.Invoke();
             }
-            //GameObject.Destroy(gameObject);
         }
 
 

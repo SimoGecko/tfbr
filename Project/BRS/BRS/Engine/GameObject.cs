@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
@@ -125,7 +126,12 @@ namespace BRS {
         public static void Destroy(GameObject o) {
             o.active = false;
             allGameObjects.Remove(o);
+            
             //TODO free up memory
+            foreach (Component c in o.components)
+            {
+                c.Destroy();
+            }
         }
 
         public static async void Destroy(GameObject o, float lifetime) {// delete after some time

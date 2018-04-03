@@ -1,20 +1,19 @@
-﻿using BRS.Engine.Physics;
-using BRS.Load;
+﻿using BRS.Load;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts.Physics {
+namespace BRS.Engine.Physics.RigidBodies {
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, Material material = null) {
+        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
-            Material = material;
+            ShapeType = shapeType;
             Tag = BodyTag.DrawMe;
         }
 
@@ -32,7 +31,6 @@ namespace BRS.Scripts.Physics {
                 com.Y > _treshold ? com.Y : 0,
                 com.Z > _treshold ? com.Z : 0);
 
-            Material = new Material {KineticFriction = 0, Restitution = 0, StaticFriction = 0};
 
             RigidBody = new SteerableRigidBody(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
@@ -44,9 +42,7 @@ namespace BRS.Scripts.Physics {
                 GameObject = gameObject
             };
 
-            if (Material != null) {
-                RigidBody.Material = Material;
-            }
+            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
 
             PhysicsManager.World.AddBody(RigidBody);
         }

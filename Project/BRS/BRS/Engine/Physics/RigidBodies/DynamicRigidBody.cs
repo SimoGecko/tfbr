@@ -1,16 +1,15 @@
-﻿using BRS.Engine.Physics;
-using BRS.Load;
-using Jitter.Dynamics;
+﻿using BRS.Load;
 using Jitter.LinearMath;
 
-namespace BRS.Scripts.Physics {
+namespace BRS.Engine.Physics.RigidBodies {
     class DynamicRigidBody : RigidBodyComponent {
-        public DynamicRigidBody(PhysicsManager physicsManager, bool isActive = true, Material material = null) {
+        public DynamicRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
-            Material = material;
-            Tag = BodyTag.DontDrawMe;
+            ShapeType = shapeType;
+            PureCollider = pureCollider;
+            Tag = BodyTag.DrawMe;
         }
 
         /// <summary>

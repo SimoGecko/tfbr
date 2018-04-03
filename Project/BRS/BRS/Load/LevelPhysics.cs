@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
-using BRS.Scripts.Physics;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -95,10 +95,10 @@ namespace BRS.Load {
             //AddCar(new JVector(-2, 0.8f, -2));
             AddSoftBody();
 
-            // Dummy object at position (0/0/0) for debug-rendering.
-            GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
-            dummy.tag = ObjectTag.Default;
-            dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
+            //// Dummy object at position (0/0/0) for debug-rendering.
+            //GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
+            //dummy.tag = ObjectTag.Default;
+            //dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
 
 

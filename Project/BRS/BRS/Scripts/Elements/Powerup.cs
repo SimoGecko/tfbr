@@ -2,6 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics.RigidBodies;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -11,13 +13,14 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float rotSpeed = 90;
+        const float rotSpeed = 1;
 
 
         //private
         protected string powerupName;
         protected bool destroyOnUse = true;
         protected bool rotate = true;
+        private float _rotationAngle = 0.0f;
 
         //reference
         protected Player owner;
@@ -32,8 +35,16 @@ namespace BRS.Scripts {
         public override void Update() {
             base.Update();
 
-            if(rotate)
-                transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+            if (rotate) {
+                _rotationAngle += rotSpeed * Time.deltaTime;
+                // todo: refactor
+                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
+                if (rbc != null)
+                rbc.RigidBody.Orientation = JMatrix.CreateRotationY(_rotationAngle);
+
+                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+            }
+
         }
 
 
@@ -51,10 +62,10 @@ namespace BRS.Scripts {
                 Elements.instance.Remove(this);
                 PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
 
-                if(!destroyOnUse) gameObject.active = false;
+                if (!destroyOnUse) gameObject.active = false;
                 else GameObject.Destroy(gameObject);
             }
-            
+
         }
 
         public virtual void UsePowerup() {
@@ -71,5 +82,5 @@ namespace BRS.Scripts {
         // other
 
     }
-    
+
 }

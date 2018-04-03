@@ -6,8 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Physics.Vehicle;
-using BRS.Scripts.Physics;
 using Jitter.LinearMath;
 
 namespace BRS.Load {
@@ -133,10 +133,10 @@ namespace BRS.Load {
 
             //_car.carBody.Position = new JVector(-2, 0.8f, -2);
 
-            // Dummy object at position (0/0/0) for debug-rendering.
-            GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
-            dummy.tag = ObjectTag.Default;
-            dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
+            //// Dummy object at position (0/0/0) for debug-rendering.
+            //GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
+            //dummy.tag = ObjectTag.Default;
+            //dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
     }
 }

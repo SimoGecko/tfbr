@@ -128,6 +128,7 @@
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\ShapeType.cs" />
     <Compile Include="Engine\Physics\Vehicle\CarObject.cs" />
     <Compile Include="Engine\Physics\Vehicle\DefaultCar.cs" />
     <Compile Include="Engine\Physics\Vehicle\Wheel.cs" />
@@ -219,7 +220,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Jitter\Jitter.csproj">
+      <Project>{ac7d5ebd-67ef-475f-a4dd-e78765ee25a6}</Project>
+      <Name>Jitter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

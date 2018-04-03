@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using BRS.Engine.Physics;
-using BRS.Scripts.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -32,7 +32,7 @@ namespace BRS.Scripts {
         float targetRotation;
         private Vector3 _previousLinearVelocity = Vector3.Zero;
 
-        
+
 
         //BOOST
         public bool boosting;
@@ -114,17 +114,16 @@ namespace BRS.Scripts {
 
             if (dynamicRigidBody != null) {
                 RigidBody rb = dynamicRigidBody.RigidBody;
-                
+
                 JVector lv = JVector.Transform(Conversion.ToJitterVector(linearVelocity), rb.Orientation);
-                
+
                 rb.LinearVelocity = new JVector(lv.X, 0, lv.Z);
 
-                rb.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-                
-                SteerableRigidBody srb =rb as SteerableRigidBody;
+                rb.Orientation = JMatrix.CreateRotationY(MathHelper.ToRadians(rotation));
 
-                if (srb != null)
-                {
+                SteerableRigidBody srb = rb as SteerableRigidBody;
+
+                if (srb != null) {
                     srb.RotationY = rotation * MathHelper.Pi / 180.0f;
                 }
                 //rb.LinearVelocity = (new JVector(0, 0, 10));
