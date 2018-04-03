@@ -104,7 +104,8 @@ namespace BRS.Load {
             GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt"); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
