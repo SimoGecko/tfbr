@@ -81,11 +81,13 @@ namespace BRS.Load {
                 //player.mat = new EffectMaterial(true, Color.White);
             }
 
+            /*
+            // no need for billboard
             GameObject billboard = new GameObject("billboard", File.Load<Model>("Models/primitives/cube"));
             billboard.AddComponent(new Billboard(Elements.instance.Player(1).transform));
             //billboard.transform.SetParent(player.transform);
             billboard.transform.Scale(.3f);
-
+            */
 
             //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {

@@ -36,8 +36,9 @@ namespace BRS.Scripts {
         public override void Start() {
             point = Vector3.Zero;
             pI = follow.GetComponent<PlayerInventory>();
-            target = Elements.instance.Player(1 - playerIndex).transform;
-            teamBase = Elements.instance.Base(playerIndex).transform.position;
+            if(Elements.instance.Player(1 - playerIndex)!=null)
+                target = Elements.instance.Player(1 - playerIndex).transform;
+            teamBase = Elements.instance.Base(playerIndex%2).transform.position;
         }
 
         public override void Update() {

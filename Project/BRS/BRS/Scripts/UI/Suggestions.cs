@@ -37,7 +37,8 @@ namespace BRS.Scripts {
             comicBubble = File.Load<Texture2D>("Images/UI/comic_bubble");
             commands = new List<ButtonCommand>();
 
-            player = Elements.instance.Player(1).transform;
+            Player p = Elements.instance.Player(1);
+            if(p!=null) player = p.transform;
         }
 
         public override void Update() {

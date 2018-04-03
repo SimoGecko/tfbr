@@ -19,7 +19,7 @@ namespace BRS {
             //VALUABLES
             //cash
             //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
-            string[] models = new string[] { "SM_Prop_Money_Note_07", "../polygonheist2/SM_Prop_Money_Stack_04", "SM_Prop_Money_Stack_03" };
+            string[] models = new string[] { "SM_Prop_Money_Note_07", "SM_Prop_Money_Stack_02", "SM_Prop_Money_Stack_03" }; // ../polygonheist2/SM_Prop_Money_Stack_04
             int[] values = new int[] { 1, 3, 10 };
             for (int i=0; i<3; i++) {
                 GameObject moneyPrefab = new GameObject("money"+values[i]+"Prefab", File.Load<Model>("Models/polygonheist/" + models[i]));
