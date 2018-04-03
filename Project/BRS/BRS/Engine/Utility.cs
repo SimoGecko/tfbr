@@ -39,7 +39,7 @@ namespace BRS {
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
-            float deltaTime = Time.deltatime;
+            float deltaTime = Time.deltaTime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
             float num = 2f / smoothTime;
@@ -227,12 +227,24 @@ namespace BRS {
 
 
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat =null) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    //NOTE: lighting staff must be put here
+                    if (mat == null) {
+                        //default settings
+                        //effect.EnableDefaultLighting();
+                    } else {
+                        effect.EnableDefaultLighting();
+                        //effect.LightingEnabled = mat.lit;
+                        //effect.DiffuseColor = mat.diffuse.ToVector3();
+                        effect.Alpha = mat.diffuse.A;
+                        //effect.CurrentTechnique = EffectTechnique
+                        //effect.Texture
+                    }
+                    //effect.Alpha = .5f;
+                    //effect.di
+                    //effect.EnableDefaultLighting();
 
-                    effect.EnableDefaultLighting();
                     //effects
                     effect.World = world;
                     effect.View = view;
@@ -251,6 +263,10 @@ namespace BRS {
                     colors2D[x, y] = colors1D[x + y * texture.Width];
             return colors2D;
         }
+        /*
+        public static Vector3 ColorTo3(this Color c) {
+            return new Vector3((float)c.R/255, (float)c.G/255, (float)c.B/255);
+        }*/
 
         //==============================================================
         //EXTENSION METHODS
@@ -283,12 +299,21 @@ namespace BRS {
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
         }
+        public static Vector2 GetCenter(this Rectangle rect) {
+            return new Vector2(rect.X + .5f*rect.Width, rect.Y + .5f*rect.Height);
+        }
 
         public static Vector2 Round(this Vector2 v) { // Makes it Point2
             return new Vector2((int)v.X, (int)v.Y);
         }
         public static float Clamp(this float f, float min, float max) {
             return f < min ? min : f > max ? max : f;
+        }
+
+        public static float Angle(this Vector3 a, Vector3 b) {
+            //returns angle in degree between a and b
+            float cos = Vector3.Dot(a.normalized(), b.normalized());
+            return MathHelper.ToDegrees((float) Math.Acos(cos));
         }
 
     }
@@ -313,18 +338,27 @@ namespace BRS {
             return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
         }
 
+        public static Vector2 insideUnitSquare() {
+            return new Vector2(Value*2-1, Value * 2 - 1);
+        }
+        public static Vector3 insideUnitCube() {
+            return new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
+        }
+
         public static Vector2 insideUnitCircle() {
             double r = Math.Sqrt(rand.NextDouble());
             double phi = rand.NextDouble() * 2 * Math.PI;
             return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
         }
-
-        public static Vector2 insideUnitSquare() {
-            return new Vector2(Value, Value);
+        public static Vector3 insideUnitSphere() {
+            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            while(sample.LengthSquared()>1)
+                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            return sample;
         }
+        
 
         public static Quaternion YRotation() {
-            Color c;
             return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
         }
 
@@ -366,5 +400,10 @@ namespace BRS {
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
         }
+
+        //see notes on notebook for shape
+        public static float EvaluateA(float t) { return t * t; }
+        public static float EvaluateB(float t) { return (float)Math.Sqrt(t); }
+        public static float EvaluateC(float t) { return (float)Math.Sin((t-.5f)*Math.PI)/2+.5f; }
     }
 }

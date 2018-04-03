@@ -7,22 +7,17 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.Physics {
-    class RigidBodyComponent : Component {
-        private Shape _collisionShape;
-        public RigidBody RigidBody { get; private set; }
-        private readonly PhysicsManager _physicsManager;
+    abstract class RigidBodyComponent : Component {
+        protected Shape CollisionShape;
+        public RigidBody RigidBody;
+        protected PhysicsManager PhysicsManager;
+        protected BodyTag Tag;
 
-        private readonly bool _isStatic;
-        private readonly bool _isActive;
+        protected bool IsStatic;
+        protected bool IsActive;
 
-        private readonly Material _material;
-
-        public RigidBodyComponent(PhysicsManager physicsManager, bool isStatic, bool isActive = true, Material material = null) {
-            _physicsManager = physicsManager;
-            _isStatic = isStatic;
-            _isActive = isActive;
-            _material = material;
-        }
+        protected Material Material;
+        protected JVector CenterOfMass;
 
         /// <summary>
         /// Initialization of the rigid-body
@@ -31,37 +26,23 @@ namespace BRS.Scripts.Physics {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            _collisionShape = new BoxShape(bbSize);
-            //_collisionShape = ConvexHullHelper.Calculate(model); //Shape sh = new ConvexHullShape(model.Meshes);
+            CollisionShape = new BoxShape(bbSize);
 
-            RigidBody = new RigidBody(_collisionShape)
-            {
+            RigidBody = new RigidBody(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
-                IsStatic = _isStatic,
-                IsActive = _isActive,
-                Tag = gameObject.Type == ObjectType.Player ? BodyTag.DrawMe : BodyTag.DontDrawMe
+                IsStatic = IsStatic,
+                IsActive = IsActive,
+                Tag = Tag
             };
-            RigidBody.Tag = BodyTag.DontDrawMe;
 
-            if (_material != null) {
-                RigidBody.Material = _material;
+            if (Material != null) {
+                RigidBody.Material = Material;
             }
 
-            _physicsManager.World.AddBody(RigidBody);
+            PhysicsManager.World.AddBody(RigidBody);
 
             base.Start();
-        }
-
-        /// <summary>
-        /// Update of the time-step.
-        /// </summary>
-        public override void Update() {
-            // Apply position and rotation from physics-world to the game-object
-            transform.position = Conversion.ToXnaVector(RigidBody.Position);
-            transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-
-            base.Update();
         }
     }
 }

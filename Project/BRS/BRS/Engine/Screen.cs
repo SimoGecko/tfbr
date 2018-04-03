@@ -15,7 +15,7 @@ namespace BRS {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int WIDTH = 1920;
+        public const int WIDTH = 1920; // 1920x1080, 2560x1440
         public const int HEIGHT = 1080;
         public const string TITLE = "GAME TITLE";
 
