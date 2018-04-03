@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         //private
         public int BaseIndex { get; set; } = 0;
         public int TotalMoney { get; private set; }
-
+        public Color BaseColor { get; private set; }
 
 
         //reference
@@ -27,6 +27,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public Base(int baseIndex) {
             BaseIndex = baseIndex;
+            BaseColor = Graphics.ColorIndex(baseIndex);
         }
 
         public override void Start() {

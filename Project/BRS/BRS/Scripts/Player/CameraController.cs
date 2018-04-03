@@ -112,7 +112,7 @@ namespace BRS.Scripts {
 
 
         // queries
-        public float YRotation { get { return Yangle; } }
+        public float YRotation { get { return YangleSmooth; } }
 
 
 

@@ -56,7 +56,7 @@ namespace BRS.Scripts {
             sB = spriteBatch;
 
             //callbacks
-            Minimap.instance.Draw(sB);
+            //Minimap.instance.Draw(sB);
             GameUI.instance.Draw();
             //Billboard.instance.Draw();
         }
@@ -68,6 +68,7 @@ namespace BRS.Scripts {
             PlayerUI.instance.Draw(index);
             PowerupUI.instance.Draw(index);
             Suggestions.instance.Draw(index);
+            Minimap.instance.DrawSmall(spriteBatch, index);
 
         }
 

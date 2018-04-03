@@ -41,7 +41,7 @@ namespace BRS.Scripts {
         PlayerStamina   pS;
         PlayerLift      pL;
 
-        CameraController camController;
+        public CameraController camController;
         Player other;
 
 
