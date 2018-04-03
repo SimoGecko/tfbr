@@ -12,12 +12,9 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float timeBeforeExplosion = 3f;
-        const float explosionRadius = 2f;
-        const float explosionDamage = 60;
+        
 
         //private
-        bool planted = false; // use to show sparks
 
 
         //reference
@@ -26,14 +23,8 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            destroyOnUse = false;
-            powerupName = "bomb";
+            powerupType = PowerupType.bomb;
         }
-
-        public override void Update() {
-            base.Update();
-        }
-
 
 
         // --------------------- CUSTOM METHODS ----------------
@@ -43,14 +34,18 @@ namespace BRS.Scripts {
         public override void UsePowerup() {
             base.UsePowerup();
             transform.position = owner.transform.position + Vector3.Up;
-            canPickup = false;
-            planted = true; 
-            gameObject.active = true;
-            rotate = false;
+            GameObject plantedBomb = GameObject.Instantiate("plantedBombPrefab", transform);
+        }
+    }
 
-            //Powerup pu = Spawner.instance.SpawnOnePowerupAt(p.transform.position, "bombPrefab");
-            //Powerup pu = p.gameObject.GetComponent<PlayerPowerup>().DropBomb(posBomb);
+    class PlantedBomb : Component {
+        ////////// bomb that can be planted and explodes after some time damaging what's around //////////
 
+        const float timeBeforeExplosion = 3f;
+        const float explosionRadius = 4f;
+        const float explosionDamage = 60;
+
+        public override void Start() {
             new Timer(timeBeforeExplosion, () => Explode());
         }
 
@@ -68,11 +63,8 @@ namespace BRS.Scripts {
         bool InExplosionRange(GameObject o) {
             return (o.transform.position - transform.position).LengthSquared() <= explosionRadius * explosionRadius;
         }
-
-
-
-        // other
-
     }
+
+    
 
 }

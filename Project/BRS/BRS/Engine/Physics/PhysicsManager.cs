@@ -112,6 +112,7 @@ namespace BRS.Engine.Physics {
                     continue;
                 }
 
+                // Todo: this yields a problem
                 Instance.World.CollisionSystem.Detect(rbSphere, rb);
             }
 

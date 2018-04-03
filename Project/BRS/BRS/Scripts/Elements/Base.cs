@@ -13,7 +13,7 @@ namespace BRS.Scripts {
 
         //public
         const float deloadDistanceThreshold = 4f;
-        const float timeBetweenUnloads = .1f;
+        const float timeBetweenUnloads = .05f;
         const float moneyPenalty = .5f; // percent
 
         //private
@@ -83,6 +83,7 @@ namespace BRS.Scripts {
                     TotalMoney -= (int)(TotalMoney * moneyPenalty);
                 }
             }
+            UpdateUI();
         }
 
 

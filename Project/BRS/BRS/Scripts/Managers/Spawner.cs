@@ -21,18 +21,21 @@ namespace BRS.Scripts {
         const int moneyAmount = 50;
         const int vaultGold = 20;
         const int crateAmount = 10;
-        const int powerupAmount = 30;
+        const int powerupAmount = 15;
 
-        const float timeBetweenCashSpawn = 1f;
-        const float timeBetweenCrateSpawn = 5f;
-        const float timeBetweenPowerupSpawn = 10f;
+        const float timeBetweenCashSpawn = 10f;
+        const float timeBetweenCrateSpawn = 30f;
+        const float timeBetweenPowerupSpawn = 30;
 
         const float timeRandomizer = .2f;
 
-        //prob distributions
-        static Dictionary<string, float> MoneyDistribution = new Dictionary<string, float> { { "money", .6f }, { "diamond", .3f }, { "gold", .1f } };
-        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> { { "bomb", .2f }, { "capacity", .1f }, { "key", .2f }, { "health", .1f }, { "shield", .1f }, { "speed", .1f }, { "trap", .2f } };
-
+        //prob distributions (no need to sum up to 1)
+        static Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> {
+            { "money1", .6f }, { "money3", .4f }, { "money10", .2f }, { "gold", .1f } };
+        static Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
+            { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
+            { "speed", .1f }, { "trap", .1f }, { "explodingbox", .1f }, { "weight", .1f }, { "magnet", 3.0f } };
+        
 
 
         //private
@@ -48,11 +51,16 @@ namespace BRS.Scripts {
         public override void Start() {
             instance = this;
 
+            for(int k=1; k<=10; k++) {
+                SpawnKCashAt(new Vector3(k*4, 0, 0), k);
+            }
+            
             SpawnInitialMoney();
             SpawnInitialVaultGold();
             SpawnInitialCrates();
             SpawnInitialPowerup();
 
+            
             SpawnCashContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
@@ -95,6 +103,18 @@ namespace BRS.Scripts {
             Elements.instance.Add(newmoney.GetComponent<Money>());
         }
 
+        void SpawnKCashAt(Vector3 position, int k) {
+            //spqwns a stack of cash
+            float radius = .5f;
+            float thickness = .1f;
+            for(int i=0; i<k; i++) {
+                int lvl = (int)Math.Log(i);
+                Vector3 pos = MyRandom.insideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
+                GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
+                Elements.instance.Add(newmoney.GetComponent<Money>());
+            }
+        }
+
         void SpawnInitialVaultGold() {
             for (int i = 0; i < vaultGold; i++) {
                 Vector2 position = MyRandom.InsideRectangle(Vault.vaultArea);
@@ -120,6 +140,7 @@ namespace BRS.Scripts {
         void SpawnInitialPowerup() {
             for (int i = 0; i < powerupAmount; i++)
                 SpawnOnePowerupRandom();
+                //SpawnOnePowerupAt(new Vector3(i * 3, 0, -10));
         }
 
         void SpawnOnePowerupRandom() {

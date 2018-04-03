@@ -23,6 +23,7 @@ namespace BRS.Scripts {
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
         string playerName;
+        public Color playerColor;
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -42,6 +43,7 @@ namespace BRS.Scripts {
         PlayerLift pL;
 
         CameraController camController;
+        Player other;
 
 
         // --------------------- BASE METHODS ------------------
@@ -49,9 +51,16 @@ namespace BRS.Scripts {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             playerName = _name + (playerIndex + 1).ToString();
+            playerColor = Graphics.ColorIndex(playerIndex);
+            //TODO make mesh have this color
+            
         }
         public override void Start() {
             base.Start();
+
+            GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
+            if (po != null) other = po.GetComponent<Player>();
+           
 
             camController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
 
@@ -65,6 +74,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
+
             if (!GameManager.GameActive) {
                 pM.Move(Vector3.Zero); // smooth stop
                 return;
@@ -122,7 +132,6 @@ namespace BRS.Scripts {
 
         // --------------------- CUSTOM METHODS ----------------
 
-
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
             base.TakeDamage(damage); // don't override state
@@ -143,16 +152,21 @@ namespace BRS.Scripts {
         protected override void Respawn() {
             base.Respawn();
             state = State.normal;
-            transform.position = new Vector3(-5 + 10 * PlayerIndex, 2, 0); // store base position
+            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
         }
 
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
+            bool playerInRange = false;
+            if (other != null) {
+                playerInRange = Vector3.DistanceSquared(transform.position, other.transform.position) <= Math.Pow(PlayerAttack.attackDistance, 2);
+            }
+            bool canAttack = pS.HasStaminaForAttack() && playerInRange;
             PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -162,8 +176,10 @@ namespace BRS.Scripts {
         Vector2 MoveInput() {
             if (PlayerIndex == 0)
                 return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
-            else
+            else if (PlayerIndex == 1)
                 return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
+            else
+                return Input.GetThumbstick("Left", PlayerIndex);
         }
 
         bool AttackInput() {
@@ -188,7 +204,8 @@ namespace BRS.Scripts {
 
         bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
-               || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex);
+               || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
+               || Input.GetButton(Buttons.LeftShoulder , PlayerIndex) || Input.GetButton(Buttons.LeftTrigger , PlayerIndex);
         }
 
         // other

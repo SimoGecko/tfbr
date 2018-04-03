@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         //public
         const float minSpeed = 5f;
         const float maxSpeed = 10f;
-        const float maxTurningRate = 360; // deg/sec
+        const float maxTurningRate = 720; // deg/sec
         const float boostSpeedMultiplier = 1.5f;
 
         const float slowdownMalus = .3f;
@@ -80,7 +80,7 @@ namespace BRS.Scripts {
             speedboost *= slowdown ? slowdownMalus : 1f;
 
             //// move
-            //transform.eulerAngles = new Vector3(0, rotation, 0);
+            transform.eulerAngles = new Vector3(0, rotation, 0);
             //transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
 
             //move forward

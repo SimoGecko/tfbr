@@ -16,7 +16,8 @@ namespace BRS.Scripts {
 
 
         //private
-        List<Powerup> carryingPowerup;
+        List<Powerup> carryingPowerup; // last collected is first to use -> LIFO
+        //it's like a stack. if you add more that maxNumber, the one at position 0 is deleted
 
         //reference
 
@@ -37,26 +38,33 @@ namespace BRS.Scripts {
         public void UsePowerup(Player p) {
             //could implement selector here
             if (carryingPowerup.Count > 0) {
-                carryingPowerup[0].UsePowerup();
-                carryingPowerup.RemoveAt(0);
+                carryingPowerup[carryingPowerup.Count - 1].UsePowerup();
+                carryingPowerup.RemoveAt(carryingPowerup.Count - 1);
             }
+            PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
         }
 
         public void Collect(Powerup powerup) {
-            // If player has already one powerup, it will simply be exchanged
-            // Todo: Update also the UI
-            carryingPowerup.Clear();
+            if (carryingPowerup.Count == maxNumberPowerups) {
+                carryingPowerup.RemoveAt(0);
+            }
             carryingPowerup.Add(powerup);
+            PowerupUI.instance.UpdatePlayerPowerupUI(powerup.owner.PlayerIndex, CarryingPowerups());
         }
 
         public bool CanPickUp(Powerup powerup) {
-            //return carryingPowerup.Count < maxNumberPowerups;
-            // If player has already one powerup, it will simply be exchanged
             return true;
+            //return carryingPowerup.Count < maxNumberPowerups;
         }
 
         // queries
         bool HasPowerup { get { return carryingPowerup.Count > 0; } }
+
+        public int[] CarryingPowerups() {
+            List<int> result = new List<int>();
+            foreach (var p in carryingPowerup) result.Add((int)p.powerupType);
+            return result.ToArray();
+        }
 
         // other
 

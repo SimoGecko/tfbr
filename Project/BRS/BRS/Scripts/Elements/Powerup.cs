@@ -7,6 +7,9 @@ using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
+
+    public enum PowerupType { health, capacity, speed, stamina, bomb, key, shield, trap, explodingbox, weight, magnet };
+
     class Powerup : Pickup {
         ////////// base class for all powerups in the game //////////
 
@@ -15,20 +18,19 @@ namespace BRS.Scripts {
         //public
         const float rotSpeed = 1;
 
-
         //private
-        protected string powerupName;
-        protected bool destroyOnUse = true;
+        public PowerupType powerupType;
+        //protected bool destroyOnUse = true;
         protected bool rotate = true;
         private float _rotationAngle = 0.0f;
 
         //reference
-        protected Player owner;
+        public Player owner { get; protected set; }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            destroyOnUse = rotate = true;
+            rotate = true;
             transform.rotation = MyRandom.YRotation();
         }
 
@@ -57,21 +59,17 @@ namespace BRS.Scripts {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                pp.Collect(this);
                 owner = p;
+                pp.Collect(this);
 
                 Elements.instance.Remove(this);
-                PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, powerupName, true);
 
-                if (!destroyOnUse) gameObject.active = false;
-                else GameObject.Destroy(gameObject);
+                //if(!destroyOnUse) gameObject.active = false;
+                GameObject.Destroy(gameObject);
             }
-
         }
 
-        public virtual void UsePowerup() {
-            PowerupUI.instance.UpdatePlayerPowerupUI(owner.PlayerIndex, powerupName, false);
-        }
+        public virtual void UsePowerup() { }
 
         // queries
         public virtual bool CanUse() {
