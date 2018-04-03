@@ -58,7 +58,7 @@ namespace BRS.Load {
 
             //PLAYERS
             for (int i=0; i<GameManager.numPlayers; i++) {
-                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the _tex version is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
                 player.AddComponent(new SphereCollider(Vector3.Zero, .8f, false));

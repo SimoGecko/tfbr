@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2017
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scene Exporter", "Scene Exporter.csproj", "{A0F6AF27-96DC-99EC-6206-4138AF1F7018}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scene Exporter.Editor", "Scene Exporter.Editor.csproj", "{A3BCAC69-EDCE-6F84-EC2D-9DAB30A74F10}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{A0F6AF27-96DC-99EC-6206-4138AF1F7018}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0F6AF27-96DC-99EC-6206-4138AF1F7018}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0F6AF27-96DC-99EC-6206-4138AF1F7018}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3BCAC69-EDCE-6F84-EC2D-9DAB30A74F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3BCAC69-EDCE-6F84-EC2D-9DAB30A74F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3BCAC69-EDCE-6F84-EC2D-9DAB30A74F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3BCAC69-EDCE-6F84-EC2D-9DAB30A74F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
