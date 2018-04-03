@@ -1,12 +1,9 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using BRS.Scripts;
 
 namespace BRS {
@@ -73,7 +70,7 @@ namespace BRS {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
                 powerupPrefab.transform.Scale(.3f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
-                powerupPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+                powerupPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
                 AddPrefab(powerupPrefab);
             }
             /*
@@ -183,21 +180,21 @@ namespace BRS {
             plantedBombPrefab.transform.Scale(.3f);
             plantedBombPrefab.transform.SetStatic();
             plantedBombPrefab.AddComponent(new PlantedBomb());
-            plantedBombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            plantedBombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(plantedBombPrefab);
 
             //falling weight
             GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/elements/weight"));
             fallingWeight.transform.Scale(.5f);
             fallingWeight.AddComponent(new FallingWeight());
-            fallingWeight.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            fallingWeight.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(fallingWeight);
 
             //planted magnet
             GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/elements/magnet"));
             plantedMagnet.transform.Scale(.3f);
             plantedMagnet.AddComponent(new PlantedMagnet());
-            plantedMagnet.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            plantedMagnet.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(plantedMagnet);
 
             //speed boost

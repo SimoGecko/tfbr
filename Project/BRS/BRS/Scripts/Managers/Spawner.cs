@@ -108,7 +108,7 @@ namespace BRS.Scripts {
             float radius = .5f;
             float thickness = .1f;
             for(int i=0; i<k; i++) {
-                int lvl = (int)Math.Log(i);
+                int lvl = (int)Math.Log(i+1);
                 Vector3 pos = MyRandom.insideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
                 GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
                 Elements.instance.Add(newmoney.GetComponent<Money>());
