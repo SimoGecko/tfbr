@@ -59,7 +59,6 @@ namespace BRS.Scripts {
             rankinglist = File.ReadRanking("Load/Rankings/ranking" + (roundTime / 60).ToString() + "min.txt");
 
             for (int i = 0; i < GameManager.numPlayers; ++i) {
-                // TODO: correct bases[i] => in 4 players mode, 2 bases for 4 players => correct indexing
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.instance.GetPlayerName(i), bases[i%2].TotalMoney.ToString()));
             }
 
