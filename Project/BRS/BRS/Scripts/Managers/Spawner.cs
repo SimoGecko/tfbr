@@ -52,7 +52,7 @@ namespace BRS.Scripts {
             instance = this;
 
             for(int k=1; k<=10; k++) {
-                SpawnKCashAt(new Vector3(k*4, 0, 0), k);
+                SpawnKCashAt(new Vector3(-10+ k*2, 0, -5), k);
             }
             
             SpawnInitialMoney();
