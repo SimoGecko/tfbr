@@ -5392,3 +5392,15 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/polygonheist/SM_Env_Pillar_Exterior_04.fbx
 
+#begin images/UI/buttonClicked.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/UI/buttonClicked.png
+

@@ -87,6 +87,10 @@ namespace BRS.Menu {
 
         public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
+            foreach (Button bu in button.neighbors) {
+                bu.isClicked = false;
+            }
+            button.isClicked = true;
         }
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
@@ -139,6 +143,11 @@ namespace BRS.Menu {
             }
         }
 
+        public void SetDefaultParametersGame(object sender, EventArgs e) {
+            if (GameManager.numPlayers == 1)
+                GameManager.numPlayers = 2;
+        }
+
         public void ChangeNamePlayer(object sender, EventArgs e) {
             foreach (var elem in playerInfoMenu.components) {
                 if (elem is TextBox textBox) {
@@ -160,7 +169,7 @@ namespace BRS.Menu {
             if (playersInfo.ContainsKey(namePlayerInfosToChange))
                 playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(playersInfo[namePlayerInfosToChange].Item1, test);
             else
-                playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>("testNicoName", null));
+                playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>(namePlayerInfosToChange, test));
         }
 
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {

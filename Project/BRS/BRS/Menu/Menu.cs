@@ -57,15 +57,31 @@ namespace BRS.Menu {
             Vector2[] offset = { new Vector2(-200, -100), new Vector2(200, -100), new Vector2(-175, 100), new Vector2(88, 100), new Vector2(350, 100) };
             string[] textButtons = { "2", "4", "2 min", "3 min", "5 min" };
 
+            List<Button> linkedButton = new List<Button>();
             for (int i = 0; i < textButtons.Length; ++i) {
                 var playButton = new Button(textureButton, middleScreen + offset[i]) {
                     Text = textButtons[i],
                 };
-                if (i < 2) playButton.Click += MenuManager.instance.UpdateNoPlayers;
+                if (i < 2) {
+                    playButton.Click += MenuManager.instance.UpdateNoPlayers;
+                    playButton.Click += MenuManager.instance.HighlightBorders;
+                }
                 else {
                     playButton.Click += MenuManager.instance.UpdateRoundDuration;
+                    playButton.Click += MenuManager.instance.HighlightBorders;
                     playButton.ScaleWidth = .5f;
                 }
+
+                if (i == 2) linkedButton.Clear();
+
+                linkedButton.Add(playButton);
+                foreach (var bu in linkedButton) {
+                    if (bu != playButton) {
+                        playButton.neighbors.Add(bu);
+                        bu.neighbors.Add(playButton);
+                    }
+                }
+
                 MenuManager.instance.playMenu1.AddComponent(playButton);
             }
 
@@ -78,6 +94,7 @@ namespace BRS.Menu {
             var nextButton = new Button(textureButton, positionNextButton) {
                 Text = "next", NameMenuToSwitchTo = "play2"
             };
+            nextButton.Click += MenuManager.instance.SetDefaultParametersGame;
             nextButton.Click += MenuManager.instance.SwitchToMenu;
             nextButton.Click += MenuManager.instance.UpdatePlayersChangeTo;
 
@@ -101,10 +118,6 @@ namespace BRS.Menu {
 
             MenuManager.instance.playMenu2.AddComponent(startGameButton);
             MenuManager.instance.playMenu2.AddComponent(backButton2);
-
-            var changeNamePlayerButton = new Button(textureButton, positionNextButton + new Vector2(0,100)) { Text = "Test Change name" };
-            changeNamePlayerButton.Click += MenuManager.instance.ChangeNamePlayer;
-            MenuManager.instance.playMenu2.AddComponent(changeNamePlayerButton);
 
             ListComponents buttonPlayersChanges = new ListComponents("playerInfoToChange");
             Vector2[] offsetPlayersChanges = { new Vector2(-275, -300), new Vector2(-12, -300), new Vector2(250, -300), new Vector2(512, -300) };

@@ -35,7 +35,10 @@ namespace BRS.Menu {
         public string Text { get; set; }
 
         public bool isClicked;
+        Texture2D textureClicked;
         public int index { get; set; }
+
+        public List<Button> neighbors;
 
         public Rectangle Rectangle {
             get {
@@ -50,6 +53,8 @@ namespace BRS.Menu {
             offsetTexture = new Vector2(t.Width / 2, t.Height / 2);
             isClicked = false;
             active = true;
+            neighbors = new List<Button>();
+            textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
         }
 
         public override void Start() {
@@ -82,7 +87,9 @@ namespace BRS.Menu {
                 if (isHovering)
                     colour = Color.Gray;
 
-                if (texture != null)
+                if (isClicked && textureClicked != null)
+                    UserInterface.instance.DrawPicture(Rectangle, textureClicked, colour);
+                else if (texture != null)
                     UserInterface.instance.DrawPicture(Rectangle, texture, colour);
 
                 if (!string.IsNullOrEmpty(Text)) {
