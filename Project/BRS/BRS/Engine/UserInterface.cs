@@ -12,6 +12,7 @@ namespace BRS.Scripts {
 
     [Flags]
     public enum Align { Center = 0, Left = 1, Right = 2, Top = 4, Bottom = 8, TopLeft = 5, TopRight = 6, BotLeft = 9, BotRight = 10 }
+    //public enum Align2 { M=0, L=1, R=2, T=4, B=8, TL=5, TR=6, BL=9, BR=10 }
 
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
@@ -72,20 +73,21 @@ namespace BRS.Scripts {
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             sB = spriteBatch;
             //callbacks
-            /*
+            
             BaseUI.instance.Draw(index%2);
             PlayerUI.instance.Draw(index);
             PowerupUI.instance.Draw(index);
             Suggestions.instance.Draw(index);
             Minimap.instance.DrawSmall(spriteBatch, index);
-            */
+            
 
             //test draw
+            /*
             DrawPictureAlign(white, new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Color.Gray);
             DrawPictureAlign(white, new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Color.LightGray, true);
 
             DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
-            DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);
+            DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);*/
         }
 
 

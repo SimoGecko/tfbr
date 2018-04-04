@@ -155,7 +155,10 @@ namespace BRS.Scripts {
 
         bool IsInsideMini(Vector3 pos, out Vector2 result) {
             result = miniDest.GetCenter() + (Pos3D2Pix(pos) - playerPos).Rotate(cameraRot); // center + delta
+            result = miniDest.Project(result);
+            return true;
             return miniDest.Contains(result);
+            //miniDest.
         }
 
 
