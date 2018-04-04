@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using System;
+using System.Text;
 
 namespace BRS {
     class File : Component {
@@ -153,6 +154,23 @@ namespace BRS {
                 }
             }
             return listPerson;
+        }
+
+        public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
+            using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                int count = 0;
+                foreach (var elem in listPlayersNameScore) {
+                    AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
+                    ++count;
+                    if (count >= maxElem) break;
+                }
+            }
+        
+        }
+
+        private static void AddText(FileStream fs, string value) {
+            byte[] info = new UTF8Encoding(true).GetBytes(value);
+            fs.Write(info, 0, info.Length);
         }
     }
 

@@ -131,7 +131,7 @@ namespace BRS.Menu {
 
             var namePlayer = new TextBox() {
                 InitPos = middleScreen + new Vector2(0, -400),
-                Text = "test",
+                Text = "",
                 NameIdentifier = "name_player"
             };
             MenuManager.instance.playerInfoMenu.AddComponent(namePlayer);

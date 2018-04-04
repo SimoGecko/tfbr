@@ -142,7 +142,7 @@ namespace BRS.Scripts {
             PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, nameUser);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------

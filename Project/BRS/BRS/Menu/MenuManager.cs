@@ -146,7 +146,9 @@ namespace BRS.Menu {
                         if (playersInfo.ContainsKey(namePlayerInfosToChange))
                             playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, playersInfo[namePlayerInfosToChange].Item2);
                         else
-                            playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>("testNicoName", null));
+                            playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
+
+                        textBox.Text = "";
                     }
                 }
             }
