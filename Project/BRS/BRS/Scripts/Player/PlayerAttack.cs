@@ -2,6 +2,9 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -31,9 +34,9 @@ namespace BRS.Scripts {
         public override void Update() { }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && attacking) {
-                Player p = c.gameObject.GetComponent<Player>();
+                Player p = c.GameObject.GetComponent<Player>();
                 DealWithAttack(p);
             }
         }
@@ -44,6 +47,7 @@ namespace BRS.Scripts {
 
         // commands
         public void BeginAttack() {
+            Debug.Log(Time.time);
             attacking = true;
             attackRefTime = 0;
             attackStartPos = transform.position;
@@ -57,13 +61,19 @@ namespace BRS.Scripts {
             if (attackRefTime <= 1) {
                 attackRefTime += Time.deltaTime / attackDuration;
                 float t = Curve.EvaluateSqrt(attackRefTime);
-                transform.position = Vector3.LerpPrecise(this.attackStartPos, attackEndPos, t);
+                Vector3 newPosition = Vector3.LerpPrecise(attackStartPos, attackEndPos, t);
+                
+                // Apply new position to the rigid-body
+                // Todo by Andy for Andy: can be surely written better :-)
+                MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
+                mrb.RigidBody.Position = new JVector(newPosition.X, mrb.RigidBody.Position.Y, newPosition.Z);
             } else {
                 attacking = false;
             }
         }
         /*
         void EndAttack() {
+            Debug.Log(Time.time);
             attacking = false;
         }*/
 

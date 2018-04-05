@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -58,8 +59,8 @@ namespace BRS.Scripts {
         // --------------------- CUSTOM METHODS ----------------
         public override void OnCollisionEnter(Collider c) {
             if (invokedDelete) return;
-            if (c.gameObject.HasComponent<IDamageable>()) {
-                c.gameObject.GetComponent<IDamageable>().TakeDamage(fallDamage);
+            if (c.GameObject.HasComponent<IDamageable>()) {
+                c.GameObject.GetComponent<IDamageable>().TakeDamage(fallDamage);
             }
         }
 

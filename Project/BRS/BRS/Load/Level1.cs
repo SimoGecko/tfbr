@@ -5,19 +5,36 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
-using System.IO;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Vehicle;
+using Jitter.LinearMath;
 using BRS.Menu;
 
 namespace BRS.Load {
     class Level1 : Scene {
-        public Level1(PhysicsManager physics)
-            : base(physics) { }
+        private readonly Game1 _game;
 
-        public override void Build() {
-            ////////// scene setup for level1 //////////
+        // TODO: game-parameter will be removed as soon as the car is rewritten to our framework
+        public Level1(PhysicsManager physics, Game1 game)
+            : base(physics) {
+            _game = game;
+        }
+
+
+        protected override void BuildManagers() {
+            UiManager.Start();
+            Managers.Start();
+        }
+
+
+        /// <summary>
+        /// Scene setup for level1
+        /// </summary>
+        protected override void Build() {
             Debug.Log("BUILD SCENE!!");
+
             //MANAGERS
             UiManager = new GameObject("UImanager"); // must be before the other manager
             UiManager.AddComponent(new BaseUI());
@@ -26,7 +43,6 @@ namespace BRS.Load {
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
 
-
             Managers = new GameObject("manager");
             Managers.AddComponent(new Elements());
             Managers.AddComponent(new GameManager());
@@ -34,8 +50,6 @@ namespace BRS.Load {
             Managers.AddComponent(new Spawner());
             Managers.AddComponent(new Minimap());
             Managers.AddComponent(new AudioTest());
-
-
 
             //TEST lighting
             /*
@@ -76,38 +90,35 @@ namespace BRS.Load {
             vault.transform.position = new Vector3(5, 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            vault.AddComponent(new StaticRigidBody(PhysicsManager));
+            //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+
+            // Todo: refactor
+            vault.Start();
 
             //other elements
             GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
 
             //LOAD UNITY SCENE
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt"); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             task2.Wait();
-
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            Debug.Assert(bases.Length == 2, "there should be 2 bases");
-            for (int i = 0; i < bases.Length; i++) {
-                bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
-                bases[i].transform.SetStatic();
-                Elements.instance.Add(bases[i].GetComponent<Base>());
-            }
         }
 
-        public override void CreatePlayers() {
+        protected override void CreatePlayers() {
             List<GameObject> objects = new List<GameObject>();
 
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.AddComponent(new Player(i, i % 2));
+                player.transform.Scale(2.0f);
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
-                player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
+
+                player.AddComponent(new Player(i, i % 2));
+                player.AddComponent(new MovingRigidBody(PhysicsManager));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
@@ -133,6 +144,18 @@ namespace BRS.Load {
 
                 objects.Add(player);
                 objects.Add(arrow);
+            }
+
+            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
+            Debug.Assert(bases.Length == 2, "there should be 2 bases");
+            for (int i = 0; i < bases.Length; i++) {
+                bases[i].AddComponent(new Base(i));
+                bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
+                //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
+                bases[i].transform.SetStatic();
+                Elements.instance.Add(bases[i].GetComponent<Base>());
+
+                objects.Add(bases[i]);
             }
 
             // todo: (andy) is this necessary here?

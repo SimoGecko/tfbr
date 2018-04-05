@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -79,9 +80,9 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isplayer = c.gameObject.tag == ObjectTag.Player;
+            bool isplayer = c.GameObject.tag == ObjectTag.Player;
             if (isplayer && inUse) {
-                PlayerMovement pM = c.gameObject.GetComponent<PlayerMovement>();
+                PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSlowdown(true);
                 new Timer(slowdownTime, () => pM.SetSlowdown(false));
                 GameObject.Destroy(gameObject);

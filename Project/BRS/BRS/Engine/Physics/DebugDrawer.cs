@@ -125,6 +125,7 @@ namespace BRS.Engine.Physics {
 
             _basicEffect.View = camera.View;
             _basicEffect.Projection = camera.Proj;
+            _basicEffect.Alpha = 0.1f;
 
             foreach (EffectPass pass in _basicEffect.CurrentTechnique.Passes) {
                 pass.Apply();

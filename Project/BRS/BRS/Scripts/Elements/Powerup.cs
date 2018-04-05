@@ -2,6 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics.RigidBodies;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -14,12 +16,13 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float rotSpeed = 90;
+        const float rotSpeed = 1;
 
         //private
         public PowerupType powerupType;
         //protected bool destroyOnUse = true;
         protected bool rotate = true;
+        private float _rotationAngle = 0.0f;
 
         //reference
         public Player owner { get; protected set; }
@@ -33,8 +36,18 @@ namespace BRS.Scripts {
 
         public override void Update() {
             base.Update();
-            //if(rotate)
-            transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+
+            if (rotate) {
+                _rotationAngle += rotSpeed * Time.deltaTime;
+
+                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
+                if (rbc != null) {
+                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                }
+
+                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+            }
+
         }
 
 
@@ -68,5 +81,5 @@ namespace BRS.Scripts {
         // other
 
     }
-    
+
 }

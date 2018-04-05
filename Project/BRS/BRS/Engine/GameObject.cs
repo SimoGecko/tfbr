@@ -1,13 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, Vault, DynamicObstacle, StaticObstacle }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -103,7 +105,7 @@ namespace BRS {
             GameObject result = (GameObject)tocopy.Clone();
             result.transform.position = position;
             result.transform.rotation = rotation;
-            if (tocopy.transform.isStatic) result.transform.SetStatic();
+            //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
             result.Start();
             return result;
@@ -125,9 +127,14 @@ namespace BRS {
 
         public static void Destroy(GameObject o) {
             o.active = false;
-            if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
+            //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
+            
             //TODO free up memory
+            foreach (Component c in o.components)
+            {
+                c.Destroy();
+            }
         }
 
         public static async void Destroy(GameObject o, float lifetime) {// delete after some time

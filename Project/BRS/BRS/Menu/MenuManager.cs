@@ -103,9 +103,9 @@ namespace BRS.Menu {
             GameManager.numPlayers = Int32.Parse(button.Text);
         }
 
-        public void CreatePlayers(object sender, EventArgs e) {
-            Game1.instance.scene.CreatePlayers();
-        }
+        //public void CreatePlayers(object sender, EventArgs e) {
+        //    Game1.instance.scene.CreatePlayers();
+        //}
 
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;

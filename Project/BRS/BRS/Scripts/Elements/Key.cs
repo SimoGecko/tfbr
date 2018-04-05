@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -43,10 +44,10 @@ namespace BRS.Scripts {
         }
 
         void OpenVault() {
-            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, openRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, openRadius);
             foreach (Collider c in overlapColliders) {
-                if (c.gameObject.HasComponent<IOpenable>()) {
-                    c.gameObject.GetComponent<IOpenable>().Open();
+                if (c.GameObject.HasComponent<IOpenable>()) {
+                    c.GameObject.GetComponent<IOpenable>().Open();
                 }
             }
         }
@@ -59,9 +60,9 @@ namespace BRS.Scripts {
 
         bool ThereIsOneOpenableInRange() {
             transform.position = owner.transform.position;
-            Collider[] overlapColliders = BRS.Physics.OverlapSphere(transform.position, openRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, openRadius);
             foreach (Collider c in overlapColliders) {
-                if (c.gameObject.HasComponent<IOpenable>()) return true;
+                if (c.GameObject.HasComponent<IOpenable>()) return true;
             }
             return false;
         }

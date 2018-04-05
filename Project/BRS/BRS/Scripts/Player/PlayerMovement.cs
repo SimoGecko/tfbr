@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using BRS.Engine.Physics;
-using BRS.Scripts.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -25,14 +25,12 @@ namespace BRS.Scripts {
         const float speedPadMultiplier = 2f;
 
         //private
-        float rotation, rotationOld;
+        float rotation;
         float smoothMagnitude, refMagnitude;
         float refangle, refangle2;
         float inputAngle;
         float targetRotation;
-        private Vector3 _previousLinearVelocity = Vector3.Zero;
 
-        
 
         //BOOST
         public bool boosting;
@@ -44,6 +42,7 @@ namespace BRS.Scripts {
 
         //reference
         PlayerInventory playerInventory;
+        private SteerableRigidBody _rigidBody;
 
 
         // --------------------- BASE METHODS ------------------
@@ -52,6 +51,9 @@ namespace BRS.Scripts {
             //rotation = targetRotation = -90;
 
             playerInventory = gameObject.GetComponent<PlayerInventory>();
+
+            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
+            _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
         }
 
         public override void Update() {
@@ -77,76 +79,33 @@ namespace BRS.Scripts {
                 targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
             }
 
+            // Calculate rotation
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
+
+            // Calculate velocity
             float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
             speedboost *= slowdown ? slowdownMalus : 1f;
 
-            //// move
-            transform.eulerAngles = new Vector3(0, rotation, 0);
-            //transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
-
-            //move forward
-            //compute final speed
+            Vector3 linearVelocity;
             if (speedPad) { // override and force to move at max speed
-                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
+                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedPadMultiplier;
             } else {
-                transform.Translate(Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude * Time.deltaTime);
+                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
             }
-            return;
 
-
-            // Apply forces/changes to physics
-            //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
-            //gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-
-
-            //rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            //transform.eulerAngles = new Vector3(0, rotation, 0);
-
-            //move forward
-            //float speedboost = boosting ? boostSpeedMultiplier : 1f;
-            Vector3 linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
-            //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
-            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
-
-            if (dynamicRigidBody != null) {
-                RigidBody rb = dynamicRigidBody.RigidBody;
-                
-                JVector lv = JVector.Transform(Conversion.ToJitterVector(linearVelocity), rb.Orientation);
-                
-                rb.LinearVelocity = new JVector(lv.X, 0, lv.Z);
-
-                rb.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-
-                //rb.LinearVelocity = (new JVector(0, 0, 10));
-                //rigidBodyComponent.RigidBody.AddForce(new JVector(100, 0, 0));
-                //Debug.Log(rb.Position.ToString());
-
-                //string ori = String.Format("{9:0.00} results in:\n{0:0.00} {1:0.00} {2:0.00}\n{3:0.00} {4:0.00} {5:0.00}\n{6:0.00} {7:0.00} {8:0.00}",
-                //    rb.Orientation.M11,
-                //    rb.Orientation.M12,
-                //    rb.Orientation.M13,
-                //    rb.Orientation.M21,
-                //    rb.Orientation.M22,
-                //    rb.Orientation.M23,
-                //    rb.Orientation.M31,
-                //    rb.Orientation.M32,
-                //    rb.Orientation.M33,
-                //    rotation * MathHelper.Pi / 180.0f
-                //    );
-                //Debug.Log(ori);
+            if (_rigidBody != null) {
+                _rigidBody.RotationY = MathHelper.ToRadians(rotation);
+                _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
             }
-
-            _previousLinearVelocity = linearVelocity;
-            rotationOld = rotation;
         }
 
         public void SetSlowdown(bool b) {
             slowdown = b;
         }
+
         internal void SetSpeedPad(bool b) {
             speedPad = b;
         }

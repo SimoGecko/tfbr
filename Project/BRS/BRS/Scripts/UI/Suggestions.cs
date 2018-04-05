@@ -38,7 +38,7 @@ namespace BRS.Scripts {
             commands = new List<ButtonCommand>();
 
             Player p = Elements.instance.Player(1);
-            if(p!=null) player = p.transform;
+            if (p!=null) player = p.transform;
         }
 
         public override void Update() {

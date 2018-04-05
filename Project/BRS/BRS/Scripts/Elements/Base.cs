@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -33,7 +34,9 @@ namespace BRS.Scripts {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
-            UpdateUI();
+
+            // Todo: This causes currently a strange loop. Players are need UI to be started already, but the UI which contains the Suggestions uses the player and bases to be startet first!
+            //UpdateUI();
         }
 
         public override void Update() {
@@ -41,9 +44,9 @@ namespace BRS.Scripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.gameObject.tag == ObjectTag.Player;
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
-                Player p = c.gameObject.GetComponent<Player>();
+                Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());

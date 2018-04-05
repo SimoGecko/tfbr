@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS {
@@ -9,7 +10,6 @@ namespace BRS {
 
     public interface IComponent {
         GameObject gameObject { get; set; }
-        Transform transform { get; }
 
         void Start();
         void Update();
@@ -29,6 +29,7 @@ namespace BRS {
         public virtual void Start() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { } // really necessary?
+        public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
         public virtual void Draw() { }
 

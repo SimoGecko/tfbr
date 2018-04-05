@@ -19,7 +19,7 @@ namespace BRS {
 
         private Display _display;
         private DebugDrawer _debugDrawer;
-        private PhysicsManager _physicsManager;
+        //private PhysicsManager _physicsManager;
         RasterizerState fullRasterizer, wireRasterizer;
         public static Game1 instance;
 
@@ -37,12 +37,11 @@ namespace BRS {
         }
 
         protected override void Initialize() {
-            if (_usePhysics) {
-                _debugDrawer = new DebugDrawer(this);
-                Components.Add(_debugDrawer);
-                _display = new Display(this);
-                Components.Add(_display);
-            }
+            _debugDrawer = new DebugDrawer(this);
+            Components.Add(_debugDrawer);
+            _display = new Display(this);
+            Components.Add(_display);
+            PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
 
             base.Initialize();
 
@@ -56,11 +55,9 @@ namespace BRS {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             if (_usePhysics) {
-                _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
-                scene = new LevelPhysics(this, _physicsManager);
-            }
-            else {
-                scene = new Level1(_physicsManager);
+                scene = new LevelPhysics(this, PhysicsManager.Instance);
+            } else {
+                scene = new Level1(PhysicsManager.Instance, this);
             }
 
             ui = new UserInterface();
@@ -105,20 +102,15 @@ namespace BRS {
             menuManager.Update();
 
             if (!menuDisplay) {
-
                 Input.Update();
                 Audio.Update();
-
 
                 foreach (GameObject go in GameObject.All) go.Update();
                 foreach (GameObject go in GameObject.All) go.LateUpdate();
 
-                if (_usePhysics) {
-                    _physicsManager.Update(gameTime);
-                }
-
-                Physics.Update();
+                PhysicsManager.Instance.Update(gameTime);
             }
+
             base.Update(gameTime);
         }
 
@@ -137,18 +129,16 @@ namespace BRS {
 
                     graphics.GraphicsDevice.Viewport = cam.viewport;
 
-                    if (_usePhysics) {
-                        _physicsManager.Draw(cam);
-                    }
+                    PhysicsManager.Instance.Draw(cam);
 
                     foreach (GameObject go in GameObject.All) go.Draw(cam);
                     //transform.Draw(camera);
 
-                //gizmos (wireframe)
-                GraphicsDevice.RasterizerState = wireRasterizer;
-                Gizmos.DrawWire(cam);
-                GraphicsDevice.RasterizerState = fullRasterizer;
-                Gizmos.DrawFull(cam);
+                    //gizmos (wireframe)
+                    GraphicsDevice.RasterizerState = wireRasterizer;
+                    Gizmos.DrawWire(cam);
+                    GraphicsDevice.RasterizerState = fullRasterizer;
+                    Gizmos.DrawFull(cam);
 
                     //splitscreen UI
                     spriteBatch.Begin();

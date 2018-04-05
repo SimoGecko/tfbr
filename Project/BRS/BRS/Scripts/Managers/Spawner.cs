@@ -52,7 +52,7 @@ namespace BRS.Scripts {
             instance = this;
 
             for(int k=1; k<=10; k++) {
-                SpawnKCashAt(new Vector3(k*4, 0, 0), k);
+                SpawnKCashAt(new Vector3(-10+ k*2, 0, -5), k);
             }
             
             SpawnInitialMoney();
@@ -82,7 +82,7 @@ namespace BRS.Scripts {
             for (int i = 0; i < moneyAmount; i++)
                 SpawnOneMoneyRandom();
         }
-        
+
 
         void SpawnOneMoneyRandom() {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
@@ -97,6 +97,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnOneMoneyAt(Vector3 pos) {
+            pos += new Vector3(0, 5, 0);
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
             Elements.instance.Add(newmoney.GetComponent<Money>());
@@ -107,7 +108,7 @@ namespace BRS.Scripts {
             float radius = .5f;
             float thickness = .1f;
             for(int i=0; i<k; i++) {
-                int lvl = (int)Math.Log(i);
+                int lvl = (int)Math.Log(i+1);
                 Vector3 pos = MyRandom.insideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
                 GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
                 Elements.instance.Add(newmoney.GetComponent<Money>());
@@ -130,7 +131,7 @@ namespace BRS.Scripts {
 
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(spawnArea);
-            GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up*.25f, Quaternion.Identity);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
             Elements.instance.Add(newCrate.GetComponent<Crate>());
         }
 
@@ -152,7 +153,8 @@ namespace BRS.Scripts {
         }
 
         void SpawnOnePowerupAt(Vector3 position) {
-            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up*.45f, Quaternion.Identity);
+            position += new Vector3(0, 2, 0);
+            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity);
             Elements.instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
@@ -171,7 +173,7 @@ namespace BRS.Scripts {
         async void SpawnCrateContinuous() {
             while (true) {
                 SpawnOneCrateRandom();
-                await Time.WaitForSeconds(timeBetweenCrateSpawn * MyRandom.Range(1-timeRandomizer, 1+timeRandomizer));
+                await Time.WaitForSeconds(timeBetweenCrateSpawn * MyRandom.Range(1 - timeRandomizer, 1 + timeRandomizer));
             }
         }
 
@@ -182,7 +184,7 @@ namespace BRS.Scripts {
             }
         }
 
-       
+
     }
 
 }

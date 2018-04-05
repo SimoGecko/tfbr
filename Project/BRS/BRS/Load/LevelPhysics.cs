@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
-using BRS.Scripts.Physics;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -29,7 +29,7 @@ namespace BRS.Load {
         /// <summary>
         /// Set up the scene for the physics-prototype
         /// </summary>
-        public override void Build() {
+        protected override void Build() {
             // Add top-level manager
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());
@@ -88,17 +88,17 @@ namespace BRS.Load {
                     GameObject body = new GameObject("domino_" + i, File.Load<Model>("Models/primitives/cube"));
                     body.tag = ObjectTag.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
-                    body.AddComponent(new DynamicRigidBody(PhysicsManager));
+                    body.AddComponent(new DynamicRigidBody(PhysicsManager, pureCollider: true));
                 }
             }
 
             //AddCar(new JVector(-2, 0.8f, -2));
             AddSoftBody();
 
-            // Dummy object at position (0/0/0) for debug-rendering.
-            GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
-            dummy.tag = ObjectTag.Default;
-            dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
+            //// Dummy object at position (0/0/0) for debug-rendering.
+            //GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
+            //dummy.tag = ObjectTag.Default;
+            //dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
 
 
@@ -108,20 +108,24 @@ namespace BRS.Load {
             material.StaticFriction = 0.4f;
             material.KineticFriction = 10.0f;
 
-            for (int x = -2; x < 2; ++x) {
-                for (int y = -2; y < 2; ++y) {
+            //for (int x = -2; x < 2; ++x) {
+            //    for (int y = -2; y < 2; ++y) {
 
-                    GameObject groundPlane = new GameObject("groundplane", File.Load<Model>("Models/vehicles/gplane"));
-                    groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
-                    //groundPlane.AddComponent(new StaticRigidBody(PhysicsManager, true, material: material));
-                }
-            }
+            //        GameObject groundPlane = new GameObject("groundplane", File.Load<Model>("Models/vehicles/gplane"));
+            //        groundPlane.transform.position = new Vector3(x * 10, 0, y * 10);
+            //        //groundPlane.AddComponent(new StaticRigidBody(PhysicsManager, true, material: material));
+            //    }
+            //}
+            GameObject groundPlane = new GameObject("groundplane", File.Load<Model>("Models/vehicles/gplane"));
+            groundPlane.transform.position = new Vector3(5*10,0,5*10);
+            groundPlane.tag = ObjectTag.Ground;
 
-            RigidBody rbGround = new RigidBody(new BoxShape(5*10, 10, 5*10));
+            Collider rbGround = new Collider(new BoxShape(5*10, 10, 5*10));
             rbGround.Position = new JVector(0, -5, 0);
             rbGround.IsStatic = true;
             rbGround.Material = material;
             rbGround.Tag = BodyTag.DontDrawMe;
+            rbGround.GameObject = groundPlane;
             PhysicsManager.World.AddBody(rbGround);
         }
 

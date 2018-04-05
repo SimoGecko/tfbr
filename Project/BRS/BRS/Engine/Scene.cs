@@ -25,17 +25,23 @@ namespace BRS {
         public void Start() {
             Build();
             CreatePlayers();
-            UiManager.Start();
-            Managers.Start();
+            BuildManagers();
+            //UiManager.Start();
+            //Managers.Start();
+            //GameManager.instance.RestartCustom();
         }
 
         public void Update() { }
 
-        public virtual void Build() { // levels inherit and fill this
+        protected virtual void BuildManagers() {
 
         }
 
-        public virtual void CreatePlayers() {
+        protected virtual void Build() { // levels inherit and fill this
+
+        }
+
+        protected virtual void CreatePlayers() {
 
         }
 

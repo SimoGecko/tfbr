@@ -118,6 +118,7 @@
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
+    <Compile Include="Engine\Physics\Collider.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\ShapeType.cs" />
     <Compile Include="Engine\Physics\Vehicle\CarObject.cs" />
     <Compile Include="Engine\Physics\Vehicle\DefaultCar.cs" />
     <Compile Include="Engine\Physics\Vehicle\Wheel.cs" />
@@ -161,10 +163,10 @@
     <Compile Include="Scripts\Elements\ExplodingBox.cs" />
     <Compile Include="Scripts\Elements\Magnet.cs" />
     <Compile Include="Scripts\Elements\Weight.cs" />
-    <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
-    <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
-    <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
-    <Compile Include="Scripts\Physics\SteerableRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\DynamicRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\MovingRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\StaticRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\SteerableRigidBody.cs" />
     <Compile Include="Scripts\Player\CameraController.cs" />
     <Compile Include="Scripts\UI\BaseUI.cs" />
     <Compile Include="Scripts\UI\CircleBar.cs" />
@@ -176,7 +178,7 @@
     <Compile Include="Scripts\UI\GameUI.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
     <Compile Include="Scripts\Elements\Money.cs" />
-    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\Player\Player.cs" />
     <Compile Include="Scripts\Player\PlayerLift.cs" />
@@ -236,7 +238,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Jitter\Jitter.csproj">
+      <Project>{ac7d5ebd-67ef-475f-a4dd-e78765ee25a6}</Project>
+      <Name>Jitter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

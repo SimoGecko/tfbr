@@ -1,20 +1,19 @@
-﻿using BRS.Engine.Physics;
-using BRS.Load;
+﻿using BRS.Load;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts.Physics {
+namespace BRS.Engine.Physics.RigidBodies {
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, Material material = null) {
+        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
-            Material = material;
+            ShapeType = shapeType;
             Tag = BodyTag.DrawMe;
         }
 
@@ -25,27 +24,31 @@ namespace BRS.Scripts.Physics {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
+            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
+                bbSize.Y * gameObject.transform.scale.Y,
+                bbSize.Z * gameObject.transform.scale.Z);
             CollisionShape = new BoxShape(bbSize);
 
             JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
+            com = new JVector(com.X * gameObject.transform.scale.X,
+                com.Y * gameObject.transform.scale.Y,
+                com.Z * gameObject.transform.scale.Z);
             CenterOfMass = new JVector(com.X > _treshold ? com.X : 0,
                 com.Y > _treshold ? com.Y : 0,
                 com.Z > _treshold ? com.Z : 0);
 
-            Material = new Material {KineticFriction = 0, Restitution = 0, StaticFriction = 0};
 
             RigidBody = new SteerableRigidBody(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
-                Tag = BodyTag.DontDrawMe,
-                Mass = 20.0f
+                Tag = BodyTag.DrawMe,
+                Mass = 20.0f,
+                GameObject = gameObject
             };
 
-            if (Material != null) {
-                RigidBody.Material = Material;
-            }
+            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
 
             PhysicsManager.World.AddBody(RigidBody);
         }
@@ -57,6 +60,8 @@ namespace BRS.Scripts.Physics {
             // Apply position and rotation from physics-world to the game-object
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
             transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
+           
+            //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
 
             base.Update();
         }

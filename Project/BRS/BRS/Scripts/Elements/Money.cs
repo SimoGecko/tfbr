@@ -11,6 +11,8 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
         //public
         public enum Type { Cash, Diamond, Gold };
+
+        // Todo: Do we really want to have it that each money has different value? Doesn't it make it too unpredictable? (Andy)
         public const float randomizer = .1f; // how much to deviate from actual value
 
 

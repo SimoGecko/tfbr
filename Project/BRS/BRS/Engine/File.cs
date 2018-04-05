@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -8,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.IO;
 using System;
 using System.Text;
+using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS {
     class File : Component {
@@ -53,12 +56,19 @@ namespace BRS {
 
 
         // other
-        public static void ReadFile(string pathName) {
+
+        /// <summary>
+        /// Read the scene-file and build the game- and physic-objects for it
+        /// </summary>
+        /// <param name="pathName">Path to the scene-file</param>
+        /// <param name="physics">PhysicsManager for the physics-simulation</param>
+        public static void ReadFile(string pathName, PhysicsManager physics) {
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
                     while (nameContent == "")
                         nameContent = reader.ReadLine();
+
                     if (nameContent == null)
                         break;
 
@@ -87,14 +97,39 @@ namespace BRS {
                         go.transform.scale = scale;
                         go.transform.rotation = rotation; 
 
-                        if (tagName == "Ground") go.tag = ObjectTag.Ground;
-                        else if (tagName == "Base") go.tag = ObjectTag.Base;
-                        else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
-                        else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
-                        else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
-                        else if (tagName == "StaticObstacle") go.tag = ObjectTag.StaticObstacle;
-                        else if (tagName == "DynamicObstacle") go.tag = ObjectTag.DynamicObstacle;
+                        try {
+                            go.tag = (ObjectTag)Enum.Parse(typeof(ObjectTag), tagName, true);
+                        } catch {
+                            go.tag = ObjectTag.Default;
+                        }
+
+                        //if (tagName == "Ground") go.tag = ObjectTag.Ground;
+                        //else if (tagName == "Base") go.tag = ObjectTag.Base;
+                        //else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
+                        //else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
+                        //else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
+                        //else if (tagName == "StaticObstacle") go.tag = ObjectTag.StaticObstacle;
+                        //else if (tagName == "DynamicObstacle") go.tag = ObjectTag.DynamicObstacle;
+
+                        switch (go.tag) {
+                            case ObjectTag.Base:
+                                //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
+                                break;
+                            case ObjectTag.Ground:
+                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
+                                break;
+                            case ObjectTag.DynamicObstacle:
+                                go.AddComponent(new DynamicRigidBody(physics));
+                                break;
+                            default:
+                                go.AddComponent(new StaticRigidBody(physics));
+                                break;
+                        }
+
+                        // Todo: Refactor..
+                        go.Start();
                     }
+
                     nameContent = reader.ReadLine();
                 }
             }
@@ -135,6 +170,7 @@ namespace BRS {
                         go.transform.scale = scale;
                         go.transform.rotation = rotation; // rotation not parsed correctly?
                     }
+
                     nameContent = reader.ReadLine(); // <end>
                 }
             }
