@@ -42,10 +42,15 @@ namespace BRS {
         // commands
         public static void Setup(GraphicsDeviceManager graphics, Game game) {
             SetupWindow(graphics, game);
+            //SetupViewports(graphics);
+            //SetupCameras();
+        }
+
+        public static void AdditionalSetup(GraphicsDeviceManager graphics, Game game) {
+            //SetupWindow(graphics, game);
             SetupViewports(graphics);
             SetupCameras();
         }
-
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
             //window size
@@ -89,7 +94,6 @@ namespace BRS {
                 cameras[i] = camObject.GetComponent<Camera>();
             }
         }
-
 
         // queries
         static float AspectRatio {

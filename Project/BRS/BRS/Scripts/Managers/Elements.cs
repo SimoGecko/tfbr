@@ -94,7 +94,7 @@ namespace BRS.Scripts {
             Debug.Assert(team < 2, "Invalid team index");
             List<Player> result = new List<Scripts.Player>();
             foreach (Player p in playerList)
-                if (p.teamIndex == team) result.Add(p);
+                if (p.TeamIndex == team) result.Add(p);
             return result.ToArray();
         }
         public Player Enemy(int myteam) {

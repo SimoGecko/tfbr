@@ -44,7 +44,7 @@ namespace BRS.Scripts {
             bool isPlayer = c.gameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.gameObject.GetComponent<Player>();
-                if (p.teamIndex == BaseIndex) {
+                if (p.TeamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
@@ -97,7 +97,7 @@ namespace BRS.Scripts {
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var player in players) {
                 Player p = player.GetComponent<Player>();
-                if (p.teamIndex == BaseIndex) result.Add(p);
+                if (p.TeamIndex == BaseIndex) result.Add(p);
             }
             return result.ToArray();
         }

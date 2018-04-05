@@ -1,6 +1,7 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
@@ -12,11 +13,12 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int roundTime = 180;
+        public static int roundTime = 180;
         public const int timeBeforePolice = 10;
 
         //private
         Timer rt;
+        private Base[] bases;
 
         //reference
         public static RoundManager instance;
@@ -46,12 +48,26 @@ namespace BRS.Scripts {
             //FindBases();
             NotifyBases();
             Debug.Log("notified bases");
-            int winner = FindWinner();
-            GameUI.instance.UpdateGameWinnerUI(winner);
-            GameManager.instance.OnRoundEnd(winner);
+            Tuple<int, int> winner = FindWinner();
+            GameUI.instance.UpdateGameWinnerUI(winner.Item1);
+            UpdateRanking();
+            GameManager.instance.OnRoundEnd(winner.Item1);
         }
 
-        /*
+        void UpdateRanking() {
+            List<Tuple<string, string>> rankinglist;
+            rankinglist = File.ReadRanking("Load/Rankings/ranking" + (roundTime / 60).ToString() + "min.txt");
+
+            for (int i = 0; i < GameManager.numPlayers; ++i) {
+                rankinglist.Add(new Tuple<string, string>(PlayerUI.instance.GetPlayerName(i), bases[i%2].TotalMoney.ToString()));
+            }
+
+            rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
+
+            File.WriteRanking("Load/Rankings/ranking" + (roundTime / 60).ToString() + "min.txt", rankinglist, 5);
+        }
+
+
         void FindBases() {
             //find bases
             GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
@@ -62,7 +78,7 @@ namespace BRS.Scripts {
                 for (int i = 0; i < bases.Length; i++)
                     bases[i] = basesObject[i].GetComponent<Base>();
             }
-        }*/
+        }
 
         void NotifyBases() {
             //for (int i = 0; i < bases.Length; i++)
@@ -71,7 +87,7 @@ namespace BRS.Scripts {
         }
 
         // queries
-        int FindWinner() {
+        Tuple<int, int> FindWinner() {
             Base[] bases = Elements.instance.Bases();
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
@@ -82,7 +98,7 @@ namespace BRS.Scripts {
                     maxCash = totmoney;
                 }
             }
-            return winner;
+            return new Tuple<int, int>(winner, maxCash);
         }
 
 

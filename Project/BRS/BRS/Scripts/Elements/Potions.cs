@@ -63,7 +63,7 @@ namespace BRS.Scripts {
 
         public override void UsePowerup() {
             base.UsePowerup();
-            GameObject b = GameObject.FindGameObjectWithName("base_" + owner.teamIndex);
+            GameObject b = GameObject.FindGameObjectWithName("base_" + owner.TeamIndex);
             if (b != null) {
                 b.GetComponent<Base>().AddHealth(valuePotion);
             }

@@ -8,12 +8,15 @@ using Microsoft.Xna.Framework.Content;
 using BRS.Scripts;
 
 namespace BRS {
-    class Scene {
+    public class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 
         //can create scene graph
 
         protected PhysicsManager PhysicsManager { get; set; }
+
+        protected GameObject UiManager;
+        protected GameObject Managers;
 
         public Scene(PhysicsManager physics) {
             PhysicsManager = physics;
@@ -21,11 +24,18 @@ namespace BRS {
 
         public void Start() {
             Build();
+            CreatePlayers();
+            UiManager.Start();
+            Managers.Start();
         }
 
         public void Update() { }
 
-        protected virtual void Build() { // levels inherit and fill this
+        public virtual void Build() { // levels inherit and fill this
+
+        }
+
+        public virtual void CreatePlayers() {
 
         }
 

@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using System;
+using System.Text;
 
 namespace BRS {
     class File : Component {
@@ -76,14 +78,14 @@ namespace BRS {
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
                         Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(pSplit[2])), MathHelper.ToRadians(float.Parse(pSplit[1])), MathHelper.ToRadians(float.Parse(pSplit[3])));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[1])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
                         GameObject go = new GameObject(tagName + "_" + i.ToString(), File.Load<Model>("Models/primitives/" + prefabName));
 
                         go.transform.position = position;
                         go.transform.scale = scale;
-                        //go.transform.rotation = rotation; // rotation not parsed correctly // <- of course it doesn't parse correctly, you use pSplit instead of rSplit!
+                        go.transform.rotation = rotation; 
 
                         if (tagName == "Ground") go.tag = ObjectTag.Ground;
                         else if (tagName == "Base") go.tag = ObjectTag.Base;
@@ -120,9 +122,11 @@ namespace BRS {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
+
                         Vector3 position   = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
                         Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]),  float.Parse(rSplit[3]));
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2]+180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+
                         Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
                         GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName));
@@ -136,6 +140,40 @@ namespace BRS {
             }
         }
 
+        public static List<Tuple<string, string>> ReadRanking(string pathName) {
+            List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string line;
+                while ((line = reader.ReadLine()) != null) {
+                    if (line == "")
+                        break;
+
+                    //string aPerson = reader.ReadLine();
+
+                    string[] pSplit = line.Split(' ');
+                    listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+
+                }
+            }
+            return listPerson;
+        }
+
+        public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
+            using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                int count = 0;
+                foreach (var elem in listPlayersNameScore) {
+                    AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
+                    ++count;
+                    if (count >= maxElem) break;
+                }
+            }
+        
+        }
+
+        private static void AddText(FileStream fs, string value) {
+            byte[] info = new UTF8Encoding(true).GetBytes(value);
+            fs.Write(info, 0, info.Length);
+        }
     }
 
 }

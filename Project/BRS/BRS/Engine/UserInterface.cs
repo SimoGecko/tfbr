@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using System;
-
+using BRS.Menu;
 
 namespace BRS.Scripts {
 
@@ -28,8 +28,8 @@ namespace BRS.Scripts {
 
 
         //private
-        SpriteFont smallFont;
-        SpriteFont comicFont;
+        public SpriteFont smallFont;
+        public SpriteFont comicFont;
         SpriteFont bigFont;
         Texture2D bar;
         Texture2D barBig;
@@ -42,7 +42,7 @@ namespace BRS.Scripts {
 
         //reference
         public static UserInterface instance;
-        SpriteBatch sB;
+        public SpriteBatch sB;
 
         Color White = new Color(1, 1, 1);
 
@@ -64,7 +64,12 @@ namespace BRS.Scripts {
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
         }
 
-        public void DrawGlobal(SpriteBatch spriteBatch) { // call all subcomponents that are drawn on the whole screen
+        public void DrawMenu(SpriteBatch spriteBatch) {
+            sB = spriteBatch;
+            MenuManager.instance.Draw();
+        }
+
+        public void DrawGlobal(SpriteBatch spriteBatch) {
             sB = spriteBatch;
             //callbacks
             //Minimap.instance.Draw(sB);
@@ -129,21 +134,17 @@ namespace BRS.Scripts {
         }
 
 
-        //STRING
-        public void DrawString(Vector2 position, string text) {
-            sB.DrawString(smallFont, text, position, Color.White);
+        public void DrawString(Vector2 position, string text, Color colour = default(Color)) {
+            sB.DrawString(smallFont, text, position, colour == default(Color)? Color.White : colour);
         }
-        public void DrawStringBlack(Vector2 position, string text) {
-            sB.DrawString(comicFont, text, position, Color.Black);
-        }
-        public void DrawStringBig(Vector2 position, string text) {
-            sB.DrawString(bigFont, text, position, Color.White);
+        public void DrawStringBig(Vector2 position, string text, Color colour = default(Color)) {
+            sB.DrawString(bigFont, text, position, colour == default(Color) ? Color.White : colour);
         }
 
-        //PICTURE
-        public void DrawPicture(Rectangle destination, Texture2D pic) {
-            sB.Draw(pic, destination, Color.White);
+        public void DrawPicture(Rectangle destination, Texture2D pic, Color colour = default(Color)) {
+            sB.Draw(pic, destination, colour == default(Color) ? Color.White : colour);
         }
+
         public void DrawPicture(Vector2 position, Texture2D pic, Vector2 origin, float scale) {
             sB.Draw(pic, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1);
         }

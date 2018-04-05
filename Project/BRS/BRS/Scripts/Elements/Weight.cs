@@ -22,7 +22,7 @@ namespace BRS.Scripts {
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate falling weight
-            Player randomEnemyPlayer = Elements.instance.Enemy(owner.teamIndex);
+            Player randomEnemyPlayer = Elements.instance.Enemy(owner.TeamIndex);
             GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", randomEnemyPlayer.transform.position + Vector3.Up * weightSpawnHeight, Quaternion.Identity);
         }
     }

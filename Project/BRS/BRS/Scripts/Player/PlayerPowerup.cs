@@ -41,7 +41,7 @@ namespace BRS.Scripts {
                 carryingPowerup[carryingPowerup.Count - 1].UsePowerup();
                 carryingPowerup.RemoveAt(carryingPowerup.Count - 1);
             }
-            PowerupUI.instance.UpdatePlayerPowerupUI(p.playerIndex, CarryingPowerups());
+            PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
         }
 
         public void Collect(Powerup powerup) {
@@ -49,7 +49,7 @@ namespace BRS.Scripts {
                 carryingPowerup.RemoveAt(0);
             }
             carryingPowerup.Add(powerup);
-            PowerupUI.instance.UpdatePlayerPowerupUI(powerup.owner.playerIndex, CarryingPowerups());
+            PowerupUI.instance.UpdatePlayerPowerupUI(powerup.owner.PlayerIndex, CarryingPowerups());
         }
 
         public bool CanPickUp(Powerup powerup) {
