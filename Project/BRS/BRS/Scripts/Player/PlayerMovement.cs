@@ -1,13 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using System.Collections.Generic;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace BRS.Scripts {
     class PlayerMovement : Component {

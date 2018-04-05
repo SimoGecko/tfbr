@@ -103,7 +103,6 @@
     <Compile Include="Engine\Audio.cs" />
     <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
-    <Compile Include="Engine\Collider.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
@@ -112,7 +111,6 @@
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
-    <Compile Include="Engine\Physics.cs" />
     <Compile Include="Engine\Physics\ConvexHullHelper.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />

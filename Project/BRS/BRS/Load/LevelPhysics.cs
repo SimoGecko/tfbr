@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using BRS.Engine.Physics;
+﻿using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
@@ -8,6 +7,7 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace BRS.Load {
     // Todo: To be refactored

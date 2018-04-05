@@ -1,8 +1,6 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     ////////// a collection of simple powerup POTIONS and BOOSTS that can be used and have instant effects //////////

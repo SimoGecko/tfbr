@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BRS.Load;
-using BRS.Engine.Physics;
-using BRS.Scripts;
+﻿using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Xml;
+using System;
+using System.Collections.Generic;
 
 namespace BRS.Menu {
     class MenuManager {

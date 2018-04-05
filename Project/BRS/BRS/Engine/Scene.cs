@@ -1,11 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using BRS.Scripts;
 
 namespace BRS {
     public class Scene {

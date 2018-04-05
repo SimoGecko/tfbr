@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     class PlayerInventory : Component {

@@ -2,7 +2,6 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
     class Pickup : Component {

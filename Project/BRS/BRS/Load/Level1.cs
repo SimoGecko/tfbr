@@ -1,16 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using BRS.Scripts;
-using System.Threading.Tasks;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Physics.Vehicle;
-using Jitter.LinearMath;
 using BRS.Menu;
+using BRS.Scripts;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BRS.Load {
     class Level1 : Scene {

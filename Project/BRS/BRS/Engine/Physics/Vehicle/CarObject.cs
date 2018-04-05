@@ -1,6 +1,5 @@
 ﻿#region Using Statements
 
-using Windows.Devices.PointOfService;
 using BRS.Load;
 using Jitter;
 using Jitter.Collision.Shapes;

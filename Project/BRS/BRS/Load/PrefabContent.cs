@@ -3,8 +3,8 @@
 
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
     static partial class Prefabs {

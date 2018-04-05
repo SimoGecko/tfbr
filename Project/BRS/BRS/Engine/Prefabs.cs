@@ -1,11 +1,8 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using BRS.Load;
+using System.Collections.Generic;
 
 namespace BRS {
     static partial class Prefabs {
