@@ -1,6 +1,5 @@
 ﻿using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
@@ -16,7 +15,6 @@ namespace BRS.Load {
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
-        private CarObject _car;
         private readonly Game1 _game;
 
 
@@ -156,14 +154,6 @@ namespace BRS.Load {
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
                 body.AddComponent(new StaticRigidBody(PhysicsManager));
             }
-        }
-
-
-        public void AddCar(JVector position) {
-            _car = new CarObject(_game, PhysicsManager);
-            _game.Components.Add(_car);
-
-            _car.carBody.Position = position;
         }
 
         public void AddSoftBody() {
