@@ -14,7 +14,7 @@ public class SceneObjectsSaver : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        
+        ExportNico1();
     }
 	
 	void Update () {
@@ -60,12 +60,14 @@ public class SceneObjectsSaver : MonoBehaviour {
     public void ExportNico1() {
         GameObject[] p = GameObject.FindGameObjectsWithTag("Ground");
         GameObject[] b = GameObject.FindGameObjectsWithTag("Base");
-        GameObject[] o = GameObject.FindGameObjectsWithTag("Obstacle");
+        GameObject[] so = GameObject.FindGameObjectsWithTag("StaticObstacle");
+        GameObject[] dO = GameObject.FindGameObjectsWithTag("DynamicObstacle");
         GameObject[] bo = GameObject.FindGameObjectsWithTag("Boundary");
 
         WriteToFile("UnitySceneData/ObjectSceneUnity.txt", p, "Ground", "Ground", "gplane");
         WriteToFile("UnitySceneData/ObjectSceneUnity.txt", b, "Bases", "Base", "cube");
-        WriteToFile("UnitySceneData/ObjectSceneUnity.txt", o, "Obstacles", "Obstacle", "cube");
+        WriteToFile("UnitySceneData/ObjectSceneUnity.txt", so, "StaticObstacles", "StaticObstacle", "cube");
+        WriteToFile("UnitySceneData/ObjectSceneUnity.txt", dO, "DynamicObstacles", "DynamicObstacle", "cube");
         WriteToFile("UnitySceneData/ObjectSceneUnity.txt", bo, "Boundaries", "Boundary", "cube");
     }
 

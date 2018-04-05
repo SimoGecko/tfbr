@@ -279,6 +279,13 @@ namespace BRS {
             return MathHelper.ToDegrees((float) Math.Acos(cos));
         }
 
+        public static Vector2 Project(this Rectangle rect, Vector2 p) {
+            if (rect.Contains(p)) return p;
+            p.X = Clamp(p.X, rect.Left, rect.Right);
+            p.Y = Clamp(p.Y, rect.Top, rect.Bottom);
+            return p;
+        }
+
 
     }
 

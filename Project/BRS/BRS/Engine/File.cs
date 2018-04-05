@@ -105,7 +105,9 @@ namespace BRS {
                         //else if (tagName == "Base") go.tag = ObjectTag.Base;
                         //else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
                         //else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
-                        //else if (tagName == "VaultDoor") go.tag = ObjectTag.VaultDoor;
+                        //else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
+                        //else if (tagName == "StaticObstacle") go.tag = ObjectTag.StaticObstacle;
+                        //else if (tagName == "DynamicObstacle") go.tag = ObjectTag.DynamicObstacle;
 
                         switch (go.tag) {
                             case ObjectTag.Base:
@@ -114,10 +116,14 @@ namespace BRS {
                             case ObjectTag.Ground:
                                 go.AddComponent(new StaticRigidBody(physics, isGround: true));
                                 break;
+                            case ObjectTag.DynamicObstacle:
+                                go.AddComponent(new DynamicRigidBody(physics));
+                                break;
                             default:
                                 go.AddComponent(new StaticRigidBody(physics));
                                 break;
                         }
+
                     }
 
                     nameContent = reader.ReadLine();

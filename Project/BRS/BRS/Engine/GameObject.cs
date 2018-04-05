@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop

@@ -8,6 +8,9 @@ TagManager:
   - Base
   - Boundary
   - Ground
+  - movableObstacle
+  - DynamicObstacle
+  - StaticObstacle
   layers:
   - Default
   - TransparentFX

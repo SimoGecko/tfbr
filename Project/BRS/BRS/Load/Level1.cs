@@ -92,11 +92,13 @@ namespace BRS.Load {
                 //player.mat = new EffectMaterial(true, Color.White);
             }
 
+            /*
+            // no need for billboard
             GameObject billboard = new GameObject("billboard", File.Load<Model>("Models/primitives/cube"));
             billboard.AddComponent(new Billboard(Elements.instance.Player(1).transform));
             //billboard.transform.SetParent(player.transform);
             billboard.transform.Scale(.3f);
-
+            */
 
             //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
@@ -124,7 +126,8 @@ namespace BRS.Load {
             GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene + "/ObjectSceneUnity.txt", PhysicsManager); });
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
