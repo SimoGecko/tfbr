@@ -16,8 +16,8 @@ namespace BRS {
     /// </summary>
     public class GameObject {
         public Transform transform;
-        List<IComponent> components;
-        public Model Model { get; private set; }
+        public List<IComponent> components;
+        public Model Model { get; set; }
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool active { get; set; } = true;
         public string name { private set; get; }

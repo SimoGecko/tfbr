@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
@@ -9,6 +10,7 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Physics.Vehicle;
 using Jitter.LinearMath;
+using BRS.Menu;
 
 namespace BRS.Load {
     class Level1 : Scene {
@@ -21,27 +23,33 @@ namespace BRS.Load {
         }
 
 
+        protected override void BuildManagers() {
+            UiManager.Start();
+            Managers.Start();
+        }
+
 
         /// <summary>
         /// Scene setup for level1
         /// </summary>
         protected override void Build() {
             Debug.Log("BUILD SCENE!!");
-            //MANAGER
-            GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
-            UIManager.AddComponent(new BaseUI());
-            UIManager.AddComponent(new PlayerUI());
-            UIManager.AddComponent(new PowerupUI());
-            UIManager.AddComponent(new GameUI());
-            UIManager.AddComponent(new Suggestions());
 
-            GameObject manager = new GameObject("manager");
-            manager.AddComponent(new Elements());
-            manager.AddComponent(new GameManager());
-            manager.AddComponent(new RoundManager());
-            manager.AddComponent(new Spawner());
-            manager.AddComponent(new Minimap());
-            manager.AddComponent(new AudioTest());
+            //MANAGERS
+            UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new BaseUI());
+            UiManager.AddComponent(new PlayerUI());
+            UiManager.AddComponent(new PowerupUI());
+            UiManager.AddComponent(new GameUI());
+            UiManager.AddComponent(new Suggestions());
+
+            Managers = new GameObject("manager");
+            Managers.AddComponent(new Elements());
+            Managers.AddComponent(new GameManager());
+            Managers.AddComponent(new RoundManager());
+            Managers.AddComponent(new Spawner());
+            Managers.AddComponent(new Minimap());
+            Managers.AddComponent(new AudioTest());
 
             //TEST lighting
             /*
@@ -62,43 +70,6 @@ namespace BRS.Load {
                     groundPlane.transform.SetStatic();
                 }
             }*/
-
-
-            //PLAYERS
-            for (int i=0; i<GameManager.numPlayers; i++) {
-                GameObject player = new GameObject("player_"+i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the _tex version is much less shiny
-                player.tag = ObjectTag.Player;
-                player.transform.Scale(2.0f);
-                player.transform.position = new Vector3(-5 + 10 * i, 0, 1);
-                //player.AddComponent(new SphereCollider(Vector3.Zero, .7f));
-                
-                player.AddComponent(new Player(i, i%2));
-                //subcomponents
-                player.AddComponent(new MovingRigidBody(PhysicsManager));
-                player.AddComponent(new PlayerMovement());
-                player.AddComponent(new PlayerAttack());
-                player.AddComponent(new PlayerInventory());
-                player.AddComponent(new PlayerPowerup());
-                player.AddComponent(new PlayerStamina());
-                player.AddComponent(new PlayerLift());
-                //player.AddComponent(new DynamicRigidBody(PhysicsManager));
-
-                Elements.instance.Add(player.GetComponent<Player>());
-
-                //arrow
-                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player, null, i));
-                arrow.transform.Scale(.1f);
-                //player.mat = new EffectMaterial(true, Color.White);
-            }
-
-            /*
-            // no need for billboard
-            GameObject billboard = new GameObject("billboard", File.Load<Model>("Models/primitives/cube"));
-            billboard.AddComponent(new Billboard(Elements.instance.Player(1).transform));
-            //billboard.transform.SetParent(player.transform);
-            billboard.transform.Scale(.3f);
-            */
 
             //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
@@ -122,6 +93,9 @@ namespace BRS.Load {
             vault.AddComponent(new StaticRigidBody(PhysicsManager));
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
+            // Todo: refactor
+            vault.Start();
+
             //other elements
             GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
 
@@ -132,26 +106,63 @@ namespace BRS.Load {
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             task2.Wait();
+        }
+
+        protected override void CreatePlayers() {
+            List<GameObject> objects = new List<GameObject>();
+
+            for (int i = 0; i < GameManager.numPlayers; i++) {
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+                player.tag = ObjectTag.Player;
+                player.transform.Scale(2.0f);
+                player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
+
+                player.AddComponent(new Player(i, i % 2));
+                player.AddComponent(new MovingRigidBody(PhysicsManager));
+                //subcomponents
+                player.AddComponent(new PlayerMovement());
+                player.AddComponent(new PlayerAttack());
+                player.AddComponent(new PlayerInventory());
+                player.AddComponent(new PlayerPowerup());
+                player.AddComponent(new PlayerStamina());
+                player.AddComponent(new PlayerLift());
+
+                if (MenuManager.instance.playersInfo.ContainsKey("player_" + i.ToString())) {
+                    string userName = MenuManager.instance.playersInfo["player_" + i.ToString()].Item1;
+                    Model userModel = MenuManager.instance.playersInfo["player_" + i.ToString()].Item2;
+
+                    if (userName != null) player.GetComponent<Player>().nameUser = userName;
+                    if (userModel != null) player.Model = userModel;
+                }
+
+                Elements.instance.Add(player.GetComponent<Player>());
+
+                //arrow
+                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
+                arrow.AddComponent(new Arrow(player, null, i));
+                arrow.transform.Scale(.1f);
+
+                objects.Add(player);
+                objects.Add(arrow);
+            }
 
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider:true));
+                bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
                 Elements.instance.Add(bases[i].GetComponent<Base>());
+
+                objects.Add(bases[i]);
             }
 
-            //var _car = new CarObject(_game, PhysicsManager);
-            //_game.Components.Add(_car);
+            // todo: (andy) is this necessary here?
+            foreach (GameObject go in objects) {
+                go.Start();
+            }
 
-            //_car.carBody.Position = new JVector(-2, 0.8f, -2);
-
-            //// Dummy object at position (0/0/0) for debug-rendering.
-            //GameObject dummy = new GameObject("dummy_object", File.Load<Model>("Models/primitives/cube"));
-            //dummy.tag = ObjectTag.Default;
-            //dummy.AddComponent(new StaticRigidBody(PhysicsManager, tag: BodyTag.DrawMe));
         }
     }
 }

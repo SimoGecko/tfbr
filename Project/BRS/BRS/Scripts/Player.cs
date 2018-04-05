@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -17,14 +16,12 @@ namespace BRS.Scripts {
         ////////// it manages the state, team, calls relative functions with input BUT NOTHING ELSE //////////
 
         // --------------------- VARIABLES ---------------------
-        enum State { normal, attack, stun, dead, collided };
+        enum State { normal, attack, stun, dead};
 
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
-        string playerName;
-        public Color playerColor;
-        public string nameUser;
+
 
         //HIT and STUN
         const float stunTime = 2f;
@@ -36,34 +33,24 @@ namespace BRS.Scripts {
         //reference
 
         //subcomponents
-        PlayerAttack pA;
-        PlayerMovement pM;
+        PlayerAttack    pA;
+        PlayerMovement  pM;
         PlayerInventory pI;
-        PlayerPowerup pP;
-        PlayerStamina pS;
-        PlayerLift pL;
+        PlayerPowerup   pP;
+        PlayerStamina   pS;
+        PlayerLift      pL;
 
-        public CameraController camController;
-        Player other;
+        CameraController camController;
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string _name = "Simo")
+        public Player(int playerIndex, int teamIndex)
         {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
-            playerName = _name + (playerIndex + 1).ToString();
-            playerColor = Graphics.ColorIndex(playerIndex);
-            //TODO make mesh have this color
-            
-            nameUser = playerName;
         }
         public override void Start() {
             base.Start();
-
-            GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
-            if (po != null) other = po.GetComponent<Player>();
-           
 
             camController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
 
@@ -77,8 +64,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-
-            if (!GameManager.GameActive) {
+            if (!GameManager.gameActive) {
                 pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
@@ -89,51 +75,35 @@ namespace BRS.Scripts {
                 pM.boosting = boosting;
                 if (boosting) pS.UseStaminaForBoost();
 
-                Vector2 moveInput = MoveInput().Rotate(camController.YRotation);
+                Vector2 moveInput =  MoveInput().Rotate(camController.YRotation);
                 pM.Move(moveInput.To3());
 
-                if (PowerupInput()) pP.UsePowerup(this);
+                if (PowerupInput())  pP.UsePowerup(this);
                 if (DropCashInput()) pI.DropMoney();
 
                 if (AttackInput() && pS.HasStaminaForAttack()) {
                     state = State.attack;
                     pS.UseStaminaForAttack();
                     pA.BeginAttack();
-                    camController.Shake(.5f);
                 }
 
                 if (LiftInput()) {
                     pL.Lift();
                 }
 
-                if (Input.GetKeyDown(Keys.V)) {
-                    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
-
-                    string tmp = "Contained: ";
-                    foreach (Collider collider in test) {
-                        tmp += collider.GameObject.tag + ",";
-                    }
-                    Debug.Log(tmp);
-                }
-            } else if (state == State.attack) {
+            }
+            else if (state == State.attack) {
                 pA.AttackCoroutine();
                 if (pA.AttackEnded) state = State.normal;
-            } else if (state == State.collided) {
-                
             }
 
             pS.UpdateStamina();
             UpdateUI();
         }
 
-        public override void OnCollisionEnter(Collider c) {
-            if (c.IsStatic) {
-                camController.Shake(.3f);
-            }
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
+
 
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
@@ -161,15 +131,10 @@ namespace BRS.Scripts {
         void UpdateUI() {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
-            bool playerInRange = false;
-            if (other != null) {
-                playerInRange = Vector3.DistanceSquared(transform.position, other.transform.position) <= Math.Pow(PlayerAttack.attackDistance, 2);
-            }
-            bool canAttack = pS.HasStaminaForAttack() && playerInRange;
-            PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
+            UserInterface.instance.UpdatePlayerUI(PlayerIndex,
                 health, startingHealth,
                 pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName, canAttack);//, ba.Health, ba.startingHealth);
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -179,10 +144,8 @@ namespace BRS.Scripts {
         Vector2 MoveInput() {
             if (PlayerIndex == 0)
                 return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
-            else if (PlayerIndex == 1)
-                return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
             else
-                return Input.GetThumbstick("Left", PlayerIndex);
+                return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
         }
 
         bool AttackInput() {
@@ -207,8 +170,7 @@ namespace BRS.Scripts {
 
         bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
-               || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
-               || Input.GetButton(Buttons.LeftShoulder , PlayerIndex) || Input.GetButton(Buttons.LeftTrigger , PlayerIndex);
+               || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex);
         }
 
         // other

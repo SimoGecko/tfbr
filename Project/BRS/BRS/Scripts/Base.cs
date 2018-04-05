@@ -2,7 +2,6 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -13,40 +12,45 @@ namespace BRS.Scripts {
 
         //public
         const float deloadDistanceThreshold = 4f;
-        const float timeBetweenUnloads = .05f;
+        const float timeBetweenUnloads = .1f;
         const float moneyPenalty = .5f; // percent
 
         //private
         public int BaseIndex { get; set; } = 0;
         public int TotalMoney { get; private set; }
-        public Color BaseColor { get; private set; }
+
 
 
         //reference
+        //Player player; // should be array
+        //PlayerInventory playerInventory;
 
 
         // --------------------- BASE METHODS ------------------
         public Base(int baseIndex) {
             BaseIndex = baseIndex;
-            BaseColor = Graphics.ColorIndex(baseIndex);
         }
 
         public override void Start() {
             base.Start();
             TotalMoney = 0;
 
-            // Todo: This causes currently a strange loop. Players are need UI to be started already, but the UI which contains the Suggestions uses the player and bases to be startet first!
-            //UpdateUI();
+            //player = GameObject.FindGameObjectWithName("player_" + BaseIndex).GetComponent<Player>();
+            //if (player == null) Debug.LogError("player not found");
         }
 
         public override void Update() {
-            //UpdateUI();
+            /*if(Vector3.DistanceSquared(transform.position, playerInventory.transform.position) < deloadDistanceThreshold) {
+                DeloadPlayer();
+            }*/
+            UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
-            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+            bool isPlayer = c.gameObject.Type == ObjectType.Player;
+
             if (isPlayer) {
-                Player p = c.GameObject.GetComponent<Player>();
+                Player p = c.gameObject.GetComponent<Player>();
                 if (p.TeamIndex == BaseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
@@ -63,30 +67,27 @@ namespace BRS.Scripts {
         public void DeloadPlayer(PlayerInventory pi) {
             TotalMoney += pi.CarryingValue;
             pi.DeloadAll();
-            UpdateUI();
+            //UpdateUI();
         }
 
         void UpdateUI() {
-            BaseUI.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
+            UserInterface.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
         }
 
         protected override void Die() {
-            //TODO show gameover because base exploded
-        }
-
-        public override void TakeDamage(float damage) {
-            base.TakeDamage(damage);
-            UpdateUI();
+            
         }
 
         public void NotifyRoundEnd() {
-            foreach(var p in TeamPlayers()) {
-                if (!PlayerInsideRange(gameObject)) {
+            GameObject[] players = GameObject.FindGameObjectsByType(ObjectType.Player);
+            foreach(var player in players) {
+                Player p = player.GetComponent<Player>();
+                if (p.TeamIndex == BaseIndex && !PlayerInsideRange(gameObject)) {
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * moneyPenalty);
                 }
             }
-            UpdateUI();
+            
         }
 
 
@@ -95,23 +96,13 @@ namespace BRS.Scripts {
             return (p.transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
         }
 
-        Player[] TeamPlayers() {
-            List<Player> result = new List<Player>();
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (var player in players) {
-                Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex) result.Add(p);
-            }
-            return result.ToArray();
-        }
-
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
-                UpdateUI();
+                //UpdateUI();
                 await Time.WaitForSeconds(timeBetweenUnloads);
             }
         }

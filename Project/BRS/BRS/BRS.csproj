@@ -148,6 +148,13 @@
     <Compile Include="Load\Level1.cs" />
     <Compile Include="Load\LevelPhysics.cs" />
     <Compile Include="Load\PrefabContent.cs" />
+    <Compile Include="Menu\Button.cs" />
+    <Compile Include="Menu\Image.cs" />
+    <Compile Include="Menu\Menu.cs" />
+    <Compile Include="Menu\MenuManager.cs" />
+    <Compile Include="Menu\Slider.cs" />
+    <Compile Include="Menu\TextBox.cs" />
+    <Compile Include="Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
@@ -200,6 +207,9 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Load\Rankings\ranking2min.txt" />
+    <Content Include="Load\Rankings\ranking3min.txt" />
+    <Content Include="Load\Rankings\ranking5min.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />

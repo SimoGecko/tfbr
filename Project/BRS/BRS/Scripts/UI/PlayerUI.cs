@@ -127,6 +127,9 @@ namespace BRS.Scripts {
             
         }
 
+        public string GetPlayerName(int index) {
+            return playerUI[index].name;
+        }
 
 
         // other

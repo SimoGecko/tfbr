@@ -38,7 +38,7 @@ namespace BRS.Scripts {
             commands = new List<ButtonCommand>();
 
             Player p = Elements.instance.Player(1);
-            if(p!=null) player = p.transform;
+            if (p!=null) player = p.transform;
         }
 
         public override void Update() {
@@ -66,7 +66,7 @@ namespace BRS.Scripts {
                 Point bubblePosition = Camera.main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
                 Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));
                 UserInterface.instance.DrawPicture(dest, comicBubble);
-                UserInterface.instance.DrawStringBlack(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
+                UserInterface.instance.DrawString(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
             }
 
             commands.Clear();

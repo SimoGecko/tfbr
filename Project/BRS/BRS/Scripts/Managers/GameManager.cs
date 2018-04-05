@@ -18,7 +18,7 @@ namespace BRS.Scripts {
         enum State { playing, paused, finished, menu};
 
         //public
-        public static int numPlayers = 2;
+        public static int numPlayers = 1;
         public static int lvlScene = 3;
         public const int numRounds = 3;
 
