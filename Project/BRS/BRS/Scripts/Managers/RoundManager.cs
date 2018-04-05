@@ -13,14 +13,14 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int roundTime = 120;
-        public const int timeBeforePolice = 5;
+        public static int roundTime = 180;
+        public const int timeBeforePolice = 10;
 
         //private
         Timer rt;
+        private Base[] bases;
 
         //reference
-        Base[] bases;
         public static RoundManager instance;
 
 
@@ -45,7 +45,7 @@ namespace BRS.Scripts {
 
         // commands
         void OnRoundEnd() {
-            FindBases();
+            //FindBases();
             NotifyBases();
             Debug.Log("notified bases");
             Tuple<int, int> winner = FindWinner();
@@ -67,6 +67,7 @@ namespace BRS.Scripts {
             File.WriteRanking("Load/Rankings/ranking" + (roundTime / 60).ToString() + "min.txt", rankinglist, 5);
         }
 
+
         void FindBases() {
             //find bases
             GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
@@ -80,12 +81,14 @@ namespace BRS.Scripts {
         }
 
         void NotifyBases() {
-            for (int i = 0; i < bases.Length; i++)
-                bases[i].NotifyRoundEnd();
+            //for (int i = 0; i < bases.Length; i++)
+            //bases[i].NotifyRoundEnd();
+            foreach (Base b in Elements.instance.Bases()) b.NotifyRoundEnd();
         }
 
         // queries
         Tuple<int, int> FindWinner() {
+            Base[] bases = Elements.instance.Bases();
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
             for (int i = 1; i < bases.Length; i++) {

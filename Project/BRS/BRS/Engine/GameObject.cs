@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, Vault }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, Vault, DynamicObstacle, StaticObstacle }
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -63,7 +63,7 @@ namespace BRS {
 
         public virtual void Draw(Camera cam) {
             if (Model != null && active) {
-                Utility.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
             }
         }
 
@@ -89,7 +89,8 @@ namespace BRS {
         }
 
         public static GameObject Instantiate(string name, Transform t) {
-            return Instantiate(name, t.World.Translation, t.World.Rotation);
+            //return Instantiate(name, t.World.Translation, t.World.Rotation);
+            return Instantiate(name, t.position, t.rotation);
         }
 
         public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation) {
@@ -118,11 +119,13 @@ namespace BRS {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
+            //TODO copy material
             return newObject;
         }
 
         public static void Destroy(GameObject o) {
             o.active = false;
+            if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
         }

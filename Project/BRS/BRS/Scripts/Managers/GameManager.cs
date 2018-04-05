@@ -54,6 +54,7 @@ namespace BRS.Scripts {
 
         // commands 
         void CheckForPause() {
+            if (!(gameState == State.playing || gameState == State.paused)) return;
             if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
                 paused = !paused;
                 gameState = paused ? State.paused : State.playing;
@@ -63,7 +64,7 @@ namespace BRS.Scripts {
         public void OnRoundEnd(int winner) {
             teamWins[winner]++;
             gameState = State.finished;
-            new Timer(1f, () => RestartCustom(), true);
+            new Timer(1, () => RestartCustom(), true);
             BaseUI.instance.UpdateBaseUIWins(winner);
         }
 
@@ -84,14 +85,14 @@ namespace BRS.Scripts {
         void RestartCustom() { // it still slows down for some reason
             Elements.instance.Restart(); 
             Spawner.instance.Start();
-            UserInterface.instance.Start();
+            //UserInterface.instance.Start();
             RoundManager.instance.Start();
-            PowerupUI.instance.Start();
+            //PowerupUI.instance.Start();
 
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            foreach (var b in bases) b.Start();
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (var p in players) p.Start();
+            //GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
+            foreach (var b in Elements.instance.Bases()) b.Start();
+            //GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
+            foreach (var p in Elements.instance.Players()) p.Start();
 
             GameObject vault = GameObject.FindGameObjectWithName("vault");
             if (vault != null) vault.Start();

@@ -12,30 +12,38 @@ namespace BRS.Scripts {
 
         //public
         const float margin = .4f;
-        public int playerIndex;
+        const float smoothTime = .1f;
+
 
         //private
+        int playerIndex;
+        float smoothAngle, smoothRefAngle;
+        public Vector3 teamBase;
         Vector3 point; // in case the point is fixed
+        Color arrowColor;
 
         //reference
-        Transform target;
-        Transform follow;
+        GameObject follow; // attached player
+        PlayerInventory pI;
+        Transform target; // enemy player
 
 
         // --------------------- BASE METHODS ------------------
-        public Arrow(Transform _follow, Transform _target, int _index) {
+        public Arrow(GameObject _follow, Transform _target, int _index) {
             target = _target; follow = _follow; playerIndex = _index;
         }
 
         public override void Start() {
             point = Vector3.Zero;
-            GameObject playerT = GameObject.FindGameObjectWithName("player_" + (1 - playerIndex));
-            if (playerT!=null)
-                target = playerT.transform;
+            pI = follow.GetComponent<PlayerInventory>();
+            if(Elements.instance.Player(1 - playerIndex)!=null)
+                target = Elements.instance.Player(1 - playerIndex).transform;
+            teamBase = Elements.instance.Base(playerIndex%2).transform.position;
         }
 
         public override void Update() {
             LookAtPoi();
+            //TODO apply arrow color
         }
 
 
@@ -45,17 +53,25 @@ namespace BRS.Scripts {
 
         // commands
         void LookAtPoi() {
-            transform.position = follow.position;
-            Vector3 direction = poi - transform.position;
+            transform.position = follow.transform.position;
+            Vector3 direction = Poi() - transform.position;
             float angle = MathHelper.ToDegrees((float) System.Math.Atan2(direction.Z, direction.X));
-            transform.eulerAngles = new Vector3(0, -angle, 0);
+            smoothAngle = Utility.SmoothDampAngle(smoothAngle, angle, ref smoothRefAngle, smoothTime);
+            transform.eulerAngles = new Vector3(0, -smoothAngle, 0);
             transform.Translate(Vector3.Right * margin);
         }
 
 
 
         // queries
-        Vector3 poi { get { return target != null ? target.position : point; } }
+        Vector3 Poi() {
+            if (pI.IsFull()) {
+                arrowColor = Color.Green;
+                return teamBase;
+            }
+            arrowColor = Color.Red;
+            return target != null ? target.position : point;
+        }
 
 
         // other

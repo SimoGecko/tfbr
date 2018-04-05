@@ -15,12 +15,18 @@ namespace BRS {
 
         protected PhysicsManager PhysicsManager { get; set; }
 
+        protected GameObject UiManager;
+        protected GameObject Managers;
+
         public Scene(PhysicsManager physics) {
             PhysicsManager = physics;
         }
 
         public void Start() {
             Build();
+            CreatePlayers();
+            UiManager.Start();
+            Managers.Start();
         }
 
         public void Update() { }

@@ -101,12 +101,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Engine\Audio.cs" />
+    <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Collider.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
+    <Compile Include="Engine\Graphics.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
     <Compile Include="Engine\ParticleSystem.cs" />
@@ -152,9 +154,13 @@
     <Compile Include="Menu\TextBox.cs" />
     <Compile Include="Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scripts\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\Bomb.cs" />
+    <Compile Include="Scripts\Elements\ExplodingBox.cs" />
+    <Compile Include="Scripts\Elements\Magnet.cs" />
+    <Compile Include="Scripts\Elements\Weight.cs" />
     <Compile Include="Scripts\Physics\DynamicRigidBody.cs" />
     <Compile Include="Scripts\Physics\MovingRigidBody.cs" />
     <Compile Include="Scripts\Physics\StaticRigidBody.cs" />
@@ -188,6 +194,7 @@
     <Compile Include="Scripts\Elements\Vault.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />
+    <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
@@ -206,6 +213,7 @@
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

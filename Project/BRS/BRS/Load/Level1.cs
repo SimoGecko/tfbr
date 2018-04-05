@@ -17,32 +17,28 @@ namespace BRS.Load {
 
         public override void Build() {
             ////////// scene setup for level1 //////////
-            base.Build();
-
-            //MANAGER
-            GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
-            UIManager.AddComponent(new BaseUI());
-            UIManager.AddComponent(new PlayerUI());
-            UIManager.AddComponent(new PowerupUI());
-            UIManager.AddComponent(new GameUI());
-            UIManager.Start();
-
+            Debug.Log("BUILD SCENE!!");
+            //MANAGERS
+            UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new BaseUI());
+            UiManager.AddComponent(new PlayerUI());
+            UiManager.AddComponent(new PowerupUI());
+            UiManager.AddComponent(new GameUI());
+            UiManager.AddComponent(new Suggestions());
 
 
-            List<GameObject> addedGO = new List<GameObject>();
+            Managers = new GameObject("manager");
+            Managers.AddComponent(new Elements());
+            Managers.AddComponent(new GameManager());
+            Managers.AddComponent(new RoundManager());
+            Managers.AddComponent(new Spawner());
+            Managers.AddComponent(new Minimap());
+            Managers.AddComponent(new AudioTest());
 
-            GameObject manager = new GameObject("manager");
-            manager.AddComponent(new Elements());
-            manager.AddComponent(new GameManager());
-            manager.AddComponent(new RoundManager());
-            manager.AddComponent(new Spawner());
-            manager.AddComponent(new Minimap());
-
-            addedGO.Add(manager);
-            
 
 
             //TEST lighting
+            /*
             GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
             monkeyScene.transform.Scale(3);
             monkeyScene.transform.position += Vector3.Up * .1f;
@@ -50,7 +46,7 @@ namespace BRS.Load {
             GameObject monkeyScene2 = new GameObject("monkeyScene2", File.Load<Model>("Models/test/plant"));
             monkeyScene2.transform.Scale(3);
             monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right*2;
-
+            */
 
             //GROUND
             /*for (int x = 0; x < 2; x++) {
@@ -77,36 +73,35 @@ namespace BRS.Load {
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
             vault.AddComponent(new Vault());
-            vault.transform.position = new Vector3(5 , 1.5f, -62);
+            vault.transform.position = new Vector3(5, 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
-            addedGO.Add(vault);
 
             //other elements
-            GameObject.Instantiate("speedpadPrefab", Vector3.Zero, Quaternion.Identity);
+            GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
 
             //LOAD UNITY SCENE
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt"); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             task2.Wait();
 
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            //Debug.Assert(bases.Length == 2, "there should be 2 bases");
+            Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*3));
+                bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
+                Elements.instance.Add(bases[i].GetComponent<Base>());
             }
-
-            foreach (GameObject go in addedGO)
-                go.Start();
         }
 
         public override void CreatePlayers() {
-            //PLAYER
+            List<GameObject> objects = new List<GameObject>();
+
             for (int i = 0; i < GameManager.numPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
@@ -129,13 +124,20 @@ namespace BRS.Load {
                     if (userModel != null) player.Model = userModel;
                 }
 
+                Elements.instance.Add(player.GetComponent<Player>());
+
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player.transform, null, i));
+                arrow.AddComponent(new Arrow(player, null, i));
                 arrow.transform.Scale(.1f);
 
-                player.Start();
-                arrow.Start();
+                objects.Add(player);
+                objects.Add(arrow);
+            }
+
+            // todo: (andy) is this necessary here?
+            foreach (GameObject go in objects) {
+                go.Start();
             }
 
         }

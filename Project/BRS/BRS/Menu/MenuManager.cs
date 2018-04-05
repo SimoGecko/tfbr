@@ -187,8 +187,7 @@ namespace BRS.Menu {
 
 
             Game1.instance.ScreenAdditionalSetup();
-            Game1.instance.scene.Build();
-            Game1.instance.scene.CreatePlayers();
+            Game1.instance.scene.Start();
 
 
             for (int i = 0; i < GameManager.numPlayers; i++) {

@@ -83,6 +83,7 @@ namespace BRS {
             Prefabs.Start();
             //scene.Start();
             Input.Start();
+            Audio.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start();
             foreach (GameObject go in GameObject.All) go.Start();
@@ -106,6 +107,7 @@ namespace BRS {
             if (!menuDisplay) {
 
                 Input.Update();
+                Audio.Update();
 
 
                 foreach (GameObject go in GameObject.All) go.Update();
@@ -142,10 +144,11 @@ namespace BRS {
                     foreach (GameObject go in GameObject.All) go.Draw(cam);
                     //transform.Draw(camera);
 
-                    //gizmos (wireframe)
-                    GraphicsDevice.RasterizerState = wireRasterizer;
-                    Gizmos.Draw(cam);
-                    GraphicsDevice.RasterizerState = fullRasterizer;
+                //gizmos (wireframe)
+                GraphicsDevice.RasterizerState = wireRasterizer;
+                Gizmos.DrawWire(cam);
+                GraphicsDevice.RasterizerState = fullRasterizer;
+                Gizmos.DrawFull(cam);
 
                     //splitscreen UI
                     spriteBatch.Begin();

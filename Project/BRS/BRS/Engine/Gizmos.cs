@@ -32,16 +32,19 @@ namespace BRS {
             transformOrder.Add(t);
         }
 
-        public static void Draw(Camera cam) {
+        public static void DrawWire(Camera cam) {
             //called at actual draw time
             foreach(Transform cube in cubeOrder) {
-                Utility.DrawModel(Prefabs.cubeModel, cam.View, cam.Proj, cube.World);
+                Graphics.DrawModel(Prefabs.cubeModel, cam.View, cam.Proj, cube.World);
             }
             foreach(Transform sphere in sphereOrder) {
-                Utility.DrawModel(Prefabs.sphereModel, cam.View, cam.Proj, sphere.World);
+                Graphics.DrawModel(Prefabs.sphereModel, cam.View, cam.Proj, sphere.World);
             }
+            
+        }
+        public static void DrawFull(Camera cam) {
             foreach (Transform trans in transformOrder) {
-                Utility.DrawModel(Prefabs.emptymodel, cam.View, cam.Proj, trans.World);
+                Graphics.DrawModel(Prefabs.emptymodel, cam.View, cam.Proj, trans.World);
             }
         }
 

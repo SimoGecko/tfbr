@@ -92,6 +92,8 @@ namespace BRS {
                         else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
                         else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
                         else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
+                        else if (tagName == "StaticObstacle") go.tag = ObjectTag.StaticObstacle;
+                        else if (tagName == "DynamicObstacle") go.tag = ObjectTag.DynamicObstacle;
                     }
                     nameContent = reader.ReadLine();
                 }

@@ -44,6 +44,7 @@ namespace BRS.Scripts {
         public void Draw(int index) {
             Vector2 position = new Vector2(130, 130);
             position += Vector2.UnitX * UserInterface.instance.GetOffset(index);
+            Vector2 screenPosition = Camera.main.WorldToScreenPoint(Elements.instance.Player(index).transform.position);
 
             UserInterface.instance.DrawPicture(position, forkliftIcon, forkliftIcon.Bounds.GetCenter(), .5f);
 
@@ -54,14 +55,24 @@ namespace BRS.Scripts {
             //health
             float healthPercent = playerUI[index].health / playerUI[index].maxHealth;
             UserInterface.instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Green);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -60), healthPercent, Color.Green);
 
             //stamina
             float staminaPercent = playerUI[index].stamina / playerUI[index].maxStamina;
             UserInterface.instance.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -55), staminaPercent, Color.Red);
+
+            //stamina button suggestions
+            if (playerUI[index].canAttack) {
+                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
+            } else if (staminaPercent == 1) {
+                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.RT);
+            }
 
             //capacity
             float capacityPercent = (float)playerUI[index].carryingWeight / playerUI[index].maxCapacity;
             UserInterface.instance.DrawBarVertical(position + new Vector2(-95 , 60), capacityPercent, Color.Blue);
+            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -50), capacityPercent, Color.Blue);
 
             //cash
             string playerValueString = "$" + playerUI[index].carryingValue.ToString("N0");//ToString("#,##0")
@@ -69,7 +80,7 @@ namespace BRS.Scripts {
 
         }
 
-        public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name) {
+        public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack) {
             // current
             playerUI[index].carryingValue = carryingValue;
 
@@ -82,6 +93,7 @@ namespace BRS.Scripts {
             playerUI[index].maxCapacity = maxCapacity;
 
             playerUI[index].name = name;
+            playerUI[index].canAttack = canAttack;
 
         }
 
@@ -89,7 +101,7 @@ namespace BRS.Scripts {
 
         // queries
         public void DrawOldUI(int index) {
-            /*
+            
             int offset = UserInterface.instance.GetOffset(index);
 
             string playerValueString = "carrying: " + playerUI[index].carryingValue;
@@ -112,7 +124,7 @@ namespace BRS.Scripts {
             UserInterface.instance.DrawBarBig(new Vector2(10 + offset, 270), capacityPercent, Color.Blue);
             string capacityString = playerUI[index].carryingWeight + "/" + playerUI[index].maxCapacity;
             UserInterface.instance.DrawString(new Vector2(100 + offset, 260), capacityString);
-            */
+            
         }
 
         public string GetPlayerName(int index) {
@@ -135,5 +147,8 @@ namespace BRS.Scripts {
         public float maxHealth;
         public float maxStamina;
         public int maxCapacity;
+
+        //helper
+        public bool canAttack;
     }
 }
