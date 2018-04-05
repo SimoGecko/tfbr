@@ -35,9 +35,11 @@ namespace BRS {
             return v < 0 ? 0 : v > 1 ? 1 : v;
         }
 
+
+
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
-            float deltaTime = Time.deltatime;
+            float deltaTime = Time.deltaTime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
             float num = 2f / smoothTime;
@@ -94,6 +96,21 @@ namespace BRS {
             return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
         }
 
+       public static string EvaluateDistribution(Dictionary<string, float> distrib) {
+            float sum = 0;
+            foreach (var entry in distrib) sum += entry.Value;
+
+            float val = MyRandom.Value*sum;
+            foreach(var entry in distrib) {
+                if (val <= entry.Value) return entry.Key;
+                val -= entry.Value;
+            }
+            Debug.LogError("distribution doesn't sum to 1");
+            return "";
+        }
+
+
+
         //TRANSORM METHODS
         /*
         public static Vector3 toEulerAngle(this Quaternion q){ // in degrees //NOT WORKING CORRECTLY
@@ -121,7 +138,8 @@ namespace BRS {
             yaw   = MathHelper.ToDegrees(yaw);
             roll  = MathHelper.ToDegrees(roll);
 
-            return new Vector3(pitch, -yaw, -roll); // Ensure it's right
+            //return new Vector3(pitch, -yaw, -roll); // Ensure it's right
+            return new Vector3(roll, -pitch, yaw); // Ensure it's right
         }*/
 
         /*
@@ -161,25 +179,59 @@ namespace BRS {
             }
         }*/
 
+        //========================================================0
 
+        //In a 2D grid, returns the angle to a specified point from the +X axis
+        public static float ArcTanAngle(float X, float Y) {
+            if (X == 0) {
+                if (Y == 1) return (float)MathHelper.PiOver2;
+                else        return (float)-MathHelper.PiOver2;
+            } else if (X > 0) return (float)Math.Atan(Y / X);
+            else if (X < 0) {
+                if (Y > 0) return (float)Math.Atan(Y / X) + MathHelper.Pi;
+                else       return (float)Math.Atan(Y / X) - MathHelper.Pi;
+            } else return 0;
+        }
 
-        //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world) {
-            foreach (ModelMesh mesh in model.Meshes) {
-                foreach (BasicEffect effect in mesh.Effects) {
-                    //NOTE: lighting staff must be put here
+        //returns Euler angles that point from one point to another
+        public static Vector3 AngleTo(Vector3 from, Vector3 location) {
+            Vector3 angle = new Vector3();
+            Vector3 v3 = Vector3.Normalize(location - from);
+            angle.X = (float)Math.Asin(v3.Y);
+            angle.Y = ArcTanAngle(-v3.Z, -v3.X);
+            return angle;
+        }
 
-                    effect.EnableDefaultLighting();
-                    //effects
-                    effect.World = world;
-                    effect.View = view;
-                    effect.Projection = proj;
-                }
-                mesh.Draw(); // outside, not inside
+        //converts a Quaternion to Euler angles (X = pitch, Y = yaw, Z = roll)
+        public static Vector3 ToEuler(this Quaternion rotation) {
+            Vector3 rotationaxes = new Vector3();
+
+            Vector3 forward = Vector3.Transform(Vector3.Forward, rotation);
+            Vector3 up = Vector3.Transform(Vector3.Up, rotation);
+            rotationaxes = AngleTo(new Vector3(), forward);
+            if (rotationaxes.X == MathHelper.PiOver2) {
+                rotationaxes.Y = ArcTanAngle(up.Z, up.X);
+                rotationaxes.Z = 0;
+            } else if (rotationaxes.X == -MathHelper.PiOver2) {
+                rotationaxes.Y = ArcTanAngle(-up.Z, -up.X);
+                rotationaxes.Z = 0;
+            } else {
+                up = Vector3.Transform(up, Matrix.CreateRotationY(-rotationaxes.Y));
+                up = Vector3.Transform(up, Matrix.CreateRotationX(-rotationaxes.X));
+                rotationaxes.Z = ArcTanAngle(up.Y, -up.X);
             }
+            return new Vector3(MathHelper.ToDegrees(rotationaxes.X), MathHelper.ToDegrees(rotationaxes.Y), MathHelper.ToDegrees(rotationaxes.Z));
         }
 
 
+
+        //==============================================================
+
+
+
+        
+
+        //==============================================================
         //EXTENSION METHODS
         public static Vector3 normalized(this Vector3 v) {
             if (v.Length() < 1e-5) return Vector3.Zero;
@@ -201,15 +253,45 @@ namespace BRS {
             return new Vector3(v.X, 0, v.Y);
         }
 
+        public static Vector2 Rotate(this Vector2 v, float angle) {
+            float cos = (float)Math.Cos(MathHelper.ToRadians(angle));
+            float sin = (float)Math.Sin(MathHelper.ToRadians(angle));
+            return new Vector2(v.X * cos - v.Y * sin, v.X * sin + v.Y * cos);
+        }
+
         public static Vector2 Evaluate(this Rectangle rect, Vector2 v) {
             return new Vector2(rect.X + v.X * rect.Width, rect.Y + v.Y * rect.Height);
         }
+        public static Vector2 GetCenter(this Rectangle rect) {
+            return new Vector2(rect.X + .5f*rect.Width, rect.Y + .5f*rect.Height);
+        }
+
+        public static Vector2 Round(this Vector2 v) { // Makes it Point2
+            return new Vector2((int)v.X, (int)v.Y);
+        }
+        public static float Clamp(this float f, float min, float max) {
+            return f < min ? min : f > max ? max : f;
+        }
+
+        public static float Angle(this Vector3 a, Vector3 b) {
+            //returns angle in degree between a and b
+            float cos = Vector3.Dot(a.normalized(), b.normalized());
+            return MathHelper.ToDegrees((float) Math.Acos(cos));
+        }
+
+        public static Vector2 Project(this Rectangle rect, Vector2 p) {
+            if (rect.Contains(p)) return p;
+            p.X = Clamp(p.X, rect.Left, rect.Right);
+            p.Y = Clamp(p.Y, rect.Top, rect.Bottom);
+            return p;
+        }
+
 
     }
 
 
     static class MyRandom { // TODO find better name
-        static int seed = 101;
+        static int seed = 102;
         static Random rand = new Random(seed);
 
         public static float Value { // random float in [0, 1[
@@ -227,14 +309,28 @@ namespace BRS {
             return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
         }
 
+        public static Vector2 insideUnitSquare() {
+            return new Vector2(Value*2-1, Value * 2 - 1);
+        }
+        public static Vector3 insideUnitCube() {
+            return new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
+        }
+
         public static Vector2 insideUnitCircle() {
             double r = Math.Sqrt(rand.NextDouble());
             double phi = rand.NextDouble() * 2 * Math.PI;
             return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
         }
+        public static Vector3 insideUnitSphere() {
+            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            while(sample.LengthSquared()>1)
+                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            return sample;
+        }
+        
 
-        public static Vector2 insideUnitSquare() {
-            return new Vector2(Value, Value);
+        public static Quaternion YRotation() {
+            return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
         }
 
     }
@@ -243,12 +339,18 @@ namespace BRS {
         public static void Log(string s) {
             //Console.WriteLine(s);
             System.Diagnostics.Debug.WriteLine(s);
-
         }
+        public static void Log(Object o) {
+            System.Diagnostics.Debug.WriteLine(o.ToString());
+        }
+
         public static void LogError(string s) {
             //Console.WriteLine("//ERROR//: "+s);
             System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);
+        }
 
+        public static void Assert(bool b, string s) {
+            if (!b) System.Diagnostics.Debug.WriteLine("//ASSERTION FAIL//: " + s);
         }
     }
 
@@ -269,5 +371,10 @@ namespace BRS {
         public static float EvaluateDown(float t) {
             return (float)Math.Pow(t, .2f);
         }
+
+        //see notes on notebook for shape
+        public static float EvaluateA(float t) { return t * t; }
+        public static float EvaluateB(float t) { return (float)Math.Sqrt(t); }
+        public static float EvaluateC(float t) { return (float)Math.Sin((t-.5f)*Math.PI)/2+.5f; }
     }
 }

@@ -1,14 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
     class Pickup : Component {
@@ -17,36 +10,32 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float delayBeforePickup = .5f; // cannot pickup right after spawned
+        //const float pickupDistThreshold = .5f;
 
 
         //private
-        const float delayBeforePickup = .5f; // cannot pickup right after spawned
-        bool canPickup = false;
-        //string interactabletag = "player";
-        //float pickupthreshold = .5f;
+        protected bool canPickup;
+        public System.Action OnPickup;
 
         //reference
-        //Transform target;
-        //protected GameObject[] players;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            //players = GameObject.FindGameObjectsWithTag("player");//.GetComponent<Player>();
-            //if (players == null) Debug.LogError("player not found");
-            //target = player.transform;
             canPickup = false;
             Invoke(delayBeforePickup, () => canPickup = true);
         }
 
         public override void Update() {
-            //CheckPickup();
+            
         }
 
         public override void OnCollisionEnter(Collider c) {
-            Player player = c.gameObject.GetComponent<Player>();
-            if (player != null && canPickup) {
-                OnPickup(player);
+            bool isPlayer = c.gameObject.myTag == "player";
+            if (isPlayer && canPickup) {
+                DoPickup(c.gameObject.GetComponent<Player>());
+                OnPickup?.Invoke();
             }
             //GameObject.Destroy(gameObject);
         }
@@ -68,7 +57,7 @@ namespace BRS.Scripts {
             
         }*/
 
-        protected virtual void OnPickup(Player p) {
+        protected virtual void DoPickup(Player p) {
             //fill
         }
 

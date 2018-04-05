@@ -12,68 +12,57 @@ using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts {
     class CameraController : Component {
-        ////////// Sets the camera position and follows the player smoothly //////////
+        ////////// Sets the camera position and follows the player smoothly, also allowing rotation //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        public int camIndex;
         const float smoothTime = .3f;
+        static Vector2 mouseSensitivity =new Vector2(-.3f, -.3f); // set those (also with sign) into options menu
+        static Vector2 gamepadSensitivity = new Vector2(-3f, -3f);
+        static Vector3 offset = new Vector3(0, 10, 10);
+        static Vector3 angles = new Vector3(-40, 0, 0);
+        static Vector2 angleRange = new Vector2(-10, 10); // -40, 40
 
         //private
-        static Vector3 offset;
-        Vector3 refVelocity;
-        const float camSensitivity = 1f;
-        float Yangle = 0;
+        float Xangle = 0, XangleSmooth=0;
+        float Yangle = 0, YangleSmooth=0;
+        float refVelocityX = 0, refVelocityY = 0;
+        public int camIndex;
 
         //reference
-        //Transform cams;
         Transform player;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            /*
-            int numPlayers = GameManager.numPlayers;
-            cams = new Transform[numPlayers];
-            players = new Transform[numPlayers];
-            refVelocity = new Vector3[numPlayers];
-            
-            for(int i=0; i<numPlayers; i++) {
-                cams[i] = Camera.GetCamera(i).transform;
-                if (cams[i] != null) {
-                    cams[i].position = new Vector3(-5, 7, 5);
-                    cams[i].eulerAngles = new Vector3(-50, 0, 0);
-
-                    players[i] = GameObject.FindGameObjectWithName("player_"+i).transform;
-                    if (players[i] == null) Debug.LogError("player not found");
-                    if(offset == Vector3.Zero)
-                        offset = cams[i].position - players[i].position;
-                }
-            }*/
-            transform.position = new Vector3(-5, 7, 5);
-            transform.eulerAngles = new Vector3(-50, 0, 0);
+            Xangle = XangleSmooth = Yangle = YangleSmooth = refVelocityX = refVelocityY = 0;
 
             player = GameObject.FindGameObjectWithName("player_" + camIndex).transform;
             if (player == null) Debug.LogError("player not found");
-            if (offset == Vector3.Zero)
-                offset = transform.position - player.position;
 
+            transform.position = player.position + offset;
+            transform.eulerAngles = angles;
         }
 
-        public override void Update() {
-            Vector3 targetPos = player.position + offset;
-            //Transform target = new Transform(targetPos, transform.rotation, Vector3.One);
+        public override void LateUpdate() { // after player has moved
+            float inputX = (Input.mouseDelta.X*mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
+            float inputY = (Input.mouseDelta.Y*mouseSensitivity.Y).Clamp(-100, 100);
 
-            //Yangle += Input.mouseDelta.X * camSensitivity;
+            inputX += Input.GetThumbstick("Right", camIndex).X * gamepadSensitivity.X;
+            inputY += Input.GetThumbstick("Right", camIndex).Y * gamepadSensitivity.Y;
 
-            //target.RotateAround(player.position, Vector3.Up, Yangle);
+            Xangle = (Xangle + inputY).Clamp(angleRange.X, angleRange.Y);
+            XangleSmooth = Utility.SmoothDamp(XangleSmooth, Xangle, ref refVelocityX, smoothTime);
 
+            Yangle += inputX;
+            YangleSmooth = Utility.SmoothDamp(YangleSmooth, Yangle, ref refVelocityY, smoothTime);
 
-            transform.position = Utility.SmoothDamp(transform.position, targetPos, ref refVelocity, smoothTime);
-            //transform.rotation = target.rotation;
+            transform.position = player.position + offset;
+            transform.eulerAngles = angles;
 
-
+            transform.RotateAround(player.position, Vector3.Up, YangleSmooth);
+            transform.RotateAround(player.position, transform.Right, XangleSmooth);
         }
 
 
@@ -86,6 +75,7 @@ namespace BRS.Scripts {
 
 
         // queries
+        public float YRotation { get { return Yangle; } }
 
 
 

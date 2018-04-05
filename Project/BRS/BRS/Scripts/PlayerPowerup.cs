@@ -12,21 +12,21 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const int maxNumberPowerups = 1;
 
 
         //private
-        Powerup powerupInInventory;
-       
+        List<Powerup> carryingPowerup;
+
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { }
-        public override void Update() {
-            if (Input.GetKeyDown(Keys.E) && HasPowerup) {
-                UsePowerup();
-            }
+        public override void Start() {
+            carryingPowerup = new List<Powerup>();
+
         }
+        public override void Update() { }
 
 
 
@@ -34,13 +34,24 @@ namespace BRS.Scripts {
 
 
         // commands
-        void UsePowerup() {
-
+        public void UsePowerup(Player p) {
+            //could implement selector here
+            if (carryingPowerup.Count > 0) {
+                carryingPowerup[0].UsePowerup();
+                carryingPowerup.RemoveAt(0);
+            }
         }
-        
+
+        public void Collect(Powerup powerup) {
+            carryingPowerup.Add(powerup);
+        }
+
+        public bool CanPickUp(Powerup powerup) {
+            return carryingPowerup.Count < maxNumberPowerups;
+        }
 
         // queries
-        bool HasPowerup { get { return powerupInInventory != null; } }
+        bool HasPowerup { get { return carryingPowerup.Count > 0; } }
 
         // other
 

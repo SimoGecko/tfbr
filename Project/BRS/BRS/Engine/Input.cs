@@ -17,12 +17,18 @@ namespace BRS {
         static bool[] vibrating = new bool[4];
 
         public static void Start() {
-            gState = oldGstate = new GamePadState[4];
+            gState  = new GamePadState[4];
+            oldGstate = new GamePadState[4];
 
             kState = Keyboard.GetState();
             mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 gState[i] = GamePad.GetState(i);
+
+            //old stuff for mouse
+            oldMstate = Mouse.GetState();
+           
+
         }
 
         public static void Update() {
@@ -31,6 +37,7 @@ namespace BRS {
 
             kState = Keyboard.GetState();
             mState = Mouse.GetState();
+
             for (int i = 0; i < 4; i++) {
                 oldGstate[i] = gState[i];
                 gState[i] = GamePad.GetState(i);
@@ -47,8 +54,6 @@ namespace BRS {
                 }
             }*/
         }
-
-
 
         //AXIS
         static bool LeftAxis()  { return kState.IsKeyDown(Keys.Left)  || kState.IsKeyDown(Keys.A);  }
@@ -88,12 +93,6 @@ namespace BRS {
             return 0f;
         }
 
-        public static bool Fire1() {
-            return GetKeyDown(Keys.Space) || GetButtonDown(Buttons.A);
-        }
-        public static bool Fire2() {
-            return GetKeyDown(Keys.Enter) || GetButtonDown(Buttons.A, 1);
-        }
 
         //KEYS
         public static bool GetKey(Keys k)     { return kState.IsKeyDown(k); }
@@ -110,14 +109,17 @@ namespace BRS {
         public static int mouseWheel      { get { return mState.ScrollWheelValue; } }
         public static int mouseWheelDelta { get { return mState.ScrollWheelValue-oldMstate.ScrollWheelValue; } }
 
-        public static bool GetMouseButton(int index) {
+        static bool GetMouseButton(int index, MouseState state) {
             switch (index) {
-                case 0: return mState.LeftButton   == ButtonState.Pressed;
-                case 1: return mState.RightButton  == ButtonState.Pressed;
-                case 2: return mState.MiddleButton == ButtonState.Pressed;
+                case 0: return state.LeftButton   == ButtonState.Pressed;
+                case 1: return state.RightButton  == ButtonState.Pressed;
+                case 2: return state.MiddleButton == ButtonState.Pressed;
             }
             return false;
         }
+        public static bool GetMouseButton(int index) { return GetMouseButton(index, mState); }
+        public static bool GetMouseButtonDown(int index) { return  GetMouseButton(index, mState) && !GetMouseButton(index, oldMstate); }
+        public static bool GetMouseButtonUp  (int index) { return !GetMouseButton(index, mState) &&  GetMouseButton(index, oldMstate); }
 
 
         //GAMEPAD
@@ -127,9 +129,9 @@ namespace BRS {
         }
 
         //includes dpad -> see schematic
-        public static bool GetButton    (Buttons b, int i = 0) { return gState[i].IsButtonDown(b); }
-        public static bool GetButtonDown(Buttons b, int i = 0) { return gState[i].IsButtonDown(b) && oldGstate[i].IsButtonUp(b); }
-        public static bool GetButtonUp  (Buttons b, int i = 0) { return gState[i].IsButtonUp(b)   && oldGstate[i].IsButtonDown(b); }
+        public static bool GetButton    (Buttons b, int i = 0) { return  gState[i].IsButtonDown(b); }
+        public static bool GetButtonDown(Buttons b, int i = 0) { return  gState[i].IsButtonDown(b) && !oldGstate[i].IsButtonDown(b); }
+        public static bool GetButtonUp  (Buttons b, int i = 0) { return !gState[i].IsButtonDown(b) &&  oldGstate[i].IsButtonDown(b); }
 
         static internal Vector2 GetThumbstick(string v, int i=0) {
             if (v == "Left")  { return gState[i].ThumbSticks.Left; }
@@ -143,19 +145,19 @@ namespace BRS {
             return 0f;
         }
 
+        /*
         const float amountDown = 0.5f; // how much to press to be considered down
         public static bool IsTriggerDown(string v, int i = 0) {
             if (v == "Left")  { return gState[i].Triggers.Left >=amountDown; }
             if (v == "Right") { return gState[i].Triggers.Right>=amountDown; }
             return false;
-        }
+        }*/
 
-        //vibration
+        //VIBRATION
         public static void Vibrate(float left, float right, float time, int i=0) {
             GamePad.SetVibration(i, left, right);
             new Timer(time, () => StopVibration(i));
             vibrating[i] = true;
-            //timer[i] = time;
         }
 
         static void StopVibration(int i=0) {

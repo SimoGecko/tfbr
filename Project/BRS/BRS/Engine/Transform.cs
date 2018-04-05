@@ -25,6 +25,13 @@ namespace BRS {
         Matrix WorldCached;
         //bool dirty -> recompute only when necessary
 
+        static Transform _identity;
+        public static Transform Identity {
+            get {
+                if (_identity == null) _identity = new Transform(Vector3.Zero, Quaternion.Identity, Vector3.One);
+                return _identity;
+            }
+        }
 
         //constructors
         public Transform(Vector3 p, Quaternion r, Vector3 s) {
@@ -105,7 +112,7 @@ namespace BRS {
         }
 
         public Vector3 eulerAngles {
-            //get { return m_rotation; } // TODO
+            get { return m_rotation.ToEuler(); }
             set { m_rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(value.Y), MathHelper.ToRadians(value.X), MathHelper.ToRadians(value.Z)); }
         }
 
@@ -130,7 +137,7 @@ namespace BRS {
             Rotate(axis, angle);
         }
         public void LookAt(Vector3 p) { // this caused the use of quaternions
-            Matrix look = Matrix.CreateLookAt(m_position, p, Up);
+            Matrix look = Matrix.CreateLookAt(m_position, p, Vector3.Up);
             //eulerAngles = look.toEulerAngles();
             m_rotation = look.Rotation;
             m_rotation.Conjugate();

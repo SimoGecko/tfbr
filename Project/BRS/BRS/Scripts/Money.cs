@@ -9,26 +9,27 @@ namespace BRS.Scripts {
         ////////// represents an amount of money that can be collected  //////////
 
         // --------------------- VARIABLES ---------------------
-
+        public enum Type { Cash, Diamond, Gold };
         //public
-        public const float randomizer = .1f;
+        public const float randomizer = .1f; // how much to deviate from actual value
 
 
         //private
         int value = 1;
         int weight = 1;
+        Type type;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public Money(int _value, int _weight) {
+        public Money(int _value, int _weight, Type _type) {
             value = _value; weight = _weight;
+            type = _type;
         }
 
         public override void Start() {
             base.Start();
-
             value = (int)(Value*MyRandom.Range(1-randomizer, 1+randomizer));
         }
 
@@ -42,10 +43,11 @@ namespace BRS.Scripts {
 
 
         // commands
-        protected override void OnPickup(Player p) {
+        protected override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
                 pi.Collect(this);
+                Elements.instance.Remove(this);
                 GameObject.Destroy(gameObject);
             }
         }
