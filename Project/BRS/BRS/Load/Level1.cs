@@ -74,6 +74,7 @@ namespace BRS.Load {
                 
                 player.AddComponent(new Player(i, i%2));
                 //subcomponents
+                player.AddComponent(new MovingRigidBody(PhysicsManager));
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
                 player.AddComponent(new PlayerInventory());
@@ -81,7 +82,6 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 //player.AddComponent(new DynamicRigidBody(PhysicsManager));
-                player.AddComponent(new MovingRigidBody(PhysicsManager));
 
                 Elements.instance.Add(player.GetComponent<Player>());
 

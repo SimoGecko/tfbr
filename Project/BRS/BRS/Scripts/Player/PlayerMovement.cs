@@ -42,6 +42,7 @@ namespace BRS.Scripts {
 
         //reference
         PlayerInventory playerInventory;
+        private SteerableRigidBody _rigidBody;
 
 
         // --------------------- BASE METHODS ------------------
@@ -50,6 +51,9 @@ namespace BRS.Scripts {
             //rotation = targetRotation = -90;
 
             playerInventory = gameObject.GetComponent<PlayerInventory>();
+
+            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
+            _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
         }
 
         public override void Update() {
@@ -75,34 +79,13 @@ namespace BRS.Scripts {
                 targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
             }
 
+            // Calculate rotation
             rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
+
+            // Calculate velocity
             float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
             speedboost *= slowdown ? slowdownMalus : 1f;
 
-            //// move
-            transform.eulerAngles = new Vector3(0, rotation, 0);
-            //transform.Translate(Vector3.Forward * currentSpeed * speedboost * smoothMagnitude * Time.deltatime);
-
-            //move forward
-            //compute final speed
-            // Todo: Apply speedPad in physics...
-            //if (speedPad) { // override and force to move at max speed
-            //    transform.Translate(Vector3.Forward * capacityBasedSpeed * speedPadMultiplier * Time.deltaTime);
-            //} else {
-            //    transform.Translate(Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude * Time.deltaTime);
-            //}
-
-
-            // Apply forces/changes to physics
-            //gameObject.Position = new JVector(transform.position.X, 0.5f, transform.position.Z);
-            //gameObject.Orientation = JMatrix.CreateRotationY(rotation * MathHelper.Pi / 180.0f);
-
-
-            //rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
-            //transform.eulerAngles = new Vector3(0, rotation, 0);
-
-            //move forward
-            //float speedboost = boosting ? boostSpeedMultiplier : 1f;
             Vector3 linearVelocity;
             if (speedPad) { // override and force to move at max speed
                 linearVelocity = Vector3.Forward * capacityBasedSpeed * speedPadMultiplier;
@@ -110,25 +93,19 @@ namespace BRS.Scripts {
                 linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
             }
 
-            //transform.Translate(linearVelocity);
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
-            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
-
-            if (dynamicRigidBody != null) {
-                SteerableRigidBody srb = dynamicRigidBody.RigidBody as SteerableRigidBody;
-
-                if (srb != null) {
-                    srb.RotationY = MathHelper.ToRadians(rotation);
-                    srb.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity), srb.Orientation);
-                }
+            if (_rigidBody != null) {
+                _rigidBody.RotationY = MathHelper.ToRadians(rotation);
+                _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
             }
         }
 
         public void SetSlowdown(bool b) {
             slowdown = b;
         }
+
         internal void SetSpeedPad(bool b) {
             speedPad = b;
         }
