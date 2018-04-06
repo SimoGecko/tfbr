@@ -79,21 +79,22 @@ namespace BRS.Engine {
             _sb = spriteBatch;
             //callbacks
             
-            /*
-            BaseUI.instance.Draw(index%2);
-            PlayerUI.instance.Draw(index);
-            PowerupUI.instance.Draw(index);
-            Suggestions.instance.Draw(index);
-            Minimap.instance.DrawSmall(spriteBatch, index);
-            */
+            
+            BaseUI.Instance.Draw(index%2);
+            PlayerUI.Instance.Draw(index);
+            PowerupUI.Instance.Draw(index);
+            Suggestions.Instance.Draw(index);
+            Minimap.Instance.DrawSmall(spriteBatch, index);
+            
 
             //test draw
-            
+            /*
             DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
             //DrawPictureAlign(white, new Rectangle(100, 100, 150, 100), null, Align.TopLeft, Align.TopLeft, Color.LightGray, true);
 
             DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
             DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);
+            */
         }
 
 

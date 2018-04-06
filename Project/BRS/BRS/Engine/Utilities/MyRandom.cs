@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Engine.Utilities {
+namespace BRS.Engine {
     static class MyRandom { // TODO find better name
         static readonly int Seed = 102;
         static readonly Random Rand = new Random(Seed);

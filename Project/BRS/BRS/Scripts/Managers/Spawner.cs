@@ -87,10 +87,12 @@ namespace BRS.Scripts.Managers {
 
 
         void SpawnOneMoneyRandom() {
+            
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
             Vector2 position = _spawnArea.Evaluate(sample);
             SpawnOneMoneyAt(position.To3());
+            //SpawnOneMoneyAt(Heatmap.instance.GetMoneyPos().To3());
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius) {

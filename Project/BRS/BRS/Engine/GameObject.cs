@@ -36,6 +36,12 @@ namespace BRS.Engine {
             allGameObjects.Add(this);
         }
 
+        public virtual void Awake() {
+            foreach (IComponent c in components) {
+                c.Awake();
+            }
+        }
+
         public virtual void Start() {
             foreach (IComponent c in components) {
                 c.Start();
@@ -201,7 +207,6 @@ namespace BRS.Engine {
             foreach (IComponent c in components) {
                 if (c is T) return (T)c;
             }
-
             Debug.LogError("component not found " + typeof(T) + " inside " + name);
             return default(T);
         }

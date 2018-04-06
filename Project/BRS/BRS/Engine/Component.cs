@@ -10,6 +10,7 @@ namespace BRS.Engine {
     public interface IComponent {
         GameObject GameObject { get; set; }
 
+        void Awake();
         void Start();
         void Update();
         void LateUpdate();
@@ -19,12 +20,15 @@ namespace BRS.Engine {
         object Clone();
     }
 
+
+    //TODO remove this Component duplicate
     public class Component : IComponent {
         public bool Active { get; set; }
         public GameObject GameObject { get; set; }
         // ReSharper disable once InconsistentNaming
         public Transform  transform  { get { return GameObject.transform; } }
 
+        public virtual void Awake() { }
         public virtual void Start() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { } // really necessary?

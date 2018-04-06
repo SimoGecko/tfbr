@@ -86,6 +86,17 @@ namespace BRS.Engine {
             return new Vector3((float)c.R/255, (float)c.G/255, (float)c.B/255);
         }*/
 
+        public static int[,] ColorToInt(Color[,] color, int channel) {
+            int width = color.GetLength(0);
+            int height = color.GetLength(1);
+            int[,] result = new int[width, height];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    result[x, y] = (channel == 0) ? color[x, y].R : (channel == 1) ? color[x, y].G : color[x, y].B;
+                }
+            }
+            return result;
+        }
 
     }
 

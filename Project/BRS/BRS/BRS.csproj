@@ -162,6 +162,7 @@
     <Compile Include="Scripts\Elements\FallingWeight.cs" />
     <Compile Include="Scripts\Elements\OilTrap.cs" />
     <Compile Include="Scripts\Elements\PlantedMagnet.cs" />
+    <Compile Include="Scripts\Managers\Heatmap.cs" />
     <Compile Include="Scripts\PowerUps\Bomb.cs" />
     <Compile Include="Scripts\Elements\ExplodingBox.cs" />
     <Compile Include="Scripts\PowerUps\CapacityBoost.cs" />

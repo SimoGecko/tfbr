@@ -23,34 +23,33 @@ namespace BRS.Load {
         }
 
 
-        protected override void StartManagers() {
-            UiManager.Start();
-            Managers.Start();
-        }
-
 
         /// <summary>
         /// Scene setup for level1
         /// </summary>
         protected override void Build() {
-            Debug.Log("BUILD SCENE!!");
 
             //MANAGERS
-            UiManager = new GameObject("UImanager"); // must be before the other manager
+            GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
             UiManager.AddComponent(new BaseUI());
             UiManager.AddComponent(new PlayerUI());
             UiManager.AddComponent(new PowerupUI());
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
 
-            Managers = new GameObject("manager");
-            Managers.AddComponent(new ElementManager());
-            Managers.AddComponent(new GameManager());
-            Managers.AddComponent(new RoundManager());
-            Managers.AddComponent(new Spawner());
-            Managers.AddComponent(new Minimap());
-            Managers.AddComponent(new AudioTest());
+            GameObject Manager = new GameObject("manager");
+            Manager.AddComponent(new ElementManager());
+            Manager.AddComponent(new GameManager());
+            Manager.AddComponent(new RoundManager());
+            Manager.AddComponent(new Heatmap());
+            Manager.AddComponent(new Spawner());
+            Manager.AddComponent(new Minimap());
+            Manager.AddComponent(new AudioTest());
+            Manager.AddComponent(new AudioTest());
 
+
+            UiManager.Start();
+            Manager.Start();
             //TEST lighting
             /*
             GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
@@ -106,6 +105,8 @@ namespace BRS.Load {
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             task2.Wait();
+
+            CreatePlayers();
         }
 
         protected override void CreatePlayers() {
@@ -114,7 +115,7 @@ namespace BRS.Load {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.transform.Scale(2.0f);
+                player.transform.Scale(1.0f);
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 player.AddComponent(new Player(i, i % 2));

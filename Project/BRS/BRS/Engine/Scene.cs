@@ -11,24 +11,16 @@ namespace BRS.Engine {
 
         protected PhysicsManager PhysicsManager { get; set; }
 
-        protected GameObject UiManager;
-        protected GameObject Managers;
-
         public Scene(PhysicsManager physics) {
             PhysicsManager = physics;
         }
 
         public void Start() {
             Build();
-            CreatePlayers();
-            StartManagers();
         }
 
         public void Update() { }
 
-        protected virtual void StartManagers() {
-
-        }
 
         protected virtual void Build() { // levels inherit and fill this
 

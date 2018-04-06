@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Engine.Utilities {
+namespace BRS.Engine {
     static class Utility {
         ////////// class that provides useful methods (mostly math and on existing objects) - Imitates Unity //////////
 
@@ -93,7 +93,7 @@ namespace BRS.Engine.Utilities {
             return (x-(float)Math.Sqrt(-4*a*x+4+a+x*x)) / (2*(x-1));
         }
 
-       public static string EvaluateDistribution(Dictionary<string, float> distrib) {
+        public static string EvaluateDistribution(Dictionary<string, float> distrib) {
             float sum = 0;
             foreach (var entry in distrib) sum += entry.Value;
 
@@ -104,6 +104,18 @@ namespace BRS.Engine.Utilities {
             }
             Debug.LogError("distribution doesn't sum to 1");
             return "";
+        }
+
+        public static int[,] Flip(int[,] a) {
+            int d0 = a.GetLength(0);
+            int d1 = a.GetLength(1);
+            int[,] result = new int[d1, d0];
+            for (int x = 0; x < d0; x++) {
+                for (int y = 0; y < d1; y++) {
+                    result[y, x] = a[x,y];
+                }
+            }
+            return result;
         }
 
 
