@@ -2,21 +2,21 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 
-namespace BRS {
-    //!!! VERY IMPORTANT CLASS
-    ////////// Class that represents a position, rotation and scale in 3D space (possibly relatieve to a parent) //////////
-
-    //TODO test and complete functions
-
-    //(it doesn't necessarily have a gameobject)
-    // INFO
-    // right-handed system: X=right, Y=up, -Z=forward
-
+namespace BRS.Engine {
+    /// <summary>
+    /// Class that represents a position, rotation and scale in 3D space (possibly relatieve to a parent)
+    /// 
+    /// (it doesn't necessarily have a gameobject)
+    /// INFO: right-handed system: X=right, Y=up, -Z=forward
+    /// 
+    /// TODO test and complete functions
+    /// </summary>
     public class Transform {
         // local space members
-        Vector3 m_position; 
+        Vector3 m_position;
         Quaternion m_rotation;
         Vector3 m_scale;
 
@@ -47,7 +47,7 @@ namespace BRS {
         public Transform(Vector3 pos) : this(pos, Quaternion.Identity, Vector3.One) { }
         public Transform(float x, float y, float z) : this(new Vector3(x, y, z)) { }
         public Transform(Vector3 pos, Vector3 rot) : this(pos) { eulerAngles = rot; }
-        public Transform(Vector3 pos, Vector3 rot, Vector3 sc) : this(pos, Quaternion.Identity, sc) { eulerAngles = rot;}
+        public Transform(Vector3 pos, Vector3 rot, Vector3 sc) : this(pos, Quaternion.Identity, sc) { eulerAngles = rot; }
         public Transform(Transform t) : this(t.m_position, t.m_rotation, t.m_scale) { }
 
         public Matrix World {
@@ -59,7 +59,7 @@ namespace BRS {
             }
         }
 
-        
+
         //BASIS CHANGE // incorporate rotation and scale 
         //TAKE into account difference between point and vector (and direction?)
         public Vector3 toWorld(Vector3 v) { return Vector3.Transform(v, parentMatrix); }
@@ -72,13 +72,13 @@ namespace BRS {
 
         //MATRIX
         Matrix parentMatrix { get { return parent == null ? Matrix.Identity : parent.World; } }
-        Matrix rotmatrix    { get { return Matrix.CreateFromQuaternion(m_rotation); } }
+        Matrix rotmatrix { get { return Matrix.CreateFromQuaternion(m_rotation); } }
         // Matrix rotmatrix { get { return Matrix.CreateFromYawPitchRoll(MathHelper.ToRadians(m_rotation.Y), MathHelper.ToRadians(m_rotation.X), MathHelper.ToRadians(m_rotation.Z)); } }
 
         //local coords
         //TODO must take into consideration parent transform aswell?
-        public Vector3 Right   { get { return toLocalRotation(Vector3.Right  ); } }//+X
-        public Vector3 Up      { get { return toLocalRotation(Vector3.Up     ); } }//+Y
+        public Vector3 Right { get { return toLocalRotation(Vector3.Right); } }//+X
+        public Vector3 Up { get { return toLocalRotation(Vector3.Up); } }//+Y
         public Vector3 Forward { get { return toLocalRotation(Vector3.Forward); } }//-Z
 
         //ACCESSORS
@@ -101,9 +101,9 @@ namespace BRS {
             get { return toWorld(m_position); }
             set { m_position = toLocal(value); }
         }
-        
+
         public Quaternion rotation { // TODO make world
-            get { return  m_rotation; }
+            get { return m_rotation; }
             set { m_rotation = value; }
         }
         public Vector3 scale {
@@ -121,8 +121,8 @@ namespace BRS {
         public void CopyFrom(Transform t) { m_position = t.m_position; m_rotation = t.m_rotation; m_scale = t.m_scale; }
 
         //translate
-        public void Translate(Vector3 v) { m_position += toLocalRotation( v); } // local space
-        public void TranslateGlobal(Vector3 v) { m_position +=  v; } // global space
+        public void Translate(Vector3 v) { m_position += toLocalRotation(v); } // local space
+        public void TranslateGlobal(Vector3 v) { m_position += v; } // global space
 
         //rotate
         public void Rotate(Vector3 axis, float angle) {
@@ -145,7 +145,7 @@ namespace BRS {
 
         //scale
         public void Scale(Vector3 s) { m_scale += s; }
-        public void Scale(float s)   { m_scale *= s; }
+        public void Scale(float s) { m_scale *= s; }
 
         //other
         public void SetParent(Transform t) { parent = t; }

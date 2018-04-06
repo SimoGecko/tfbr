@@ -101,39 +101,46 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Engine\Audio.cs" />
+    <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
-    <Compile Include="Engine\Collider.cs" />
+    <Compile Include="Engine\Particles\Particle.cs" />
     <Compile Include="Engine\Component.cs" />
+    <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
     <Compile Include="Engine\Gizmos.cs" />
+    <Compile Include="Engine\Graphics.cs" />
     <Compile Include="Engine\Input.cs" />
-    <Compile Include="Engine\ParticleSystem.cs" />
-    <Compile Include="Engine\Physics.cs" />
+    <Compile Include="Engine\Material.cs" />
+    <Compile Include="Engine\Particles\ParticleSystem.cs" />
     <Compile Include="Engine\Physics\ConvexHullHelper.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
+    <Compile Include="Engine\Physics\Collider.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\ConePrimitive.cs" />
+    <Compile Include="Engine\Physics\Primitives3D\ConvexHullPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CylinderPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\GeometricPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\SpherePrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
-    <Compile Include="Engine\Physics\Vehicle\CarObject.cs" />
-    <Compile Include="Engine\Physics\Vehicle\DefaultCar.cs" />
-    <Compile Include="Engine\Physics\Vehicle\Wheel.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\ShapeType.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
     <Compile Include="Engine\Time.cs" />
+    <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Engine\UserInterface.cs" />
-    <Compile Include="Engine\Utility.cs" />
+    <Compile Include="Engine\Utilities\Curve.cs" />
+    <Compile Include="Engine\Utilities\Debug.cs" />
+    <Compile Include="Engine\Utilities\MyRandom.cs" />
+    <Compile Include="Engine\Utilities\Utility.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
@@ -141,69 +148,85 @@
     <Compile Include="Load\Level1.cs" />
     <Compile Include="Load\LevelPhysics.cs" />
     <Compile Include="Load\PrefabContent.cs" />
+    <Compile Include="Menu\Button.cs" />
+    <Compile Include="Menu\Image.cs" />
+    <Compile Include="Menu\Menu.cs" />
+    <Compile Include="Menu\MenuManager.cs" />
+    <Compile Include="Menu\Slider.cs" />
+    <Compile Include="Menu\TextBox.cs" />
+    <Compile Include="Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\Base.cs" />
-    <Compile Include="Scripts\Bomb.cs" />
-    <Compile Include="Scripts\CameraController.cs" />
-    <Compile Include="Scripts\CircleBar.cs" />
-    <Compile Include="Scripts\Crate.cs" />
-    <Compile Include="Scripts\Elements.cs" />
-    <Compile Include="Scripts\GameManager.cs" />
-    <Compile Include="Scripts\GamepadTest.cs" />
-    <Compile Include="Scripts\Key.cs" />
-    <Compile Include="Scripts\LivingEntity.cs" />
-    <Compile Include="Scripts\Minimap.cs" />
-    <Compile Include="Scripts\Money.cs" />
-    <Compile Include="Scripts\Physics\RigidBodyComponent.cs" />
-    <Compile Include="Scripts\Pickup.cs" />
-    <Compile Include="Scripts\Player.cs" />
-    <Compile Include="Scripts\PlayerLift.cs" />
-    <Compile Include="Scripts\PlayerAttack.cs" />
-    <Compile Include="Scripts\PlayerInventory.cs" />
-    <Compile Include="Scripts\PlayerMovement.cs" />
-    <Compile Include="Scripts\PlayerPowerup.cs" />
-    <Compile Include="Scripts\PlayerStamina.cs" />
-    <Compile Include="Scripts\Potions.cs" />
-    <Compile Include="Scripts\Powerup.cs" />
-    <Compile Include="Scripts\Spawner.cs" />
-    <Compile Include="Scripts\TransformTest.cs" />
-    <Compile Include="Scripts\Vault.cs" />
+    <Compile Include="Scripts\AudioTest.cs" />
+    <Compile Include="Scripts\Elements\Arrow.cs" />
+    <Compile Include="Scripts\Elements\Base.cs" />
+    <Compile Include="Scripts\Elements\FallingWeight.cs" />
+    <Compile Include="Scripts\Elements\OilTrap.cs" />
+    <Compile Include="Scripts\Elements\PlantedMagnet.cs" />
+    <Compile Include="Scripts\PowerUps\Bomb.cs" />
+    <Compile Include="Scripts\Elements\ExplodingBox.cs" />
+    <Compile Include="Scripts\PowerUps\CapacityBoost.cs" />
+    <Compile Include="Scripts\PowerUps\HealthPotion.cs" />
+    <Compile Include="Scripts\PowerUps\Magnet.cs" />
+    <Compile Include="Scripts\Elements\PlantedBomb.cs" />
+    <Compile Include="Scripts\PowerUps\Weight.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\DynamicRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\MovingRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\StaticRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\SteerableRigidBody.cs" />
+    <Compile Include="Scripts\PlayerScripts\CameraController.cs" />
+    <Compile Include="Scripts\PowerUps\ShieldPotion.cs" />
+    <Compile Include="Scripts\PowerUps\StaminaPotion.cs" />
+    <Compile Include="Scripts\UI\BaseUI.cs" />
+    <Compile Include="Scripts\UI\BaseUIStruct.cs" />
+    <Compile Include="Scripts\UI\CircleBar.cs" />
+    <Compile Include="Scripts\Elements\Crate.cs" />
+    <Compile Include="Scripts\Managers\ElementManager.cs" />
+    <Compile Include="Scripts\Managers\GameManager.cs" />
+    <Compile Include="Scripts\Elements\Key.cs" />
+    <Compile Include="Scripts\PlayerScripts\LivingEntity.cs" />
+    <Compile Include="Scripts\UI\GameUI.cs" />
+    <Compile Include="Scripts\UI\Minimap.cs" />
+    <Compile Include="Scripts\Elements\Money.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
+    <Compile Include="Scripts\Elements\Pickup.cs" />
+    <Compile Include="Scripts\PlayerScripts\Player.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerLift.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerAttack.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerInventory.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerMovement.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerPowerup.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerStamina.cs" />
+    <Compile Include="Scripts\PowerUps\SpeedBoost.cs" />
+    <Compile Include="Scripts\PowerUps\Powerup.cs" />
+    <Compile Include="Scripts\Managers\RoundManager.cs" />
+    <Compile Include="Scripts\Managers\Spawner.cs" />
+    <Compile Include="Scripts\Elements\SpeedPad.cs" />
+    <Compile Include="Scripts\PowerUps\Trap.cs" />
+    <Compile Include="Scripts\Elements\Vault.cs" />
+    <Compile Include="Scripts\UI\PlayerUI.cs" />
+    <Compile Include="Scripts\UI\PlayerUIStruct.cs" />
+    <Compile Include="Scripts\UI\PowerupUI.cs" />
+    <Compile Include="Scripts\UI\PowerupUIStruct.cs" />
+    <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Content\cash.xnb" />
-    <None Include="Content\diamond.xnb" />
-    <None Include="Content\gold.xnb" />
-    <None Include="Content\minimap.xnb" />
-    <None Include="Content\minimap_icons.xnb" />
-    <None Include="Content\primitives\capsule.xnb" />
-    <None Include="Content\primitives\cube.xnb" />
-    <None Include="Content\primitives\cylinder.xnb" />
-    <None Include="Content\empty.xnb" />
-    <None Include="Content\font1.xnb" />
-    <None Include="Content\forklift.xnb" />
-    <None Include="Content\gplane.xnb" />
-    <None Include="Content\ground.xnb" />
-    <None Include="Content\money_bar.xnb" />
-    <None Include="Content\primitives\plane.xnb" />
-    <None Include="Content\primitives\quad.xnb" />
-    <None Include="Content\primitives\sphere.xnb" />
-    <None Include="Content\progress_bar_fat.xnb" />
-    <None Include="Content\wirecube.xnb" />
-    <None Include="Content\wiresphere.xnb" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="BRS_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\policecar.png" />
-    <Content Include="Content\policecar_lights.png" />
+    <Content Include="Load\Rankings\ranking2min.txt" />
+    <Content Include="Load\Rankings\ranking3min.txt" />
+    <Content Include="Load\Rankings\ranking5min.txt" />
+    <Content Include="Load\UnitySceneData\export1.txt" />
+    <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
     <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -226,7 +249,12 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Jitter\Jitter.csproj">
+      <Project>{ac7d5ebd-67ef-475f-a4dd-e78765ee25a6}</Project>
+      <Name>Jitter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

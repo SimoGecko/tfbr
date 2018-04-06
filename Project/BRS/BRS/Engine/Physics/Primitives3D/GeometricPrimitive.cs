@@ -133,7 +133,7 @@ namespace BRS.Engine.Physics.Primitives3D {
         #region Draw
 
         private Matrix[] _worlds = new Matrix[1];
-        private int _index = 0;
+        private int _index;
 
         public void AddWorldMatrix(Matrix matrix) {
             if (_index == _worlds.Length) {
@@ -166,7 +166,7 @@ namespace BRS.Engine.Physics.Primitives3D {
             for (int i = 0; i < _index; i++) {
                 effect.World = _worlds[i];
                 effect.CurrentTechnique.Passes[0].Apply();
-                effect.Alpha = 0.4f;
+                effect.Alpha = 0.5f;
 
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0,
                                                      _vertices.Count, 0, primitiveCount);

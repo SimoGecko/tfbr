@@ -2,48 +2,38 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using BRS.Load;
 
-namespace BRS {
+namespace BRS.Engine {
     static partial class Prefabs {
         ////////// static class that contains all GameObjects stored as prefabs and allows access to instantiate them //////////
 
-        static Dictionary<string, GameObject> allprefabs = new Dictionary<string, GameObject>();
-        static ContentManager Content;
-        public static Model emptymodel; // to represent a small transform without mesh - debug
-        public static Model cubeModel, sphereModel;
+        static Dictionary<string, GameObject> _allprefabs = new Dictionary<string, GameObject>();
+        public static Model Emptymodel; // to represent a small transform without mesh - debug
+        public static Model CubeModel, SphereModel;
 
         public static void Start() {
-            emptymodel = Content.Load<Model>("empty");
-            cubeModel = Content.Load<Model>("cube");
-            sphereModel = Content.Load<Model>("sphere");
+            Emptymodel  = File.Load<Model>("Models/primitives/emptyCol");
+            CubeModel   = File.Load<Model>("Models/primitives/cube");
+            SphereModel = File.Load<Model>("Models/primitives/sphere");
             BuildPrefabs();
-        }
-
-        public static void Update() {
-
         }
 
         //COMMANDS (do not modify)
         static void AddPrefab(GameObject o) {
-            allprefabs.Add(o.Name, o);
+            _allprefabs.Add(o.name, o);
             //o.Start(); // no need as already called from gameobject
-            o.Active = false;
+            o.active = false;
         }
 
         public static GameObject GetPrefab(string name) {
-            if (!allprefabs.ContainsKey(name)) {
+            if (!_allprefabs.ContainsKey(name)) {
                 Debug.LogError("No existing prefab with name " + name);
                 return null;
             }
-            return allprefabs[name];
-        }
 
-        public static void GiveContent(ContentManager c) {
-            Content = c;
+            return _allprefabs[name];
         }
         
     }

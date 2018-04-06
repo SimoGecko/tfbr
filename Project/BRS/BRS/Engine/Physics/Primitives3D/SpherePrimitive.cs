@@ -35,7 +35,7 @@ namespace BRS.Engine.Physics.Primitives3D {
         public SpherePrimitive(GraphicsDevice graphicsDevice,
                                float radius, int tessellation) {
             if (tessellation < 3)
-                throw new ArgumentOutOfRangeException("tessellation");
+                throw new ArgumentOutOfRangeException(nameof(tessellation));
 
             int verticalSegments = tessellation;
             int horizontalSegments = tessellation * 2;

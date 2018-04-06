@@ -1,70 +1,75 @@
-﻿using BRS.Engine.Physics;
+﻿using BRS.Engine;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using BRS.Load;
+using BRS.Menu;
 
 namespace BRS {
 
     //TODO organize
 
     public class Game1 : Game {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public static Game1 Instance { get; set; }
 
-        Scene scene;
-        UserInterface ui;
+        public Scene Scene;
 
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+
+        private UserInterface _ui;
         private Display _display;
         private DebugDrawer _debugDrawer;
-        private PhysicsManager _physicsManager;
-        RasterizerState fullRasterizer, wireRasterizer;
-        public static Game1 instance;
         
+        private RasterizerState _fullRasterizer, _wireRasterizer;
+
+
         private static bool _usePhysics = false;
 
-
+        private MenuManager _menuManager;
+        public bool MenuDisplay;
 
         public Game1() {
-            instance = this;
-            graphics = new GraphicsDeviceManager(this);
+            Instance = this;
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Screen.Setup(graphics, this); // setup screen and create cameras
+            Screen.Setup(_graphics, this); // setup screen and create cameras
+            File.content = Content;
         }
 
         protected override void Initialize() {
-            if (_usePhysics) {
-                _debugDrawer = new DebugDrawer(this);
-                Components.Add(_debugDrawer);
-                _display = new Display(this);
-                Components.Add(_display);
-            }
+            _debugDrawer = new DebugDrawer(this);
+            Components.Add(_debugDrawer);
+            _display = new Display(this);
+            Components.Add(_display);
+            PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
 
             base.Initialize();
 
-            fullRasterizer = GraphicsDevice.RasterizerState;
-            wireRasterizer = new RasterizerState();
-            wireRasterizer.FillMode = FillMode.WireFrame;
+            _fullRasterizer = GraphicsDevice.RasterizerState;
+            _wireRasterizer = new RasterizerState();
+            _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
 
         protected override void LoadContent() {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             if (_usePhysics) {
-                _physicsManager = new PhysicsManager(_debugDrawer, _display, GraphicsDevice);
-                scene = new LevelPhysics(this, _physicsManager);
+                Scene = new LevelPhysics(PhysicsManager.Instance);
             } else {
-                scene = new Level1(_physicsManager);
+                Scene = new Level1(PhysicsManager.Instance);
             }
 
-            ui = new UserInterface();
+            _ui = new UserInterface();
+            _ui.Start();
 
-            //LOAD
-            Prefabs.GiveContent(Content); // do not put in initialize: Todo: Why?
-            ui.GiveContent(Content);
-            scene.GiveContent(Content);
+            _menuManager = new MenuManager();
+            _menuManager.LoadContent();
+            MenuDisplay = true;
 
             Start(); // CALL HERE
 
@@ -76,15 +81,18 @@ namespace BRS {
 
         public void Start() {
             //START
-            Prefabs.Start();
-            ui.Start();
-            scene.Start();
+            Engine.Prefabs.Start();
+            //scene.Start();
             Input.Start();
+            Audio.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start();
             foreach (GameObject go in GameObject.All) go.Start();
         }
 
+        public void ScreenAdditionalSetup() {
+            Screen.AdditionalSetup(_graphics, this);
+        }
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
@@ -94,17 +102,18 @@ namespace BRS {
             if (/*GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||*/ Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             Time.Update(gameTime);
-            Input.Update();
 
+            _menuManager.Update();
 
-            foreach (GameObject go in GameObject.All) go.Update();
-            foreach (GameObject go in GameObject.All) go.LateUpdate();
+            if (!MenuDisplay) {
+                Input.Update();
+                Audio.Update();
 
-            if (_usePhysics) {
-                _physicsManager.Update(gameTime);
+                foreach (GameObject go in GameObject.All) go.Update();
+                foreach (GameObject go in GameObject.All) go.LateUpdate();
+
+                PhysicsManager.Instance.Update(gameTime);
             }
-
-            Physics.Update();
 
             base.Update(gameTime);
         }
@@ -112,40 +121,44 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            //foreach camera
-            int i = 0;
-            foreach (Camera cam in Screen.cameras) {
-                GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
+            _spriteBatch.Begin();
+            _ui.DrawMenu(_spriteBatch);
+            _spriteBatch.End();
 
-                graphics.GraphicsDevice.Viewport = cam.viewport;
+            if (!MenuDisplay) {
+                //foreach camera
+                int i = 0;
+                foreach (Camera cam in Screen.Cameras) {
+                    GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
-                if (_usePhysics) {
-                    _physicsManager.Draw();
+                    _graphics.GraphicsDevice.Viewport = cam.Viewport;
+
+                    PhysicsManager.Instance.Draw(cam);
+
+                    foreach (GameObject go in GameObject.All) go.Draw(cam);
+                    //transform.Draw(camera);
+
+                    //gizmos (wireframe)
+                    GraphicsDevice.RasterizerState = _wireRasterizer;
+                    Gizmos.DrawWire(cam);
+                    GraphicsDevice.RasterizerState = _fullRasterizer;
+                    Gizmos.DrawFull(cam);
+
+                    //splitscreen UI
+                    _spriteBatch.Begin();
+                    _ui.DrawSplitscreen(_spriteBatch, i++);
+                    _spriteBatch.End();
                 }
+                Gizmos.ClearOrders();
 
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
-                //transform.Draw(camera);
+                _graphics.GraphicsDevice.Viewport = Screen.FullViewport;
 
-                //gizmos (wireframe)
-                GraphicsDevice.RasterizerState = wireRasterizer;
-                Gizmos.Draw(cam);
-                GraphicsDevice.RasterizerState = fullRasterizer;
+                //fullscreen UI
+                _spriteBatch.Begin();
+                _ui.DrawGlobal(_spriteBatch);
+                _spriteBatch.End();
 
-                //splitscreen UI
-                spriteBatch.Begin();
-                ui.DrawSplitscreen(spriteBatch, i++);
-                spriteBatch.End();
             }
-            Gizmos.ClearOrders();
-
-            graphics.GraphicsDevice.Viewport = Screen.fullViewport;
-
-            //fullscreen UI
-            spriteBatch.Begin();
-            ui.DrawGlobal(spriteBatch);
-            spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }

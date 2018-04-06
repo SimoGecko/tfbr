@@ -1,7 +1,6 @@
 ﻿{
   "dependencies": {
-    "JitterPhysics": "0.2.0.20",
-    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.6"
+    "Microsoft.NETCore.UniversalWindowsPlatform": "6.0.8"
   },
   "frameworks": {
     "uap10.0.10240": {}
