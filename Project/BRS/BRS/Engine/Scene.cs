@@ -1,13 +1,9 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using BRS.Scripts;
 
-namespace BRS {
+namespace BRS.Engine {
     public class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 
@@ -25,15 +21,12 @@ namespace BRS {
         public void Start() {
             Build();
             CreatePlayers();
-            BuildManagers();
-            //UiManager.Start();
-            //Managers.Start();
-            //GameManager.instance.RestartCustom();
+            StartManagers();
         }
 
         public void Update() { }
 
-        protected virtual void BuildManagers() {
+        protected virtual void StartManagers() {
 
         }
 

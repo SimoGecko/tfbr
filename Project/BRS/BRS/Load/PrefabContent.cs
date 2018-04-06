@@ -3,10 +3,14 @@
 
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using Microsoft.Xna.Framework.Graphics;
 using BRS.Scripts;
+using BRS.Scripts.Elements;
+using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+// Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
+// ReSharper disable once CheckNamespace
+namespace BRS.Engine {
     static partial class Prefabs {
         //static class that contains all GameObjects stored as prefabs
 

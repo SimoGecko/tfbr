@@ -1,14 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using System;
+using BRS.Engine.Utilities;
+using BRS.Menu;
+using BRS.Scripts;
+using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
-using System;
-using BRS.Menu;
 
-namespace BRS.Scripts {
+namespace BRS.Engine {
 
     [Flags]
     public enum Align { Center = 0, Left = 1, Right = 2, Top = 4, Bottom = 8, TopLeft = 5, TopRight = 6, BotLeft = 9, BotRight = 10 }
@@ -24,60 +25,58 @@ namespace BRS.Scripts {
         //public enum HorizontAnchor { Left, Middle, Right};
         //public enum Align { TL, RM, TR, ML, MM, MR, BL, BM, BR} // top, middle, bottom x left, middle, right
         //public
+        public const int BarWidth = 128;
+        public const int BarBigWidth = 256;
+        public const int BarHeight = 16;
 
 
 
         //private
-        public SpriteFont smallFont;
-        public SpriteFont comicFont;
-        SpriteFont bigFont;
-        Texture2D bar;
-        Texture2D barBig;
-        public const int BARWIDTH = 128;
-        public const int BARBIGWIDTH = 256;
-        public const int BARHEIGHT = 16;
+        public SpriteFont SmallFont { get; private set; }
+        public SpriteFont ComicFont { get; private set; }
+        public SpriteFont BigFont { get; private set; }
+        private Texture2D _bar;
+        private Texture2D _barBig;
 
-        Rectangle barRect, bigRect, smallRect;
-        Texture2D white;
+        private Rectangle _barRect, _bigRect, _smallRect;
+        private Texture2D _white;
 
         //reference
-        public static UserInterface instance;
-        public SpriteBatch sB;
-
-        Color White = new Color(1, 1, 1);
+        public static UserInterface Instance;
+        private SpriteBatch _sb;
 
 
         // --------------------- BASE METHODS ------------------
         public void Start() {
-            instance = this;
-            smallFont = File.Load<SpriteFont>("Other/font/font1");
-            comicFont = File.Load<SpriteFont>("Other/font/comicFont");
-            bigFont   = File.Load<SpriteFont>("Other/font/font2");
+            Instance = this;
+            SmallFont = File.Load<SpriteFont>("Other/font/font1");
+            ComicFont = File.Load<SpriteFont>("Other/font/comicFont");
+            BigFont   = File.Load<SpriteFont>("Other/font/font2");
 
-            bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
-            barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
-            white     = File.Load<Texture2D>("Images/UI/white");
+            _bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
+            _barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
+            _white     = File.Load<Texture2D>("Images/UI/white");
 
-            barRect = new Rectangle(0, 0, BARWIDTH, BARHEIGHT);
-            bigRect = new Rectangle(0, 0, BARBIGWIDTH, BARHEIGHT);
-            smallRect = new Rectangle(0, 0, BARBIGWIDTH/4, BARHEIGHT/4);
+            _barRect = new Rectangle(0, 0, BarWidth, BarHeight);
+            _bigRect = new Rectangle(0, 0, BarBigWidth, BarHeight);
+            _smallRect = new Rectangle(0, 0, BarBigWidth/4, BarHeight/4);
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
         }
 
         public void DrawMenu(SpriteBatch spriteBatch) {
-            sB = spriteBatch;
-            MenuManager.instance.Draw();
+            _sb = spriteBatch;
+            MenuManager.Instance.Draw();
         }
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            sB = spriteBatch;
+            _sb = spriteBatch;
             //callbacks
             //Minimap.instance.Draw(sB);
-            GameUI.instance.Draw();
+            GameUI.Instance.Draw();
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
-            sB = spriteBatch;
+            _sb = spriteBatch;
             //callbacks
             
             /*
@@ -90,7 +89,7 @@ namespace BRS.Scripts {
 
             //test draw
             
-            DrawPictureAlign(white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
+            DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
             //DrawPictureAlign(white, new Rectangle(100, 100, 150, 100), null, Align.TopLeft, Align.TopLeft, Color.LightGray, true);
 
             DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
@@ -107,53 +106,53 @@ namespace BRS.Scripts {
 
         //BARS
         public void DrawBar(Vector2 position, float percent, Color color) {
-            barRect.Width = BARWIDTH;
-            sB.Draw(bar, position, barRect, Color.LightGray);
-            barRect.Width = (int)(BARWIDTH * percent);
-            sB.Draw(bar, position, barRect, color);
+            _barRect.Width = BarWidth;
+            _sb.Draw(_bar, position, _barRect, Color.LightGray);
+            _barRect.Width = (int)(BarWidth * percent);
+            _sb.Draw(_bar, position, _barRect, color);
         }
         public void DrawBarVertical(Vector2 position, float percent, Color color) {
-            barRect.Width = BARWIDTH;
+            _barRect.Width = BarWidth;
             //sB.Draw(bar, position, barRect, Color.LightGray);
-            sB.Draw(bar, position, barRect, Color.LightGray, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
-            barRect.Width = (int)(BARWIDTH * percent);
+            _sb.Draw(_bar, position, _barRect, Color.LightGray, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
+            _barRect.Width = (int)(BarWidth * percent);
             //sB.Draw(bar, position, barRect, color);
-            sB.Draw(bar, position, barRect, color, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
+            _sb.Draw(_bar, position, _barRect, color, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
         }
         public void DrawBarBig(Vector2 position, float percent, Color color) {
-            bigRect.Width = BARBIGWIDTH;
-            sB.Draw(barBig, position, bigRect, Color.LightGray);
-            bigRect.Width = (int)(BARBIGWIDTH * percent);
-            sB.Draw(barBig, position, bigRect, color);
+            _bigRect.Width = BarBigWidth;
+            _sb.Draw(_barBig, position, _bigRect, Color.LightGray);
+            _bigRect.Width = (int)(BarBigWidth * percent);
+            _sb.Draw(_barBig, position, _bigRect, color);
         }
         public void DrawBarSmall(Vector2 position, float percent, Color color) {
-            bigRect.Width = BARBIGWIDTH;
-            sB.Draw(barBig, position, bigRect, Color.LightGray, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
-            bigRect.Width = (int)(BARBIGWIDTH * percent);
-            sB.Draw(barBig, position, bigRect, color, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
+            _bigRect.Width = BarBigWidth;
+            _sb.Draw(_barBig, position, _bigRect, Color.LightGray, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
+            _bigRect.Width = (int)(BarBigWidth * percent);
+            _sb.Draw(_barBig, position, _bigRect, color, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
         }
 
 
         public void DrawString(Vector2 position, string text, Color colour = default(Color)) {
-            sB.DrawString(smallFont, text, position, colour == default(Color)? Color.White : colour);
+            _sb.DrawString(SmallFont, text, position, colour == default(Color)? Color.White : colour);
         }
         public void DrawStringBig(Vector2 position, string text, Color colour = default(Color)) {
-            sB.DrawString(bigFont, text, position, colour == default(Color) ? Color.White : colour);
+            _sb.DrawString(BigFont, text, position, colour == default(Color) ? Color.White : colour);
         }
 
         public void DrawPicture(Rectangle destination, Texture2D pic, Color colour = default(Color)) {
-            sB.Draw(pic, destination, colour == default(Color) ? Color.White : colour);
+            _sb.Draw(pic, destination, colour == default(Color) ? Color.White : colour);
         }
 
         public void DrawPicture(Vector2 position, Texture2D pic, Vector2 origin, float scale) {
-            sB.Draw(pic, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1);
+            _sb.Draw(pic, position, null, Color.White, 0, origin, scale, SpriteEffects.None, 1);
         }
         public void DrawPicture(Rectangle destination, Texture2D pic, Rectangle source) {
-            sB.Draw(pic, destination, source, Color.White);
+            _sb.Draw(pic, destination, source, Color.White);
         }
         public void DrawPicture(Rectangle dest, Texture2D pic, Rectangle src, float rotation) {
             Vector2 origin = new Vector2(src.Width / 2, src.Height / 2);
-            sB.Draw(pic, dest, src, Color.White, MathHelper.ToRadians(rotation), origin, SpriteEffects.None, 1);
+            _sb.Draw(pic, dest, src, Color.White, MathHelper.ToRadians(rotation), origin, SpriteEffects.None, 1);
         }
 
 
@@ -175,9 +174,9 @@ namespace BRS.Scripts {
             }
             bounds = AlignRect(bounds, anchor, pivot);
             
-            Color color = (col == null) ? Color.White : (Color)col;
+            Color color = col ?? Color.White;
 
-            Vector2 size = smallFont.MeasureString(text);
+            Vector2 size = SmallFont.MeasureString(text);
             Vector2 pos = bounds.GetCenter();
             Vector2 origin = size * 0.5f;
 
@@ -186,7 +185,7 @@ namespace BRS.Scripts {
             if (paragraph.HasFlag(Align.Top))    origin.Y += bounds.Height / 2 - size.Y / 2;
             if (paragraph.HasFlag(Align.Bottom)) origin.Y -= bounds.Height / 2 - size.Y / 2;
             
-            sB.DrawString(smallFont, text, pos, color, 0, origin, 1, SpriteEffects.None, 0);
+            _sb.DrawString(SmallFont, text, pos, color, 0, origin, 1, SpriteEffects.None, 0);
         }
 
         public void DrawPictureAlign(Texture2D tex, Rectangle bounds, Rectangle? source, Align anchor, Align pivot, Color? col, bool flip = false, float rot = 0) {
@@ -197,8 +196,8 @@ namespace BRS.Scripts {
             Vector2 origin = PivotPoint(pivot, tex.Bounds).ToVector2();//is relative to the texture
             bounds.Location += AnchorPos(anchor) - PivotPoint(pivot, bounds) + origin.ToPoint();
 
-            Color color = (col == null) ? Color.White : (Color)col;
-            sB.Draw(tex, bounds, source, color, MathHelper.ToRadians(rot), origin, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1);
+            Color color = col ?? Color.White;
+            _sb.Draw(tex, bounds, source, color, MathHelper.ToRadians(rot), origin, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1);
         }
 
 
@@ -234,8 +233,8 @@ namespace BRS.Scripts {
         }
 
         Point AnchorPos(Align anchor) {
-            int anchorPosX = anchor.HasFlag(Align.Left) ? 0 : anchor.HasFlag(Align.Right) ? Screen.SPLITWIDTH : Screen.SPLITWIDTH / 2;
-            int anchorPosY = anchor.HasFlag(Align.Top) ? 0 : anchor.HasFlag(Align.Bottom) ? Screen.SPLITHEIGHT : Screen.SPLITHEIGHT / 2;
+            int anchorPosX = anchor.HasFlag(Align.Left) ? 0 : anchor.HasFlag(Align.Right) ? Screen.SplitWidth : Screen.SplitWidth / 2;
+            int anchorPosY = anchor.HasFlag(Align.Top) ? 0 : anchor.HasFlag(Align.Bottom) ? Screen.SplitHeight : Screen.SplitHeight / 2;
             return new Point(anchorPosX, anchorPosY);
         }
 

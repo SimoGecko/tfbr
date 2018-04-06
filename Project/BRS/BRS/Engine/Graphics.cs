@@ -1,14 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
+    /// <summary>
+    /// Collection of various methods that have to do with color.
+    /// </summary>
     class Graphics {
-        ////////// collection of various methods that have to do with color //////////
-
         // --------------------- VARIABLES ---------------------
 
         //public
@@ -20,10 +20,10 @@ namespace BRS {
         public static Color yellow = new Color(255, 187, 0);
         */
         //some default colors (same as google)
-        public static Color red    = new Color(234, 67, 53);
-        public static Color green  = new Color(52, 168, 83);
-        public static Color blue   = new Color(66, 133, 244);
-        public static Color yellow = new Color(251, 188, 5);
+        private static readonly Color Red    = new Color(234, 67, 53);
+        private static readonly Color Green  = new Color(52, 168, 83);
+        private static readonly Color Blue   = new Color(66, 133, 244);
+        private static readonly Color Yellow = new Color(251, 188, 5);
 
 
         //private
@@ -48,7 +48,7 @@ namespace BRS {
                         effect.EnableDefaultLighting();
                         //effect.LightingEnabled = mat.lit;
                         //effect.DiffuseColor = mat.diffuse.ToVector3();
-                        effect.Alpha = mat.diffuse.A;
+                        effect.Alpha = mat.Diffuse.A;
                         //effect.CurrentTechnique = EffectTechnique
                         //effect.Texture
                     }
@@ -76,10 +76,10 @@ namespace BRS {
         }
 
         public static Color ColorIndex(int i) {
-            if (i == 0) return red;
-            if (i == 1) return green;
-            if (i == 2) return blue;
-            return yellow;
+            if (i == 0) return Red;
+            if (i == 1) return Green;
+            if (i == 2) return Blue;
+            return Yellow;
         }
         /*
         public static Vector3 ColorTo3(this Color c) {

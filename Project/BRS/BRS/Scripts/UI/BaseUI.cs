@@ -1,11 +1,12 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class BaseUI : Component {
         ////////// draws UI for the base stats //////////
 
@@ -15,20 +16,20 @@ namespace BRS.Scripts {
 
 
         //private
-        BaseUIStruct[] baseUI;
-        Texture2D baseIcon;
-        int[] baseUIwins = new int[2];
+        private BaseUIStruct[] _baseUi;
+        private Texture2D _baseIcon;
+        private readonly int[] _baseUIwins = new int[2];
 
 
         //reference
-        public static BaseUI instance;
+        public static BaseUI Instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            instance = this;
-            baseUI = new BaseUIStruct[2];
-            baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
+            Instance = this;
+            _baseUi = new BaseUIStruct[2];
+            _baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
         }
 
         public override void Update() {
@@ -41,40 +42,41 @@ namespace BRS.Scripts {
 
         public void Draw(int index) {
             Vector2 position = new Vector2(100, 970);
-            position += Vector2.UnitX* UserInterface.instance.GetOffset(index);
+            position += Vector2.UnitX* UserInterface.Instance.GetOffset(index);
 
-            UserInterface.instance.DrawPicture(position, baseIcon, baseIcon.Bounds.GetCenter(), .4f);
+            UserInterface.Instance.DrawPicture(position, _baseIcon, _baseIcon.Bounds.GetCenter(), .4f);
 
             //name
             string baseName = "Team " + (index + 1).ToString();
-            UserInterface.instance.DrawString(position + new Vector2(-70, -110), baseName);
+            UserInterface.Instance.DrawString(position + new Vector2(-70, -110), baseName);
 
             //health
-            float healthPercent = baseUI[index].baseHealth / baseUI[index].baseMaxHealth;
-            UserInterface.instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Orange);
+            float healthPercent = _baseUi[index].BaseHealth / _baseUi[index].BaseMaxHealth;
+            UserInterface.Instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Orange);
 
             //cash
-            string baseValueString = "$" + baseUI[index].totalMoneyInBase.ToString("N0");//ToString("#,##0")
-            UserInterface.instance.DrawString(position + new Vector2(50, -20), baseValueString);
+            string baseValueString = "$" + _baseUi[index].TotalMoneyInBase.ToString("N0");//ToString("#,##0")
+            UserInterface.Instance.DrawString(position + new Vector2(50, -20), baseValueString);
             //wins
-            string winsString = "wins: " + baseUIwins[index];
-            UserInterface.instance.DrawString(position + new Vector2(-70, 50), winsString);
+            string winsString = "wins: " + _baseUIwins[index];
+            UserInterface.Instance.DrawString(position + new Vector2(-70, 50), winsString);
         }
 
 
         // commands
         public void UpdateBaseUI(int index, float baseHealth, float baseMaxHealth, int value) {
-            if (index < baseUI.Length) {
-                baseUI[index].baseHealth = baseHealth;
-                baseUI[index].baseMaxHealth = baseMaxHealth;
-                baseUI[index].totalMoneyInBase = value;
+            if (index < _baseUi.Length) {
+                _baseUi[index].BaseHealth = baseHealth;
+                _baseUi[index].BaseMaxHealth = baseMaxHealth;
+                _baseUi[index].TotalMoneyInBase = value;
             }
         }
 
         public void UpdateBaseUIWins(int index) {
-            baseUIwins[index]++;
+            _baseUIwins[index]++;
         }
 
+        // Todo: Used?
         void DrawOld(int index) {
             /*
             int offset = UserInterface.instance.GetOffset(index);
@@ -96,11 +98,5 @@ namespace BRS.Scripts {
 
         // other
 
-    }
-
-    public struct BaseUIStruct {
-        public int totalMoneyInBase;
-        public float baseHealth;
-        public float baseMaxHealth;
     }
 }

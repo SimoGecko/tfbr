@@ -2,11 +2,12 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 
-namespace BRS {
+namespace BRS.Engine {
     static class Audio {
         //static class that contains all audio in the game and allows playback
         //static Dictionary<string, SoundEffect> sounds;
@@ -14,7 +15,7 @@ namespace BRS {
         static Dictionary<string, Song> songs;
 
         //static Transform listener = GameObject.FindGameObjectWithName("player_0").transform;
-        static Transform listenerTransf = Camera.main.transform;
+        static Transform listenerTransf = Camera.Main.transform;
         static AudioListener listener = new AudioListener();
 
         static AudioEmitter em = new AudioEmitter();

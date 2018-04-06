@@ -33,7 +33,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 IsActive = IsActive,
                 Tag = Tag,
                 PureCollider = PureCollider,
-                GameObject = gameObject
+                GameObject = GameObject
             };
 
             RigidBody.Material = new Material { Restitution = 0.0f };
@@ -50,12 +50,12 @@ namespace BRS.Engine.Physics.RigidBodies {
         }
 
         private void CalculateShape(ShapeType type) {
-            Model model = gameObject.Model;
+            Model model = GameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
-                bbSize.Y * gameObject.transform.scale.Y,
-                bbSize.Z * gameObject.transform.scale.Z);
+            bbSize = new JVector(bbSize.X * GameObject.transform.scale.X,
+                bbSize.Y * GameObject.transform.scale.Y,
+                bbSize.Z * GameObject.transform.scale.Z);
 
             float maxDimension = MathHelper.Max(bbSize.X, MathHelper.Max(bbSize.Y, bbSize.Z));
 

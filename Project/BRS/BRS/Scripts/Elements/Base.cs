@@ -2,32 +2,35 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
         ////////// base in the game that has health and collects money //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float deloadDistanceThreshold = 4f;
-        const float timeBetweenUnloads = .05f;
-        const float moneyPenalty = .5f; // percent
-
-        //private
-        public int BaseIndex { get; set; } = 0;
         public int TotalMoney { get; private set; }
         public Color BaseColor { get; private set; }
 
+        //private
+        private const float DeloadDistanceThreshold = 4f;
+        private const float TimeBetweenUnloads = .05f;
+        private const float MoneyPenalty = .5f; // percent
+        private readonly int _baseIndex = 0;
+        
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public Base(int baseIndex) {
-            BaseIndex = baseIndex;
+            _baseIndex = baseIndex;
             BaseColor = Graphics.ColorIndex(baseIndex);
         }
 
@@ -47,9 +50,9 @@ namespace BRS.Scripts {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex) {
+                if (p.TeamIndex == _baseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
-                    DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
+                    DeloadPlayerProgression(p.GameObject.GetComponent<PlayerInventory>());
                 }
             }
         }
@@ -67,7 +70,7 @@ namespace BRS.Scripts {
         }
 
         void UpdateUI() {
-            BaseUI.instance.UpdateBaseUI(BaseIndex, health, startingHealth, TotalMoney);
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, Health, StartingHealth, TotalMoney);
         }
 
         protected override void Die() {
@@ -81,9 +84,9 @@ namespace BRS.Scripts {
 
         public void NotifyRoundEnd() {
             foreach(var p in TeamPlayers()) {
-                if (!PlayerInsideRange(gameObject)) {
+                if (!PlayerInsideRange(GameObject)) {
                     //apply penalty (could happen twice)
-                    TotalMoney -= (int)(TotalMoney * moneyPenalty);
+                    TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                 }
             }
             UpdateUI();
@@ -92,7 +95,7 @@ namespace BRS.Scripts {
 
         // queries
         bool PlayerInsideRange(GameObject p) {
-            return (p.transform.position - transform.position).LengthSquared() <= deloadDistanceThreshold* deloadDistanceThreshold;
+            return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold* DeloadDistanceThreshold;
         }
 
         Player[] TeamPlayers() {
@@ -100,7 +103,7 @@ namespace BRS.Scripts {
             GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var player in players) {
                 Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == BaseIndex) result.Add(p);
+                if (p.TeamIndex == _baseIndex) result.Add(p);
             }
             return result.ToArray();
         }
@@ -108,11 +111,11 @@ namespace BRS.Scripts {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
-            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
+            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.GameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();
-                await Time.WaitForSeconds(timeBetweenUnloads);
+                await Time.WaitForSeconds(TimeBetweenUnloads);
             }
         }
 

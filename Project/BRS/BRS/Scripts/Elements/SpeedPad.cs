@@ -1,21 +1,21 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class SpeedPad : Component {
         ////////// represents a speed pad that once passed over gives a quick speed boost //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float effectTime = 2f;
 
 
         //private
+        private const float EffectTime = 2f;
 
 
         //reference
@@ -35,7 +35,7 @@ namespace BRS.Scripts {
             if (isplayer) {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSpeedPad(true);
-                new Timer(effectTime, () => pM.SetSpeedPad(false));
+                new Timer(EffectTime, () => pM.SetSpeedPad(false));
             }
         }
 

@@ -1,22 +1,23 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Pickup : Component {
         ////////// generic class for object that can be picked up //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float delayBeforePickup = .5f; // cannot pickup right after spawned
+        const float DelayBeforePickup = .5f; // cannot pickup right after spawned
         //const float pickupDistThreshold = .5f;
 
 
         //private
-        protected bool canPickup;
+        protected bool CanPickup;
         //public System.Action OnPickup;
 
         //reference
@@ -24,8 +25,8 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            canPickup = false;
-            Invoke(delayBeforePickup, () => canPickup = true);
+            CanPickup = false;
+            Invoke(DelayBeforePickup, () => CanPickup = true);
         }
 
         public override void Update() {
@@ -34,7 +35,7 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
-            if (isPlayer && canPickup) {
+            if (isPlayer && CanPickup) {
                 DoPickup(c.GameObject.GetComponent<Player>());
                 //OnPickup?.Invoke();
             }

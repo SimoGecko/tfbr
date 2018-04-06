@@ -1,106 +1,101 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using BRS.Load;
-using BRS.Engine.Physics;
-using BRS.Scripts;
+﻿using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using System.Xml;
+using System;
+using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 
 namespace BRS.Menu {
     class MenuManager {
         // each game object is a Panel (main menu, play1, play2, tuto1, tuto2, tuto3, options, credits)
-        Dictionary<string, GameObject> menuRect = new Dictionary<string, GameObject>();
-        GameObject currentMenu;
+        readonly Dictionary<string, GameObject> _menuRect = new Dictionary<string, GameObject>();
+        GameObject _currentMenu;
 
-        public GameObject mainMenu = new GameObject("main");
-        public GameObject playMenu1 = new GameObject("play1");
-        public GameObject playMenu2 = new GameObject("play2");
-        public GameObject[] tutoMenu = { new GameObject("tutorial1"), new GameObject("tutorial2"), new GameObject("tutorial3"), new GameObject("tutorial4") };
-        public GameObject rankingMenu = new GameObject("ranking");
-        public GameObject optionsMenu = new GameObject("options");
-        public GameObject creditsMenu = new GameObject("credits");
-        public GameObject playerInfoMenu = new GameObject("playerInfos");
+        public readonly GameObject MainMenu = new GameObject("main");
+        public readonly GameObject PlayMenu1 = new GameObject("play1");
+        public readonly GameObject PlayMenu2 = new GameObject("play2");
+        public readonly GameObject[] TutorialMenu = { new GameObject("tutorial1"), new GameObject("tutorial2"), new GameObject("tutorial3"), new GameObject("tutorial4") };
+        public readonly GameObject RankingMenu = new GameObject("ranking");
+        public readonly GameObject OptionsMenu = new GameObject("options");
+        public readonly GameObject CreditsMenu = new GameObject("credits");
+        public readonly GameObject PlayerInfoMenu = new GameObject("playerInfos");
 
 
-        public static MenuManager instance;
+        public static MenuManager Instance;
 
-        Menu menuGame = new Menu();
+        readonly Menu _menuGame = new Menu();
 
-        int noCharacters = 3;
-        const float rotSpeed = 90;
-        public List<GameObject> characterToChoose = new List<GameObject>();
+        int _noCharacters = 3;
+        const float RotSpeed = 90;
+        public readonly List<GameObject> CharacterToChoose = new List<GameObject>();
 
-        public Dictionary<string, Tuple<string, Model>> playersInfo; // playerName -> userName, Model 
-        public string namePlayerInfosToChange;
+        public Dictionary<string, Tuple<string, Model>> PlayersInfo; // playerName -> userName, Model 
+        public string NamePlayerInfosToChange;
 
         public void LoadContent() {
-            instance = this;
+            Instance = this;
 
-            playersInfo = new Dictionary<string, Tuple<string, Model>>();
-            namePlayerInfosToChange = "player_0";
+            PlayersInfo = new Dictionary<string, Tuple<string, Model>>();
+            NamePlayerInfosToChange = "player_0";
 
-            menuGame.LoadContent();
+            _menuGame.LoadContent();
 
-            float[] posX = {0, -5, 5}; 
-            for (int i=0; i<noCharacters; ++i) {
+            float[] posX = { 0, -5, 5 };
+            for (int i = 0; i < _noCharacters; ++i) {
                 GameObject playerCharacter = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex"));
                 playerCharacter.transform.position = new Vector3(posX[i], 0, 0);
-                characterToChoose.Add(playerCharacter);
+                CharacterToChoose.Add(playerCharacter);
             }
 
-            Game1.instance.ScreenAdditionalSetup();
+            Game1.Instance.ScreenAdditionalSetup();
             GameObject camObject = GameObject.FindGameObjectWithName("camera_0");
             camObject.Start();
-            
+
 
             //// MAIN MENU ////
-            Menu.instance.BuildMainMenu();
-            currentMenu = mainMenu;
+            Menu.Instance.BuildMainMenu();
+            _currentMenu = MainMenu;
 
-            Menu.instance.BuildPlayMenu();
-            Menu.instance.BuildTutorialMenu();
-            Menu.instance.BuildRankingMenu();
-            Menu.instance.BuildOptionsMenu();
-            Menu.instance.BuildCreditsMenu();
-            Menu.instance.BuildPlayerInfoMenu();
-            
+            Menu.Instance.BuildPlayMenu();
+            Menu.Instance.BuildTutorialMenu();
+            Menu.Instance.BuildRankingMenu();
+            Menu.Instance.BuildOptionsMenu();
+            Menu.Instance.BuildCreditsMenu();
+            Menu.Instance.BuildPlayerInfoMenu();
+
 
             //// Create Menu's dictionary
-            menuRect.Add(mainMenu.name, mainMenu);
-            menuRect.Add(playMenu1.name, playMenu1);
-            menuRect.Add(playMenu2.name, playMenu2);
+            _menuRect.Add(MainMenu.name, MainMenu);
+            _menuRect.Add(PlayMenu1.name, PlayMenu1);
+            _menuRect.Add(PlayMenu2.name, PlayMenu2);
 
-            foreach (GameObject go in tutoMenu)
-                menuRect.Add(go.name, go);
+            foreach (GameObject go in TutorialMenu)
+                _menuRect.Add(go.name, go);
 
-            menuRect.Add(optionsMenu.name, optionsMenu);
-            menuRect.Add(creditsMenu.name, creditsMenu);
-            menuRect.Add(rankingMenu.name, rankingMenu);
-            menuRect.Add(playerInfoMenu.name, playerInfoMenu);
+            _menuRect.Add(OptionsMenu.name, OptionsMenu);
+            _menuRect.Add(CreditsMenu.name, CreditsMenu);
+            _menuRect.Add(RankingMenu.name, RankingMenu);
+            _menuRect.Add(PlayerInfoMenu.name, PlayerInfoMenu);
         }
 
         public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
-            foreach (Button bu in button.neighbors) {
-                bu.isClicked = false;
+            foreach (Button bu in button.Neighbors) {
+                bu.IsClicked = false;
             }
-            button.isClicked = true;
+            button.IsClicked = true;
         }
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
             Button button = (Button)sender;
-            RoundManager.roundTime = Int32.Parse(button.Text[0].ToString()) * 60;
+            RoundManager.RoundTime = Int32.Parse(button.Text[0].ToString()) * 60;
         }
 
         public void UpdateNoPlayers(object sender, EventArgs e) {
             Button button = (Button)sender;
-            GameManager.numPlayers = Int32.Parse(button.Text);
+            GameManager.NumPlayers = Int32.Parse(button.Text);
         }
 
         //public void CreatePlayers(object sender, EventArgs e) {
@@ -110,32 +105,31 @@ namespace BRS.Menu {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in playerInfoMenu.components) {
+            foreach (var elem in PlayerInfoMenu.components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
                         if (button.Text == "remove") {
                             if (textBox.Text.Length > 0)
                                 textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
-                        }
-                        else
-                            textBox.Text += button.Text;    
+                        } else
+                            textBox.Text += button.Text;
                     }
                 }
             }
         }
 
         public void UpdatePlayersChangeTo(object sender, EventArgs e) {
-            Button button = (Button)sender;
+            //Button button = (Button)sender;
 
-            foreach (var elem in playMenu2.components) {
+            foreach (var elem in PlayMenu2.components) {
                 if (elem is ListComponents listComp) {
-                    if (listComp.nameIdentifier == "playerInfoToChange") {
+                    if (listComp.NameIdentifier == "playerInfoToChange") {
                         int count = 0;
-                        foreach (var lC in listComp.listComponents) {
-                            if (count < GameManager.numPlayers)
-                                lC.active = true;
+                        foreach (var lC in listComp.Components) {
+                            if (count < GameManager.NumPlayers)
+                                lC.Active = true;
                             else
-                                lC.active = false;
+                                lC.Active = false;
                             ++count;
                         }
                     }
@@ -144,18 +138,18 @@ namespace BRS.Menu {
         }
 
         public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.numPlayers == 1)
-                GameManager.numPlayers = 2;
+            if (GameManager.NumPlayers == 1)
+                GameManager.NumPlayers = 2;
         }
 
         public void ChangeNamePlayer(object sender, EventArgs e) {
-            foreach (var elem in playerInfoMenu.components) {
+            foreach (var elem in PlayerInfoMenu.components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
-                        if (playersInfo.ContainsKey(namePlayerInfosToChange))
-                            playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, playersInfo[namePlayerInfosToChange].Item2);
+                        if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                            PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, PlayersInfo[NamePlayerInfosToChange].Item2);
                         else
-                            playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
+                            PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
 
                         textBox.Text = "";
                     }
@@ -166,33 +160,39 @@ namespace BRS.Menu {
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Model test = File.Load<Model>("Models/vehicles/forklift_tex");
-            if (playersInfo.ContainsKey(namePlayerInfosToChange))
-                playersInfo[namePlayerInfosToChange] = new Tuple<string, Model>(playersInfo[namePlayerInfosToChange].Item1, test);
+            if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, test);
             else
-                playersInfo.Add(namePlayerInfosToChange, new Tuple<string, Model>(namePlayerInfosToChange, test));
+                PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, test));
         }
 
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
             Button button = (Button)sender;
-            namePlayerInfosToChange = "player_" + button.index.ToString();
+            NamePlayerInfosToChange = "player_" + button.Index.ToString();
         }
         public void StartGameFunction(object sender, EventArgs e) {
-            Game1.instance.menuDisplay = false;
-            currentMenu.active = false;
+            Game1.Instance.MenuDisplay = false;
+            _currentMenu.active = false;
 
-            GameObject camObjectMenu = GameObject.FindGameObjectWithName("camera_0");
-            GameObject.Destroy(camObjectMenu);
-            foreach (GameObject go in characterToChoose)
-                GameObject.Destroy(go); 
+            for (int i = 0; i < 4; ++i) {
+                GameObject camObjectMenu = GameObject.FindGameObjectWithName("camera_" + i);
+                GameObject.Destroy(camObjectMenu);
+            }
+
+            foreach (GameObject go in CharacterToChoose) {
+                GameObject.Destroy(go);
+            }
+
+            Game1.Instance.ScreenAdditionalSetup();
+            Game1.Instance.Scene.Start();
 
 
-            Game1.instance.ScreenAdditionalSetup();
-            Game1.instance.scene.Start();
-
-
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
                 camObject.Start();
+
+                List<GameObject> cams = GameObject.FindGameObjectsWithName("camera_" + i);
+                Debug.Log("Not unique?!: " + "'camera_" + i + "' = " + cams.Count);
             }
 
         }
@@ -200,12 +200,12 @@ namespace BRS.Menu {
         public void SwitchRankingDisplay(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in rankingMenu.components) {
+            foreach (var elem in RankingMenu.components) {
                 if (elem is ListComponents listComp) {
-                    if (listComp.nameIdentifier == "rankings_game") {
-                        foreach (var lC in listComp.listComponents)
-                            lC.active = false;
-                        listComp.listComponents[button.index].active = true;
+                    if (listComp.NameIdentifier == "rankings_game") {
+                        foreach (var lC in listComp.Components)
+                            lC.Active = false;
+                        listComp.Components[button.Index].Active = true;
                     }
                 }
             }
@@ -213,22 +213,22 @@ namespace BRS.Menu {
 
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
- 
-            //Transform goalTransform = camTransf[menu];
-            if (currentMenu != null)
-                currentMenu.active = false;
 
-            currentMenu = menuRect[button.NameMenuToSwitchTo];
-            currentMenu.active = true;
+            //Transform goalTransform = camTransf[menu];
+            if (_currentMenu != null)
+                _currentMenu.active = false;
+
+            _currentMenu = _menuRect[button.NameMenuToSwitchTo];
+            _currentMenu.active = true;
         }
 
         public void Update() {
             foreach (var go in GameObject.All)
                 go.Update();
 
-            foreach (GameObject go in characterToChoose) 
-                go.transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
-            
+            foreach (GameObject go in CharacterToChoose)
+                go.transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
+
         }
 
         public void Draw() {
@@ -237,9 +237,9 @@ namespace BRS.Menu {
                     foreach (var component in go.components)
                         component.Draw();
 
-            if (currentMenu == playMenu2) {
-                foreach (Camera cam in Screen.cameras) {
-                    foreach (GameObject go in characterToChoose)
+            if (_currentMenu == PlayMenu2) {
+                foreach (Camera cam in Screen.Cameras) {
+                    foreach (GameObject go in CharacterToChoose)
                         go.Draw(cam);
                 }
             }

@@ -1,14 +1,17 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
-using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PowerUps {
 
-    public enum PowerupType { health, capacity, speed, stamina, bomb, key, shield, trap, explodingbox, weight, magnet };
+    public enum PowerupType { Health, Capacity, Speed, Stamina, Bomb, Key, Shield, Trap, Explodingbox, Weight, Magnet };
 
     class Powerup : Pickup {
         ////////// base class for all powerups in the game //////////
@@ -16,31 +19,34 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float rotSpeed = 1;
+        public PowerupType PowerupType;
 
         //private
-        public PowerupType powerupType;
         //protected bool destroyOnUse = true;
-        protected bool rotate = true;
-        private float _rotationAngle = 0.0f;
+        private bool _rotate = true;
+
+        //private float _rotationAngle = 0.0f;
+
+        // const
+        private const float RotSpeed = 1;
 
         //reference
-        public Player owner { get; protected set; }
+        public Player Owner { get; protected set; }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            rotate = true;
+            _rotate = true;
             transform.rotation = MyRandom.YRotation();
         }
 
         public override void Update() {
             base.Update();
 
-            if (rotate) {
-                _rotationAngle += rotSpeed * Time.deltaTime;
+            if (_rotate) {
+                //_rotationAngle += RotSpeed * Time.DeltaTime;
 
-                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
+                RigidBodyComponent rbc = GameObject.GetComponent<DynamicRigidBody>();
                 if (rbc != null) {
                     rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
                 }
@@ -57,15 +63,15 @@ namespace BRS.Scripts {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
+            PlayerPowerup pp = p.GameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                owner = p;
+                Owner = p;
                 pp.Collect(this);
 
-                Elements.instance.Remove(this);
+                ElementManager.Instance.Remove(this);
 
                 //if(!destroyOnUse) gameObject.active = false;
-                GameObject.Destroy(gameObject);
+                GameObject.Destroy(GameObject);
             }
         }
 

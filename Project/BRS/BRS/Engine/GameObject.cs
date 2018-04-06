@@ -1,14 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle }
 
     /// <summary>
@@ -126,13 +126,16 @@ namespace BRS {
         }
 
         public static void Destroy(GameObject o) {
+            if (o == null) {
+                return;
+            }
+
             o.active = false;
             //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
-            
+
             //TODO free up memory
-            foreach (Component c in o.components)
-            {
+            foreach (Component c in o.components) {
                 c.Destroy();
             }
         }
@@ -151,6 +154,17 @@ namespace BRS {
             }
             Debug.LogError("could not find gameobject " + name);
             return null;
+        }
+        public static List<GameObject> FindGameObjectsWithName(string name) { // THIS is dangerous method, as it could return null and cause unhandled exception
+            List<GameObject> results = new List<GameObject>();
+
+            foreach (GameObject o in allGameObjects) {
+                if (o.name.Equals(name)) {
+                    results.Add(o);
+                }
+            }
+
+            return results;
         }
 
         //returns all the gameobject that satisfy the tag
@@ -174,7 +188,7 @@ namespace BRS {
         //COMPONENTS
         public void AddComponent(IComponent c) {
             components.Add(c);
-            c.gameObject = this;
+            c.GameObject = this;
             //no components added at runtime, otherwise c.Start();
         }
 

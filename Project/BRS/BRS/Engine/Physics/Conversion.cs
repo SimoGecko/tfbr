@@ -66,10 +66,20 @@ namespace BRS.Engine.Physics {
                 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
+        /// <summary>
+        /// Convert a Jitter-quaternion to a XNA-quaternion
+        /// </summary>
+        /// <param name="quaternion">Jitter-quaternion</param>
+        /// <returns>XNA-quaternion</returns>
         public static Quaternion ToXnaQuaternion(JQuaternion quaternion) {
             return new Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
 
+        /// <summary>
+        /// Convert a XNA-quaternion to a Jitter-quaternion
+        /// </summary>
+        /// <param name="quaternion">XNA-quaternion</param>
+        /// <returns>Jitter-quaternion</returns>
         public static JQuaternion ToJitterQuaternion(Quaternion quaternion) {
             return new JQuaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }

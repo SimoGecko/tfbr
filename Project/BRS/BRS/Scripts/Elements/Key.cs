@@ -1,22 +1,21 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
+using BRS.Scripts.PowerUps;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Key : Powerup {
         ////////// key that can be used to open the vault or safe boxes //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float timeToUse = .3f;
-        const float openRadius = 10f;
 
         //private
-
+        private const float TimeToUse = .3f;
+        private const float OpenRadius = 10f;
 
         //reference
 
@@ -24,11 +23,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            powerupType = PowerupType.key;
-        }
-
-        public override void Update() {
-            base.Update();
+            PowerupType = PowerupType.Key;
         }
 
 
@@ -39,12 +34,13 @@ namespace BRS.Scripts {
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
-            transform.position = owner.transform.position;
-            new Timer(timeToUse, () => OpenVault());
+            transform.position = Owner.transform.position;
+            new Timer(TimeToUse, OpenVault);
         }
 
         void OpenVault() {
-            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, openRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
+
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IOpenable>()) {
                     c.GameObject.GetComponent<IOpenable>().Open();
@@ -54,16 +50,18 @@ namespace BRS.Scripts {
 
         // queries
         bool InOpeningRange(GameObject o) {
-            transform.position = owner.transform.position;
-            return (o.transform.position - transform.position).LengthSquared() <= openRadius * openRadius;
+            transform.position = Owner.transform.position;
+            return (o.transform.position - transform.position).LengthSquared() <= OpenRadius * OpenRadius;
         }
 
         bool ThereIsOneOpenableInRange() {
-            transform.position = owner.transform.position;
-            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, openRadius);
+            transform.position = Owner.transform.position;
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
+
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IOpenable>()) return true;
             }
+
             return false;
         }
 

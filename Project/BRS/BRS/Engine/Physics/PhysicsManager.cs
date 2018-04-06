@@ -20,7 +20,7 @@ namespace BRS.Engine.Physics {
             Instance = new PhysicsManager(debugDrawer, display, graphicsDevice);
         }
 
-        public enum CollisionState { Propagate, SaveInList }
+        private enum CollisionState { Propagate, SaveInList }
 
         private CollisionState Status { get; set; }
         private List<Collider> _colliders;
@@ -29,15 +29,15 @@ namespace BRS.Engine.Physics {
         public World World { private set; get; }
 
         // Reference for drawing additional information on the screen
-        public DebugDrawer DebugDrawer { private set; get; }
+        private readonly DebugDrawer _debugDrawer;
 
         // Written debug information
-        public Display Display { private set; get; }
+        private readonly Display _display;
 
         private int _activeBodies;
-        public BasicEffect BasicEffect { private set; get; }
+        private readonly BasicEffect _basicEffect;
 
-        private GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
+        private readonly GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
 
         private bool _doDrawings = false;
 
@@ -57,8 +57,8 @@ namespace BRS.Engine.Physics {
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
             World.Events.ContactCreated += Events_ContactCreated;
 
-            DebugDrawer = debugDrawer;
-            Display = display;
+            _debugDrawer = debugDrawer;
+            _display = display;
 
             _primitives[(int)PrimitiveTypes.Box] = new BoxPrimitive(graphicsDevice);
             _primitives[(int)PrimitiveTypes.Capsule] = new CapsulePrimitive(graphicsDevice);
@@ -67,9 +67,9 @@ namespace BRS.Engine.Physics {
             _primitives[(int)PrimitiveTypes.Sphere] = new SpherePrimitive(graphicsDevice);
             //_primitives[(int)PrimitiveTypes.Convex] = new ConvexHullPrimitive(graphicsDevice);
 
-            BasicEffect = new BasicEffect(graphicsDevice);
-            BasicEffect.EnableDefaultLighting();
-            BasicEffect.PreferPerPixelLighting = true;
+            _basicEffect = new BasicEffect(graphicsDevice);
+            _basicEffect.EnableDefaultLighting();
+            _basicEffect.PreferPerPixelLighting = true;
         }
 
         public void Update(GameTime gameTime) {
@@ -132,11 +132,11 @@ namespace BRS.Engine.Physics {
                 return;
             }
 
-            BasicEffect.View = camera.View;
-            BasicEffect.Projection = camera.Proj;
+            _basicEffect.View = camera.View;
+            _basicEffect.Projection = camera.Proj;
 
-            BasicEffect.PreferPerPixelLighting = true;
-            BasicEffect.LightingEnabled = true;
+            _basicEffect.PreferPerPixelLighting = true;
+            _basicEffect.LightingEnabled = true;
             _activeBodies = 0;
 
             // Draw all shapes
@@ -148,12 +148,12 @@ namespace BRS.Engine.Physics {
 
 
             foreach (GeometricPrimitive prim in _primitives) {
-                prim.Draw(BasicEffect);
+                prim.Draw(_basicEffect);
             }
 
-            BasicEffect.PreferPerPixelLighting = false;
-            BasicEffect.LightingEnabled = false;
-            DebugDrawer.SetBasicEffect(BasicEffect);
+            _basicEffect.PreferPerPixelLighting = false;
+            _basicEffect.LightingEnabled = false;
+            _debugDrawer.SetBasicEffect(_basicEffect);
             //DrawIslands();
             DrawDebugInfo();
         }
@@ -202,16 +202,16 @@ namespace BRS.Engine.Physics {
         /// <summary>
         /// 
         /// </summary>
-        public void DrawDebugInfo() {
+        private void DrawDebugInfo() {
             int cc = 0;
 
             foreach (Constraint constr in World.Constraints) {
-                constr.DebugDraw(DebugDrawer);
+                constr.DebugDraw(_debugDrawer);
             }
 
             foreach (RigidBody body in World.RigidBodies) {
-                DebugDrawer.Color = DebugDrawer.RandomColors[cc % DebugDrawer.RandomColors.Length];
-                body.DebugDraw(DebugDrawer);
+                _debugDrawer.Color = _debugDrawer.RandomColors[cc % _debugDrawer.RandomColors.Length];
+                body.DebugDraw(_debugDrawer);
                 cc++;
             }
         }
@@ -310,13 +310,13 @@ namespace BRS.Engine.Physics {
                 contactCount += ar.ContactList.Count;
             }
 
-            Display.DisplayText[1] = World.CollisionSystem.ToString();
+            _display.DisplayText[1] = World.CollisionSystem.ToString();
 
             //Display.DisplayText[0] = "Current Scene: " + PhysicScenes[currentScene].ToString();
             //
-            Display.DisplayText[2] = "Arbitercount: " + World.ArbiterMap.Arbiters.Count + ";" + " Contactcount: " + contactCount;
-            Display.DisplayText[3] = "Islandcount: " + World.Islands.Count;
-            Display.DisplayText[4] = "Bodycount: " + World.RigidBodies.Count + " (" + _activeBodies + ")";
+            _display.DisplayText[2] = "Arbitercount: " + World.ArbiterMap.Arbiters.Count + ";" + " Contactcount: " + contactCount;
+            _display.DisplayText[3] = "Islandcount: " + World.Islands.Count;
+            _display.DisplayText[4] = "Bodycount: " + World.RigidBodies.Count + " (" + _activeBodies + ")";
             //Display.DisplayText[5] = (multithread) ? "Multithreaded" : "Single Threaded";
 
             int entries = (int)World.DebugType.Num;
@@ -325,16 +325,16 @@ namespace BRS.Engine.Physics {
             for (int i = 0; i < entries; i++) {
                 World.DebugType type = (World.DebugType)i;
 
-                Display.DisplayText[8 + i] = type + ": " + World.DebugTimes[i].ToString("0.00");
+                _display.DisplayText[8 + i] = type + ": " + World.DebugTimes[i].ToString("0.00");
 
                 total += World.DebugTimes[i];
             }
 
-            Display.DisplayText[8 + entries] = "------------------------------";
-            Display.DisplayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
-            Display.DisplayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
+            _display.DisplayText[8 + entries] = "------------------------------";
+            _display.DisplayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
+            _display.DisplayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
 
-            Display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
+            _display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
                 "  gen1: " + GC.CollectionCount(1).ToString() +
                 "  gen2: " + GC.CollectionCount(2).ToString();
         }

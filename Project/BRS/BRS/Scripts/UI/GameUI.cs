@@ -1,11 +1,13 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class GameUI : Component {
         ////////// draws info related to the game and rounds //////////
 
@@ -15,23 +17,23 @@ namespace BRS.Scripts {
 
 
         //private
-        Texture2D policeCar, policeLight;
+        private Texture2D _policeCar, _policeLight;
 
-        Timer roundtime;
-        bool showWinner;
-        bool showPolice;
-        string winnerString = "";
+        private Timer _roundtime;
+        private bool _showWinner;
+        private bool _showPolice;
+        private string _winnerString = "";
 
         //reference
-        public static GameUI instance;
+        public static GameUI Instance;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            instance = this;
-            showWinner = showPolice = false;
+            Instance = this;
+            _showWinner = _showPolice = false;
 
-            policeCar = File.Load<Texture2D>("Images/UI/policeCar");
-            policeLight = File.Load<Texture2D>("Images/UI/policeCar_lights");
+            _policeCar = File.Load<Texture2D>("Images/UI/policeCar");
+            _policeLight = File.Load<Texture2D>("Images/UI/policeCar_lights");
         }
 
         public override void Update() {
@@ -44,47 +46,47 @@ namespace BRS.Scripts {
 
 
         // commands
-        public void Draw() {
-            Vector2 centerPos = new Vector2(Screen.WIDTH / 2, Screen.HEIGHT / 2);
+        public override void Draw() {
+            Vector2 centerPos = new Vector2(Screen.Width / 2, Screen.Height / 2);
 
-            string roundNumber = "round: " + GameManager.instance.RoundNumber + "/" + GameManager.numRounds;
-            UserInterface.instance.DrawString(centerPos + new Vector2(-100, -100), roundNumber);
+            string roundNumber = "round: " + GameManager.Instance.RoundNumber + "/" + GameManager.NumRounds;
+            UserInterface.Instance.DrawString(centerPos + new Vector2(-100, -100), roundNumber);
 
-            string roundTimeString = "time: " + roundtime.span.ToReadableString();
-            UserInterface.instance.DrawString(centerPos + new Vector2(-100, -50), roundTimeString);
+            string roundTimeString = "time: " + _roundtime.Span.ToReadableString();
+            UserInterface.Instance.DrawString(centerPos + new Vector2(-100, -50), roundTimeString);
 
             //police bar
-            float barPercent = (float)(1 - roundtime.span.TotalSeconds / RoundManager.roundTime);
-            UserInterface.instance.DrawBarBig(centerPos + new Vector2(-128, 0), barPercent, Color.Gray);
+            float barPercent = (float)(1 - _roundtime.Span.TotalSeconds / RoundManager.RoundTime);
+            UserInterface.Instance.DrawBarBig(centerPos + new Vector2(-128, 0), barPercent, Color.Gray);
 
             //TODO show blinking police
-            int fgRectWidth = (int)(UserInterface.BARBIGWIDTH * barPercent);
-            UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeCar, Vector2.One * 64, .6f);
+            int fgRectWidth = (int)(UserInterface.BarBigWidth * barPercent);
+            UserInterface.Instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeCar, Vector2.One * 64, .6f);
 
-            if (showPolice) {
-                UserInterface.instance.DrawString(centerPos + new Vector2(-160, 50), "Get back to your base!");
-                if ((Time.frame / 10) % 2 == 0) {
-                    UserInterface.instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), policeLight, Vector2.One * 64, .6f);
+            if (_showPolice) {
+                UserInterface.Instance.DrawString(centerPos + new Vector2(-160, 50), "Get back to your base!");
+                if ((Time.Frame / 10) % 2 == 0) {
+                    UserInterface.Instance.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeLight, Vector2.One * 64, .6f);
                 }
             }
 
-            if (showWinner) {
-                UserInterface.instance.DrawStringBig(centerPos + new Vector2(-250, 150), winnerString);
+            if (_showWinner) {
+                UserInterface.Instance.DrawStringBig(centerPos + new Vector2(-250, 150), _winnerString);
             }
         }
 
         public void UpdateGameWinnerUI(int winner) {
-            winnerString = "Player " + (winner + 1) + " won!";
-            showWinner = true;
+            _winnerString = "Player " + (winner + 1) + " won!";
+            _showWinner = true;
         }
 
         public void UpdatePoliceComing() {
-            showPolice = true;
+            _showPolice = true;
         }
 
         public void StartMatch(Timer rt) {
-            roundtime = rt;
-            showWinner = showPolice = false;
+            _roundtime = rt;
+            _showWinner = _showPolice = false;
         }
 
         // queries

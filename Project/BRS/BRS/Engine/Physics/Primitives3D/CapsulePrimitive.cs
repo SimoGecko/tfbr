@@ -35,7 +35,7 @@ namespace BRS.Engine.Physics.Primitives3D {
         public CapsulePrimitive(GraphicsDevice graphicsDevice,
                                float diameter, float length, int tessellation) {
             if (tessellation % 2 != 0)
-                throw new ArgumentOutOfRangeException("tessellation should be even");
+                throw new ArgumentOutOfRangeException(nameof(tessellation), "tessellation should be even");
 
             int verticalSegments = tessellation;
             int horizontalSegments = tessellation * 2;

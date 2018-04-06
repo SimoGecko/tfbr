@@ -1,10 +1,12 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class ExplodingBox : Powerup {
         ////////// powerup that spawn a box that explodes once cracked //////////
 
@@ -22,11 +24,7 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            powerupType = PowerupType.explodingbox;
-        }
-
-        public override void Update() {
-            base.Update();
+            PowerupType = PowerupType.Explodingbox;
         }
 
 
@@ -38,11 +36,11 @@ namespace BRS.Scripts {
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate exploding box
-            transform.position = owner.transform.position;
+            transform.position = Owner.transform.position;
             GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * .25f, Quaternion.Identity);
             Crate c = newCrate.GetComponent<Crate>();
             c.SetExplosionRigged();
-            Elements.instance.Add(c);
+            ElementManager.Instance.Add(c);
         }
 
 

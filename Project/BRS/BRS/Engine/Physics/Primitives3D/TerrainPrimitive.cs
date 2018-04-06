@@ -42,26 +42,26 @@ namespace BRS.Engine.Physics.Primitives3D {
                     normal += Vector3.Cross(neighbour[0] - pos, neighbour[3] - pos);
                     normal.Normalize();
 
-                    this.AddVertex(new Vector3(i, heights[i, e], e), normal);
+                    AddVertex(new Vector3(i, heights[i, e], e), normal);
                 }
             }
 
             for (int i = 1; i < 100; i++) {
                 for (int e = 1; e < 100; e++) {
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex(i * 100 + e);
+                    AddIndex((i - 1) * 100 + e);
+                    AddIndex(i * 100 + (e - 1));
+                    AddIndex(i * 100 + e);
 
 
-                    this.AddIndex(i * 100 + (e - 1));
-                    this.AddIndex((i - 1) * 100 + e);
-                    this.AddIndex((i - 1) * 100 + (e - 1));
+                    AddIndex(i * 100 + (e - 1));
+                    AddIndex((i - 1) * 100 + e);
+                    AddIndex((i - 1) * 100 + (e - 1));
 
                 }
             }
 
 
-            this.InitializePrimitive(device);
+            InitializePrimitive(device);
         }
 
     }

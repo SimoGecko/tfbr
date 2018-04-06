@@ -1,13 +1,17 @@
-﻿using System.Collections.Generic;
-using BRS.Engine.Physics;
+﻿using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Physics.Vehicle;
 using BRS.Scripts;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 
 namespace BRS.Load {
     // Todo: To be refactored
@@ -16,13 +20,9 @@ namespace BRS.Load {
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
-        private CarObject _car;
-        private readonly Game1 _game;
 
-
-        public LevelPhysics(Game1 game, PhysicsManager physics)
+        public LevelPhysics(PhysicsManager physics)
             : base(physics) {
-            _game = game;
         }
 
 
@@ -39,7 +39,7 @@ namespace BRS.Load {
 
             GameObject rootScene = new GameObject("manager");
             //rootScene.AddComponent(new CameraController());
-            rootScene.AddComponent(new Elements());
+            rootScene.AddComponent(new ElementManager());
             rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new RoundManager());
             rootScene.AddComponent(new Spawner());
@@ -54,7 +54,7 @@ namespace BRS.Load {
 
 
             //PLAYER
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
 
                 GameObject forklift = new GameObject("player_" + i, File.Load<Model>("Models/vehicles/forklift"));
                 forklift.tag = ObjectTag.Player;
@@ -74,7 +74,7 @@ namespace BRS.Load {
 
 
             //BASE
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject playerBase = new GameObject("playerBase_" + i, File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
@@ -156,14 +156,6 @@ namespace BRS.Load {
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
                 body.AddComponent(new StaticRigidBody(PhysicsManager));
             }
-        }
-
-
-        public void AddCar(JVector position) {
-            _car = new CarObject(_game, PhysicsManager);
-            _game.Components.Add(_car);
-
-            _car.carBody.Position = position;
         }
 
         public void AddSoftBody() {

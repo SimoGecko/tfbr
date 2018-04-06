@@ -3,13 +3,12 @@
 
 using System.Collections.Generic;
 using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
 
-namespace BRS {
+namespace BRS.Engine {
     ////////// base class for scripting language //////////
 
     public interface IComponent {
-        GameObject gameObject { get; set; }
+        GameObject GameObject { get; set; }
 
         void Start();
         void Update();
@@ -21,10 +20,10 @@ namespace BRS {
     }
 
     public class Component : IComponent {
-        public bool active;
-        GameObject m_gameObject; // added member
-        public GameObject gameObject { get { return m_gameObject; } set { m_gameObject = value; } }
-        public Transform  transform  { get { return m_gameObject.transform; } }
+        public bool Active { get; set; }
+        public GameObject GameObject { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public Transform  transform  { get { return GameObject.transform; } }
 
         public virtual void Start() { }
         public virtual void Update() { }
@@ -43,35 +42,35 @@ namespace BRS {
     }
 
     public class ListComponents : Component {
-        public List<Component> listComponents;
-        public string nameIdentifier;
+        public readonly List<Component> Components;
+        public readonly string NameIdentifier;
 
 
         public ListComponents(string name = null) {
-            listComponents = new List<Component>();
-            active = true;
-            nameIdentifier = name;
+            Components = new List<Component>();
+            Active = true;
+            NameIdentifier = name;
         }
 
         public override void Draw() {
-            if (active)
-                foreach (Component comp in listComponents)
+            if (Active)
+                foreach (Component comp in Components)
                     comp.Draw();
         }
 
         public override void Start() {
-            foreach (Component comp in listComponents)
+            foreach (Component comp in Components)
                 comp.Start();
         }
 
         public override void Update() {
-            if (active)
-                foreach (Component comp in listComponents)
+            if (Active)
+                foreach (Component comp in Components)
                     comp.Update();
         }
 
         public void AddComponent(Component comp) {
-            listComponents.Add(comp);
+            Components.Add(comp);
         }
     }
 }

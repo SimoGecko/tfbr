@@ -22,12 +22,12 @@ namespace BRS.Engine.Physics.RigidBodies {
         // todo: refactor again, just testing
         public override void Start() {
             if (_isGround) {
-                Model model = gameObject.Model;
+                Model model = GameObject.Model;
                 BoundingBox bb = BoundingBoxHelper.Calculate(model);
                 JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-                bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
+                bbSize = new JVector(bbSize.X * GameObject.transform.scale.X,
                     10,
-                    bbSize.Z * gameObject.transform.scale.Z);
+                    bbSize.Z * GameObject.transform.scale.Z);
                 CollisionShape = new BoxShape(bbSize);
 
                 RigidBody = new Collider(CollisionShape) {
@@ -36,7 +36,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     IsStatic = IsStatic,
                     IsActive = IsActive,
                     Tag = Tag,
-                    GameObject = gameObject
+                    GameObject = GameObject
                 };
 
                 PhysicsManager.World.AddBody(RigidBody);

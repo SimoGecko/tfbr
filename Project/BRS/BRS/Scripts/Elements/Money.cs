@@ -1,10 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+
+namespace BRS.Scripts.Elements {
     class Money : Pickup {
         ////////// represents an amount of money that can be collected  //////////
 
@@ -46,11 +49,11 @@ namespace BRS.Scripts {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
+            PlayerInventory pi = p.GameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
                 pi.Collect(this);
-                Elements.instance.Remove(this);
-                GameObject.Destroy(gameObject);
+                ElementManager.Instance.Remove(this);
+                GameObject.Destroy(GameObject);
             }
         }
 

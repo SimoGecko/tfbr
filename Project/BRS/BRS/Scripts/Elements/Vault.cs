@@ -1,32 +1,36 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
 
+    // Todo: Probably belongs in the engine?
     public interface IOpenable : IComponent {
         void Open();
     }
 
+    /// <summary>
+    /// vault that can be exploded or opened and allows to enter in it
+    /// </summary>
     class Vault : LivingEntity, IOpenable {
-        ////////// vault that can be exploded or opened and allows to enter in it //////////
-
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float openingDuration = 2f;
-        const float openingAnge = -90f;
-        const float pivotOffset = -1.5f;
 
-        public static Rectangle vaultArea = new Rectangle(-9, -72, 19, 8);
+        public static Rectangle VaultArea = new Rectangle(-9, -72, 19, 8);
 
 
         //private
-        bool open = false; // at end of animation
-        bool opening = false; // for animation
-        float openRefTime;
+        private const float OpeningDuration = 2f;
+        private const float OpeningAnge = -90f;
+        private const float PivotOffset = -1.5f;
+
+        private bool _open; // at end of animation
+        private bool _opening; // for animation
+        private float _openRefTime;
 
 
         //reference
@@ -34,11 +38,11 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            health = 10;
+            Health = 10;
         }
 
         public override void Update() {
-            if (opening) OpenCoroutine();
+            if (_opening) OpenCoroutine();
 
         }
 
@@ -49,8 +53,8 @@ namespace BRS.Scripts {
 
         // commands
         public void Open() {
-            opening = true;
-            openRefTime = 0;
+            _opening = true;
+            _openRefTime = 0;
         }
 
         protected override void Die() {
@@ -59,19 +63,19 @@ namespace BRS.Scripts {
         }
 
         // queries
-        Vector3 pivotPoint { get { return transform.position + transform.Right*pivotOffset; } }
+        Vector3 pivotPoint { get { return transform.position + transform.Right*PivotOffset; } }
 
 
         // other
         void OpenCoroutine() {
-            if (openRefTime <= 1) {
-                float amount = Time.deltaTime / openingDuration;
-                openRefTime += amount;
+            if (_openRefTime <= 1) {
+                float amount = Time.DeltaTime / OpeningDuration;
+                _openRefTime += amount;
                 //float t = Curve.EvaluateSqrt(openRefTime);
-                transform.RotateAround(pivotPoint, Vector3.Up, amount*openingAnge);
+                transform.RotateAround(pivotPoint, Vector3.Up, amount*OpeningAnge);
             } else {
-                opening = false;
-                open = true;
+                _opening = false;
+                _open = true;
             }
         }
 
