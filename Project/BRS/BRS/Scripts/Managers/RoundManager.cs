@@ -16,7 +16,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 180;
+        public static int RoundTime = 120;
         public const int TimeBeforePolice = 10;
 
         //private
@@ -48,7 +48,7 @@ namespace BRS.Scripts.Managers {
 
         // commands
         void OnRoundEnd() {
-            //FindBases();
+            FindBases();
             NotifyBases();
             Debug.Log("notified bases");
             Tuple<int, int> winner = FindWinner();

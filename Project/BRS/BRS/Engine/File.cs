@@ -95,7 +95,7 @@ namespace BRS.Engine {
 
                         go.transform.position = position;
                         go.transform.scale = scale;
-                        go.transform.rotation = rotation; 
+                        go.transform.rotation = rotation;
 
                         try {
                             go.tag = (ObjectTag)Enum.Parse(typeof(ObjectTag), tagName, true);
@@ -158,9 +158,9 @@ namespace BRS.Engine {
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
 
-                        Vector3 position   = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
-                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]),  float.Parse(rSplit[3]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2]+180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
+                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2] + 180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
 
                         Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
@@ -177,33 +177,43 @@ namespace BRS.Engine {
         }
 
         public static List<Tuple<string, string>> ReadRanking(string pathName) {
-            List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
-            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
-                string line;
-                while ((line = reader.ReadLine()) != null) {
-                    if (line == "")
-                        break;
+            try {
+                List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
+                using (StreamReader reader =
+                    new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                    string line;
+                    while ((line = reader.ReadLine()) != null) {
+                        if (line == "")
+                            break;
 
-                    //string aPerson = reader.ReadLine();
+                        //string aPerson = reader.ReadLine();
 
-                    string[] pSplit = line.Split(' ');
-                    listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+                        string[] pSplit = line.Split(' ');
+                        listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
 
+                    }
                 }
+                return listPerson;
+            } catch (Exception e) {
+                Debug.LogError(e.Message);
+
+                return new List<Tuple<string, string>>();
             }
-            return listPerson;
         }
 
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
-            using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
-                int count = 0;
-                foreach (var elem in listPlayersNameScore) {
-                    AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
-                    ++count;
-                    if (count >= maxElem) break;
+            try {
+                using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                    int count = 0;
+                    foreach (var elem in listPlayersNameScore) {
+                        AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
+                        ++count;
+                        if (count >= maxElem) break;
+                    }
                 }
+            } catch (Exception e) {
+                Debug.LogError(e.Message);
             }
-        
         }
 
         private static void AddText(FileStream fs, string value) {
