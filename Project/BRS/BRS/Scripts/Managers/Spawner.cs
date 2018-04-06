@@ -53,9 +53,9 @@ namespace BRS.Scripts.Managers {
         public override void Start() {
             Instance = this;
 
-            for(int k=1; k<=10; k++) {
+            /*for(int k=1; k<=10; k++) {
                 SpawnKCashAt(new Vector3(-10+ k*2, 0, -5), k);
-            }
+            }*/
             
             SpawnInitialMoney();
             SpawnInitialVaultGold();
@@ -87,12 +87,13 @@ namespace BRS.Scripts.Managers {
 
 
         void SpawnOneMoneyRandom() {
-            
+            /*
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
             Vector2 position = _spawnArea.Evaluate(sample);
             SpawnOneMoneyAt(position.To3());
-            //SpawnOneMoneyAt(Heatmap.instance.GetMoneyPos().To3());
+            */
+            SpawnOneMoneyAt(Heatmap.instance.GetMoneyPos().To3());
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius) {

@@ -23,7 +23,6 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            Debug.Log("called sphereaudio");
             GameObject sound = new GameObject("sphereaudio", File.Load<Model>("models/primitives/sphere"));
             sound.transform.position = position;
         }

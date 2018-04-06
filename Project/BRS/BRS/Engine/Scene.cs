@@ -17,6 +17,7 @@ namespace BRS.Engine {
 
 
             Add("Level1", new Level1());
+            Add("Level2", new Level2());
             Add("LevelPhysics", new LevelPhysics());
             
         }
@@ -37,7 +38,6 @@ namespace BRS.Engine {
         ////////// contains all gameobjects in the scene //////////
 
         //can create scene graph
-        string _sceneName = "";
         List<GameObject> objectsInScene = new List<GameObject>();
 
         /*
@@ -56,6 +56,10 @@ namespace BRS.Engine {
 
         public void Unload() {
             foreach (GameObject o in objectsInScene) GameObject.Destroy(o);
+        }
+
+        protected void Add(GameObject o) {
+            objectsInScene.Add(o);
         }
 
         //CHANGE SCENE

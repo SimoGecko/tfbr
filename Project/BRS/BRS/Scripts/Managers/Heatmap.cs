@@ -18,7 +18,10 @@ namespace BRS.Scripts {
 
         //private
         CDFdistrib green; // stores green distribution
+        //_upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
+        //_lowerRightPt = new Vector3(25, 0, 5);
 
+        Rectangle playArea = new Rectangle(-25, -75, 50, 80);
 
         //reference
         Texture2D heatmapPic;
@@ -50,7 +53,10 @@ namespace BRS.Scripts {
 
         // commands
         public Vector2 GetMoneyPos() {
-            return green.Evaluate().ToVector2();
+            Vector2 pixel = green.Evaluate().ToVector2();
+            //Vector2 normalizedCoords = Vector2.Divide(pixel, new Vector2(heatmapPic.Height, heatmapPic.Width));
+            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(heatmapPic.Width, heatmapPic.Height));
+            return playArea.Evaluate(normalizedCoords);
         }
         
 
@@ -100,11 +106,17 @@ namespace BRS.Scripts {
             }
 
             public Point Evaluate() {
-                int sampleX = MyRandom.Range(0, Sum());
+                int maxX = Sum();
+                int sampleX = MyRandom.Range(0, maxX);
                 int indexX = Array.BinarySearch(colsum, sampleX);
-                int sampleY = MyRandom.Range(0, RowSum(indexX));
+                if (indexX < 0) indexX = ~indexX; // if not found exactly, this is index of first number bigger than sampleX
+
+                int maxY = RowSum(indexX);
+                int sampleY = MyRandom.Range(0, maxY);
                 int indexY = Array.BinarySearch(rowsum[indexX], sampleY);
-                return new Point(indexX, indexY);
+                if (indexY < 0) indexY = ~indexY;
+
+                return new Point(indexX, indexY); // this is pixel, now normalize (row, col)
             }
 
             public int Sum() { return colsum[rows - 1]; }

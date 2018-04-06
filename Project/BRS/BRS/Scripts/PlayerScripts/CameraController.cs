@@ -89,7 +89,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         void FollowSmoothAndRotate() {
-            // Todo: used?
+            // Todo: used? yes
             Vector3 currentPosition = transform.position;
 
             transform.position = _player.position + Offset;
@@ -98,7 +98,7 @@ namespace BRS.Scripts.PlayerScripts {
             transform.RotateAround(_player.position, Vector3.Up, _yAngleSmooth);
             transform.RotateAround(_player.position, transform.Right, _xAngleSmooth);
 
-            // Todo: used?
+            // Todo: used? yes
             Vector3 targetPos = transform.position;
             //transform.position = Utility.SmoothDamp(currentPosition, targetPos, ref targetPosRef, positionSmoothTime);
 

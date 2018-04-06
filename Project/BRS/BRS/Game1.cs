@@ -35,7 +35,7 @@ namespace BRS {
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
 
-            Screen.Setup(_graphics, this, GraphicsDevice); // setup screen and create cameras
+            Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
 
             //@andy remove this - hide everything inside PhysicsManager.Setup();
             _debugDrawer = new DebugDrawer(this);
@@ -57,7 +57,7 @@ namespace BRS {
                 _menuManager = new MenuManager();
                 _menuManager.LoadContent();
             } else {
-                Screen.AdditionalSetupBasedOnNumPlayers(_graphics, this);
+                Screen.AdditionalSetup(_graphics);
             }
             new UserInterface();
 
@@ -100,6 +100,21 @@ namespace BRS {
             else {
                 Input.Update();
                 Audio.Update();
+
+                if (Input.GetKeyDown(Keys.D9)) {
+                    Debug.Log("changing scene...");
+                    SceneManager.Load("Level2");
+                    Screen.AdditionalSetup(_graphics);
+                    foreach (GameObject go in GameObject.All) go.Start();
+
+                }
+                if (Input.GetKeyDown(Keys.D0)) {
+                    Debug.Log("changing scene...");
+                    SceneManager.Load("Level1");
+                    Screen.AdditionalSetup(_graphics);
+                    foreach (GameObject go in GameObject.All) go.Start();
+
+                }
 
                 foreach (GameObject go in GameObject.All) go.Update();
                 foreach (GameObject go in GameObject.All) go.LateUpdate();

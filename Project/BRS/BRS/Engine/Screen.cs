@@ -43,15 +43,14 @@ namespace BRS.Engine {
 
 
         // commands
-        public static void Setup(GraphicsDeviceManager graphics, Game game, GraphicsDevice graphicsDevice) {
+        public static void InitialSetup(GraphicsDeviceManager graphics, Game game, GraphicsDevice graphicsDevice) {
+            //called just once at the beginning of the game
             SetupWindow(graphics, game);
             SetupRasterizers(graphicsDevice);
-            //SetupViewports(graphics);
-            //SetupCameras();
         }
 
-        public static void AdditionalSetupBasedOnNumPlayers(GraphicsDeviceManager graphics, Game game) {
-            //SetupWindow(graphics, game);
+        public static void AdditionalSetup(GraphicsDeviceManager graphics) {
+            //called on scene change to reset cameras and viewports
             SetupViewports(graphics);
             SetupCameras();
         }
@@ -100,8 +99,7 @@ namespace BRS.Engine {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject camObject = new GameObject("camera_" + i);
                 camObject.AddComponent(new Camera(_splitViewport[i]));
-                camObject.AddComponent(new CameraController()); // TODO move out this creation code
-                camObject.GetComponent<CameraController>().CamIndex = i;
+                
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }

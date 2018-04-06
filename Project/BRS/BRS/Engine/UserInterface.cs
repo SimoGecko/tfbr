@@ -22,6 +22,8 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
+        //TODO make it agnostic to this game
+
         //public
         public const int BarWidth = 128;
         public const int BarBigWidth = 256;
@@ -74,13 +76,18 @@ namespace BRS.Engine {
         public void DrawGlobal(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             //callbacks
-            //Minimap.instance.Draw(sB);
+            Minimap.Instance.Draw(_sb);
+
+            
             GameUI.Instance.Draw();
+            
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             _sb = spriteBatch;
             //callbacks
+
+            
             BaseUI.Instance.Draw(index%2);
             PlayerUI.Instance.Draw(index);
             PowerupUI.Instance.Draw(index);

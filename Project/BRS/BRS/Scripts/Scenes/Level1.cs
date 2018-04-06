@@ -38,6 +38,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new PowerupUI());
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
+            Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
@@ -47,11 +48,12 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
-            Manager.AddComponent(new AudioTest());
+            Add(Manager);
 
 
             //UiManager.Start();
             //Manager.Start();
+
 
 
             //TEST lighting
@@ -95,12 +97,14 @@ namespace BRS.Scripts.Scenes {
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            Add(vault);
 
             // Todo: refactor
             vault.Start();
 
             //other elements
-            GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
+            GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
+            Add(speedpad);
 
             //LOAD UNITY SCENE
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
@@ -109,6 +113,17 @@ namespace BRS.Scripts.Scenes {
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             task2.Wait();
+
+
+            //CREATE CAMERA CONTROLLERS
+            int i = 0;
+            foreach(Camera c in Screen.Cameras) {
+                GameObject camObject = c.gameObject;
+                Add(camObject);
+                camObject.AddComponent(new CameraController()); // TODO move out this creation code
+                camObject.GetComponent<CameraController>().CamIndex = i++;
+            }
+            
 
             CreatePlayers();
         }
@@ -132,6 +147,8 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
 
+                Add(player);
+
                 /*
                 if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
@@ -148,7 +165,10 @@ namespace BRS.Scripts.Scenes {
                 arrow.AddComponent(new Arrow(player, null, i));
                 arrow.transform.Scale(.1f);
 
-                objects.Add(player);
+                Add(arrow);
+
+
+                objects.Add(player); //why???
                 objects.Add(arrow);
             }
 
@@ -161,12 +181,13 @@ namespace BRS.Scripts.Scenes {
                 bases[i].transform.SetStatic();
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
+                Add(bases[i]);
                 objects.Add(bases[i]);
             }
 
-            // todo: (andy) is this necessary here?
+            // todo: (andy) is this necessary here? // SIMO surely NOT!!
             foreach (GameObject go in objects) {
-                go.Start();
+                //go.Start();
             }
 
         }

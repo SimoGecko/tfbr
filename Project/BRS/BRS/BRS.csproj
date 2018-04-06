@@ -146,6 +146,7 @@
     </Compile>
     <Compile Include="Game1.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
+    <Compile Include="Scripts\Scenes\Level2.cs" />
     <Compile Include="Scripts\Scenes\LevelPhysics.cs" />
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />

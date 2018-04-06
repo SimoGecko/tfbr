@@ -18,7 +18,6 @@ namespace BRS.Engine {
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
         static void BuildPrefabs() {
-            Debug.Log("callde prefab start");
             //VALUABLES
             //cash
             //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
@@ -30,6 +29,7 @@ namespace BRS.Engine {
                 moneyPrefab.transform.SetStatic();
                 moneyPrefab.AddComponent(new Money(100*values[i], values[i], Money.Type.Cash));
                 moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+                //moneyPrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
                 AddPrefab(moneyPrefab);
             }
             
