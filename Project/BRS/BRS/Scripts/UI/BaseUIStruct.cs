@@ -1,5 +1,4 @@
-namespace BRS.Scripts
-{
+namespace BRS.Scripts.UI {
     public struct BaseUIStruct {
         public int TotalMoneyInBase;
         public float BaseHealth;

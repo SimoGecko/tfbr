@@ -4,8 +4,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-
-namespace BRS {
+namespace BRS.Engine {
     /// <summary>
     /// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration.
     /// </summary>

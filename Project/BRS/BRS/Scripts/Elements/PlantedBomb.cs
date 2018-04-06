@@ -1,6 +1,8 @@
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     /// <summary>
     /// Bomb that can be planted and explodes after some time damaging what's around
     /// </summary>

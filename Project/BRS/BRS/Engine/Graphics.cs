@@ -4,7 +4,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
     /// <summary>
     /// Collection of various methods that have to do with color.
     /// </summary>

@@ -1,4 +1,4 @@
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     public struct PlayerUIStruct {
         // current
         public string Name;

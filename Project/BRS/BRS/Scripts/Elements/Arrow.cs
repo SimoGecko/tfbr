@@ -2,9 +2,13 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Arrow : Component {
         ////////// shows an arrow that always points in the direction of the interest point //////////
 
@@ -39,10 +43,10 @@ namespace BRS.Scripts {
             _point = Vector3.Zero;
             _pI = _follow.GetComponent<PlayerInventory>();
 
-            if(Elements.Instance.Player(1 - _playerIndex)!=null)
-                _target = Elements.Instance.Player(1 - _playerIndex).transform;
+            if(ElementManager.Instance.Player(1 - _playerIndex)!=null)
+                _target = ElementManager.Instance.Player(1 - _playerIndex).transform;
 
-            _teamBase = Elements.Instance.Base(_playerIndex%2).transform.position;
+            _teamBase = ElementManager.Instance.Base(_playerIndex%2).transform.position;
         }
 
         public override void Update() {

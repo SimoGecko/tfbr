@@ -1,13 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
+using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using System;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     /// <summary>
     /// Deals with the movement of the player around the map
     /// </summary>

@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts
-{
+namespace BRS.Scripts.Elements {
     class PlantedMagnet : Component {
         ////////// magnet that slows down everything within its radius //////////
 
@@ -30,7 +32,7 @@ namespace BRS.Scripts
         }
 
         public override void Update() {
-            if(_active)
+            if (_active)
                 CheckSlowdownRadius();
         }
 
@@ -45,8 +47,8 @@ namespace BRS.Scripts
             foreach (var pm in _pMAffected) pm.SetSlowdown(false);
             _pMAffected.Clear();
 
-            foreach(Player p in Elements.Instance.Players()) {
-                if (InActionRadius(p.GameObject)){
+            foreach (Player p in ElementManager.Instance.Players()) {
+                if (InActionRadius(p.GameObject)) {
                     PlayerMovement pM = p.GameObject.GetComponent<PlayerMovement>();
                     pM.SetSlowdown(true);
                     _pMAffected.Add(pM);

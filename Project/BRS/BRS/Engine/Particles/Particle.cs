@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine.Particles {
     public class Particle {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }

@@ -1,4 +1,5 @@
-﻿using BRS.Engine.Physics;
+﻿using BRS.Engine;
+using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -80,7 +81,7 @@ namespace BRS {
 
         public void Start() {
             //START
-            Prefabs.Start();
+            Engine.Prefabs.Start();
             //scene.Start();
             Input.Start();
             Audio.Start();

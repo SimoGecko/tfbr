@@ -1,9 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Pickup : Component {
         ////////// generic class for object that can be picked up //////////
 

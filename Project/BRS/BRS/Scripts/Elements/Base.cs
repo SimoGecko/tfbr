@@ -1,11 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine.Physics;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
+using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
         ////////// base in the game that has health and collects money //////////
 

@@ -1,9 +1,10 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PowerUps {
     class Bomb : Powerup {
         ////////// bomb that can be planted and explodes after some time damaging what's around //////////
 

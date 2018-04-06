@@ -9,6 +9,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 
 namespace BRS.Load {
     class Level1 : Scene {
@@ -38,7 +44,7 @@ namespace BRS.Load {
             UiManager.AddComponent(new Suggestions());
 
             Managers = new GameObject("manager");
-            Managers.AddComponent(new Elements());
+            Managers.AddComponent(new ElementManager());
             Managers.AddComponent(new GameManager());
             Managers.AddComponent(new RoundManager());
             Managers.AddComponent(new Spawner());
@@ -129,7 +135,7 @@ namespace BRS.Load {
                     if (userModel != null) player.Model = userModel;
                 }
 
-                Elements.Instance.Add(player.GetComponent<Player>());
+                ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
@@ -147,7 +153,7 @@ namespace BRS.Load {
                 bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
-                Elements.Instance.Add(bases[i].GetComponent<Base>());
+                ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
                 objects.Add(bases[i]);
             }

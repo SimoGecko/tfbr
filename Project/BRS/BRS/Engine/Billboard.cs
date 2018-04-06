@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 
-namespace BRS.Scripts {
+namespace BRS.Engine {
     class Billboard : Component {
         ////////// simple billboard that looks at the camera //////////
 

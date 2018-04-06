@@ -3,7 +3,7 @@
 
 using Microsoft.Xna.Framework;
 
-namespace BRS {
+namespace BRS.Engine {
     public class EffectMaterial {
         ////////// represents a material which sets lighting parameters //////////
 

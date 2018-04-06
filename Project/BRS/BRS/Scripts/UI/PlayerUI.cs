@@ -1,11 +1,14 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class PlayerUI : Component {
         ////////// draws UI about player stats //////////
 
@@ -43,7 +46,7 @@ namespace BRS.Scripts {
         public void Draw(int index) {
             Vector2 position = new Vector2(130, 130);
             position += Vector2.UnitX * UserInterface.Instance.GetOffset(index);
-            Vector2 screenPosition = Camera.Main.WorldToScreenPoint(Elements.Instance.Player(index).transform.position);
+            Vector2 screenPosition = Camera.Main.WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
 
             UserInterface.Instance.DrawPicture(position, _forkliftIcon, _forkliftIcon.Bounds.GetCenter(), .5f);
 

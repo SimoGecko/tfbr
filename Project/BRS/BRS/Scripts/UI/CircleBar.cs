@@ -1,10 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class CircleBar : Component {
         ////////// represents a circle bar //////////
 

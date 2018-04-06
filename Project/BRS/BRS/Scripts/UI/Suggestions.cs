@@ -1,11 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     public enum XboxButtons { A, X, Y, B, LB, RB, LT, RT, DD, DL, DR, DU, D, L, R, M };
 
     class Suggestions : Component {
@@ -36,7 +39,7 @@ namespace BRS.Scripts {
             _comicBubble = File.Load<Texture2D>("Images/UI/comic_bubble");
             _commands = new List<ButtonCommand>();
 
-            Player p = Elements.Instance.Player(1);
+            Player p = ElementManager.Instance.Player(1);
             if (p != null) Player = p.transform;
         }
 
@@ -60,7 +63,7 @@ namespace BRS.Scripts {
                 }
             }
             //comic bubble
-            Player p = Elements.Instance.Player(index);
+            Player p = ElementManager.Instance.Player(index);
             if (p.GameObject.GetComponent<PlayerInventory>().IsFull()) {
                 Point bubblePosition = Camera.Main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
                 Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));

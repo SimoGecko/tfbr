@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine.Particles {
     public class ParticleSystem : Component {
         ////////// class that represents a 2D particle engine for various effects //////////
         //TODO test

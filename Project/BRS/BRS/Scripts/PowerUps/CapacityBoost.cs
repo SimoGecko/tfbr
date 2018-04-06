@@ -1,4 +1,6 @@
-namespace BRS.Scripts {
+using BRS.Scripts.PlayerScripts;
+
+namespace BRS.Scripts.PowerUps {
     class CapacityBoost : Powerup {
         private const int ValueBoost = 2;
 

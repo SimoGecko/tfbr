@@ -1,11 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
-namespace BRS {
+namespace BRS.Engine {
     /// <summary>
     /// Class that represents a virtual camera in space with projection characteristics
     /// </summary>

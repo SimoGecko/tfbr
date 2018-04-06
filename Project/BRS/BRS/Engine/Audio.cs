@@ -1,12 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
-using System.Collections.Generic;
 
-namespace BRS {
+namespace BRS.Engine {
     static class Audio {
         //static class that contains all audio in the game and allows playback
         //static Dictionary<string, SoundEffect> sounds;

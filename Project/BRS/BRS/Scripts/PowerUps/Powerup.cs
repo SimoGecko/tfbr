@@ -1,10 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PowerUps {
 
     public enum PowerupType { Health, Capacity, Speed, Stamina, Bomb, Key, Shield, Trap, Explodingbox, Weight, Magnet };
 
@@ -63,7 +68,7 @@ namespace BRS.Scripts {
                 Owner = p;
                 pp.Collect(this);
 
-                Elements.Instance.Remove(this);
+                ElementManager.Instance.Remove(this);
 
                 //if(!destroyOnUse) gameObject.active = false;
                 GameObject.Destroy(GameObject);

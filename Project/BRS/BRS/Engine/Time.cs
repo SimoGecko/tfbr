@@ -1,13 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Scripts;
-using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BRS.Scripts;
+using BRS.Scripts.Managers;
+using Microsoft.Xna.Framework;
 
-namespace BRS {
+namespace BRS.Engine {
     static class Time {
         ////////// static class that provides time functions and timers //////////
 

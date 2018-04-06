@@ -1,10 +1,14 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class PowerupUI : Component {
         ////////// draws the powerups for the player //////////
 

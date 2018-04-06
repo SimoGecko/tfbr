@@ -1,10 +1,10 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace BRS {
+namespace BRS.Engine {
     /// <summary>
     /// This class allows to draw wireframe shapes (cubes, spheres) to debug game info.
     /// </summary>

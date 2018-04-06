@@ -1,4 +1,4 @@
-namespace BRS.Scripts {
+namespace BRS.Scripts.PowerUps {
     class HealthPotion : Powerup {
         private const float ValuePotion = 20;
 

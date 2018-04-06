@@ -3,7 +3,7 @@
 
 using BRS.Engine.Physics;
 
-namespace BRS {
+namespace BRS.Engine {
     public class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
 

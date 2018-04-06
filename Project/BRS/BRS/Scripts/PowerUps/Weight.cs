@@ -1,9 +1,12 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PowerUps {
     class Weight : Powerup {
         ////////// powerup that spawn a weight that falls on top of the enemy player //////////
 
@@ -19,7 +22,7 @@ namespace BRS.Scripts {
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate falling weight
-            Player randomEnemyPlayer = Elements.Instance.Enemy(Owner.TeamIndex);
+            Player randomEnemyPlayer = ElementManager.Instance.Enemy(Owner.TeamIndex);
             GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", randomEnemyPlayer.transform.position + Vector3.Up * WeightSpawnHeight, Quaternion.Identity);
         }
     }

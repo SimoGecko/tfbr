@@ -1,9 +1,12 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
+using Curve = BRS.Engine.Utilities.Curve;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     /// <summary>
     /// Sets the camera position and follows the player smoothly, also allowing rotation
     /// </summary>

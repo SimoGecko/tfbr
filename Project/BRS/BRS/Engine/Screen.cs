@@ -2,10 +2,12 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Scripts;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
     class Screen {
         ////////// deals with window issues, such as screen size, title, fullscreen and splitscreen //////////
         ////////// creates all the cameras that will be in the game //////////

@@ -1,7 +1,10 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-namespace BRS.Scripts {
+using BRS.Engine;
+using BRS.Engine.Utilities;
+
+namespace BRS.Scripts.PowerUps {
     class Trap : Powerup {
         ////////// powerup that can be dropped to slow down enemy //////////
 

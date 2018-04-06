@@ -1,10 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using BRS.Engine.Utilities;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
     static partial class Prefabs {
         ////////// static class that contains all GameObjects stored as prefabs and allows access to instantiate them //////////
 

@@ -1,9 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Crate : Component, IDamageable {
         ////////// represents a crate that can be cracked when attacked and reveals money and powerup inside //////////
 
@@ -55,8 +59,8 @@ namespace BRS.Scripts {
             _cracked = true;
             if (_explosionRigged) Explode();
             else SpawnValuables();
-            
-            Elements.Instance.Remove(this);
+
+            ElementManager.Instance.Remove(this);
             GameObject.Destroy(GameObject);
         }
 

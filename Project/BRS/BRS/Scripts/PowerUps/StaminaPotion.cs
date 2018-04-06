@@ -1,4 +1,6 @@
-namespace BRS.Scripts {
+using BRS.Scripts.PlayerScripts;
+
+namespace BRS.Scripts.PowerUps {
     class StaminaPotion : Powerup {
         private const float ValuePotion = .2f;
 

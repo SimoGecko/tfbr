@@ -1,9 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Scripts.PowerUps;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class Key : Powerup {
         ////////// key that can be used to open the vault or safe boxes //////////
 

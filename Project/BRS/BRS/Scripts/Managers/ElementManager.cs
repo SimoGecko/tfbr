@@ -1,11 +1,16 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
-    class Elements : Component {
+namespace BRS.Scripts.Managers {
+    class ElementManager : Component {
         ////////// stores which elements (money/crates/powerups/...) are present on the map and where //////////
 
         // --------------------- VARIABLES ---------------------
@@ -22,11 +27,11 @@ namespace BRS.Scripts {
         private List<Powerup> _powerupList;
 
         //reference
-        public static Elements Instance;
+        public static ElementManager Instance;
 
 
         // --------------------- BASE METHODS ------------------
-        public Elements() {
+        public ElementManager() {
             Instance = this;
         }
 

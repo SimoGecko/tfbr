@@ -1,11 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 
-namespace BRS {
+namespace BRS.Engine.Utilities {
     static class Utility {
         ////////// class that provides useful methods (mostly math and on existing objects) - Imitates Unity //////////
 

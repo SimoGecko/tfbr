@@ -1,11 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Managers {
     class Spawner : Component {
         ////////// spawns money randomly on the map //////////
 
@@ -98,7 +102,7 @@ namespace BRS.Scripts {
             pos += new Vector3(0, 5, 0);
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
             GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
-            Elements.Instance.Add(newmoney.GetComponent<Money>());
+            ElementManager.Instance.Add(newmoney.GetComponent<Money>());
         }
 
         void SpawnKCashAt(Vector3 position, int k) {
@@ -109,7 +113,7 @@ namespace BRS.Scripts {
                 int lvl = (int)Math.Log(i+1);
                 Vector3 pos = MyRandom.InsideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
                 GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
-                Elements.Instance.Add(newmoney.GetComponent<Money>());
+                ElementManager.Instance.Add(newmoney.GetComponent<Money>());
             }
         }
 
@@ -117,7 +121,7 @@ namespace BRS.Scripts {
             for (int i = 0; i < VaultGold; i++) {
                 Vector2 position = MyRandom.InsideRectangle(Vault.VaultArea);
                 GameObject newGold = GameObject.Instantiate("goldPrefab", position.To3(), MyRandom.YRotation());
-                Elements.Instance.Add(newGold.GetComponent<Money>());
+                ElementManager.Instance.Add(newGold.GetComponent<Money>());
             }
         }
 
@@ -130,7 +134,7 @@ namespace BRS.Scripts {
         void SpawnOneCrateRandom() {
             Vector2 position = MyRandom.InsideRectangle(_spawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
-            Elements.Instance.Add(newCrate.GetComponent<Crate>());
+            ElementManager.Instance.Add(newCrate.GetComponent<Crate>());
         }
 
 
@@ -153,7 +157,7 @@ namespace BRS.Scripts {
         void SpawnOnePowerupAt(Vector3 position) {
             position += new Vector3(0, 2, 0);
             GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity);
-            Elements.Instance.Add(newPowerup.GetComponent<Powerup>());
+            ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
 

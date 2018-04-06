@@ -1,17 +1,18 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS {
+namespace BRS.Engine {
     class File : Component {
         ////////// class used to load files from disk and providing safeguard agains null files //////////
 

@@ -1,7 +1,9 @@
-﻿using BRS.Engine.Physics;
+﻿using BRS.Engine;
+using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     /// <summary>
     /// weight that falls on top of the enemy player 
     /// </summary>

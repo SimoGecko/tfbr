@@ -1,12 +1,16 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
+using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     /// <summary>
     /// player class that is a center hub for all things related to the player
     /// it manages the state, team, calls relative functions with input BUT NOTHING ELSE

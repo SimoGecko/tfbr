@@ -1,10 +1,10 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine.Physics;
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 
-namespace BRS {
+namespace BRS.Engine {
     ////////// base class for scripting language //////////
 
     public interface IComponent {

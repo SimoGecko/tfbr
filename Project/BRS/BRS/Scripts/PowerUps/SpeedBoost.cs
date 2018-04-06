@@ -2,7 +2,10 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 
-namespace BRS.Scripts {
+using BRS.Engine;
+using BRS.Scripts.PlayerScripts;
+
+namespace BRS.Scripts.PowerUps {
     class SpeedBoost : Powerup {
         private const float BoostTime = 3f;
 

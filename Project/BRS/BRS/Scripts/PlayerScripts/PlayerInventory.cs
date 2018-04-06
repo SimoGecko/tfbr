@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     class PlayerInventory : Component {
         ////////// knows about the valuables the player is currently carrying //////////
 

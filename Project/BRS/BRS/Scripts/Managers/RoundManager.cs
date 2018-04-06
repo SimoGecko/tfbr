@@ -3,8 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Elements;
+using BRS.Scripts.UI;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Managers {
     class RoundManager : Component {
         ////////// deals with round stuff, ie time, current winner of rounds and score, ... (just for one round) //////////
         ////////// also stores the mode of the round, ie BOMBER / SPEEDER / SUPERCASH / POWERUP RUSH / ... //////////
@@ -81,12 +85,12 @@ namespace BRS.Scripts {
         void NotifyBases() {
             //for (int i = 0; i < bases.Length; i++)
             //bases[i].NotifyRoundEnd();
-            foreach (Base b in Elements.Instance.Bases()) b.NotifyRoundEnd();
+            foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
         }
 
         // queries
         Tuple<int, int> FindWinner() {
-            Base[] bases = Elements.Instance.Bases();
+            Base[] bases = ElementManager.Instance.Bases();
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
 

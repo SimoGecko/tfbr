@@ -1,12 +1,15 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
+using Curve = BRS.Engine.Utilities.Curve;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     class PlayerAttack : Component {
         ////////// deals with the attack of the player //////////
 

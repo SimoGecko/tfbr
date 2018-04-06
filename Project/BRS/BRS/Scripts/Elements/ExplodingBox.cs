@@ -1,9 +1,12 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
     class ExplodingBox : Powerup {
         ////////// powerup that spawn a box that explodes once cracked //////////
 
@@ -37,7 +40,7 @@ namespace BRS.Scripts {
             GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * .25f, Quaternion.Identity);
             Crate c = newCrate.GetComponent<Crate>();
             c.SetExplosionRigged();
-            Elements.Instance.Add(c);
+            ElementManager.Instance.Add(c);
         }
 
 

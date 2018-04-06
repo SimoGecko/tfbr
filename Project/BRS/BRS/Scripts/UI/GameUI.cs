@@ -1,10 +1,13 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.UI {
     class GameUI : Component {
         ////////// draws info related to the game and rounds //////////
 

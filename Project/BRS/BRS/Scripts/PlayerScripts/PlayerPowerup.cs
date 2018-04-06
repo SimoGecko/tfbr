@@ -2,8 +2,11 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.PowerUps;
+using BRS.Scripts.UI;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     /// <summary>
     /// deals with storing powerups and using them
     /// </summary>

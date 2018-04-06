@@ -7,6 +7,11 @@ using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 
 namespace BRS.Load {
     // Todo: To be refactored
@@ -34,7 +39,7 @@ namespace BRS.Load {
 
             GameObject rootScene = new GameObject("manager");
             //rootScene.AddComponent(new CameraController());
-            rootScene.AddComponent(new Elements());
+            rootScene.AddComponent(new ElementManager());
             rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new RoundManager());
             rootScene.AddComponent(new Spawner());

@@ -1,9 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Scripts.UI;
 using Microsoft.Xna.Framework.Input;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Managers {
     class GameManager : Component {
         ////////// controls the game state, ie round time, ... //////////
 
@@ -76,16 +78,16 @@ namespace BRS.Scripts {
         }
 
         void RestartCustom() { // it still slows down for some reason
-            Elements.Instance.Restart(); 
+            ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
             //UserInterface.instance.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 
             //GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            foreach (var b in Elements.Instance.Bases()) b.Start();
+            foreach (var b in ElementManager.Instance.Bases()) b.Start();
             //GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (var p in Elements.Instance.Players()) p.Start();
+            foreach (var p in ElementManager.Instance.Players()) p.Start();
 
             GameObject vault = GameObject.FindGameObjectWithName("vault");
             if (vault != null) vault.Start();

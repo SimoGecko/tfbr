@@ -1,7 +1,8 @@
+using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Scripts.PlayerScripts;
 
-namespace BRS.Scripts
-{
+namespace BRS.Scripts.Elements {
     class OilTrap : Component {
         ////////// oiltrap that slows down enemy when collided with //////////
 

@@ -1,9 +1,10 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.PlayerScripts {
     class PlayerLift : Component {
         ////////// deals with the attack of the player //////////
 

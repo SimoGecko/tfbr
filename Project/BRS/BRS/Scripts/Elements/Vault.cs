@@ -1,9 +1,11 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts {
+namespace BRS.Scripts.Elements {
 
     // Todo: Probably belongs in the engine?
     public interface IOpenable : IComponent {

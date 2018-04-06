@@ -1,4 +1,7 @@
-namespace BRS.Scripts {
+using BRS.Engine;
+using BRS.Scripts.Elements;
+
+namespace BRS.Scripts.PowerUps {
     class ShieldPotion : Powerup {
         private const float ValuePotion = 20f;
 
