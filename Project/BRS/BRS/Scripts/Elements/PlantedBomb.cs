@@ -23,7 +23,7 @@ namespace BRS.Scripts.Elements {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
-            GameObject.Destroy(GameObject);
+            GameObject.Destroy(gameObject);
         }
 
         // queries

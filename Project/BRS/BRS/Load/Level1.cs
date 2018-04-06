@@ -109,7 +109,7 @@ namespace BRS.Load {
             CreatePlayers();
         }
 
-        protected override void CreatePlayers() {
+        void CreatePlayers() {
             List<GameObject> objects = new List<GameObject>();
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {

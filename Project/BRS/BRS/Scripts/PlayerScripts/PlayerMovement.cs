@@ -54,9 +54,9 @@ namespace BRS.Scripts.PlayerScripts {
             //transform.Rotate(Vector3.Up, -90);
             //rotation = targetRotation = -90;
 
-            playerInventory = GameObject.GetComponent<PlayerInventory>();
+            playerInventory = gameObject.GetComponent<PlayerInventory>();
 
-            MovingRigidBody dynamicRigidBody = GameObject.GetComponent<MovingRigidBody>();
+            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
             _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
         }
 

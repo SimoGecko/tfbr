@@ -14,6 +14,7 @@ namespace BRS.Engine {
     [Flags]
     public enum Align { Center = 0, Left = 1, Right = 2, Top = 4, Bottom = 8, TopLeft = 5, TopRight = 6, BotLeft = 9, BotRight = 10 }
     //public enum Align2 { M=0, L=1, R=2, T=4, B=8, TL=5, TR=6, BL=9, BR=10 }
+    //public enum Align3 { TL, RM, TR, ML, MM, MR, BL, BM, BR} // (top, middle, bottom) x (left, middle, right)
 
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
@@ -21,25 +22,21 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
-        //public enum VerticalAnchor { Top, Middle, Bottom}; // how to align the UI
-        //public enum HorizontAnchor { Left, Middle, Right};
-        //public enum Align { TL, RM, TR, ML, MM, MR, BL, BM, BR} // top, middle, bottom x left, middle, right
         //public
         public const int BarWidth = 128;
         public const int BarBigWidth = 256;
         public const int BarHeight = 16;
 
 
-
         //private
         public SpriteFont SmallFont { get; private set; }
         public SpriteFont ComicFont { get; private set; }
-        public SpriteFont BigFont { get; private set; }
-        private Texture2D _bar;
-        private Texture2D _barBig;
+        public SpriteFont BigFont   { get; private set; }
+
+        private Texture2D _bar, _barBig;
+        private Texture2D _white;
 
         private Rectangle _barRect, _bigRect, _smallRect;
-        private Texture2D _white;
 
         //reference
         public static UserInterface Instance;
@@ -63,6 +60,10 @@ namespace BRS.Engine {
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
         }
 
+
+
+        // ---------- CALLBACKS ----------
+
         public void DrawMenu(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             MenuManager.Instance.Draw();
@@ -78,8 +79,6 @@ namespace BRS.Engine {
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             _sb = spriteBatch;
             //callbacks
-            
-            
             BaseUI.Instance.Draw(index%2);
             PlayerUI.Instance.Draw(index);
             PowerupUI.Instance.Draw(index);
@@ -163,7 +162,10 @@ namespace BRS.Engine {
 
 
 
-        
+
+        // --------------------- ALIGN ----------------
+
+
 
         //pivot  = where is the center of the rectangle
         //anchor = which corner of the screen to follow

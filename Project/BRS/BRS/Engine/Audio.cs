@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Media;
 
 namespace BRS.Engine {
     static class Audio {
-        //static class that contains all audio in the game and allows playback
+        ////////// static class that contains all audio in the game and allows playback //////////
+
         //static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, SoundEffectInstance> sounds;
         static Dictionary<string, Song> songs;
@@ -37,8 +38,7 @@ namespace BRS.Engine {
 
 
         public static void Update() {
-            sounds["mono/phi"].Apply3D(Listener(), em);
-
+            sounds["mono/phi"].Apply3D(Listener(), em); // TODO
         }
 
         //COMMANDS
@@ -137,7 +137,6 @@ namespace BRS.Engine {
             foreach(string s in soundsString) {
                 SoundEffect soundEffect = File.Load<SoundEffect>("Audio/test/" + s);
                 sounds.Add(s, soundEffect.CreateInstance());
-                //sounds[s].IsLooped = true;
             }
         }
 

@@ -12,13 +12,6 @@ namespace BRS.Scripts.PowerUps {
 
         //public
 
-
-        //private
-
-
-        //reference
-
-
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -27,21 +20,12 @@ namespace BRS.Scripts.PowerUps {
 
 
         // --------------------- CUSTOM METHODS ----------------
-
-
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
-            transform.position = Owner.transform.position + Vector3.Up;
-
             //instantiate magnet slowing down stuff
+            transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedMagnet = GameObject.Instantiate("plantedMagnetPrefab", transform);
         }
-
-        // queries
-
-
-        // other
-
     }
 }

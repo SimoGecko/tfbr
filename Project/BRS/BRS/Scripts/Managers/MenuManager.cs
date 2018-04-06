@@ -191,8 +191,8 @@ namespace BRS.Menu {
                 GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
                 camObject.Start();
 
-                List<GameObject> cams = GameObject.FindGameObjectsWithName("camera_" + i);
-                Debug.Log("Not unique?!: " + "'camera_" + i + "' = " + cams.Count);
+                //List<GameObject> cams = GameObject.FindGameObjectsWithName("camera_" + i); // DON'T DO THIS! 
+                //Debug.Log("Not unique?!: " + "'camera_" + i + "' = " + cams.Count);
             }
 
         }

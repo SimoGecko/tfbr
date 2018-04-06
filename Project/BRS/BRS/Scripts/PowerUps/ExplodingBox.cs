@@ -3,23 +3,16 @@
 
 using BRS.Engine;
 using BRS.Scripts.Managers;
-using BRS.Scripts.PowerUps;
+using BRS.Scripts.Elements;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Scripts.Elements {
+namespace BRS.Scripts.PowerUps {
     class ExplodingBox : Powerup {
         ////////// powerup that spawn a box that explodes once cracked //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-
-
-        //private
-
-
-        //reference
-
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -28,10 +21,7 @@ namespace BRS.Scripts.Elements {
         }
 
 
-
         // --------------------- CUSTOM METHODS ----------------
-
-
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
@@ -42,14 +32,5 @@ namespace BRS.Scripts.Elements {
             c.SetExplosionRigged();
             ElementManager.Instance.Add(c);
         }
-
-
-        // queries
-
-
-
-        // other
-
     }
-
 }

@@ -64,7 +64,7 @@ namespace BRS.Scripts.UI {
             }
             //comic bubble
             Player p = ElementManager.Instance.Player(index);
-            if (p.GameObject.GetComponent<PlayerInventory>().IsFull()) {
+            if (p.gameObject.GetComponent<PlayerInventory>().IsFull()) {
                 Point bubblePosition = Camera.Main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
                 Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));
                 UserInterface.Instance.DrawPicture(dest, _comicBubble);

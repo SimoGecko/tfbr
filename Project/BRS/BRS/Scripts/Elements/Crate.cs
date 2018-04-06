@@ -61,7 +61,7 @@ namespace BRS.Scripts.Elements {
             else SpawnValuables();
 
             ElementManager.Instance.Remove(this);
-            GameObject.Destroy(GameObject);
+            GameObject.Destroy(gameObject);
         }
 
         void SpawnValuables() {

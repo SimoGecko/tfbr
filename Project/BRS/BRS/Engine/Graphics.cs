@@ -5,9 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine {
-    /// <summary>
-    /// Collection of various methods that have to do with color.
-    /// </summary>
+    ////////// Collection of various methods that have to do with color and graphics //////////
     class Graphics {
         // --------------------- VARIABLES ---------------------
 
@@ -65,6 +63,8 @@ namespace BRS.Engine {
             }
         }
 
+
+        //COLOR METHODS
         public static Color[,] TextureTo2DArray(Texture2D texture) {
             Color[] colors1D = new Color[texture.Width * texture.Height];
             texture.GetData(colors1D);

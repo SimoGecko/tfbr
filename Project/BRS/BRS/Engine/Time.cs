@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Engine {
     static class Time {
-        ////////// static class that provides time functions and timers //////////
+        ////////// static class that provides time functions //////////
 
         public static GameTime Gt;
         public static int Frame = 0;
@@ -19,6 +19,8 @@ namespace BRS.Engine {
         public static float CurrentTime      { get { return (float)Gt.TotalGameTime.TotalSeconds; } }
         public static float DeltaTime { get { return (float)Gt.ElapsedGameTime.TotalSeconds; } }
         public static int OneFrame  { get { return Gt.ElapsedGameTime.Milliseconds; } }
+        public static float FrameRate { get { return 1 / (float)Gt.ElapsedGameTime.TotalSeconds; } }
+
 
         public static void Update(GameTime gt) {
             Gt = gt;

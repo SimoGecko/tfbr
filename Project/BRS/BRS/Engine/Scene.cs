@@ -1,13 +1,17 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine.Physics;
 
 namespace BRS.Engine {
     public class Scene {
         ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
+        //TODO make loading levels easy
 
         //can create scene graph
+        static Dictionary<string, Scene> scenes;
+        List<GameObject> objectsInScene;
 
         protected PhysicsManager PhysicsManager { get; set; }
 
@@ -23,10 +27,6 @@ namespace BRS.Engine {
 
 
         protected virtual void Build() { // levels inherit and fill this
-
-        }
-
-        protected virtual void CreatePlayers() {
 
         }
 

@@ -82,7 +82,7 @@ namespace BRS.Scripts.Managers {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Money m in _moneyList) {
-                result.Add(m.GameObject.transform.position);
+                result.Add(m.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -92,7 +92,7 @@ namespace BRS.Scripts.Managers {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Crate c in _crateList) {
-                result.Add(c.GameObject.transform.position);
+                result.Add(c.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -102,7 +102,7 @@ namespace BRS.Scripts.Managers {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Powerup p in _powerupList) {
-                result.Add(p.GameObject.transform.position);
+                result.Add(p.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -147,9 +147,9 @@ namespace BRS.Scripts.Managers {
 
         // other
         public void Restart() {
-            foreach (var g in _moneyList) GameObject.Destroy(g.GameObject);
-            foreach (var g in _crateList) GameObject.Destroy(g.GameObject);
-            foreach (var g in _powerupList) GameObject.Destroy(g.GameObject);
+            foreach (var g in _moneyList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _crateList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _powerupList) GameObject.Destroy(g.gameObject);
             Start();
         }
 

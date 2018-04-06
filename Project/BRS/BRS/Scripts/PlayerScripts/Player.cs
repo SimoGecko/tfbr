@@ -66,12 +66,12 @@ namespace BRS.Scripts.PlayerScripts {
             CamController.Start();
 
             //subcomponents (shorten)
-            _pA = GameObject.GetComponent<PlayerAttack>();
-            _pM = GameObject.GetComponent<PlayerMovement>();
-            _pI = GameObject.GetComponent<PlayerInventory>();
-            _pP = GameObject.GetComponent<PlayerPowerup>();
-            _pS = GameObject.GetComponent<PlayerStamina>();
-            _pL = GameObject.GetComponent<PlayerLift>();
+            _pA = gameObject.GetComponent<PlayerAttack>();
+            _pM = gameObject.GetComponent<PlayerMovement>();
+            _pI = gameObject.GetComponent<PlayerInventory>();
+            _pP = gameObject.GetComponent<PlayerPowerup>();
+            _pS = gameObject.GetComponent<PlayerStamina>();
+            _pL = gameObject.GetComponent<PlayerLift>();
         }
 
         public override void Update() {

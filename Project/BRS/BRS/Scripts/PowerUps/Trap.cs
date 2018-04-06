@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using BRS.Engine.Utilities;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
     class Trap : Powerup {
@@ -12,13 +12,6 @@ namespace BRS.Scripts.PowerUps {
 
         //public
 
-
-        //private
-
-
-        //reference
-
-
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -26,26 +19,13 @@ namespace BRS.Scripts.PowerUps {
         }
 
 
-
         // --------------------- CUSTOM METHODS ----------------
-
-
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
             //transform.position = owner.transform.position + Vector3.Up;
             //instantiate oil trap
             GameObject.Instantiate("oilPrefab", Owner.transform.position, MyRandom.YRotation());
-            Debug.Log("instant");
         }
-
-
-
-        // queries
-
-
-
-        // other
-
     }
 }

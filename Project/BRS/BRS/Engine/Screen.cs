@@ -10,8 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BRS.Engine {
     class Screen {
         ////////// deals with window issues, such as screen size, title, fullscreen and splitscreen //////////
-        ////////// creates all the cameras that will be in the game //////////
-
+        ////////// also creates all the cameras that will be in the game //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -31,7 +30,9 @@ namespace BRS.Engine {
 
 
         // --------------------- BASE METHODS ------------------
-        public void Start() { }
+        public void Start() {
+
+        }
 
         public void Update() { }
 
@@ -47,7 +48,7 @@ namespace BRS.Engine {
             //SetupCameras();
         }
 
-        public static void AdditionalSetup(GraphicsDeviceManager graphics, Game game) {
+        public static void AdditionalSetupBasedOnNumPlayers(GraphicsDeviceManager graphics, Game game) {
             //SetupWindow(graphics, game);
             SetupViewports(graphics);
             SetupCameras();
@@ -55,8 +56,8 @@ namespace BRS.Engine {
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
             //window size
-            //graphics.PreferredBackBufferWidth = WIDTH;
-            //graphics.PreferredBackBufferHeight = HEIGHT;
+            graphics.PreferredBackBufferWidth = Width;
+            graphics.PreferredBackBufferHeight = Height;
             graphics.ApplyChanges();
             game.Window.Title = "New Title";
             game.IsMouseVisible = true;

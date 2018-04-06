@@ -10,6 +10,9 @@ namespace BRS.Scripts.PowerUps {
     class Weight : Powerup {
         ////////// powerup that spawn a weight that falls on top of the enemy player //////////
 
+        // --------------------- VARIABLES ---------------------
+
+        //public
         const float WeightSpawnHeight = 5;
 
         // --------------------- BASE METHODS ------------------
@@ -18,12 +21,15 @@ namespace BRS.Scripts.PowerUps {
             PowerupType = PowerupType.Weight;
         }
 
+
         // --------------------- CUSTOM METHODS ----------------
+        // commands
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate falling weight
             Player randomEnemyPlayer = ElementManager.Instance.Enemy(Owner.TeamIndex);
-            GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", randomEnemyPlayer.transform.position + Vector3.Up * WeightSpawnHeight, Quaternion.Identity);
+            Vector3 spawnPos = randomEnemyPlayer.transform.position + Vector3.Up * WeightSpawnHeight;
+            GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", spawnPos, MyRandom.YRotation());
         }
     }
 }

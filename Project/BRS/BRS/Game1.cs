@@ -92,7 +92,7 @@ namespace BRS {
         }
 
         public void ScreenAdditionalSetup() {
-            Screen.AdditionalSetup(_graphics, this);
+            Screen.AdditionalSetupBasedOnNumPlayers(_graphics, this);
         }
 
         protected override void UnloadContent() {
@@ -150,7 +150,6 @@ namespace BRS {
                     _ui.DrawSplitscreen(_spriteBatch, i++);
                     _spriteBatch.End();
                 }
-                Gizmos.ClearOrders();
 
                 _graphics.GraphicsDevice.Viewport = Screen.FullViewport;
 

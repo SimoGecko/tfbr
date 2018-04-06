@@ -25,8 +25,8 @@ namespace BRS.Scripts.Managers {
             { "money1", .6f }, { "money3", .4f }, { "money10", .2f }, { "gold", .1f } };
 
         private static readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
-            { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
-            { "speed", .1f }, { "trap", .1f }, { "explodingbox", .1f }, { "weight", .1f }, { "magnet", 3.0f } };
+            { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", 1.1f }, { "shield", .1f },
+            { "speed", .1f }, { "trap", .1f }, { "explodingbox", .1f }, { "weight", .1f }, { "magnet", 1.0f } };
 
 
 
