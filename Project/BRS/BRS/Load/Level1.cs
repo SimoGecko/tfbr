@@ -127,12 +127,14 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
 
-                if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
-                    string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
-                    Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
+                if (MenuManager.Instance != null) { 
+                    if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                        string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
+                        Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
 
-                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
-                    if (userModel != null) player.Model = userModel;
+                        if (userName != null) player.GetComponent<Player>().PlayerName = userName;
+                        if (userModel != null) player.Model = userModel;
+                    }
                 }
 
                 ElementManager.Instance.Add(player.GetComponent<Player>());

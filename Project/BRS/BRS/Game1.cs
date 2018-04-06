@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using BRS.Load;
 using BRS.Menu;
+using BRS.Scripts.Managers;
 
 namespace BRS {
 
@@ -30,7 +31,7 @@ namespace BRS {
         private static bool _usePhysics = false;
 
         private MenuManager _menuManager;
-        public bool MenuDisplay;
+        public bool MenuDisplay = false;
 
         public Game1() {
             Instance = this;
@@ -66,10 +67,7 @@ namespace BRS {
 
             _ui = new UserInterface();
             _ui.Start();
-
-            _menuManager = new MenuManager();
-            _menuManager.LoadContent();
-            MenuDisplay = true;
+           
 
             Start(); // CALL HERE
 
@@ -82,7 +80,23 @@ namespace BRS {
         public void Start() {
             //START
             Engine.Prefabs.Start();
-            //scene.Start();
+            //if (!MenuDisplay)
+            //Scene.Start();
+
+            if (MenuDisplay) {
+                _menuManager = new MenuManager();
+                _menuManager.LoadContent();
+            }
+            else {
+                Game1.Instance.ScreenAdditionalSetup();
+                //Game1.Instance.Scene.Start();
+                Scene.Start();
+                for (int i = 0; i < GameManager.NumPlayers; i++) {
+                    GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
+                    camObject.Start();
+                }
+            }
+
             Input.Start();
             Audio.Start();
 
@@ -103,9 +117,9 @@ namespace BRS {
 
             Time.Update(gameTime);
 
-            _menuManager.Update();
-
-            if (!MenuDisplay) {
+            if (MenuDisplay)
+                _menuManager.Update();
+            else {
                 Input.Update();
                 Audio.Update();
 
@@ -121,11 +135,12 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-            _ui.DrawMenu(_spriteBatch);
-            _spriteBatch.End();
-
-            if (!MenuDisplay) {
+            if (MenuDisplay) {
+                _spriteBatch.Begin();
+                _ui.DrawMenu(_spriteBatch);
+                _spriteBatch.End();
+            }
+            else {
                 //foreach camera
                 int i = 0;
                 foreach (Camera cam in Screen.Cameras) {
