@@ -13,23 +13,22 @@ using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 
-namespace BRS.Load {
+namespace BRS.Scripts.Scenes {
     // Todo: To be refactored
-    public enum BodyTag { DrawMe, DontDrawMe }
 
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
 
-        public LevelPhysics(PhysicsManager physics)
+        /*public LevelPhysics(PhysicsManager physics)
             : base(physics) {
-        }
+        }*/
 
 
         /// <summary>
         /// Set up the scene for the physics-prototype
         /// </summary>
-        protected override void Build() {
+        public override void Load() {
             // Add top-level manager
             GameObject UIManager = new GameObject("UImanager"); // must be before the other manager
             UIManager.AddComponent(new BaseUI());
@@ -66,7 +65,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
                 forklift.AddComponent(new PlayerStamina());
-                forklift.AddComponent(new MovingRigidBody(PhysicsManager));
+                forklift.AddComponent(new MovingRigidBody(PhysicsManager.Instance));
 
                 Players.Add(forklift);
             }
@@ -79,7 +78,7 @@ namespace BRS.Load {
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
-                playerBase.AddComponent(new StaticRigidBody(PhysicsManager));
+                playerBase.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
             }
 
 
@@ -88,7 +87,7 @@ namespace BRS.Load {
                     GameObject body = new GameObject("domino_" + i, File.Load<Model>("Models/primitives/cube"));
                     body.tag = ObjectTag.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
-                    body.AddComponent(new DynamicRigidBody(PhysicsManager, pureCollider: true));
+                    body.AddComponent(new DynamicRigidBody(PhysicsManager.Instance, pureCollider: true));
                 }
             }
 
@@ -126,7 +125,7 @@ namespace BRS.Load {
             rbGround.Material = material;
             rbGround.Tag = BodyTag.DontDrawMe;
             rbGround.GameObject = groundPlane;
-            PhysicsManager.World.AddBody(rbGround);
+            PhysicsManager.Instance.World.AddBody(rbGround);
         }
 
         public void AddWalls() {
@@ -136,25 +135,25 @@ namespace BRS.Load {
                 GameObject body = new GameObject("wall_" + (4 * x), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
             }
         }
 
@@ -183,7 +182,7 @@ namespace BRS.Load {
             // ###### Uncomment here for a better visualization
             // Demo.Components.Add(new ClothObject(Demo, cloth));
 
-            PhysicsManager.World.AddBody(cloth);
+            PhysicsManager.Instance.World.AddBody(cloth);
         }
     }
 }

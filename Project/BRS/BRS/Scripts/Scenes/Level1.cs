@@ -16,18 +16,20 @@ using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 
-namespace BRS.Load {
+namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
+        /*
         public Level1(PhysicsManager physics)
             : base(physics) {
-        }
+        }*/
+
 
 
 
         /// <summary>
         /// Scene setup for level1
         /// </summary>
-        protected override void Build() {
+        public override void Load() {
 
             //MANAGERS
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
@@ -48,8 +50,10 @@ namespace BRS.Load {
             Manager.AddComponent(new AudioTest());
 
 
-            UiManager.Start();
-            Manager.Start();
+            //UiManager.Start();
+            //Manager.Start();
+
+
             //TEST lighting
             /*
             GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
@@ -89,7 +93,7 @@ namespace BRS.Load {
             vault.transform.position = new Vector3(5, 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new StaticRigidBody(PhysicsManager));
+            vault.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             // Todo: refactor
@@ -100,7 +104,7 @@ namespace BRS.Load {
 
             //LOAD UNITY SCENE
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager.Instance); });
             task.Wait();
 
             var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
@@ -119,7 +123,7 @@ namespace BRS.Load {
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 player.AddComponent(new Player(i, i % 2));
-                player.AddComponent(new MovingRigidBody(PhysicsManager));
+                player.AddComponent(new MovingRigidBody(PhysicsManager.Instance));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
@@ -128,13 +132,14 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
 
+                /*
                 if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
                     Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
 
                     if (userName != null) player.GetComponent<Player>().PlayerName = userName;
                     if (userModel != null) player.Model = userModel;
-                }
+                }*/
 
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
@@ -151,7 +156,7 @@ namespace BRS.Load {
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
+                bases[i].AddComponent(new StaticRigidBody(PhysicsManager.Instance, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());

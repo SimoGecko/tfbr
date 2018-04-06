@@ -145,9 +145,9 @@
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
-    <Compile Include="Load\Level1.cs" />
-    <Compile Include="Load\LevelPhysics.cs" />
-    <Compile Include="Load\PrefabContent.cs" />
+    <Compile Include="Scripts\Scenes\Level1.cs" />
+    <Compile Include="Scripts\Scenes\LevelPhysics.cs" />
+    <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
     <Compile Include="Engine\Menu\Image.cs" />
     <Compile Include="Scripts\UI\Menu.cs" />
@@ -255,6 +255,9 @@
       <Project>{ac7d5ebd-67ef-475f-a4dd-e78765ee25a6}</Project>
       <Name>Jitter</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Load\UnitySceneData\New folder\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

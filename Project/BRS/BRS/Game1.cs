@@ -1,10 +1,9 @@
 ﻿using BRS.Engine;
+using BRS.Scripts.Managers;
 using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Scripts;
-using BRS.Load;
 using BRS.Menu;
 
 namespace BRS {
@@ -12,9 +11,9 @@ namespace BRS {
     //TODO organize
 
     public class Game1 : Game {
-        public static Game1 Instance { get; set; }
+        public static Game1 Instance { get; set; } // this should not exist
 
-        public Scene Scene;
+        //public Scene Scene;
 
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -22,7 +21,7 @@ namespace BRS {
 
         private UserInterface _ui;
         private Display _display;
-        private DebugDrawer _debugDrawer;
+        private DebugDrawer _debugDrawer; // these should also not exist
         
         private RasterizerState _fullRasterizer, _wireRasterizer;
 
@@ -30,17 +29,20 @@ namespace BRS {
         private static bool _usePhysics = false;
 
         private MenuManager _menuManager;
-        public bool MenuDisplay;
+        public bool MenuDisplay = false;
 
         public Game1() {
+            //don't add anything into constructor
             Instance = this;
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Screen.Setup(_graphics, this); // setup screen and create cameras
-            File.content = Content;
         }
 
         protected override void Initialize() {
+            Screen.Setup(_graphics, this); // setup screen and create cameras
+            File.content = Content;
+            SceneManager.Start();
+
             _debugDrawer = new DebugDrawer(this);
             Components.Add(_debugDrawer);
             _display = new Display(this);
@@ -56,20 +58,17 @@ namespace BRS {
 
 
         protected override void LoadContent() {
+            Prefabs.Start();
+
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            if (_usePhysics) {
-                Scene = new LevelPhysics(PhysicsManager.Instance);
-            } else {
-                Scene = new Level1(PhysicsManager.Instance);
-            }
+            
 
-            _ui = new UserInterface();
-            _ui.Start();
-
+            /*
             _menuManager = new MenuManager();
             _menuManager.LoadContent();
             MenuDisplay = true;
+            */
 
             Start(); // CALL HERE
 
@@ -80,8 +79,37 @@ namespace BRS {
         }
 
         public void Start() {
+
+            //if (!MenuDisplay)
+            //Scene.Start();
+
+            if (MenuDisplay) {
+                _menuManager = new MenuManager();
+                _menuManager.LoadContent();
+            } else {
+                ScreenAdditionalSetup();
+                //Game1.Instance.Scene.Start();
+                //SceneManager.Start();
+                /*
+                for (int i = 0; i < GameManager.NumPlayers; i++) {
+                    GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
+                    camObject.Start();
+                }*/
+            }
+
+
+            if (_usePhysics) {
+                SceneManager.Load("LevelPhysics");
+                //Scene = new LevelPhysics("levelPhysics");// PhysicsManager.Instance);
+            } else {
+                SceneManager.Load("Level1");
+                //Scene = new Level1("Level1");// PhysicsManager.Instance);
+            }
+
+            _ui = new UserInterface();
+            _ui.Start();
+
             //START
-            Engine.Prefabs.Start();
             //scene.Start();
             Input.Start();
             Audio.Start();
@@ -104,9 +132,11 @@ namespace BRS {
 
             Time.Update(gameTime);
 
-            _menuManager.Update();
+            if (MenuDisplay) {
+                _menuManager.Update(); // this shouldn't be here
 
-            if (!MenuDisplay) {
+            }
+            else {
                 Input.Update();
                 Audio.Update();
 
@@ -122,11 +152,12 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            _spriteBatch.Begin();
-            _ui.DrawMenu(_spriteBatch);
-            _spriteBatch.End();
-
-            if (!MenuDisplay) {
+            if (MenuDisplay) {
+                _spriteBatch.Begin();
+                _ui.DrawMenu(_spriteBatch);
+                _spriteBatch.End();
+            }
+            else {
                 //foreach camera
                 int i = 0;
                 foreach (Camera cam in Screen.Cameras) {

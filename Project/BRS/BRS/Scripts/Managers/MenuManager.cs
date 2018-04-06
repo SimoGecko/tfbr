@@ -184,7 +184,8 @@ namespace BRS.Menu {
             }
 
             Game1.Instance.ScreenAdditionalSetup();
-            Game1.Instance.Scene.Start();
+            SceneManager.Load("Level1");
+            //Game1.Instance.Scene.Start();
 
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
@@ -222,7 +223,7 @@ namespace BRS.Menu {
             _currentMenu.active = true;
         }
 
-        public void Update() {
+        public void Update() { // THIS Is horrible code!
             foreach (var go in GameObject.All)
                 go.Update();
 

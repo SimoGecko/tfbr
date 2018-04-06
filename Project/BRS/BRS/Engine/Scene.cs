@@ -3,32 +3,63 @@
 
 using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Scripts.Scenes;
 
 namespace BRS.Engine {
+    public class SceneManager {
+        ////////// static class that allows to load and unload/change levels //////////
+
+        static Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
+        static Scene currentScene;
+
+        public static void Start() {
+            scenes = new Dictionary<string, Scene>();
+
+
+            Add("Level1", new Level1());
+            Add("LevelPhysics", new LevelPhysics());
+            
+        }
+
+        static void Add(string sceneName, Scene scene) {
+            scenes.Add(sceneName, scene);
+        }
+
+        public static void Load(string sceneName) {
+            if (currentScene != null) currentScene.Unload();
+            currentScene = scenes[sceneName];
+            if (currentScene != null) currentScene.Load();
+        }
+    }
+
+
     public class Scene {
-        ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
-        //TODO make loading levels easy
+        ////////// contains all gameobjects in the scene //////////
 
         //can create scene graph
-        static Dictionary<string, Scene> scenes;
-        List<GameObject> objectsInScene;
+        string _sceneName = "";
+        List<GameObject> objectsInScene = new List<GameObject>();
 
+        /*
         protected PhysicsManager PhysicsManager { get; set; }
 
         public Scene(PhysicsManager physics) {
             PhysicsManager = physics;
-        }
-
-        public void Start() {
-            Build();
-        }
-
-        public void Update() { }
+        }*/
 
 
-        protected virtual void Build() { // levels inherit and fill this
+
+
+        public virtual void Load() { // levels inherit and fill this
 
         }
+
+        public void Unload() {
+            foreach (GameObject o in objectsInScene) GameObject.Destroy(o);
+        }
+
+        //CHANGE SCENE
+
 
     }
 

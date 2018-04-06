@@ -1,5 +1,4 @@
-﻿using BRS.Load;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
