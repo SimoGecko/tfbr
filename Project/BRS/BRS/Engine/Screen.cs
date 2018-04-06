@@ -27,6 +27,7 @@ namespace BRS.Engine {
 
         //reference
         public static Camera[] Cameras;
+        public static RasterizerState _fullRasterizer, _wireRasterizer;
 
 
         // --------------------- BASE METHODS ------------------
@@ -42,8 +43,9 @@ namespace BRS.Engine {
 
 
         // commands
-        public static void Setup(GraphicsDeviceManager graphics, Game game) {
+        public static void Setup(GraphicsDeviceManager graphics, Game game, GraphicsDevice graphicsDevice) {
             SetupWindow(graphics, game);
+            SetupRasterizers(graphicsDevice);
             //SetupViewports(graphics);
             //SetupCameras();
         }
@@ -61,6 +63,12 @@ namespace BRS.Engine {
             graphics.ApplyChanges();
             game.Window.Title = "New Title";
             game.IsMouseVisible = true;
+        }
+
+        static void SetupRasterizers(GraphicsDevice graphicsDevice) {
+            _fullRasterizer = graphicsDevice.RasterizerState;
+            _wireRasterizer = new RasterizerState();
+            _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
         static void SetupViewports(GraphicsDeviceManager graphics) {

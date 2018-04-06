@@ -49,7 +49,7 @@ namespace BRS.Menu {
                 CharacterToChoose.Add(playerCharacter);
             }
 
-            Game1.Instance.ScreenAdditionalSetup();
+            //Game1.Instance.ScreenAdditionalSetup(); // don't do this
             GameObject camObject = GameObject.FindGameObjectWithName("camera_0");
             camObject.Start();
 
@@ -171,7 +171,7 @@ namespace BRS.Menu {
             NamePlayerInfosToChange = "player_" + button.Index.ToString();
         }
         public void StartGameFunction(object sender, EventArgs e) {
-            Game1.Instance.MenuDisplay = false;
+            //Game1.Instance.MenuDisplay = false;
             _currentMenu.active = false;
 
             for (int i = 0; i < 4; ++i) {
@@ -183,7 +183,7 @@ namespace BRS.Menu {
                 GameObject.Destroy(go);
             }
 
-            Game1.Instance.ScreenAdditionalSetup();
+            // Game1.Instance.ScreenAdditionalSetup();
             SceneManager.Load("Level1");
             //Game1.Instance.Scene.Start();
 

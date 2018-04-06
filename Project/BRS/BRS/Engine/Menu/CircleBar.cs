@@ -32,7 +32,7 @@ namespace BRS.Scripts.UI {
             CircleBg = File.Load<Texture2D>("Images/UI/circle_bg");
             Texture2D circleFg = File.Load<Texture2D>("Images/UI/circle_fg");
             Texture2D circleGr = File.Load<Texture2D>("Images/UI/circle_gradient");
-            Initialize(circleFg, circleGr, Game1.Instance.GraphicsDevice);
+            //Initialize(circleFg, circleGr, Game1.Instance.GraphicsDevice);
         }
 
         public override void Update() {

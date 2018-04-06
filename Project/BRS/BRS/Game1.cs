@@ -11,38 +11,35 @@ namespace BRS {
     //TODO organize
 
     public class Game1 : Game {
-        public static Game1 Instance { get; set; } // this should not exist
 
-        //public Scene Scene;
-
+        //default
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
 
-        private UserInterface _ui;
-        private Display _display;
-        private DebugDrawer _debugDrawer; // these should also not exist
-        
-        private RasterizerState _fullRasterizer, _wireRasterizer;
 
-
-        private static bool _usePhysics = false;
-
+        //all these should not be here
         private MenuManager _menuManager;
         public bool MenuDisplay = false;
 
+        private Display _display;
+        private DebugDrawer _debugDrawer; // these should also not exist
+        private static bool _usePhysics = false;
+
+
         public Game1() {
-            //don't add anything into constructor
-            Instance = this;
+            //NOTE: don't add anything into constructor
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            File.content = Content;
         }
 
         protected override void Initialize() {
-            Screen.Setup(_graphics, this); // setup screen and create cameras
-            File.content = Content;
-            SceneManager.Start();
+            //NOTE: this is basic initialization of core components, nothing else
 
+            Screen.Setup(_graphics, this, GraphicsDevice); // setup screen and create cameras
+
+            //remove this
             _debugDrawer = new DebugDrawer(this);
             Components.Add(_debugDrawer);
             _display = new Display(this);
@@ -50,54 +47,26 @@ namespace BRS {
             PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
 
             base.Initialize();
-
-            _fullRasterizer = GraphicsDevice.RasterizerState;
-            _wireRasterizer = new RasterizerState();
-            _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
 
         protected override void LoadContent() {
-            Prefabs.Start();
-
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            
-
-            /*
-            _menuManager = new MenuManager();
-            _menuManager.LoadContent();
-            MenuDisplay = true;
-            */
-
-            Start(); // CALL HERE
-
-        }
-
-        public void Reset() {
-            LoadContent();
-        }
-
-        public void Start() {
-
-            //if (!MenuDisplay)
-            //Scene.Start();
-
+            //this should also not be here
+            //CREATE UI MANAGER
             if (MenuDisplay) {
                 _menuManager = new MenuManager();
                 _menuManager.LoadContent();
             } else {
-                ScreenAdditionalSetup();
-                //Game1.Instance.Scene.Start();
-                //SceneManager.Start();
-                /*
-                for (int i = 0; i < GameManager.NumPlayers; i++) {
-                    GameObject camObject = GameObject.FindGameObjectWithName("camera_" + i);
-                    camObject.Start();
-                }*/
+                Screen.AdditionalSetupBasedOnNumPlayers(_graphics, this);
             }
+            new UserInterface();
 
 
+            //load prefabs and scene
+            Prefabs.Start();
+            SceneManager.Start();
             if (_usePhysics) {
                 SceneManager.Load("LevelPhysics");
                 //Scene = new LevelPhysics("levelPhysics");// PhysicsManager.Instance);
@@ -106,8 +75,23 @@ namespace BRS {
                 //Scene = new Level1("Level1");// PhysicsManager.Instance);
             }
 
-            _ui = new UserInterface();
-            _ui.Start();
+            //everything is loaded, call Start
+            Start();
+
+        }
+
+        public void Start() {
+            //all the objects are present in memory but still don't hold references. Initialize variables and start
+
+            //if (!MenuDisplay)
+            //Scene.Start();
+
+            
+
+
+            
+
+            UserInterface.Instance.Start();
 
             //START
             //scene.Start();
@@ -120,7 +104,7 @@ namespace BRS {
         }
 
         public void ScreenAdditionalSetup() {
-            Screen.AdditionalSetupBasedOnNumPlayers(_graphics, this);
+            
         }
 
         protected override void UnloadContent() {
@@ -133,8 +117,7 @@ namespace BRS {
             Time.Update(gameTime);
 
             if (MenuDisplay) {
-                _menuManager.Update(); // this shouldn't be here
-
+                _menuManager.Update(); // this shouldn't be here -> put it in Userinterface.Update()
             }
             else {
                 Input.Update();
@@ -154,7 +137,7 @@ namespace BRS {
 
             if (MenuDisplay) {
                 _spriteBatch.Begin();
-                _ui.DrawMenu(_spriteBatch);
+                UserInterface.Instance.DrawMenu(_spriteBatch);
                 _spriteBatch.End();
             }
             else {
@@ -165,20 +148,20 @@ namespace BRS {
 
                     _graphics.GraphicsDevice.Viewport = cam.Viewport;
 
-                    PhysicsManager.Instance.Draw(cam);
+                    PhysicsManager.Instance.Draw(cam); // why is this here
 
                     foreach (GameObject go in GameObject.All) go.Draw(cam);
                     //transform.Draw(camera);
 
                     //gizmos (wireframe)
-                    GraphicsDevice.RasterizerState = _wireRasterizer;
+                    GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                     Gizmos.DrawWire(cam);
-                    GraphicsDevice.RasterizerState = _fullRasterizer;
+                    GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                     Gizmos.DrawFull(cam);
 
                     //splitscreen UI
                     _spriteBatch.Begin();
-                    _ui.DrawSplitscreen(_spriteBatch, i++);
+                    UserInterface.Instance.DrawSplitscreen(_spriteBatch, i++);
                     _spriteBatch.End();
                 }
 
@@ -186,7 +169,7 @@ namespace BRS {
 
                 //fullscreen UI
                 _spriteBatch.Begin();
-                _ui.DrawGlobal(_spriteBatch);
+                UserInterface.Instance.DrawGlobal(_spriteBatch);
                 _spriteBatch.End();
 
             }

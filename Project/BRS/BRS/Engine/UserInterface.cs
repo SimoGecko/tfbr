@@ -44,6 +44,8 @@ namespace BRS.Engine {
 
 
         // --------------------- BASE METHODS ------------------
+        public UserInterface() { Instance = this; }
+
         public void Start() {
             Instance = this;
             SmallFont = File.Load<SpriteFont>("Other/font/font1");
