@@ -36,7 +36,7 @@ namespace BRS {
 
         public static float SmoothDamp(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed = float.MaxValue) {
             //formula taken from Unity
-            float deltaTime = Time.deltaTime;
+            float deltaTime = Time.DeltaTime;
 
             smoothTime = Math.Max(0.0001f, smoothTime);
             float num = 2f / smoothTime;
@@ -181,8 +181,8 @@ namespace BRS {
         //In a 2D grid, returns the angle to a specified point from the +X axis
         public static float ArcTanAngle(float X, float Y) {
             if (X == 0) {
-                if (Y == 1) return (float)MathHelper.PiOver2;
-                else        return (float)-MathHelper.PiOver2;
+                if (Y == 1) return MathHelper.PiOver2;
+                else        return -MathHelper.PiOver2;
             } else if (X > 0) return (float)Math.Atan(Y / X);
             else if (X < 0) {
                 if (Y > 0) return (float)Math.Atan(Y / X) + MathHelper.Pi;
@@ -230,13 +230,13 @@ namespace BRS {
 
         //==============================================================
         //EXTENSION METHODS
-        public static Vector3 normalized(this Vector3 v) {
+        public static Vector3 Normalized(this Vector3 v) {
             if (v.Length() < 1e-5) return Vector3.Zero;
             return v / v.Length();
         }
 
         public static Vector3 GetPoint(this Ray ray, float t) {
-            return ray.Position + t * ray.Direction.normalized();
+            return ray.Position + t * ray.Direction.Normalized();
         }
 
         public static string ToReadableString(this TimeSpan timeSpan) {
@@ -272,7 +272,7 @@ namespace BRS {
 
         public static float Angle(this Vector3 a, Vector3 b) {
             //returns angle in degree between a and b
-            float cos = Vector3.Dot(a.normalized(), b.normalized());
+            float cos = Vector3.Dot(a.Normalized(), b.Normalized());
             return MathHelper.ToDegrees((float) Math.Acos(cos));
         }
 
@@ -284,94 +284,5 @@ namespace BRS {
         }
 
 
-    }
-
-
-    static class MyRandom { // TODO find better name
-        static int seed = 102;
-        static Random rand = new Random(seed);
-
-        public static float Value { // random float in [0, 1[
-            get { return (float)rand.NextDouble(); }
-        }
-
-        public static int Range(int min, int max) { // random int in [min, max[
-            return min + rand.Next(max - min);
-        }
-        public static float Range(float min, float max) { // random float in [min, max[
-            return (float)(min + rand.NextDouble()*(max - min));
-        }
-
-        public static Vector2 InsideRectangle(Rectangle rect) {
-            return new Vector2(rect.X + Value * rect.Width, rect.Y + Value * rect.Height);
-        }
-
-        public static Vector2 insideUnitSquare() {
-            return new Vector2(Value*2-1, Value * 2 - 1);
-        }
-        public static Vector3 insideUnitCube() {
-            return new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
-        }
-
-        public static Vector2 insideUnitCircle() {
-            double r = Math.Sqrt(rand.NextDouble());
-            double phi = rand.NextDouble() * 2 * Math.PI;
-            return new Vector2((float)(Math.Cos(phi) * r), (float)(Math.Sin(phi) * r));
-        }
-        public static Vector3 insideUnitSphere() {
-            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
-            while(sample.LengthSquared()>1)
-                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
-            return sample;
-        }
-        
-
-        public static Quaternion YRotation() {
-            return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
-        }
-
-    }
-
-    static class Debug {
-        public static void Log(string s) {
-            //Console.WriteLine(s);
-            System.Diagnostics.Debug.WriteLine(s);
-        }
-        public static void Log(Object o) {
-            System.Diagnostics.Debug.WriteLine(o.ToString());
-        }
-
-        public static void LogError(string s) {
-            //Console.WriteLine("//ERROR//: "+s);
-            System.Diagnostics.Debug.WriteLine("//ERROR//: "+s);
-        }
-
-        public static void Assert(bool b, string s) {
-            if (!b) System.Diagnostics.Debug.WriteLine("//ASSERTION FAIL//: " + s);
-        }
-    }
-
-    public class Curve {
-        //represents a curve that can be evaulated in the range [0,1]
-        public static float EvaluateSigmoid(float t) {
-            return (float)(Math.Tanh((t - 0.5f) * 5.2f) + 1) / 2;
-        }
-        public static float EvaluateSqrt(float t) {
-            return (float)Math.Sqrt(t*1.5f);
-        }
-        public static float EvaluatePingPong(float t) {
-            return (-t * t + t) * 4;
-        }
-        public static float EvaluateUp(float t) {
-            return t*t;
-        }
-        public static float EvaluateDown(float t) {
-            return (float)Math.Pow(t, .2f);
-        }
-
-        //see notes on notebook for shape
-        public static float EvaluateA(float t) { return t * t; }
-        public static float EvaluateB(float t) { return (float)Math.Sqrt(t); }
-        public static float EvaluateC(float t) { return (float)Math.Sin((t-.5f)*Math.PI)/2+.5f; }
     }
 }

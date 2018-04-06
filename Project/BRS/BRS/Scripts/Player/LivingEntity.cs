@@ -4,6 +4,7 @@
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
+    // Todo: Doesn't this belong into the Engine?
     public interface IDamageable : IComponent {
         void TakeDamage(float damage);
     }
@@ -14,11 +15,16 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public float startingHealth = 100;
+        public float StartingHealth = 100;
 
         //private
-        protected float health;
-        protected bool dead;
+        protected float Health;
+        protected bool Dead;
+
+        public LivingEntity() {
+            Health = StartingHealth;
+            Dead = false;
+        }
 
         //reference
         public event System.Action OnDeath;
@@ -28,7 +34,7 @@ namespace BRS.Scripts {
             Respawn();
         }
 
-        
+
 
         public override void Update() { }
 
@@ -39,36 +45,35 @@ namespace BRS.Scripts {
 
         // commands
         public virtual void TakeDamage(float damage) {
-            health -= damage;
-            if (health < 0) health = 0;
-            if (health <= 0 && !dead) {
+            Health -= damage;
+            if (Health < 0) Health = 0;
+            if (Health <= 0 && !Dead) {
                 Die();
             }
         }
 
         protected virtual void Die() {
-            dead = true;
+            Dead = true;
             OnDeath?.Invoke();
             //GameObject.Destroy(gameObject);
         }
 
         protected virtual void Respawn() {
-            health = startingHealth;
-            dead = false;
-        } 
+            Health = StartingHealth;
+            Dead = false;
+        }
 
         public void AddHealth(float amount) {
-            health = MathHelper.Min(health + amount, startingHealth);
+            Health = MathHelper.Min(Health + amount, StartingHealth);
         }
 
         public void UpdateMaxHealth(float amountToAdd) {
-            startingHealth += amountToAdd;
+            StartingHealth += amountToAdd;
         }
 
 
         // queries
-        public float HealthPercent { get { return health / startingHealth; } }
-        public float Health { get { return health; } }
+        public float HealthPercent { get { return Health / StartingHealth; } }
 
 
 

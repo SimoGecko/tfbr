@@ -10,10 +10,10 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float effectTime = 2f;
 
 
         //private
+        private const float EffectTime = 2f;
 
 
         //reference
@@ -33,7 +33,7 @@ namespace BRS.Scripts {
             if (isplayer) {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSpeedPad(true);
-                new Timer(effectTime, () => pM.SetSpeedPad(false));
+                new Timer(EffectTime, () => pM.SetSpeedPad(false));
             }
         }
 

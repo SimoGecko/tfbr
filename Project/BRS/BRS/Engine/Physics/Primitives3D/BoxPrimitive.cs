@@ -18,22 +18,19 @@ namespace BRS.Engine.Physics.Primitives3D {
     /// <summary>
     /// Geometric primitive class for drawing cubes.
     /// </summary>
-    public class BoxPrimitive : GeometricPrimitive
-    {
+    public class BoxPrimitive : GeometricPrimitive {
         /// <summary>
         /// Constructs a new cube primitive, using default settings.
         /// </summary>
         public BoxPrimitive(GraphicsDevice graphicsDevice)
-            : this(graphicsDevice, 1)
-        {
+            : this(graphicsDevice, 1) {
         }
 
 
         /// <summary>
         /// Constructs a new cube primitive, with the specified size.
         /// </summary>
-        public BoxPrimitive(GraphicsDevice graphicsDevice, float size)
-        {
+        public BoxPrimitive(GraphicsDevice graphicsDevice, float size) {
             // A cube has six faces, each one pointing in a different direction.
             Vector3[] normals =
             {
@@ -46,8 +43,7 @@ namespace BRS.Engine.Physics.Primitives3D {
             };
 
             // Create each face in turn.
-            foreach (Vector3 normal in normals)
-            {
+            foreach (Vector3 normal in normals) {
                 // Get two vectors perpendicular to the face normal and to each other.
                 Vector3 side1 = new Vector3(normal.Y, normal.Z, normal.X);
                 Vector3 side2 = Vector3.Cross(normal, side1);

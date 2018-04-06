@@ -133,7 +133,7 @@ namespace BRS.Engine.Physics.Primitives3D {
         #region Draw
 
         private Matrix[] _worlds = new Matrix[1];
-        private int _index = 0;
+        private int _index;
 
         public void AddWorldMatrix(Matrix matrix) {
             if (_index == _worlds.Length) {

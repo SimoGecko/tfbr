@@ -4,25 +4,29 @@
 using System.Collections.Generic;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// deals with storing powerups and using them
+    /// </summary>
     class PlayerPowerup : Component {
-        ////////// deals with storing powerups and using them //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const int maxNumberPowerups = 1;
 
 
         //private
-        List<Powerup> carryingPowerup; // last collected is first to use -> LIFO
+        private List<Powerup> _carryingPowerup; // last collected is first to use -> LIFO
         //it's like a stack. if you add more that maxNumber, the one at position 0 is deleted
+
+        // const
+        const int MaxNumberPowerups = 1;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            carryingPowerup = new List<Powerup>();
+            _carryingPowerup = new List<Powerup>();
 
         }
         public override void Update() { }
@@ -35,19 +39,19 @@ namespace BRS.Scripts {
         // commands
         public void UsePowerup(Player p) {
             //could implement selector here
-            if (carryingPowerup.Count > 0) {
-                carryingPowerup[carryingPowerup.Count - 1].UsePowerup();
-                carryingPowerup.RemoveAt(carryingPowerup.Count - 1);
+            if (_carryingPowerup.Count > 0) {
+                _carryingPowerup[_carryingPowerup.Count - 1].UsePowerup();
+                _carryingPowerup.RemoveAt(_carryingPowerup.Count - 1);
             }
-            PowerupUI.instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
+            PowerupUI.Instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
         }
 
         public void Collect(Powerup powerup) {
-            if (carryingPowerup.Count == maxNumberPowerups) {
-                carryingPowerup.RemoveAt(0);
+            if (_carryingPowerup.Count == MaxNumberPowerups) {
+                _carryingPowerup.RemoveAt(0);
             }
-            carryingPowerup.Add(powerup);
-            PowerupUI.instance.UpdatePlayerPowerupUI(powerup.owner.PlayerIndex, CarryingPowerups());
+            _carryingPowerup.Add(powerup);
+            PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
         }
 
         public bool CanPickUp(Powerup powerup) {
@@ -56,11 +60,11 @@ namespace BRS.Scripts {
         }
 
         // queries
-        bool HasPowerup { get { return carryingPowerup.Count > 0; } }
+        bool HasPowerup { get { return _carryingPowerup.Count > 0; } }
 
         public int[] CarryingPowerups() {
             List<int> result = new List<int>();
-            foreach (var p in carryingPowerup) result.Add((int)p.powerupType);
+            foreach (var p in _carryingPowerup) result.Add((int)p.PowerupType);
             return result.ToArray();
         }
 

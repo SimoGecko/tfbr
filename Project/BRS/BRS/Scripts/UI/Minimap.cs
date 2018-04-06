@@ -12,42 +12,44 @@ namespace BRS.Scripts {
         enum IconType { Triangle, Square, Circle, Star, House }
 
         //public
-        const int MAPWIDTH = 428, MAPHEIGHT = 694; // of screenshot
-        const int ICONSIZE = 64;
-        const float mapScale = 1f;
-        const int SMALLMAPWIDTH = 200; // squared pixel size of minimap
 
         //private
-        static Rectangle mapDest, mapAreaVirgin, miniDest;
-        static Vector3 upperLeftPt, lowerRightPt; // corners of physical map
-        static Vector2 pivot;
+        static Rectangle _mapDest, _mapAreaVirgin, _miniDest;
+        static Vector3 _upperLeftPt, _lowerRightPt; // corners of physical map
+        static Vector2 _pivot;
 
-        Texture2D mapSprite;
-        Texture2D mapIcons;
+        Texture2D _mapSprite;
+        Texture2D _mapIcons;
+
+        // const
+        private const int MapWidth = 428, MapHeight = 694; // of screenshot
+        private const int IconSize = 64;
+        private const float MapScale = 1f;
+        private const int SmallMapWidth = 200; // squared pixel size of minimap
 
         //to avoid passing them to the function
-        Vector2 playerPos;
-        float cameraRot;
+        private Vector2 _playerPos;
+        private float _cameraRot;
 
         //reference
-        public static Minimap instance;
-        Transform playerT; // reference transform
+        public static Minimap Instance;
+        private Transform _playerT; // reference transform
         
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            instance = this;
-            mapSprite = File.Load<Texture2D>("Images/minimap/level1");
-            mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
+            Instance = this;
+            _mapSprite = File.Load<Texture2D>("Images/minimap/level1");
+            _mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
 
-            upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
-            lowerRightPt = new Vector3(25, 0, 5);
-            pivot = new Vector2(ICONSIZE / 2, ICONSIZE / 2);
+            _upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
+            _lowerRightPt = new Vector3(25, 0, 5);
+            _pivot = new Vector2(IconSize / 2, IconSize / 2);
 
-            mapDest =  new Rectangle((int)(Screen.WIDTH / 2 - MAPWIDTH / 2 * mapScale), 10, (int)(MAPWIDTH * mapScale), (int)(MAPHEIGHT * mapScale));
-            mapAreaVirgin = new Rectangle(0, 0, MAPWIDTH, MAPHEIGHT);
-            miniDest = new Rectangle(720, 850, SMALLMAPWIDTH, SMALLMAPWIDTH);
+            _mapDest =  new Rectangle((int)(Screen.Width / 2 - MapWidth / 2 * MapScale), 10, (int)(MapWidth * MapScale), (int)(MapHeight * MapScale));
+            _mapAreaVirgin = new Rectangle(0, 0, MapWidth, MapHeight);
+            _miniDest = new Rectangle(720, 850, SmallMapWidth, SmallMapWidth);
             
         }
 
@@ -63,29 +65,29 @@ namespace BRS.Scripts {
         // commands
         public void Draw(SpriteBatch spriteBatch) {
             //MAP
-            spriteBatch.Draw(mapSprite, mapDest, Color.White);
+            spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
 
             //MONEY
-            foreach (Vector3 pos in Elements.instance.AllMoneyPosition()) {
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, pivot, .08f, SpriteEffects.None, 1f);
+            foreach (Vector3 pos in Elements.Instance.AllMoneyPosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
             }
             //CRATES
-            foreach (Vector3 pos in Elements.instance.AllCratePosition()) {
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Square), Color.SaddleBrown, 0, pivot, .12f, SpriteEffects.None, 1f);
+            foreach (Vector3 pos in Elements.Instance.AllCratePosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
             }
             //POWERUPS
-            foreach (Vector3 pos in Elements.instance.AllPowerupPosition()) {
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Star), Color.Blue, 0, pivot, .12f, SpriteEffects.None, 1f);
+            foreach (Vector3 pos in Elements.Instance.AllPowerupPosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
             }
             //BASES
-            foreach (var b in Elements.instance.Bases()) {
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(b.transform.position), IconFromType(IconType.House), b.BaseColor, 0, pivot, .3f, SpriteEffects.None, 1f);
+            foreach (var b in Elements.Instance.Bases()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(b.transform.position), IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
             }
             //PLAYERS
-            foreach (var p in Elements.instance.Players()) {
+            foreach (var p in Elements.Instance.Players()) {
                 Vector3 pos = p.transform.position;
                 float rotY = -p.transform.eulerAngles.Y;
-                spriteBatch.Draw(mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Triangle), p.playerColor, MathHelper.ToRadians(rotY), pivot, .3f, SpriteEffects.None, 1f);
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY), _pivot, .3f, SpriteEffects.None, 1f);
             }
         }
 
@@ -93,50 +95,50 @@ namespace BRS.Scripts {
         //---------------------------------------------------------------------
         public void DrawSmall(SpriteBatch spriteBatch, int index) {
             //draw relative to player position
-            playerT = Elements.instance.Player(index).transform;
-            playerPos = Pos3D2Pix(playerT.position);
-            cameraRot = Elements.instance.Player(index).camController.YRotation;
+            _playerT = Elements.Instance.Player(index).transform;
+            _playerPos = Pos3D2Pix(_playerT.position);
+            _cameraRot = Elements.Instance.Player(index).CamController.YRotation;
 
             //MAP
-            Vector2 playerPosVirgin = Pos3D2PixVirgin(playerT.position);
-            int scaledWidth = (int)(SMALLMAPWIDTH/mapScale);
+            Vector2 playerPosVirgin = Pos3D2PixVirgin(_playerT.position);
+            int scaledWidth = (int)(SmallMapWidth/MapScale);
             Rectangle sourceRect = new Rectangle((int)playerPosVirgin.X- scaledWidth / 2, (int)playerPosVirgin.Y- scaledWidth / 2, scaledWidth, scaledWidth);
 
-            Point mapPivot = new Point((int)(mapScale * SMALLMAPWIDTH / 2), (int)(mapScale * SMALLMAPWIDTH / 2));
-            Point mapPivot2 = new Point( SMALLMAPWIDTH / 2, SMALLMAPWIDTH / 2);
+            Point mapPivot = new Point((int)(MapScale * SmallMapWidth / 2), (int)(MapScale * SmallMapWidth / 2));
+            Point mapPivot2 = new Point( SmallMapWidth / 2, SmallMapWidth / 2);
 
-            Rectangle miniDest2 = miniDest; miniDest2.Location += mapPivot2;
-            spriteBatch.Draw(mapSprite, miniDest2, sourceRect, Color.White, MathHelper.ToRadians(cameraRot), mapPivot.ToVector2(), SpriteEffects.None, 1); // todo make rotation
+            Rectangle miniDest2 = _miniDest; miniDest2.Location += mapPivot2;
+            spriteBatch.Draw(_mapSprite, miniDest2, sourceRect, Color.White, MathHelper.ToRadians(_cameraRot), mapPivot.ToVector2(), SpriteEffects.None, 1); // todo make rotation
             //TODO cut map accordingly
 
             Vector2 finalPx;
             //MONEY
-            foreach (Vector3 pos in Elements.instance.AllMoneyPosition()) {
+            foreach (Vector3 pos in Elements.Instance.AllMoneyPosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(mapIcons, finalPx, IconFromType(IconType.Circle), Color.Green, 0, pivot, .08f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
             }
             //CRATES
-            foreach (Vector3 pos in Elements.instance.AllCratePosition()) {
+            foreach (Vector3 pos in Elements.Instance.AllCratePosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(mapIcons, finalPx, IconFromType(IconType.Square), Color.SaddleBrown, 0, pivot, .12f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
             }
             //POWERUPS
-            foreach (Vector3 pos in Elements.instance.AllPowerupPosition()) {
+            foreach (Vector3 pos in Elements.Instance.AllPowerupPosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(mapIcons, finalPx, IconFromType(IconType.Star), Color.Blue, 0, pivot, .12f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
             }
             //BASES
-            foreach (var b in Elements.instance.Bases()) {
+            foreach (var b in Elements.Instance.Bases()) {
                 Vector3 pos = b.transform.position;
                 if (IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(mapIcons, finalPx, IconFromType(IconType.House), b.BaseColor, 0, pivot, .3f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
             }
             //PLAYERS
-            foreach (var p in Elements.instance.Players()) {
+            foreach (var p in Elements.Instance.Players()) {
                 Vector3 pos = p.transform.position;
                 float rotY = -p.transform.eulerAngles.Y;
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(mapIcons, finalPx, IconFromType(IconType.Triangle), p.playerColor, MathHelper.ToRadians(rotY+cameraRot), pivot, .3f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY+_cameraRot), _pivot, .3f, SpriteEffects.None, 1f);
             }
         }
 
@@ -144,18 +146,18 @@ namespace BRS.Scripts {
 
         // queries
         Vector2 Pos3D2Pix(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap
-            Vector3 L = upperLeftPt, R = lowerRightPt;
+            Vector3 L = _upperLeftPt, R = _lowerRightPt;
             float x0 = (pos.X - L.X) / (R.X - L.X);
             float y0 = (pos.Z - L.Z) / (R.Z - L.Z);
             Vector2 coeff = new Vector2(x0, y0);
-            return mapDest.Evaluate(coeff).Round();
+            return _mapDest.Evaluate(coeff).Round();
         }
 
         bool IsInsideMini(Vector3 pos, out Vector2 result) {
-            result = miniDest.GetCenter() + (Pos3D2Pix(pos) - playerPos).Rotate(cameraRot); // center + delta
-            result = miniDest.Project(result);
+            result = _miniDest.GetCenter() + (Pos3D2Pix(pos) - _playerPos).Rotate(_cameraRot); // center + delta
+            result = _miniDest.Project(result);
             return true;
-            return miniDest.Contains(result);
+            return _miniDest.Contains(result);
             //miniDest.
         }
 
@@ -175,17 +177,17 @@ namespace BRS.Scripts {
         }*/
 
         Vector2 Pos3D2PixVirgin(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap WITHOUT any scaling or offset
-            Vector3 L = upperLeftPt, R = lowerRightPt;
+            Vector3 L = _upperLeftPt, R = _lowerRightPt;
             float x0 = (pos.X - L.X) / (R.X - L.X);
             float y0 = (pos.Z - L.Z) / (R.Z - L.Z);
             Vector2 coeff = new Vector2(x0, y0);
-            return mapAreaVirgin.Evaluate(coeff).Round();
+            return _mapAreaVirgin.Evaluate(coeff).Round();
         }
 
         Rectangle IconFromType(IconType type) {
             int col = (int)type % 4;
             int row = (int)type / 4;
-            return new Rectangle(col * ICONSIZE, row * ICONSIZE, ICONSIZE, ICONSIZE);
+            return new Rectangle(col * IconSize, row * IconSize, IconSize, IconSize);
         }
 
         /*

@@ -13,28 +13,30 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float attackDuration = .2f;
-        public const float attackDistance = 5;
-        const float attackDistanceThreshold = 2f;
-        const float attackDamage = 40;
 
         //private
-        bool attacking;
-        Vector3 attackStartPos, attackEndPos;
-        float attackRefTime;
-        float attackStartTime;
-        bool hasAppliedDamage;
+        private bool _attacking;
+        private Vector3 _attackStartPos, _attackEndPos;
+        private float _attackRefTime;
+        private float _attackStartTime;
+        private bool _hasAppliedDamage;
+
+        //const
+        public const float AttackDistance = 5;
+        private const float AttackDuration = .2f;
+        private const float AttackDistanceThreshold = 2f;
+        private const float AttackDamage = 40;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() { attacking = false; }
+        public override void Start() { _attacking = false; }
         public override void Update() { }
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
-            if (isPlayer && attacking) {
+            if (isPlayer && _attacking) {
                 Player p = c.GameObject.GetComponent<Player>();
                 DealWithAttack(p);
             }
@@ -46,28 +48,28 @@ namespace BRS.Scripts {
 
         // commands
         public void BeginAttack() {
-            Debug.Log(Time.time);
-            attacking = true;
-            attackRefTime = 0;
-            attackStartPos = transform.position;
-            attackEndPos = transform.position + transform.Forward * attackDistance;
-            hasAppliedDamage = false;
-            attackStartTime = Time.time;
-            Invoke(attackDuration, () => attacking = false);
+            Debug.Log(Time.CurrentTime);
+            _attacking = true;
+            _attackRefTime = 0;
+            _attackStartPos = transform.position;
+            _attackEndPos = transform.position + transform.Forward * AttackDistance;
+            _hasAppliedDamage = false;
+            _attackStartTime = Time.CurrentTime;
+            Invoke(AttackDuration, () => _attacking = false);
         }
 
         public void AttackCoroutine() {
-            if (attackRefTime <= 1) {
-                attackRefTime += Time.deltaTime / attackDuration;
-                float t = Curve.EvaluateSqrt(attackRefTime);
-                Vector3 newPosition = Vector3.LerpPrecise(attackStartPos, attackEndPos, t);
+            if (_attackRefTime <= 1) {
+                _attackRefTime += Time.DeltaTime / AttackDuration;
+                float t = Curve.EvaluateSqrt(_attackRefTime);
+                Vector3 newPosition = Vector3.LerpPrecise(_attackStartPos, _attackEndPos, t);
                 
                 // Apply new position to the rigid-body
                 // Todo by Andy for Andy: can be surely written better :-)
-                MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
+                MovingRigidBody mrb = GameObject.GetComponent<MovingRigidBody>();
                 mrb.RigidBody.Position = new JVector(newPosition.X, mrb.RigidBody.Position.Y, newPosition.Z);
             } else {
-                attacking = false;
+                _attacking = false;
             }
         }
         /*
@@ -77,11 +79,11 @@ namespace BRS.Scripts {
         }*/
 
         void DealWithAttack(Player p) {
-            PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
-            if (!hasAppliedDamage && (!pa.attacking || pa.attackStartTime > attackStartTime)) {
+            PlayerAttack pa = p.GameObject.GetComponent<PlayerAttack>();
+            if (!_hasAppliedDamage && (!pa._attacking || pa._attackStartTime > _attackStartTime)) {
                 //if the other is not attacking or started attacking later
-                p.TakeDamage(attackDamage);
-                hasAppliedDamage = true;
+                p.TakeDamage(AttackDamage);
+                _hasAppliedDamage = true;
             }
         }
         /*
@@ -94,8 +96,8 @@ namespace BRS.Scripts {
 
 
         // queries
-        public bool AttackEnded { get { return !attacking; } }
-        public bool IsAttacking { get { return attacking; } }
+        public bool AttackEnded { get { return !_attacking; } }
+        public bool IsAttacking { get { return _attacking; } }
 
 
         // other

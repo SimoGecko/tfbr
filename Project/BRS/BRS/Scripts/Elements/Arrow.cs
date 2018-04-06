@@ -1,6 +1,7 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts {
@@ -10,34 +11,38 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float margin = .4f;
-        const float smoothTime = .1f;
+        const float Margin = .4f;
+        const float SmoothTime = .1f;
 
 
         //private
-        int playerIndex;
-        float smoothAngle, smoothRefAngle;
-        public Vector3 teamBase;
-        Vector3 point; // in case the point is fixed
-        Color arrowColor;
+        private readonly int _playerIndex;
+        private float _smoothAngle, _smoothRefAngle;
+        private Vector3 _teamBase;
+        private Vector3 _point; // in case the point is fixed
+        Color _arrowColor;
 
         //reference
-        GameObject follow; // attached player
-        PlayerInventory pI;
-        Transform target; // enemy player
+        private readonly GameObject _follow; // attached player
+        private PlayerInventory _pI;
+        private Transform _target; // enemy player
 
 
         // --------------------- BASE METHODS ------------------
-        public Arrow(GameObject _follow, Transform _target, int _index) {
-            target = _target; follow = _follow; playerIndex = _index;
+        public Arrow(GameObject follow, Transform target, int index) {
+            _target = target;
+            _follow = follow;
+            _playerIndex = index;
         }
 
         public override void Start() {
-            point = Vector3.Zero;
-            pI = follow.GetComponent<PlayerInventory>();
-            if(Elements.instance.Player(1 - playerIndex)!=null)
-                target = Elements.instance.Player(1 - playerIndex).transform;
-            teamBase = Elements.instance.Base(playerIndex%2).transform.position;
+            _point = Vector3.Zero;
+            _pI = _follow.GetComponent<PlayerInventory>();
+
+            if(Elements.Instance.Player(1 - _playerIndex)!=null)
+                _target = Elements.Instance.Player(1 - _playerIndex).transform;
+
+            _teamBase = Elements.Instance.Base(_playerIndex%2).transform.position;
         }
 
         public override void Update() {
@@ -52,24 +57,25 @@ namespace BRS.Scripts {
 
         // commands
         void LookAtPoi() {
-            transform.position = follow.transform.position;
+            transform.position = _follow.transform.position;
             Vector3 direction = Poi() - transform.position;
-            float angle = MathHelper.ToDegrees((float) System.Math.Atan2(direction.Z, direction.X));
-            smoothAngle = Utility.SmoothDampAngle(smoothAngle, angle, ref smoothRefAngle, smoothTime);
-            transform.eulerAngles = new Vector3(0, -smoothAngle, 0);
-            transform.Translate(Vector3.Right * margin);
+            float angle = MathHelper.ToDegrees((float) Math.Atan2(direction.Z, direction.X));
+            _smoothAngle = Utility.SmoothDampAngle(_smoothAngle, angle, ref _smoothRefAngle, SmoothTime);
+            transform.eulerAngles = new Vector3(0, -_smoothAngle, 0);
+            transform.Translate(Vector3.Right * Margin);
         }
 
 
 
         // queries
         Vector3 Poi() {
-            if (pI.IsFull()) {
-                arrowColor = Color.Green;
-                return teamBase;
+            if (_pI.IsFull()) {
+                _arrowColor = Color.Green;
+                return _teamBase;
             }
-            arrowColor = Color.Red;
-            return target != null ? target.position : point;
+
+            _arrowColor = Color.Red;
+            return _target != null ? _target.position : _point;
         }
 
 

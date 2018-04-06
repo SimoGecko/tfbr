@@ -11,28 +11,31 @@ namespace BRS {
     //TODO organize
 
     public class Game1 : Game {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        public static Game1 Instance { get; set; }
 
-        public Scene scene;
-        UserInterface ui;
+        public Scene Scene;
 
+        private readonly GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+
+
+        private UserInterface _ui;
         private Display _display;
         private DebugDrawer _debugDrawer;
-        //private PhysicsManager _physicsManager;
-        RasterizerState fullRasterizer, wireRasterizer;
-        public static Game1 instance;
+        
+        private RasterizerState _fullRasterizer, _wireRasterizer;
+
 
         private static bool _usePhysics = false;
 
-        MenuManager menuManager;
-        public bool menuDisplay;
+        private MenuManager _menuManager;
+        public bool MenuDisplay;
 
         public Game1() {
-            instance = this;
-            graphics = new GraphicsDeviceManager(this);
+            Instance = this;
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            Screen.Setup(graphics, this); // setup screen and create cameras
+            Screen.Setup(_graphics, this); // setup screen and create cameras
             File.content = Content;
         }
 
@@ -45,27 +48,27 @@ namespace BRS {
 
             base.Initialize();
 
-            fullRasterizer = GraphicsDevice.RasterizerState;
-            wireRasterizer = new RasterizerState();
-            wireRasterizer.FillMode = FillMode.WireFrame;
+            _fullRasterizer = GraphicsDevice.RasterizerState;
+            _wireRasterizer = new RasterizerState();
+            _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
 
         protected override void LoadContent() {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             if (_usePhysics) {
-                scene = new LevelPhysics(this, PhysicsManager.Instance);
+                Scene = new LevelPhysics(PhysicsManager.Instance);
             } else {
-                scene = new Level1(PhysicsManager.Instance, this);
+                Scene = new Level1(PhysicsManager.Instance);
             }
 
-            ui = new UserInterface();
-            ui.Start();
+            _ui = new UserInterface();
+            _ui.Start();
 
-            menuManager = new MenuManager();
-            menuManager.LoadContent();
-            menuDisplay = true;
+            _menuManager = new MenuManager();
+            _menuManager.LoadContent();
+            MenuDisplay = true;
 
             Start(); // CALL HERE
 
@@ -87,7 +90,7 @@ namespace BRS {
         }
 
         public void ScreenAdditionalSetup() {
-            Screen.AdditionalSetup(graphics, this);
+            Screen.AdditionalSetup(_graphics, this);
         }
 
         protected override void UnloadContent() {
@@ -99,9 +102,9 @@ namespace BRS {
 
             Time.Update(gameTime);
 
-            menuManager.Update();
+            _menuManager.Update();
 
-            if (!menuDisplay) {
+            if (!MenuDisplay) {
                 Input.Update();
                 Audio.Update();
 
@@ -117,17 +120,17 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            spriteBatch.Begin();
-            ui.DrawMenu(spriteBatch);
-            spriteBatch.End();
+            _spriteBatch.Begin();
+            _ui.DrawMenu(_spriteBatch);
+            _spriteBatch.End();
 
-            if (!menuDisplay) {
+            if (!MenuDisplay) {
                 //foreach camera
                 int i = 0;
-                foreach (Camera cam in Screen.cameras) {
+                foreach (Camera cam in Screen.Cameras) {
                     GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true };
 
-                    graphics.GraphicsDevice.Viewport = cam.viewport;
+                    _graphics.GraphicsDevice.Viewport = cam.Viewport;
 
                     PhysicsManager.Instance.Draw(cam);
 
@@ -135,24 +138,24 @@ namespace BRS {
                     //transform.Draw(camera);
 
                     //gizmos (wireframe)
-                    GraphicsDevice.RasterizerState = wireRasterizer;
+                    GraphicsDevice.RasterizerState = _wireRasterizer;
                     Gizmos.DrawWire(cam);
-                    GraphicsDevice.RasterizerState = fullRasterizer;
+                    GraphicsDevice.RasterizerState = _fullRasterizer;
                     Gizmos.DrawFull(cam);
 
                     //splitscreen UI
-                    spriteBatch.Begin();
-                    ui.DrawSplitscreen(spriteBatch, i++);
-                    spriteBatch.End();
+                    _spriteBatch.Begin();
+                    _ui.DrawSplitscreen(_spriteBatch, i++);
+                    _spriteBatch.End();
                 }
                 Gizmos.ClearOrders();
 
-                graphics.GraphicsDevice.Viewport = Screen.fullViewport;
+                _graphics.GraphicsDevice.Viewport = Screen.FullViewport;
 
                 //fullscreen UI
-                spriteBatch.Begin();
-                ui.DrawGlobal(spriteBatch);
-                spriteBatch.End();
+                _spriteBatch.Begin();
+                _ui.DrawGlobal(_spriteBatch);
+                _spriteBatch.End();
 
             }
             base.Draw(gameTime);

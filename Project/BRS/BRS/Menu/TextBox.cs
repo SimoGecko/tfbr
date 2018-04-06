@@ -7,11 +7,11 @@ namespace BRS.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos - UserInterface.instance.smallFont.MeasureString(Text) / 2; } }
+        public Vector2 Position { get { return InitPos - UserInterface.Instance.SmallFont.MeasureString(Text) / 2; } }
 
         public override void Draw() {
             base.Draw();
-            UserInterface.instance.DrawString(Position, Text, Color.Black);
+            UserInterface.Instance.DrawString(Position, Text, Color.Black);
         }
     }
 }

@@ -10,27 +10,27 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float crackSpawnRadius = 2f;
-
-        const int minNumCoins = 1;
-        const int maxNumCoins = 8;
-        const float probOfPowerup = .2f;
 
 
         //for rigged boxes
-        const float explosionRadius = 1f;
-        const float explosionDamage = 30;
-        bool cracked = false;
+        private const float ExplosionRadius = 1f;
+        private const float ExplosionDamage = 30;
 
         //private
-        bool explosionRigged = false;
+        private const float CrackSpawnRadius = 2f;
+        private const int MinNumCoins = 1;
+        private const int MaxNumCoins = 8;
+        private const float ProbOfPowerup = .2f;
+
+        private bool _explosionRigged;
+        private bool _cracked;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            explosionRigged = cracked = false;
+            _explosionRigged = _cracked = false;
         }
 
         public override void Update() {
@@ -52,41 +52,41 @@ namespace BRS.Scripts {
 
         // commands
         void CrackCrate() {
-            cracked = true;
-            if (explosionRigged) Explode();
+            _cracked = true;
+            if (_explosionRigged) Explode();
             else SpawnValuables();
             
-            Elements.instance.Remove(this);
-            GameObject.Destroy(gameObject);
+            Elements.Instance.Remove(this);
+            GameObject.Destroy(GameObject);
         }
 
         void SpawnValuables() {
-            int numCoins = MyRandom.Range(minNumCoins, maxNumCoins + 1);
+            int numCoins = MyRandom.Range(MinNumCoins, MaxNumCoins + 1);
             for (int i = 0; i < numCoins; i++) {
-                Spawner.instance.SpawnMoneyAround(transform.position, crackSpawnRadius);
+                Spawner.Instance.SpawnMoneyAround(transform.position, CrackSpawnRadius);
             }
 
-            if (MyRandom.Value <= probOfPowerup) {
-                Spawner.instance.SpawnPowerupAround(transform.position, crackSpawnRadius);
+            if (MyRandom.Value <= ProbOfPowerup) {
+                Spawner.Instance.SpawnPowerupAround(transform.position, CrackSpawnRadius);
             }
         }
 
         void Explode() {
             //same code as in bomb
-            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, explosionRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
-                    c.GameObject.GetComponent<IDamageable>().TakeDamage(explosionDamage);
+                    c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
         }
 
 
         public void TakeDamage(float damage) { // TODO is it necessary to have both?
-            if(!cracked)CrackCrate();
+            if(!_cracked)CrackCrate();
         }
 
-        public void SetExplosionRigged() { explosionRigged = true; }
+        public void SetExplosionRigged() { _explosionRigged = true; }
 
 
         // queries

@@ -11,45 +11,45 @@ namespace BRS.Menu {
 
         // --------------------- VARIABLES ---------------------
 
-        private MouseState currentMouse;
-        private MouseState previousMouse;
+        private MouseState _currentMouse;
+        private MouseState _previousMouse;
 
-        public bool isHovering;
-        public Texture2D texture;
+        public bool IsHovering;
+        public Texture2D Texture;
 
         public EventHandler Click;
 
         public float ScaleWidth { get; set; } = 1;
         public float ScaleHeight { get; set; } = 1;
 
-        public Vector2 offsetTexture = new Vector2(0,0);
-        public Vector2 initPos;
-        private Vector2 Position { get { return initPos - offsetTexture; } }
+        public Vector2 OffsetTexture = new Vector2(0, 0);
+        public Vector2 InitPos;
+        private Vector2 Position { get { return InitPos - OffsetTexture; } }
 
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
 
-        public bool isClicked;
-        Texture2D textureClicked;
-        public int index { get; set; }
+        public bool IsClicked;
+        Texture2D _textureClicked;
+        public int Index { get; set; }
 
-        public List<Button> neighbors;
+        public List<Button> Neighbors;
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)(texture.Width * ScaleWidth), (int)(texture.Height * ScaleHeight));
+                return new Rectangle((int)Position.X, (int)Position.Y, (int)(Texture.Width * ScaleWidth), (int)(Texture.Height * ScaleHeight));
             }
         }
 
         // --------------------- BASE METHODS ------------------
         public Button(Texture2D t, Vector2 pos) {
-            texture = t;
-            initPos = pos;
-            offsetTexture = new Vector2(t.Width / 2, t.Height / 2);
-            isClicked = false;
-            active = true;
-            neighbors = new List<Button>();
-            textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
+            Texture = t;
+            InitPos = pos;
+            OffsetTexture = new Vector2(t.Width / 2, t.Height / 2);
+            IsClicked = false;
+            Active = true;
+            Neighbors = new List<Button>();
+            _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
         }
 
         public override void Start() {
@@ -57,18 +57,18 @@ namespace BRS.Menu {
         }
 
         public override void Update() {
-            if (active) {
+            if (Active) {
                 base.Update();
 
-                previousMouse = currentMouse;
-                currentMouse = Mouse.GetState();
+                _previousMouse = _currentMouse;
+                _currentMouse = Mouse.GetState();
 
-                var mouseRectangle = new Rectangle(currentMouse.X, currentMouse.Y, 1, 1);
+                var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
 
-                isHovering = false;
+                IsHovering = false;
                 if (mouseRectangle.Intersects(Rectangle)) {
-                    isHovering = true;
-                    if (currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed
+                    IsHovering = true;
+                    if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed
                         || Input.GetButtonUp(Buttons.A)) {
                         Click?.Invoke(this, new EventArgs());
                     }
@@ -77,21 +77,21 @@ namespace BRS.Menu {
         }
 
         public override void Draw() {
-            if (active) {
+            if (Active) {
                 var colour = Color.White;
-                if (isHovering)
+                if (IsHovering)
                     colour = Color.Gray;
 
-                if (isClicked && textureClicked != null)
-                    UserInterface.instance.DrawPicture(Rectangle, textureClicked, colour);
-                else if (texture != null)
-                    UserInterface.instance.DrawPicture(Rectangle, texture, colour);
+                if (IsClicked && _textureClicked != null)
+                    UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
+                else if (Texture != null)
+                    UserInterface.Instance.DrawPicture(Rectangle, Texture, colour);
 
                 if (!string.IsNullOrEmpty(Text)) {
-                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.instance.smallFont.MeasureString(Text).X / 2);
-                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.instance.smallFont.MeasureString(Text).Y / 2);
+                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.instance.DrawString(new Vector2(x, y), Text, Color.Black);
+                    UserInterface.Instance.DrawString(new Vector2(x, y), Text, Color.Black);
                 }
             }
         }

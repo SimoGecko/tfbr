@@ -11,17 +11,20 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float timeBetweenDrops = .1f;
-        int capacity = 20;
-        const float dropcashRadius = .5f;
-        const float losecashRadius = 2f;
 
         //private
+        private int _capacity = 20;
+
+        // const
+        const float TimeBetweenDrops = .1f;
+        const float DropcashRadius = .5f;
+        const float LosecashRadius = 2f;
+
         //MONEY
-        int carryingWeight = 0;
-        int carryingValue = 0;
-        bool canDropMoney = true;
-        Stack<Money> carryingMoney = new Stack<Money>();
+        int _carryingWeight = 0;
+        int _carryingValue = 0;
+        private bool _canDropMoney = true;
+        private Stack<Money> _carryingMoney = new Stack<Money>();
 
         //reference
 
@@ -29,9 +32,9 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             //INIT
-            carryingValue = carryingWeight = 0;
-            carryingMoney = new Stack<Money>(); carryingMoney.Clear();
-            canDropMoney = true;
+            _carryingValue = _carryingWeight = 0;
+            _carryingMoney = new Stack<Money>(); _carryingMoney.Clear();
+            _canDropMoney = true;
         }
         public override void Update() { }
 
@@ -43,66 +46,66 @@ namespace BRS.Scripts {
         
         public void Collect(Money money) {
             if (CanPickUp(money)) {
-                carryingWeight += money.Weight;
-                carryingValue += money.Value;
-                carryingMoney.Push(money);
+                _carryingWeight += money.Weight;
+                _carryingValue += money.Value;
+                _carryingMoney.Push(money);
             }
         }
 
         //deload = leave in base (no spawning)
         public void DeloadAll() {
-            carryingWeight = 0;
-            carryingValue = 0;
-            carryingMoney.Clear();
+            _carryingWeight = 0;
+            _carryingValue = 0;
+            _carryingMoney.Clear();
         }
 
         public void DeloadOne() {
-            Money m = carryingMoney.Pop();
-            carryingWeight -= m.Weight;
-            carryingValue -= m.Value;
+            Money m = _carryingMoney.Pop();
+            _carryingWeight -= m.Weight;
+            _carryingValue -= m.Value;
         }
 
         //drop = leave on ground by choice based on input
         public void DropMoney() {
-            if (canDropMoney) {
-                RemoveMoneyAmount(1, dropcashRadius);
-                canDropMoney = false;
-                new Timer(timeBetweenDrops, () => canDropMoney = true);
+            if (_canDropMoney) {
+                RemoveMoneyAmount(1, DropcashRadius);
+                _canDropMoney = false;
+                new Timer(TimeBetweenDrops, () => _canDropMoney = true);
             }
         }
 
         //lose = leave on ground by attack
         public void LoseMoney() {
-            RemoveMoneyAmount(Math.Max(carryingMoney.Count/2, 3), losecashRadius);
+            RemoveMoneyAmount(Math.Max(_carryingMoney.Count/2, 3), LosecashRadius);
         }
 
         public void LoseAllMoney() {
-            RemoveMoneyAmount(carryingMoney.Count, losecashRadius);
+            RemoveMoneyAmount(_carryingMoney.Count, LosecashRadius);
         }
 
         //general to remove
         void RemoveMoneyAmount(int amount, float radius) {
-            amount = Math.Min(amount, carryingMoney.Count);
+            amount = Math.Min(amount, _carryingMoney.Count);
             for (int i = 0; i < amount; i++){
-                Money money = carryingMoney.Pop();
+                Money money = _carryingMoney.Pop();
                 //Spawn money somewhere
-                Spawner.instance.SpawnMoneyAround(transform.position, radius);
-                carryingValue -= money.Value;
-                carryingWeight -= money.Weight;
+                Spawner.Instance.SpawnMoneyAround(transform.position, radius);
+                _carryingValue -= money.Value;
+                _carryingWeight -= money.Weight;
             }
         }
 
         public void UpdateCapacity(int amountToAdd) {
-            capacity += amountToAdd;
+            _capacity += amountToAdd;
         }
 
         // queries
         public bool CanPickUp(Money money) {
-            return carryingWeight + money.Weight <= capacity;
+            return _carryingWeight + money.Weight <= _capacity;
         }
 
         public bool IsFull() {
-            return carryingWeight >= capacity-3;
+            return _carryingWeight >= _capacity-3;
         }
 
         /*
@@ -110,11 +113,11 @@ namespace BRS.Scripts {
             return canDropMoney && carryingMoney.Count > 0;
         }*/
 
-        public float MoneyPercent { get { return (float)carryingWeight / capacity; } }
-        public int CarryingValue  { get { return carryingValue; } }
-        public int CarryingWeight { get { return carryingWeight; } }
-        public int Capacity       { get { return capacity; } }
-        public int ValueOnTop     { get { return carryingMoney.Peek().Value; } }
+        public float MoneyPercent { get { return (float)_carryingWeight / _capacity; } }
+        public int CarryingValue  { get { return _carryingValue; } }
+        public int CarryingWeight { get { return _carryingWeight; } }
+        public int Capacity       { get { return _capacity; } }
+        public int ValueOnTop     { get { return _carryingMoney.Peek().Value; } }
 
         // other
 

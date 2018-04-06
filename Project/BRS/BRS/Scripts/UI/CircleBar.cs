@@ -11,26 +11,27 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const int width = 128;
-        const int height = 128;
+        public static Texture2D Result;
+        public Texture2D CircleBg;
 
         //private
-        static float[] gradient;
-        static Color[] wheel;
-        static Color clear;
+        private static float[] _gradient;
+        private static Color[] _wheel;
+        private static Color _clear;
 
-        public static Texture2D result;
-        public Texture2D circleBg;
+        // const
+        private const int Width = 128;
+        private const int Height = 128;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            circleBg = File.Load<Texture2D>("Images/UI/circle_bg");
+            CircleBg = File.Load<Texture2D>("Images/UI/circle_bg");
             Texture2D circleFg = File.Load<Texture2D>("Images/UI/circle_fg");
             Texture2D circleGr = File.Load<Texture2D>("Images/UI/circle_gradient");
-            Initialize(circleFg, circleGr, Game1.instance.GraphicsDevice);
+            Initialize(circleFg, circleGr, Game1.Instance.GraphicsDevice);
         }
 
         public override void Update() {
@@ -43,32 +44,36 @@ namespace BRS.Scripts {
 
         // commands
         public void Draw(SpriteBatch spriteBatch, float percent) {
-            spriteBatch.Draw(circleBg, new Vector2(300, 200), Color.White);
+            spriteBatch.Draw(CircleBg, new Vector2(300, 200), Color.White);
             spriteBatch.Draw(Mix(percent), new Vector2(300, 200), Color.White);
         }
 
-        public static void Initialize(Texture2D fg, Texture2D gr, GraphicsDevice gd) {
-            gradient = new float[width * height];
-            wheel = new Color[width * height];
-            Color[] gtemp = new Color[width * height];
-            fg.GetData(wheel);
+        private static void Initialize(Texture2D fg, Texture2D gr, GraphicsDevice gd) {
+            _gradient = new float[Width * Height];
+            _wheel = new Color[Width * Height];
+            Color[] gtemp = new Color[Width * Height];
+            fg.GetData(_wheel);
             gr.GetData(gtemp);
-            for (int i = 0; i < width * height; i++)
-                gradient[i] = gtemp[i].R;
 
-            clear = new Color(0, 0, 0, 0);
-            result = new Texture2D(gd, width, height);
+            for (int i = 0; i < Width * Height; i++) {
+                _gradient[i] = gtemp[i].R;
+            }
+
+            _clear = new Color(0, 0, 0, 0);
+            Result = new Texture2D(gd, Width, Height);
         }
 
 
-        public static Texture2D Mix(float amount) {
-            Color[] res = new Color[width*height];
-            for(int i=0; i<width*height; i++) {
+        private static Texture2D Mix(float amount) {
+            Color[] res = new Color[Width * Height];
+
+            for (int i = 0; i < Width * Height; i++) {
                 //TODO make smooth & deal with bordercases (0, 1)
-                    res[i] = (gradient[i]<=amount*255) ? wheel[i] : clear;
+                res[i] = (_gradient[i] <= amount * 255) ? _wheel[i] : _clear;
             }
-            result.SetData(res);
-            return result;
+
+            Result.SetData(res);
+            return Result;
         }
 
 

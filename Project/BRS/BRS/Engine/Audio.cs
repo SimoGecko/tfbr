@@ -14,7 +14,7 @@ namespace BRS {
         static Dictionary<string, Song> songs;
 
         //static Transform listener = GameObject.FindGameObjectWithName("player_0").transform;
-        static Transform listenerTransf = Camera.main.transform;
+        static Transform listenerTransf = Camera.Main.transform;
         static AudioListener listener = new AudioListener();
 
         static AudioEmitter em = new AudioEmitter();

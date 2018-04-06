@@ -21,15 +21,12 @@ namespace BRS {
         public void Start() {
             Build();
             CreatePlayers();
-            BuildManagers();
-            //UiManager.Start();
-            //Managers.Start();
-            //GameManager.instance.RestartCustom();
+            StartManagers();
         }
 
         public void Update() { }
 
-        protected virtual void BuildManagers() {
+        protected virtual void StartManagers() {
 
         }
 

@@ -15,12 +15,9 @@ namespace BRS.Load {
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
-        private readonly Game1 _game;
 
-
-        public LevelPhysics(Game1 game, PhysicsManager physics)
+        public LevelPhysics(PhysicsManager physics)
             : base(physics) {
-            _game = game;
         }
 
 
@@ -52,7 +49,7 @@ namespace BRS.Load {
 
 
             //PLAYER
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
 
                 GameObject forklift = new GameObject("player_" + i, File.Load<Model>("Models/vehicles/forklift"));
                 forklift.tag = ObjectTag.Player;
@@ -72,7 +69,7 @@ namespace BRS.Load {
 
 
             //BASE
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject playerBase = new GameObject("playerBase_" + i, File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);

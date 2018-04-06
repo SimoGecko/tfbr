@@ -7,98 +7,97 @@ using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// player class that is a center hub for all things related to the player
+    /// it manages the state, team, calls relative functions with input BUT NOTHING ELSE
+    /// </summary>
     class Player : LivingEntity {
-        ////////// player class that is a center hub for all things related to the player //////////
-        ////////// it manages the state, team, calls relative functions with input BUT NOTHING ELSE //////////
-
         // --------------------- VARIABLES ---------------------
-        enum State { normal, attack, stun, dead, collided };
+        enum State { Normal, Attack, Stun, Dead };
 
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
         public int TeamIndex { get; private set; } // to differentiate teams
-        string playerName;
-        public Color playerColor;
-        public string nameUser;
+        public string PlayerName;
+        public Color PlayerColor;
 
         //HIT and STUN
-        const float stunTime = 2f;
-        const float respawnTime = 5f;
+        const float StunTime = 2f;
+        const float RespawnTime = 5f;
 
         //private
-        State state = State.normal;
+        State _state = State.Normal;
 
         //reference
 
         //subcomponents
-        PlayerAttack pA;
-        PlayerMovement pM;
-        PlayerInventory pI;
-        PlayerPowerup pP;
-        PlayerStamina pS;
-        PlayerLift pL;
+        PlayerAttack _pA;
+        PlayerMovement _pM;
+        PlayerInventory _pI;
+        PlayerPowerup _pP;
+        PlayerStamina _pS;
+        PlayerLift _pL;
 
-        public CameraController camController;
-        Player other;
+        public CameraController CamController;
+        Player _other;
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string _name = "Simo")
-        {
+        public Player(int playerIndex, int teamIndex, string name = "Simo") {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
-            playerName = _name + (playerIndex + 1).ToString();
-            playerColor = Graphics.ColorIndex(playerIndex);
+            PlayerName = name + (playerIndex + 1).ToString();
+            PlayerColor = Graphics.ColorIndex(playerIndex);
+
             //TODO make mesh have this color
-            
-            nameUser = playerName;
         }
         public override void Start() {
             base.Start();
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
-            if (po != null) other = po.GetComponent<Player>();
-           
+            if (po != null) _other = po.GetComponent<Player>();
 
-            camController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
+
+            CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
+            CamController.Start();
 
             //subcomponents (shorten)
-            pA = gameObject.GetComponent<PlayerAttack>();
-            pM = gameObject.GetComponent<PlayerMovement>();
-            pI = gameObject.GetComponent<PlayerInventory>();
-            pP = gameObject.GetComponent<PlayerPowerup>();
-            pS = gameObject.GetComponent<PlayerStamina>();
-            pL = gameObject.GetComponent<PlayerLift>();
+            _pA = GameObject.GetComponent<PlayerAttack>();
+            _pM = GameObject.GetComponent<PlayerMovement>();
+            _pI = GameObject.GetComponent<PlayerInventory>();
+            _pP = GameObject.GetComponent<PlayerPowerup>();
+            _pS = GameObject.GetComponent<PlayerStamina>();
+            _pL = GameObject.GetComponent<PlayerLift>();
         }
 
         public override void Update() {
 
             if (!GameManager.GameActive) {
-                pM.Move(Vector3.Zero); // smooth stop
+                _pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
 
             //only if game is running
-            if (state == State.normal) {
-                bool boosting = BoostInput() && pS.HasStaminaForBoost();
-                pM.boosting = boosting;
-                if (boosting) pS.UseStaminaForBoost();
+            if (_state == State.Normal) {
+                bool boosting = BoostInput() && _pS.HasStaminaForBoost();
+                _pM.Boosting = boosting;
+                if (boosting) _pS.UseStaminaForBoost();
 
-                Vector2 moveInput = MoveInput().Rotate(camController.YRotation);
-                pM.Move(moveInput.To3());
+                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation);
+                _pM.Move(moveInput.To3());
 
-                if (PowerupInput()) pP.UsePowerup(this);
-                if (DropCashInput()) pI.DropMoney();
+                if (PowerupInput()) _pP.UsePowerup(this);
+                if (DropCashInput()) _pI.DropMoney();
 
-                if (AttackInput() && pS.HasStaminaForAttack()) {
-                    state = State.attack;
-                    pS.UseStaminaForAttack();
-                    pA.BeginAttack();
-                    camController.Shake(.5f);
+                if (AttackInput() && _pS.HasStaminaForAttack()) {
+                    _state = State.Attack;
+                    _pS.UseStaminaForAttack();
+                    _pA.BeginAttack();
+                    CamController.Shake(.5f);
                 }
 
                 if (LiftInput()) {
-                    pL.Lift();
+                    _pL.Lift();
                 }
 
                 if (Input.GetKeyDown(Keys.V)) {
@@ -110,20 +109,18 @@ namespace BRS.Scripts {
                     }
                     Debug.Log(tmp);
                 }
-            } else if (state == State.attack) {
-                pA.AttackCoroutine();
-                if (pA.AttackEnded) state = State.normal;
-            } else if (state == State.collided) {
-                
+            } else if (_state == State.Attack) {
+                _pA.AttackCoroutine();
+                if (_pA.AttackEnded) _state = State.Normal;
             }
 
-            pS.UpdateStamina();
+            _pS.UpdateStamina();
             UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
             if (c.IsStatic) {
-                camController.Shake(.3f);
+                CamController.Shake(.3f);
             }
         }
 
@@ -133,23 +130,24 @@ namespace BRS.Scripts {
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
             base.TakeDamage(damage); // don't override state
-            if (!dead) {
-                state = State.stun;
-                pI.LoseMoney();
-                Timer t = new Timer(stunTime, () => { if (state == State.stun) state = State.normal; });
+
+            if (!Dead) {
+                _state = State.Stun;
+                _pI.LoseMoney();
+                Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
             }
         }
 
         protected override void Die() {
             base.Die();
-            state = State.dead;
-            pI.LoseAllMoney();
-            Timer timer = new Timer(respawnTime, Respawn);
+            _state = State.Dead;
+            _pI.LoseAllMoney();
+            Timer timer = new Timer(RespawnTime, Respawn);
         }
 
         protected override void Respawn() {
             base.Respawn();
-            state = State.normal;
+            _state = State.Normal;
             transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
         }
 
@@ -157,14 +155,14 @@ namespace BRS.Scripts {
             //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
             bool playerInRange = false;
-            if (other != null) {
-                playerInRange = Vector3.DistanceSquared(transform.position, other.transform.position) <= Math.Pow(PlayerAttack.attackDistance, 2);
+            if (_other != null) {
+                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(PlayerAttack.AttackDistance, 2);
             }
-            bool canAttack = pS.HasStaminaForAttack() && playerInRange;
-            PlayerUI.instance.UpdatePlayerUI(PlayerIndex,
-                health, startingHealth,
-                pS.stamina, pS.maxStamina,
-                pI.Capacity, pI.CarryingValue, pI.CarryingWeight, playerName, canAttack);//, ba.Health, ba.startingHealth);
+            bool canAttack = _pS.HasStaminaForAttack() && playerInRange;
+            PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
+                Health, StartingHealth,
+                _pS.Stamina, _pS.MaxStamina,
+                _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
         //-------------------------------------------------------------------------------------------
@@ -173,11 +171,12 @@ namespace BRS.Scripts {
 
         Vector2 MoveInput() {
             if (PlayerIndex == 0)
-                return new Vector2(Input.GetAxisRaw0("Horizontal"), Input.GetAxisRaw0("Vertical"));
-            else if (PlayerIndex == 1)
-                return new Vector2(Input.GetAxisRaw1("Horizontal"), Input.GetAxisRaw1("Vertical"));
-            else
-                return Input.GetThumbstick("Left", PlayerIndex);
+                return new Vector2(Input.GetAxisRaw0(Input.Axis.Horizontal), Input.GetAxisRaw0(Input.Axis.Vertical));
+
+            if (PlayerIndex == 1)
+                return new Vector2(Input.GetAxisRaw1(Input.Axis.Horizontal), Input.GetAxisRaw1(Input.Axis.Vertical));
+
+            return Input.GetThumbstick(Input.Stick.Left, PlayerIndex);
         }
 
         bool AttackInput() {
@@ -203,7 +202,7 @@ namespace BRS.Scripts {
         bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
                || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
-               || Input.GetButton(Buttons.LeftShoulder , PlayerIndex) || Input.GetButton(Buttons.LeftTrigger , PlayerIndex);
+               || Input.GetButton(Buttons.LeftShoulder, PlayerIndex) || Input.GetButton(Buttons.LeftTrigger, PlayerIndex);
         }
 
         // other

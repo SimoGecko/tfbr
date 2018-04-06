@@ -10,24 +10,27 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float staminaReloadPerSecond = .1f;
-        const float staminaPerBoost = .3f;
-        const float staminaPerAttack = .3f;
-        const float staminaReloadDelay = .2f;
+        public float MaxStamina = 1;
+        public float Stamina = 1;
 
         //private
-        public float maxStamina = 1;
-        public float stamina = 1;
-        bool canReloadStamina = true;
+        private bool _canReloadStamina = true;
+
+        // const
+        private const float StaminaReloadPerSecond = .1f;
+        private const float StaminaPerBoost = .3f;
+        private const float StaminaPerAttack = .3f;
+        private const float StaminaReloadDelay = .2f;
 
         //reference
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            maxStamina = stamina = 1f;
-            canReloadStamina = true;
+            MaxStamina = Stamina = 1f;
+            _canReloadStamina = true;
         }
+
         public override void Update() { }
 
 
@@ -37,44 +40,44 @@ namespace BRS.Scripts {
 
         // commands
         public void UpdateStamina() {
-            if (canReloadStamina && stamina < 0) {
-                canReloadStamina = false;
-                stamina = 0;
-                Timer t = new Timer(1, () => canReloadStamina = true);
+            if (_canReloadStamina && Stamina < 0) {
+                _canReloadStamina = false;
+                Stamina = 0;
+                Timer t = new Timer(1, () => _canReloadStamina = true);
             }
-            if (canReloadStamina) AddStamina(staminaReloadPerSecond * Time.deltaTime);
+            if (_canReloadStamina) AddStamina(StaminaReloadPerSecond * Time.DeltaTime);
         }
 
         public void AddStamina(float amount) {
-            stamina = MathHelper.Min(stamina + amount, maxStamina);
+            Stamina = MathHelper.Min(Stamina + amount, MaxStamina);
         }
 
         public void UpdateMaxStamina(float amountToAdd) {
-            maxStamina += amountToAdd;
+            MaxStamina += amountToAdd;
         }
 
         //USAGE
         public void UseStaminaForBoost() {
-            stamina -= staminaPerBoost * Time.deltaTime;
+            Stamina -= StaminaPerBoost * Time.DeltaTime;
         }
         public void UseStaminaForAttack() {
-            stamina -= staminaPerAttack;
+            Stamina -= StaminaPerAttack;
         }
 
 
         // queries
         public bool HasStaminaForBoost() {
-            return stamina > 0; //staminaPerBoost * Time.deltatime)
+            return Stamina > 0; //staminaPerBoost * Time.deltatime)
         }
 
         public bool HasStaminaForAttack() {
-            return stamina >= staminaPerAttack;
+            return Stamina >= StaminaPerAttack;
         }
 
 
 
         // other
-        public float StaminaPercent { get { return stamina / maxStamina; } }
+        public float StaminaPercent { get { return Stamina / MaxStamina; } }
 
     }
 

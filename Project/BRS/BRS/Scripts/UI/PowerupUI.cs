@@ -12,27 +12,29 @@ namespace BRS.Scripts {
 
         //public
         //string[] pngNames = { "bomb", "key", "capacity", "speed", "health", "shield", "trap" };
-        const int atlasWidth = 128;
 
         //private
         //Dictionary<string, int> powerupStringToIndex = new Dictionary<string, int>();
-        int numPowerups = System.Enum.GetValues(typeof(PowerupType)).Length;
+        private readonly int _numPowerups = System.Enum.GetValues(typeof(PowerupType)).Length;
         //Texture2D[] powerupsPng;// = new Texture2D[numPowerups];
-        Texture2D powerupsAtlas;
-        Rectangle[] powerupsRectangle;
-        Texture2D slot;
+        private Texture2D _powerupsAtlas;
+        private Rectangle[] _powerupsRectangle;
+        private Texture2D _slot;
 
-        PowerupUIStruct[] powerupUI;
+        private PowerupUIStruct[] _powerupUi;
+
+        // const
+        const int AtlasWidth = 128;
 
         //reference
-        public static PowerupUI instance;
+        public static PowerupUI Instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            instance = this;
-            powerupUI = new PowerupUIStruct[GameManager.numPlayers];
-            for (int i = 0; i < GameManager.numPlayers; i++) powerupUI[i].currentPowerups = new int[0];
+            Instance = this;
+            _powerupUi = new PowerupUIStruct[GameManager.NumPlayers];
+            for (int i = 0; i < GameManager.NumPlayers; i++) _powerupUi[i].CurrentPowerups = new int[0];
 
             //load pngs
             /*
@@ -41,15 +43,15 @@ namespace BRS.Scripts {
                 powerupsPng[i] = File.Load<Texture2D>("Images/powerup/" + ((PowerupType)i).ToString() + "_pic");
                 //if (!powerupStringToIndex.ContainsKey(pngNames[i])) powerupStringToIndex.Add(pngNames[i], i);
             }*/
-            powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups"); // atlas
-            powerupsRectangle = new Rectangle[numPowerups];
-            for (int i = 0; i < numPowerups; ++i) {
+            _powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups"); // atlas
+            _powerupsRectangle = new Rectangle[_numPowerups];
+            for (int i = 0; i < _numPowerups; ++i) {
                 int column = i%4;
                 int row = i/4;
-                powerupsRectangle[i] = new Rectangle(column*atlasWidth, row*atlasWidth, atlasWidth, atlasWidth);
+                _powerupsRectangle[i] = new Rectangle(column*AtlasWidth, row*AtlasWidth, AtlasWidth, AtlasWidth);
             }
 
-            slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
+            _slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
         }
 
         public override void Update() {
@@ -64,22 +66,22 @@ namespace BRS.Scripts {
         // commands
         public void Draw(int index) { // TODO clean out this code
             Vector2 position = new Vector2(300, 100);
-            position += Vector2.UnitX * UserInterface.instance.GetOffset(index);
+            position += Vector2.UnitX * UserInterface.Instance.GetOffset(index);
             Rectangle destRect = new Rectangle((int)position.X, (int)position.Y, 50, 50);
 
-            UserInterface.instance.DrawPicture(destRect, slot);
+            UserInterface.Instance.DrawPicture(destRect, _slot);
 
-            if (powerupUI[index].currentPowerups.Length>0) { // it's going to draw just one
-                foreach (int powerup in powerupUI[index].currentPowerups) {
+            if (_powerupUi[index].CurrentPowerups.Length>0) { // it's going to draw just one
+                foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
-                    UserInterface.instance.DrawPicture(destRect, powerupsAtlas, powerupsRectangle[powerup]);
-                    Suggestions.instance.GiveCommand(index, destRect.Evaluate(new Vector2(.5f, 1)) + new Vector2(0, 30), XboxButtons.X);
+                    UserInterface.Instance.DrawPicture(destRect, _powerupsAtlas, _powerupsRectangle[powerup]);
+                    Suggestions.Instance.GiveCommand(index, destRect.Evaluate(new Vector2(.5f, 1)) + new Vector2(0, 30), XboxButtons.X);
                 }
             }
         }
 
         public void UpdatePlayerPowerupUI(int index, int[] powerupList) {
-            powerupUI[index].currentPowerups = powerupList;//.Add(name);
+            _powerupUi[index].CurrentPowerups = powerupList;//.Add(name);
             //else     powerupUI[index].currentPowerup.Remove(name);
         }
 
@@ -90,11 +92,6 @@ namespace BRS.Scripts {
 
 
         // other
-
-    }
-    public struct PowerupUIStruct {
-        //power ups
-        public int[] currentPowerups;
 
     }
 }

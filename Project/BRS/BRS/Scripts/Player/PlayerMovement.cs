@@ -8,35 +8,39 @@ using Microsoft.Xna.Framework;
 using System;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// Deals with the movement of the player around the map
+    /// </summary>
     class PlayerMovement : Component {
-        ////////// Deals with the movement of the player around the map //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float minSpeed = 5f;
-        const float maxSpeed = 10f;
-        const float maxTurningRate = 720; // deg/sec
-        const float boostSpeedMultiplier = 1.5f;
-
-        const float slowdownMalus = .3f;
-        const float speedPadMultiplier = 2f;
 
         //private
-        float rotation;
-        float smoothMagnitude, refMagnitude;
-        float refangle, refangle2;
-        float inputAngle;
-        float targetRotation;
+        private float _rotation;
+        private float _smoothMagnitude, _refMagnitude;
+        private float _refangle, _refangle2;
+        private float _inputAngle;
+        private float _targetRotation;
+
+        // const
+        private const float MinSpeed = 5f;
+        private const float MaxSpeed = 10f;
+        private const float MaxTurningRate = 720; // deg/sec
+        private const float BoostSpeedMultiplier = 1.5f;
+
+        private const float SlowdownMalus = .3f;
+        private const float SpeedPadMultiplier = 2f;
 
 
         //BOOST
-        public bool boosting;
-        public bool powerupBoosting;
+        public bool Boosting;
+        public bool PowerupBoosting;
 
         //SLOWDOWN
-        bool slowdown = false;
-        bool speedPad = false;
+        bool _slowdown;
+        bool _speedPad;
 
         //reference
         PlayerInventory playerInventory;
@@ -48,9 +52,9 @@ namespace BRS.Scripts {
             //transform.Rotate(Vector3.Up, -90);
             //rotation = targetRotation = -90;
 
-            playerInventory = gameObject.GetComponent<PlayerInventory>();
+            playerInventory = GameObject.GetComponent<PlayerInventory>();
 
-            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
+            MovingRigidBody dynamicRigidBody = GameObject.GetComponent<MovingRigidBody>();
             _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
         }
 
@@ -66,51 +70,51 @@ namespace BRS.Scripts {
         // commands
         public void Move(Vector3 input) {
             float magnitude = Utility.Clamp01(input.Length());
-            smoothMagnitude = Utility.SmoothDamp(smoothMagnitude, magnitude, ref refMagnitude, .1f);
+            _smoothMagnitude = Utility.SmoothDamp(_smoothMagnitude, magnitude, ref _refMagnitude, .1f);
 
             //rotate towards desired angle
-            if (smoothMagnitude > .05f) { // avoid changing if 0
-                inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
-                inputAngle = Utility.WrapAngle(inputAngle, targetRotation);
-                targetRotation = Utility.SmoothDampAngle(targetRotation, inputAngle - 90, ref refangle, .3f, maxTurningRate * smoothMagnitude);
+            if (_smoothMagnitude > .05f) { // avoid changing if 0
+                _inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
+                _inputAngle = Utility.WrapAngle(_inputAngle, _targetRotation);
+                _targetRotation = Utility.SmoothDampAngle(_targetRotation, _inputAngle - 90, ref _refangle, .3f, MaxTurningRate * _smoothMagnitude);
             } else {
-                targetRotation = Utility.SmoothDampAngle(targetRotation, rotation, ref refangle2, .3f, maxTurningRate * smoothMagnitude);
+                _targetRotation = Utility.SmoothDampAngle(_targetRotation, _rotation, ref _refangle2, .3f, MaxTurningRate * _smoothMagnitude);
             }
 
             // Calculate rotation
-            rotation = MathHelper.Lerp(rotation, targetRotation, smoothMagnitude);
+            _rotation = MathHelper.Lerp(_rotation, _targetRotation, _smoothMagnitude);
 
             // Calculate velocity
-            float speedboost = boosting || powerupBoosting ? boostSpeedMultiplier : 1f;
-            speedboost *= slowdown ? slowdownMalus : 1f;
+            float speedboost = Boosting || PowerupBoosting ? BoostSpeedMultiplier : 1f;
+            speedboost *= _slowdown ? SlowdownMalus : 1f;
 
             Vector3 linearVelocity;
-            if (speedPad) { // override and force to move at max speed
-                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedPadMultiplier;
+            if (_speedPad) { // override and force to move at max speed
+                linearVelocity = Vector3.Forward * CapacityBasedSpeed * SpeedPadMultiplier;
             } else {
-                linearVelocity = Vector3.Forward * capacityBasedSpeed * speedboost * smoothMagnitude;
+                linearVelocity = Vector3.Forward * CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
 
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
             if (_rigidBody != null) {
-                _rigidBody.RotationY = MathHelper.ToRadians(rotation);
+                _rigidBody.RotationY = MathHelper.ToRadians(_rotation);
                 _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
             }
         }
 
         public void SetSlowdown(bool b) {
-            slowdown = b;
+            _slowdown = b;
         }
 
         internal void SetSpeedPad(bool b) {
-            speedPad = b;
+            _speedPad = b;
         }
 
 
         // queries
-        float capacityBasedSpeed { get { return MathHelper.Lerp(maxSpeed, minSpeed, playerInventory.MoneyPercent); } }
+        float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }
 
 
 

@@ -10,16 +10,16 @@ namespace BRS {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public bool lit;
-        public Color diffuse;
+        public bool Lit;
+        public Color Diffuse;
 
 
         //private
 
 
         //reference
-        public EffectMaterial(bool _lit, Color _color) {
-            lit = _lit; diffuse = _color;
+        public EffectMaterial(bool lit, Color color) {
+            Lit = lit; Diffuse = color;
         }
 
 

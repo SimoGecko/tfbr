@@ -10,11 +10,14 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float liftDistance = 1f;
 
         //private
-        bool lifting;
-        Vector3 liftStartPos, liftEndPos;
+        private bool _lifting;
+        private Vector3 _liftStartPos, _liftEndPos;
+
+        // const
+        const float LiftDistance = 1f;
+
         //Mesh forklift;
         //List<Mesh> separatedComponents;
 
@@ -22,13 +25,13 @@ namespace BRS.Scripts {
         PlayerInventory playerInventory;
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {lifting = false; }
+        public override void Start() { _lifting = false; }
         public override void Update() { }
 
 
         // --------------------- CUSTOM METHODS ----------------
         public void Lift() {
-            lifting = true;
+            _lifting = true;
             //liftStartPos = separatedComponents[0].transform;
             //liftEndPos = liftStartPos.y + liftDistance;
 
@@ -43,10 +46,10 @@ namespace BRS.Scripts {
 
         }
         // queries
-        public bool IsLifting { get { return lifting; } }
+        public bool IsLifting { get { return _lifting; } }
 
 
         // other
-        
+
     }
 }

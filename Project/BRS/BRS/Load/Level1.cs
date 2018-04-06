@@ -12,16 +12,12 @@ using System.Threading.Tasks;
 
 namespace BRS.Load {
     class Level1 : Scene {
-        private readonly Game1 _game;
-
-        // TODO: game-parameter will be removed as soon as the car is rewritten to our framework
-        public Level1(PhysicsManager physics, Game1 game)
+        public Level1(PhysicsManager physics)
             : base(physics) {
-            _game = game;
         }
 
 
-        protected override void BuildManagers() {
+        protected override void StartManagers() {
             UiManager.Start();
             Managers.Start();
         }
@@ -109,7 +105,7 @@ namespace BRS.Load {
         protected override void CreatePlayers() {
             List<GameObject> objects = new List<GameObject>();
 
-            for (int i = 0; i < GameManager.numPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(2.0f);
@@ -125,15 +121,15 @@ namespace BRS.Load {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
 
-                if (MenuManager.instance.playersInfo.ContainsKey("player_" + i.ToString())) {
-                    string userName = MenuManager.instance.playersInfo["player_" + i.ToString()].Item1;
-                    Model userModel = MenuManager.instance.playersInfo["player_" + i.ToString()].Item2;
+                if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                    string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
+                    Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
 
-                    if (userName != null) player.GetComponent<Player>().nameUser = userName;
+                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
                     if (userModel != null) player.Model = userModel;
                 }
 
-                Elements.instance.Add(player.GetComponent<Player>());
+                Elements.Instance.Add(player.GetComponent<Player>());
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
@@ -151,7 +147,7 @@ namespace BRS.Load {
                 bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
-                Elements.instance.Add(bases[i].GetComponent<Base>());
+                Elements.Instance.Add(bases[i].GetComponent<Base>());
 
                 objects.Add(bases[i]);
             }

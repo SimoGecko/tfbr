@@ -1,11 +1,10 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS {
     public class ParticleSystem : Component {
@@ -20,12 +19,12 @@ namespace BRS {
 
 
         //private
-        private Random random;
-        private List<Particle> particles;
-        private List<Texture2D> textures;
+        private readonly Random _random;
+        private readonly List<Particle> _particles;
+        private readonly List<Texture2D> _textures;
 
         //extra
-        float emitVelocity;
+        float emitVelocity = 2;
         public float EmitRate = 100;
         //emitShape / angle
         Color range; // or color over lifetime
@@ -39,16 +38,16 @@ namespace BRS {
         }
 
         public override void Update() {
-            int numNewParticles = (int)(EmitRate*Time.deltaTime);
+            int numNewParticles = (int)(EmitRate * Time.DeltaTime);
 
             for (int i = 0; i < numNewParticles; i++) {
-                particles.Add(GenerateNewParticle());
+                _particles.Add(GenerateNewParticle());
             }
 
-            for (int i = 0; i < particles.Count; i++) {
-                particles[i].Update();
-                if (particles[i].Lifetime <= 0) {
-                    particles.RemoveAt(i);
+            for (int i = 0; i < _particles.Count; i++) {
+                _particles[i].Update();
+                if (_particles[i].Lifetime <= 0) {
+                    _particles.RemoveAt(i);
                     i--; // not to skip particles to update
                 }
             }
@@ -56,8 +55,8 @@ namespace BRS {
 
         public void Draw(SpriteBatch spriteBatch) { // TODO make sure it's called
             spriteBatch.Begin(); // add effects here
-            for (int i = 0; i < particles.Count; i++) {
-                particles[i].Draw(spriteBatch);
+            foreach (Particle particle in _particles) {
+                particle.Draw(spriteBatch);
             }
             spriteBatch.End();
         }
@@ -70,13 +69,13 @@ namespace BRS {
         // commands
         public ParticleSystem(List<Texture2D> textures, Vector2 location) {
             EmitterLocation = location;
-            this.textures = textures;
-            this.particles = new List<Particle>();
-            random = new Random();
+            _textures = textures;
+            _particles = new List<Particle>();
+            _random = new Random();
         }
 
         private Particle GenerateNewParticle() {
-            Texture2D texture = textures[random.Next(textures.Count)];
+            Texture2D texture = _textures[_random.Next(_textures.Count)];
             return new Particle(texture, EmitLocation(), EmitVelocity(), StartAngle(), StartAngularVelocity(), StartColor(), StartSize(), Lifetime());
         }
 
@@ -87,23 +86,23 @@ namespace BRS {
 
         Vector2 EmitVelocity() {
             return new Vector2(
-                    emitVelocity * (float)(random.NextDouble() * 2 - 1),
-                    emitVelocity * (float)(random.NextDouble() * 2 - 1));
+                    emitVelocity * (float)(_random.NextDouble() * 2 - 1),
+                    emitVelocity * (float)(_random.NextDouble() * 2 - 1));
         }
 
         float StartSize() {
-            return (float)random.NextDouble();
+            return (float)_random.NextDouble();
         }
 
         float Lifetime() {
-            return 20 + random.Next(40);
+            return 20 + _random.Next(40);
         }
 
         Color StartColor() {
             return new Color(
-                    (float)random.NextDouble(),
-                    (float)random.NextDouble(),
-                    (float)random.NextDouble());
+                    (float)_random.NextDouble(),
+                    (float)_random.NextDouble(),
+                    (float)_random.NextDouble());
         }
 
         float StartAngle() {
@@ -111,45 +110,11 @@ namespace BRS {
         }
 
         float StartAngularVelocity() {
-            return 0.1f * (float)(random.NextDouble() * 2 - 1);
+            return 0.1f * (float)(_random.NextDouble() * 2 - 1);
         }
 
 
         // other
-        public class Particle {
-            public Texture2D Texture { get; set; }       
-            public Vector2 Position { get; set; }        
-            public Vector2 Velocity { get; set; }        
-            public float Angle { get; set; }   
-            public float AngularVelocity { get; set; }   
-            public Color Color { get; set; }      
-            public float Size { get; set; }                                                   
-            public float Lifetime { get; set; }
-
-            public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, float lifetime) {
-                Texture = texture;
-                Position = position;
-                Velocity = velocity;
-                Angle = angle;
-                AngularVelocity = angularVelocity;
-                Color = color;
-                Size = size;
-                Lifetime = lifetime;
-            }
-
-            public void Update() {
-                Lifetime -= Time.deltaTime;
-                Position += Velocity;
-                Angle += AngularVelocity;
-            }
-
-            public void Draw(SpriteBatch spriteBatch) {
-                Rectangle sourceRectangle = new Rectangle(0, 0, Texture.Width, Texture.Height);
-                Vector2 origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
-                spriteBatch.Draw(Texture, Position, sourceRectangle, Color, Angle, origin, Size, SpriteEffects.None, 0f);
-            }
-
-        }
 
     }
 }

@@ -15,19 +15,19 @@ namespace BRS.Scripts {
 
 
         //private
-        PlayerUIStruct[] playerUI;
-        Texture2D forkliftIcon;
+        private PlayerUIStruct[] _playerUi;
+        private Texture2D _forkliftIcon;
 
         //reference
-        public static PlayerUI instance;
+        public static PlayerUI Instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            instance = this;
-            playerUI = new PlayerUIStruct[GameManager.numPlayers];
+            Instance = this;
+            _playerUi = new PlayerUIStruct[GameManager.NumPlayers];
 
-            forkliftIcon = File.Load<Texture2D>("Images/UI/forklift_icon");
+            _forkliftIcon = File.Load<Texture2D>("Images/UI/forklift_icon");
         }
 
         public override void Update() {
@@ -42,112 +42,97 @@ namespace BRS.Scripts {
         // commands
         public void Draw(int index) {
             Vector2 position = new Vector2(130, 130);
-            position += Vector2.UnitX * UserInterface.instance.GetOffset(index);
-            Vector2 screenPosition = Camera.main.WorldToScreenPoint(Elements.instance.Player(index).transform.position);
+            position += Vector2.UnitX * UserInterface.Instance.GetOffset(index);
+            Vector2 screenPosition = Camera.Main.WorldToScreenPoint(Elements.Instance.Player(index).transform.position);
 
-            UserInterface.instance.DrawPicture(position, forkliftIcon, forkliftIcon.Bounds.GetCenter(), .5f);
+            UserInterface.Instance.DrawPicture(position, _forkliftIcon, _forkliftIcon.Bounds.GetCenter(), .5f);
 
             //name
-            string playerName = playerUI[index].name;
-            UserInterface.instance.DrawString(position + new Vector2(-70, -110), playerName);
+            string playerName = _playerUi[index].Name;
+            UserInterface.Instance.DrawString(position + new Vector2(-70, -110), playerName);
 
             //health
-            float healthPercent = playerUI[index].health / playerUI[index].maxHealth;
-            UserInterface.instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Green);
-            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -60), healthPercent, Color.Green);
+            float healthPercent = _playerUi[index].Health / _playerUi[index].MaxHealth;
+            UserInterface.Instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Green);
+            UserInterface.Instance.DrawBarSmall(screenPosition + new Vector2(-35, -60), healthPercent, Color.Green);
 
             //stamina
-            float staminaPercent = playerUI[index].stamina / playerUI[index].maxStamina;
-            UserInterface.instance.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
-            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -55), staminaPercent, Color.Red);
+            float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
+            UserInterface.Instance.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
+            UserInterface.Instance.DrawBarSmall(screenPosition + new Vector2(-35, -55), staminaPercent, Color.Red);
 
             //stamina button suggestions
-            if (playerUI[index].canAttack) {
-                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
+            if (_playerUi[index].CanAttack) {
+                Suggestions.Instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
             } else if (staminaPercent == 1) {
-                Suggestions.instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.RT);
+                Suggestions.Instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.RT);
             }
 
             //capacity
-            float capacityPercent = (float)playerUI[index].carryingWeight / playerUI[index].maxCapacity;
-            UserInterface.instance.DrawBarVertical(position + new Vector2(-95 , 60), capacityPercent, Color.Blue);
-            UserInterface.instance.DrawBarSmall(screenPosition + new Vector2(-35, -50), capacityPercent, Color.Blue);
+            float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
+            UserInterface.Instance.DrawBarVertical(position + new Vector2(-95 , 60), capacityPercent, Color.Blue);
+            UserInterface.Instance.DrawBarSmall(screenPosition + new Vector2(-35, -50), capacityPercent, Color.Blue);
 
             //cash
-            string playerValueString = "$" + playerUI[index].carryingValue.ToString("N0");//ToString("#,##0")
-            UserInterface.instance.DrawString(position + new Vector2(50, -20), playerValueString);
+            string playerValueString = "$" + _playerUi[index].CarryingValue.ToString("N0");//ToString("#,##0")
+            UserInterface.Instance.DrawString(position + new Vector2(50, -20), playerValueString);
 
         }
 
         public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack) {
             // current
-            playerUI[index].carryingValue = carryingValue;
+            _playerUi[index].CarryingValue = carryingValue;
 
-            playerUI[index].health = health;
-            playerUI[index].stamina = stamina;
-            playerUI[index].carryingWeight = carryingWeight;
+            _playerUi[index].Health = health;
+            _playerUi[index].Stamina = stamina;
+            _playerUi[index].CarryingWeight = carryingWeight;
             // max
-            playerUI[index].maxHealth = maxHealth;
-            playerUI[index].maxStamina = maxStamina;
-            playerUI[index].maxCapacity = maxCapacity;
+            _playerUi[index].MaxHealth = maxHealth;
+            _playerUi[index].MaxStamina = maxStamina;
+            _playerUi[index].MaxCapacity = maxCapacity;
 
-            playerUI[index].name = name;
-            playerUI[index].canAttack = canAttack;
+            _playerUi[index].Name = name;
+            _playerUi[index].CanAttack = canAttack;
 
         }
 
 
 
         // queries
+        // todo: used? otherwise delete.. since we have old code in git
         public void DrawOldUI(int index) {
             
-            int offset = UserInterface.instance.GetOffset(index);
+            int offset = UserInterface.Instance.GetOffset(index);
 
-            string playerValueString = "carrying: " + playerUI[index].carryingValue;
-            UserInterface.instance.DrawString(new Vector2(10 + offset, 120), playerValueString);
+            string playerValueString = "carrying: " + _playerUi[index].CarryingValue;
+            UserInterface.Instance.DrawString(new Vector2(10 + offset, 120), playerValueString);
 
             //health
-            float healthPercent = playerUI[index].health / playerUI[index].maxHealth;
-            UserInterface.instance.DrawBarBig(new Vector2(10 + offset, 170), healthPercent, Color.Green);
-            string healthString = playerUI[index].health + "/" + playerUI[index].maxHealth;
-            UserInterface.instance.DrawString(new Vector2(75 + offset, 160), healthString);
+            float healthPercent = _playerUi[index].Health / _playerUi[index].MaxHealth;
+            UserInterface.Instance.DrawBarBig(new Vector2(10 + offset, 170), healthPercent, Color.Green);
+            string healthString = _playerUi[index].Health + "/" + _playerUi[index].MaxHealth;
+            UserInterface.Instance.DrawString(new Vector2(75 + offset, 160), healthString);
 
             //stamina
-            float staminaPercent = playerUI[index].stamina / playerUI[index].maxStamina;
-            UserInterface.instance.DrawBarBig(new Vector2(10 + offset, 220), staminaPercent, Color.Red);
-            string staminaString = Math.Round(playerUI[index].stamina * 100) + "/" + playerUI[index].maxStamina * 100; // TODO make stamina range 100
-            UserInterface.instance.DrawString(new Vector2(75 + offset, 210), staminaString);
+            float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
+            UserInterface.Instance.DrawBarBig(new Vector2(10 + offset, 220), staminaPercent, Color.Red);
+            string staminaString = Math.Round(_playerUi[index].Stamina * 100) + "/" + _playerUi[index].MaxStamina * 100; // TODO make stamina range 100
+            UserInterface.Instance.DrawString(new Vector2(75 + offset, 210), staminaString);
 
             //capacity
-            float capacityPercent = (float)playerUI[index].carryingWeight / playerUI[index].maxCapacity;
-            UserInterface.instance.DrawBarBig(new Vector2(10 + offset, 270), capacityPercent, Color.Blue);
-            string capacityString = playerUI[index].carryingWeight + "/" + playerUI[index].maxCapacity;
-            UserInterface.instance.DrawString(new Vector2(100 + offset, 260), capacityString);
+            float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
+            UserInterface.Instance.DrawBarBig(new Vector2(10 + offset, 270), capacityPercent, Color.Blue);
+            string capacityString = _playerUi[index].CarryingWeight + "/" + _playerUi[index].MaxCapacity;
+            UserInterface.Instance.DrawString(new Vector2(100 + offset, 260), capacityString);
             
         }
 
         public string GetPlayerName(int index) {
-            return playerUI[index].name;
+            return _playerUi[index].Name;
         }
 
 
         // other
 
-    }
-    public struct PlayerUIStruct {
-        // current
-        public string name;
-        public int carryingValue;
-
-        public int carryingWeight;
-        public float health;
-        public float stamina;
-        // max
-        public float maxHealth;
-        public float maxStamina;
-        public int maxCapacity;
-
-        //helper
-        public bool canAttack;
     }
 }
