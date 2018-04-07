@@ -27,9 +27,9 @@ namespace BRS.Scripts.PlayerScripts {
         private float _targetRotation;
 
         // const
-        private const float MinSpeed = 5f;
-        private const float MaxSpeed = 10f;
-        private const float MaxTurningRate = 720; // deg/sec
+        private const float MinSpeed = 3f;
+        private const float MaxSpeed = 9f;
+        private const float MaxTurningRate = 1000; // deg/sec
         private const float BoostSpeedMultiplier = 1.5f;
 
         private const float SlowdownMalus = .3f;

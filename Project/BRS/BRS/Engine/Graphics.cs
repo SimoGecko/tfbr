@@ -23,7 +23,7 @@ namespace BRS.Engine {
         private static readonly Color Blue   = new Color(66, 133, 244);
         private static readonly Color Yellow = new Color(251, 188, 5);
 
-
+        public static Color Clear = new Color(255, 255, 255, 0);
         //private
 
 

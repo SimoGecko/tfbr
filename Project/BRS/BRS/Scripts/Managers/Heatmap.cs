@@ -18,13 +18,17 @@ namespace BRS.Scripts {
 
         //private
         CDFdistrib green; // stores green distribution
-        //_upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
+        CDFdistrib yellow; // stores yellow distribution
+        //_upperLeftPt = new Vector3(-25, 0, -75);
         //_lowerRightPt = new Vector3(25, 0, 5);
 
         Rectangle playArea = new Rectangle(-25, -75, 50, 80);
 
+        float pixelSize;
+
         //reference
-        Texture2D heatmapPic;
+        Texture2D moneyPic;
+        Texture2D goldPic;
         public static Heatmap instance;
 
 
@@ -34,8 +38,12 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-            heatmapPic = File.Load<Texture2D>("Images/heatmap/level1");
-            green = new CDFdistrib(heatmapPic, 1);
+            moneyPic = File.Load<Texture2D>("Images/heatmap/level1_green");
+            goldPic  = File.Load<Texture2D>("Images/heatmap/level1_yellow");
+            green = new CDFdistrib(moneyPic, 1);
+            yellow = new CDFdistrib(goldPic, 1);
+
+            pixelSize = (float)playArea.Width / moneyPic.Width;
 
             //int[,] test = new int[,] { { 7, 8, 4 }, { 2, 6, 1 }, { 0, 5, 3 }, { 4, 1, 0 } };
             //CDFdistrib newdistrib = new CDFdistrib(ref test);
@@ -52,21 +60,26 @@ namespace BRS.Scripts {
 
 
         // commands
-        public Vector2 GetMoneyPos() {
+        public Vector2 GetCashPos() {
             Vector2 pixel = green.Evaluate().ToVector2();
-            //Vector2 normalizedCoords = Vector2.Divide(pixel, new Vector2(heatmapPic.Height, heatmapPic.Width));
-            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(heatmapPic.Width, heatmapPic.Height));
-            return playArea.Evaluate(normalizedCoords);
+            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(moneyPic.Width, moneyPic.Height));
+            return playArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
-        
+
+        public Vector2 GetGoldPos() {
+            Vector2 pixel = yellow.Evaluate().ToVector2();
+            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(goldPic.Width, goldPic.Height));
+            return playArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+        }
+
 
 
         // queries
-        
 
-        
 
-        
+
+
+
 
 
 

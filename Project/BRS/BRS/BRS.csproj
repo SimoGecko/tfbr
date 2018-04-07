@@ -205,6 +205,7 @@
     <Compile Include="Scripts\Elements\SpeedPad.cs" />
     <Compile Include="Scripts\PowerUps\Trap.cs" />
     <Compile Include="Scripts\Elements\Vault.cs" />
+    <Compile Include="Scripts\UI\MoneyUI.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PlayerUIStruct.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />

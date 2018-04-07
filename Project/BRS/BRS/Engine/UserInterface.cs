@@ -93,7 +93,7 @@ namespace BRS.Engine {
             PowerupUI.Instance.Draw(index);
             Suggestions.Instance.Draw(index);
             Minimap.Instance.DrawSmall(spriteBatch, index);
-            
+            MoneyUI.Instance.Draw(index);
 
             //test draw
             /*

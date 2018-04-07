@@ -232,7 +232,7 @@ namespace BRS.Menu {
 
         }
 
-        public void Draw() {
+        public void Draw() { // THIS Is horrible code!
             foreach (var go in GameObject.All)
                 if (go.active)
                     foreach (var component in go.components)

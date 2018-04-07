@@ -21,6 +21,7 @@ namespace BRS.Engine {
             //VALUABLES
             //cash
             //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
+            /*
             string[] models = new string[] { "SM_Prop_Money_Note_07", "SM_Prop_Money_Stack_02", "SM_Prop_Money_Stack_03" }; // ../polygonheist2/SM_Prop_Money_Stack_04
             int[] values = new int[] { 1, 3, 10 };
             for (int i=0; i<3; i++) {
@@ -31,8 +32,15 @@ namespace BRS.Engine {
                 moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 //moneyPrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
                 AddPrefab(moneyPrefab);
-            }
-            
+            }*/
+
+            //simple cash note
+            GameObject moneyPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
+            moneyPrefab.transform.Scale(2f);
+            moneyPrefab.AddComponent(new Money(100, 1, Money.Type.cash));
+            moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            AddPrefab(moneyPrefab);
+
 
             //diamond
             /*
@@ -46,7 +54,7 @@ namespace BRS.Engine {
 
             GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
             goldPrefab.transform.Scale(2f);
-            goldPrefab.AddComponent(new Money(3000, 3, Money.Type.Gold));
+            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.gold));
             goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(goldPrefab);
 
