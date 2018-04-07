@@ -5629,3 +5629,45 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/white.png
 
+#begin Audio/songs/Talking.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Talking.mp3
+
+#begin Audio/test/police.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/test/police.wav
+
+#begin Audio/test/winner.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/test/winner.mp3
+
+#begin Audio/songs/Winner.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Winner.mp3
+
+#begin Audio/songs/Boosting.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Boosting.mp3
+
+#begin Audio/test/dropCash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/test/dropCash.wav
+
+#begin Audio/songs/Background.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Background.mp3
+

@@ -85,13 +85,20 @@ namespace BRS.Scripts.PlayerScripts {
             if (_state == State.Normal) {
                 bool boosting = BoostInput() && _pS.HasStaminaForBoost();
                 _pM.Boosting = boosting;
-                if (boosting) _pS.UseStaminaForBoost();
+                if (boosting) {
+                    _pS.UseStaminaForBoost();
+                    Audio.PlaySong("Boosting");
+                }
 
                 Vector2 moveInput = MoveInput().Rotate(CamController.YRotation);
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
-                if (DropCashInput()) _pI.DropMoney();
+                if (DropCashInput()) {
+                    _pI.DropMoney();
+                    Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
+                    Audio.Play("dropCash",_soundPosition);
+                }
 
                 if (AttackInput() && _pS.HasStaminaForAttack()) {
                     _state = State.Attack;
