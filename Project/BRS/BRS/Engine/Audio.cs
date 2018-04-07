@@ -33,11 +33,11 @@ namespace BRS.Engine
             BuildAudioLibrary();
             BuildSongLibrary();
 
-            PlaySong("Happy Happy Game Show");
-            //PlaySong("Background");
+            //PlaySong("Happy Happy Game Show");
+            //PlaySong("useKey");
 
-           // Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
-           // Play("valuable_gold",_soundPosition);
+           //Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
+           //Play("useKey",_soundPosition);
             SetMusicVolume(.05f);
             SetSoundVolume(1f);
         }
@@ -156,7 +156,7 @@ namespace BRS.Engine
 
             foreach (string s in soundsString)
             {
-                SoundEffect soundEffect = File.Load<SoundEffect>("Audio/test/" + s);
+                SoundEffect soundEffect = File.Load<SoundEffect>("Audio/effects/" + s);
                 sounds.Add(s, soundEffect.CreateInstance());
                 //sounds[s].IsLooped = true;
             }
@@ -164,7 +164,7 @@ namespace BRS.Engine
 
         static void BuildSongLibrary()
         {
-            string[] songsString = new string[] { "Happy Happy Game Show", "Winner", "Talking", "Boosting", "Background"};
+            string[] songsString = new string[] { "Happy Happy Game Show", "Winner", "Talking", "Boosting", "Background", "useKey" };
 
             foreach (string s in songsString)
             {

@@ -5404,30 +5404,6 @@
 /processorParam:TextureFormat=Color
 /build:images/UI/buttonClicked.png
 
-#begin Audio/test/boing.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/boing.wav
-
-#begin Audio/test/boom.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/boom.wav
-
-#begin Audio/test/phi.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/phi.wav
-
-#begin Audio/test/mono/phi.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/mono/phi.wav
-
 #begin Models/primitives/emptyCol.dae
 /importer:OpenAssetImporter
 /processor:ModelProcessor
@@ -5446,12 +5422,6 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Models/primitives/emptyCol.dae
-
-#begin Audio/songs/Happy Happy Game Show.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Happy Happy Game Show.mp3
 
 #begin Models/powerups/stamina.obj
 /importer:OpenAssetImporter
@@ -5629,29 +5599,47 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/white.png
 
-#begin Audio/songs/Talking.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Talking.mp3
-
-#begin Audio/test/police.wav
+#begin Audio/effects/mono/phi.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/test/police.wav
+/build:Audio/effects/mono/phi.wav
 
-#begin Audio/test/winner.mp3
+#begin Audio/effects/boing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/boing.wav
+
+#begin Audio/effects/boom.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/boom.wav
+
+#begin Audio/effects/dropCash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/dropCash.wav
+
+#begin Audio/effects/phi.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/phi.wav
+
+#begin Audio/effects/police.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/police.wav
+
+#begin Audio/songs/Background.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Audio/test/winner.mp3
-
-#begin Audio/songs/Winner.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Winner.mp3
+/build:Audio/songs/Background.mp3
 
 #begin Audio/songs/Boosting.mp3
 /importer:Mp3Importer
@@ -5659,15 +5647,27 @@
 /processorParam:Quality=Best
 /build:Audio/songs/Boosting.mp3
 
-#begin Audio/test/dropCash.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/dropCash.wav
-
-#begin Audio/songs/Background.mp3
+#begin Audio/songs/Happy Happy Game Show.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
-/build:Audio/songs/Background.mp3
+/build:Audio/songs/Happy Happy Game Show.mp3
+
+#begin Audio/songs/Talking.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Talking.mp3
+
+#begin Audio/songs/useKey.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/useKey.mp3
+
+#begin Audio/songs/Winner.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Audio/songs/Winner.mp3
 
