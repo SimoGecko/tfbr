@@ -18,7 +18,6 @@ namespace BRS.Scripts.UI {
 
         //private
         static Rectangle _mapDest, _mapAreaVirgin, _miniDest;
-        static Vector3 _upperLeftPt, _lowerRightPt; // corners of physical map
         static Vector2 _pivot;
 
         Texture2D _mapSprite;
@@ -46,8 +45,7 @@ namespace BRS.Scripts.UI {
             _mapSprite = File.Load<Texture2D>("Images/minimap/level1");
             _mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
 
-            _upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
-            _lowerRightPt = new Vector3(25, 0, 5);
+            
             _pivot = new Vector2(IconSize / 2, IconSize / 2);
 
             _mapDest =  new Rectangle((int)(Screen.Width / 2 - MapWidth / 2 * MapScale), 10, (int)(MapWidth * MapScale), (int)(MapHeight * MapScale));
@@ -149,11 +147,7 @@ namespace BRS.Scripts.UI {
 
         // queries
         Vector2 Pos3D2Pix(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap
-            Vector3 L = _upperLeftPt, R = _lowerRightPt;
-            float x0 = (pos.X - L.X) / (R.X - L.X);
-            float y0 = (pos.Z - L.Z) / (R.Z - L.Z);
-            Vector2 coeff = new Vector2(x0, y0);
-            return _mapDest.Evaluate(coeff).Round();
+            return _mapDest.Evaluate(PlayArea.Pos3DNormalized(pos)).Round();
         }
 
         bool IsInsideMini(Vector3 pos, out Vector2 result) {
@@ -180,11 +174,7 @@ namespace BRS.Scripts.UI {
         }*/
 
         Vector2 Pos3D2PixVirgin(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap WITHOUT any scaling or offset
-            Vector3 L = _upperLeftPt, R = _lowerRightPt;
-            float x0 = (pos.X - L.X) / (R.X - L.X);
-            float y0 = (pos.Z - L.Z) / (R.Z - L.Z);
-            Vector2 coeff = new Vector2(x0, y0);
-            return _mapAreaVirgin.Evaluate(coeff).Round();
+            return _mapAreaVirgin.Evaluate(PlayArea.Pos3DNormalized(pos)).Round();
         }
 
         Rectangle IconFromType(IconType type) {

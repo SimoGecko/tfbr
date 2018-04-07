@@ -26,6 +26,7 @@ namespace BRS.Engine {
         public static Color Clear = new Color(255, 255, 255, 0);
         //private
 
+        public static GraphicsDevice gD;
 
         //reference
 
@@ -75,6 +76,32 @@ namespace BRS.Engine {
             return colors2D;
         }
 
+        public static Texture2D ColorToTexture(Color[,] color) {
+            int width = color.GetLength(0);
+            int height = color.GetLength(1);
+            Texture2D result = new Texture2D(gD, width, height);
+
+            Color[] res = new Color[width * height];
+            for (int i = 0; i < width * height; i++) {
+                res[i] = color[i%width, i/width]; // TODO sure?
+            }
+
+            result.SetData(res);
+            return result;
+        }
+
+        public static Color[] Color2DToColor1D(Color[,] colors2D) {
+            int width = colors2D.GetLength(0);
+            int height = colors2D.GetLength(1);
+            Color[] colors1D = new Color[width * height];
+            for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
+                    colors1D[x + y * width]= colors2D[x, y];
+            return colors1D;
+
+        }
+
+
         public static Color ColorIndex(int i) {
             if (i == 0) return Red;
             if (i == 1) return Green;
@@ -93,6 +120,19 @@ namespace BRS.Engine {
             for (int x = 0; x < width; x++) {
                 for (int y = 0; y < height; y++) {
                     result[x, y] = (channel == 0) ? color[x, y].R : (channel == 1) ? color[x, y].G : color[x, y].B;
+                }
+            }
+            return result;
+        }
+
+        public static Color[,] IntToColor(int[,] val) {
+            int width  = val.GetLength(0);
+            int height = val.GetLength(1);
+            Color[,] result = new Color[width, height];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    int v = MathHelper.Clamp(val[x, y], 0, 255);
+                    result[x, y] = new Color(v, v, v);
                 }
             }
             return result;

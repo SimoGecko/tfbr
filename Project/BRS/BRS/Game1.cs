@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Menu;
+using BRS.Scripts;
 
 namespace BRS {
 
@@ -30,6 +31,7 @@ namespace BRS {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             File.content = Content;
+            Graphics.gD = GraphicsDevice;
         }
 
         protected override void Initialize() {
@@ -87,6 +89,7 @@ namespace BRS {
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
+            Heatmap.instance.SaveHeatMap();
         }
 
         protected override void Update(GameTime gameTime) {

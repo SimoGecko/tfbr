@@ -80,6 +80,7 @@ namespace BRS.Engine {
 
             
             GameUI.Instance.Draw();
+            Heatmap.instance.Draw();
             
         }
 

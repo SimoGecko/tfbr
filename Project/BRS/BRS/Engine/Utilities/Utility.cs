@@ -278,6 +278,7 @@ namespace BRS.Engine {
         public static Vector2 Round(this Vector2 v) { // Makes it Point2
             return new Vector2((int)v.X, (int)v.Y);
         }
+        
         public static float Clamp(this float f, float min, float max) {
             return f < min ? min : f > max ? max : f;
         }

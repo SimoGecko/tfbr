@@ -50,7 +50,6 @@ namespace BRS.Scripts.Managers {
         //private const float TimeBetweenDiamondSpawn = 30;
 
 
-        private static Rectangle _spawnArea = new Rectangle(-25, 5, 50, -80);
 
         //reference
         public static Spawner Instance;
@@ -170,7 +169,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOneCrateRandom() {
-            Vector2 position = MyRandom.InsideRectangle(_spawnArea);
+            Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
             GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
             ElementManager.Instance.Add(newCrate.GetComponent<Crate>());
         }
@@ -184,7 +183,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOnePowerupRandom() {
-            Vector2 position = MyRandom.InsideRectangle(_spawnArea);
+            Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
             SpawnOnePowerupAt(position.To3());
         }
         public void SpawnPowerupAround(Vector3 p, float radius) {

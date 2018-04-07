@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using BRS.Engine;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+using System.IO;
 
 namespace BRS.Scripts {
     class Heatmap : Component {
@@ -22,13 +25,15 @@ namespace BRS.Scripts {
         //_upperLeftPt = new Vector3(-25, 0, -75);
         //_lowerRightPt = new Vector3(25, 0, 5);
 
-        Rectangle playArea = new Rectangle(-25, -75, 50, 80);
-
         float pixelSize;
+
+        int[,] playerHeatmap;
+        int width, height;
 
         //reference
         Texture2D moneyPic;
         Texture2D goldPic;
+        Texture2D heatmapPic;
         public static Heatmap instance;
 
 
@@ -38,16 +43,22 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-            moneyPic = File.Load<Texture2D>("Images/heatmap/level1_green");
-            goldPic  = File.Load<Texture2D>("Images/heatmap/level1_yellow");
+            moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_green");
+            goldPic  = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_yellow");
+            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
             green = new CDFdistrib(moneyPic, 1);
             yellow = new CDFdistrib(goldPic, 1);
 
-            pixelSize = (float)playArea.Width / moneyPic.Width;
+            width = moneyPic.Width;
+            height = moneyPic.Height;
+
+            pixelSize = (float)PlayArea.SpawnArea.Width / moneyPic.Width;
 
             //int[,] test = new int[,] { { 7, 8, 4 }, { 2, 6, 1 }, { 0, 5, 3 }, { 4, 1, 0 } };
             //CDFdistrib newdistrib = new CDFdistrib(ref test);
             //Debug.Log("it");
+
+            StartComputingHeatmap();
         }
 
         public override void Update() {
@@ -63,13 +74,13 @@ namespace BRS.Scripts {
         public Vector2 GetCashPos() {
             Vector2 pixel = green.Evaluate().ToVector2();
             Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(moneyPic.Width, moneyPic.Height));
-            return playArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
 
         public Vector2 GetGoldPos() {
             Vector2 pixel = yellow.Evaluate().ToVector2();
             Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(goldPic.Width, goldPic.Height));
-            return playArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
 
 
@@ -77,8 +88,39 @@ namespace BRS.Scripts {
         // queries
 
 
+        async void StartComputingHeatmap() {
+            int refreshFps = 40;
+            //checks continuously to see where the players are and increases a counter to get a heatmap in the end
+            playerHeatmap = new int[width, height];
+            while (true) {
+                foreach (Player p in ElementManager.Instance.Players()) {
+                    Vector2 normCoord = PlayArea.Pos3DNormalized(p.transform.position);
+                    Point coord = new Point((int)(width * normCoord.X), (int)(height * normCoord.Y));
+                    coord.X = MathHelper.Clamp(coord.X, 0, width-1);
+                    coord.Y = MathHelper.Clamp(coord.Y, 0, height-1);
+                    playerHeatmap[coord.X, coord.Y]+=10;
+                    //Texture2D heatmapResult = Graphics.ColorToTexture(Graphics.IntToColor(playerHeatmap));
+                    Color[] colors = Graphics.Color2DToColor1D(Graphics.IntToColor(playerHeatmap));
+                    heatmapPic.SetData(colors);
 
+                }
+                await Time.WaitForSeconds(1f / refreshFps);
+            }
+            //TODO call save
+        }
 
+        public void SaveHeatMap() {
+            //when game is closed
+            Stream stream = System.IO.File.Create("Images/heatmap/level1_heatmap.png");
+            heatmapPic.SaveAsPng(stream, heatmapPic.Width, heatmapPic.Height);
+            stream.Dispose();
+            heatmapPic.Dispose();
+        }
+
+        public void Draw() {
+            UserInterface.Instance.DrawPicture(heatmapPic.Bounds, heatmapPic);
+
+        }
 
 
 
