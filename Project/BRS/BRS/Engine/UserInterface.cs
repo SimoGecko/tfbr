@@ -19,7 +19,6 @@ namespace BRS.Engine {
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
 
-
         // --------------------- VARIABLES ---------------------
 
         //TODO make it agnostic to this game
@@ -37,6 +36,7 @@ namespace BRS.Engine {
 
         private Texture2D _bar, _barBig;
         private Texture2D _white;
+        private Texture2D test_grid;
 
         private Rectangle _barRect, _bigRect, _smallRect;
 
@@ -57,6 +57,7 @@ namespace BRS.Engine {
             _bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
             _barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
             _white     = File.Load<Texture2D>("Images/UI/white");
+            test_grid = File.Load<Texture2D>("Images/UI/test_grid");
 
             _barRect = new Rectangle(0, 0, BarWidth, BarHeight);
             _bigRect = new Rectangle(0, 0, BarBigWidth, BarHeight);
@@ -76,11 +77,9 @@ namespace BRS.Engine {
         public void DrawGlobal(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             //callbacks
-            Minimap.Instance.Draw(_sb);
-
-            
+            //Minimap.Instance.Draw(_sb);
             GameUI.Instance.Draw();
-            Heatmap.instance.Draw();
+            //Heatmap.instance.Draw();
             
         }
 
@@ -104,6 +103,18 @@ namespace BRS.Engine {
             DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
             DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);
             */
+
+            //
+            Rectangle src = new Rectangle(0, 0, 32, 32);
+            Rectangle dst = new Rectangle(300, 300, 200, 100);
+            
+            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.TopRight, rot: Time.CurrentTime * 0, flip: false);
+            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.TopRight, rot: Time.CurrentTime * 0, flip: true);
+
+            DrawStringAlign("BR", dst, Align.TopLeft, Align.TopRight, Align.BotRight, scale: .5f);
+            DrawStringAlign("BL", dst, Align.TopLeft, Align.TopRight, Align.BotLeft);
+            DrawStringAlign("TR", dst, Align.TopLeft, Align.TopRight, Align.TopRight, scale:2f);
+            DrawStringAlign("TL", dst, Align.TopLeft, Align.TopRight, Align.TopLeft);
         }
 
 
@@ -180,42 +191,55 @@ namespace BRS.Engine {
         //pivot  = where is the center of the rectangle
         //anchor = which corner of the screen to follow
         //paragraph = how to align the paragraph
-        public void DrawStringAlign(string text, Rectangle bounds, Align anchor, Align pivot, Align paragraph, Color? col, bool flip = false) { // bounds includes position offset and rectangle size
+
+
+
+        public void DrawPictureAlign(Texture2D tex, Rectangle dst, Rectangle? source, Align anchor, Align pivot, Color? col = null, bool flip = false, float rot = 0) {
             if (flip) {
-                bounds.X *= -1;
-                pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
-            }
-            bounds = AlignRect(bounds, anchor, pivot);
-            
-            Color color = col ?? Color.White;
-
-            Vector2 size = SmallFont.MeasureString(text);
-            Vector2 pos = bounds.GetCenter();
-            Vector2 origin = size * 0.5f;
-
-            if (paragraph.HasFlag(Align.Left))   origin.X += bounds.Width / 2  - size.X / 2;
-            if (paragraph.HasFlag(Align.Right))  origin.X -= bounds.Width / 2  - size.X / 2;
-            if (paragraph.HasFlag(Align.Top))    origin.Y += bounds.Height / 2 - size.Y / 2;
-            if (paragraph.HasFlag(Align.Bottom)) origin.Y -= bounds.Height / 2 - size.Y / 2;
-            
-            _sb.DrawString(SmallFont, text, pos, color, 0, origin, 1, SpriteEffects.None, 0);
-        }
-
-        public void DrawPictureAlign(Texture2D tex, Rectangle bounds, Rectangle? source, Align anchor, Align pivot, Color? col, bool flip = false, float rot = 0) {
-            if (flip) {
-                bounds.X *= -1;
+                dst.X *= 1; rot *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor);
             }
-            Vector2 origin = PivotPoint(pivot, tex.Bounds).ToVector2();//is relative to the texture
-            bounds.Location += AnchorPos(anchor) - PivotPoint(pivot, bounds) + origin.ToPoint();
+            Rectangle src = source ?? tex.Bounds;
+            Vector2 origin = PivotPoint(pivot, src).ToVector2();//is relative to the texture
+            dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
 
-            Color color = col ?? Color.White;
-            _sb.Draw(tex, bounds, source, color, MathHelper.ToRadians(rot), origin, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1);
+            _sb.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
         }
 
+        //Rotation not supported
+        public void DrawStringAlign(string text, Rectangle dst, Align anchor, Align pivot, Align paragraph, Color? col = null, bool flip = false, float scale=1) { // bounds includes position offset and rectangle size
+            if (flip) {
+                dst.X *= 1;
+                pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
+            }
+            Rectangle src = new Rectangle(Point.Zero, (SmallFont.MeasureString(text)*scale).ToPoint());
+            Rectangle diff = new Rectangle(Point.Zero,  dst.Size - src.Size);
+
+            Vector2 origin = PivotPoint(pivot, src).ToVector2();
+            dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + PivotPoint(paragraph, diff);//required bc pivot isn't used in call code
+
+            _sb.DrawString(SmallFont, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
+        }
+
+        
 
 
         //OLD CODE
+        /*
+           Vector2 origin = size * 0.5f;
+           Vector2 pos = dst.GetCenter();
+           //Vector2 pos = dst.Location.ToVector2();
+           if (paragraph.HasFlag(Align.Left)) pos.X += dst.Width / 2  - size.X / 2;
+           if (paragraph.HasFlag(Align.Right)) pos.X -= dst.Width / 2  - size.X / 2;
+           if (paragraph.HasFlag(Align.Top)) pos.Y += dst.Height / 2 - size.Y / 2;
+           if (paragraph.HasFlag(Align.Bottom)) pos.Y -= dst.Height / 2 - size.Y / 2;
+           */
+
+
+        //int pivotPosX = paragraph.HasFlag(Align.Left) ? 0 : paragraph.HasFlag(Align.Right) ? diff.X : diff.X / 2;
+        //int pivotPosY = paragraph.HasFlag(Align.Top) ? 0 : paragraph.HasFlag(Align.Bottom) ? diff.Y : diff.Y / 2;
+
+
         //horiz
         /*
         if (anchor.HasFlag(Alignment.Left)) bounds.X = (int)position.X;
@@ -240,24 +264,23 @@ namespace BRS.Engine {
         */
         //sB.Draw(tex, pos, color, 0, origin, 1, SpriteEffects.None, 0);
 
+        /*
         Rectangle AlignRect(Rectangle rect, Align anchor, Align pivot) {
             rect.Location += AnchorPos(anchor)-PivotPoint(pivot, rect);
             return rect;
+        }*/
+
+        Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
+            return splitScreen ? PivotPoint(anchor, Screen.Split) : PivotPoint(anchor, Screen.Full);
         }
 
-        Point AnchorPos(Align anchor) {
-            int anchorPosX = anchor.HasFlag(Align.Left) ? 0 : anchor.HasFlag(Align.Right) ? Screen.SplitWidth : Screen.SplitWidth / 2;
-            int anchorPosY = anchor.HasFlag(Align.Top) ? 0 : anchor.HasFlag(Align.Bottom) ? Screen.SplitHeight : Screen.SplitHeight / 2;
-            return new Point(anchorPosX, anchorPosY);
-        }
-
-        Point PivotPoint(Align pivot, Rectangle rect) {
-            int pivotPosX = pivot.HasFlag(Align.Left) ? 0 : pivot.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
-            int pivotPosY = pivot.HasFlag(Align.Top) ? 0 : pivot.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
+        Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
+            int pivotPosX = align.HasFlag(Align.Left) ? 0 : align.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
+            int pivotPosY = align.HasFlag(Align.Top) ? 0 : align.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
             return new Point(pivotPosX, pivotPosY);
         }
 
-        Align Flip(Align al) {
+        Align Flip(Align al) { // switches left/right flag if present
             if      (al.HasFlag(Align.Left))  al += Align.Right - Align.Left;
             else if (al.HasFlag(Align.Right)) al -= Align.Right - Align.Left;
             return al;

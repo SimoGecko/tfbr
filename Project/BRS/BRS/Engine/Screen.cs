@@ -109,6 +109,13 @@ namespace BRS.Engine {
             get { return (float)Width / Height; }
         }
 
+        public static Rectangle Full {
+            get { return new Rectangle(0, 0, Width, Height); }
+        }
+        public static Rectangle Split {
+            get { return new Rectangle(0, 0, SplitWidth, SplitHeight); }
+        }
+
 
 
         // other
