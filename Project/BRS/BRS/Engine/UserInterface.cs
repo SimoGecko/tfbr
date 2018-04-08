@@ -97,24 +97,22 @@ namespace BRS.Engine {
 
             //test draw
             /*
-            DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
-            //DrawPictureAlign(white, new Rectangle(100, 100, 150, 100), null, Align.TopLeft, Align.TopLeft, Color.LightGray, true);
-
-            DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
-            DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);
-            */
-
-            //
-            Rectangle src = new Rectangle(0, 0, 32, 32);
-            Rectangle dst = new Rectangle(300, 300, 200, 100);
+            Rectangle src = new Rectangle(0, 0, 64, 64);
+            Rectangle dst = new Rectangle(100, 100, 128, 128);
+            Rectangle dst2 = new Rectangle(-100, -100, 128, 128);
             
-            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.TopRight, rot: Time.CurrentTime * 0, flip: false);
-            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.TopRight, rot: Time.CurrentTime * 0, flip: true);
+            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.Center, rot: Time.CurrentTime * 0, flip: false);
+            DrawPictureAlign(test_grid, dst2, src, Align.BotRight, Align.Center, rot: Time.CurrentTime * 0, flip: false);
 
-            DrawStringAlign("BR", dst, Align.TopLeft, Align.TopRight, Align.BotRight, scale: .5f);
-            DrawStringAlign("BL", dst, Align.TopLeft, Align.TopRight, Align.BotLeft);
-            DrawStringAlign("TR", dst, Align.TopLeft, Align.TopRight, Align.TopRight, scale:2f);
-            DrawStringAlign("TL", dst, Align.TopLeft, Align.TopRight, Align.TopLeft);
+            DrawStringAlign("BR", dst, Align.TopLeft, Align.Center, Align.BotRight, scale: .5f);
+            DrawStringAlign("BL", dst, Align.TopLeft, Align.Center, Align.BotLeft);
+            DrawStringAlign("TR", dst, Align.TopLeft, Align.Center, Align.TopRight, scale:2f);
+            DrawStringAlign("TL", dst, Align.TopLeft, Align.Center, Align.TopLeft);
+
+            DrawStringAlign("BR", dst2, Align.BotRight, Align.Center, Align.BotRight, scale: .5f, flip:false);
+            DrawStringAlign("BL", dst2, Align.BotRight, Align.Center, Align.BotLeft, flip: false);
+            DrawStringAlign("TR", dst2, Align.BotRight, Align.Center, Align.TopRight, scale: 2f, flip: false);
+            DrawStringAlign("TL", dst2, Align.BotRight, Align.Center, Align.TopLeft, flip: false);*/
         }
 
 
@@ -186,17 +184,13 @@ namespace BRS.Engine {
 
         // --------------------- ALIGN ----------------
 
-
-
         //pivot  = where is the center of the rectangle
         //anchor = which corner of the screen to follow
         //paragraph = how to align the paragraph
 
-
-
         public void DrawPictureAlign(Texture2D tex, Rectangle dst, Rectangle? source, Align anchor, Align pivot, Color? col = null, bool flip = false, float rot = 0) {
             if (flip) {
-                dst.X *= 1; rot *= -1;
+                dst.X *= -1; rot *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor);
             }
             Rectangle src = source ?? tex.Bounds;
@@ -209,7 +203,7 @@ namespace BRS.Engine {
         //Rotation not supported
         public void DrawStringAlign(string text, Rectangle dst, Align anchor, Align pivot, Align paragraph, Color? col = null, bool flip = false, float scale=1) { // bounds includes position offset and rectangle size
             if (flip) {
-                dst.X *= 1;
+                dst.X *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
             }
             Rectangle src = new Rectangle(Point.Zero, (SmallFont.MeasureString(text)*scale).ToPoint());
