@@ -8,6 +8,7 @@ using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -72,6 +73,8 @@ namespace BRS.Scripts.PowerUps {
 
                 //if(!destroyOnUse) gameObject.active = false;
                 GameObject.Destroy(GameObject);
+
+                Audio.Play("health_pickup",Vector3.Zero);
             }
         }
 

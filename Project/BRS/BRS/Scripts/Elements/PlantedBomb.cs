@@ -18,7 +18,7 @@ namespace BRS.Scripts.Elements {
         }
 
         void Explode() {
-            //Audio.Play("boom", _soundPosition);
+            //Audio.Play("explosion", _soundPosition);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {

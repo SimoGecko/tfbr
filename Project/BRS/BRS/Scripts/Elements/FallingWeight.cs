@@ -40,6 +40,7 @@ namespace BRS.Scripts.Elements {
             if (_invokedDelete) return;
             if (c.GameObject.HasComponent<IDamageable>()) {
                 c.GameObject.GetComponent<IDamageable>().TakeDamage(FallDamage);
+                Audio.Play("break1",Vector3.Zero);
             }
         }
 

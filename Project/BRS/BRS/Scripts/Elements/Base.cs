@@ -67,6 +67,7 @@ namespace BRS.Scripts.Elements {
             TotalMoney += pi.CarryingValue;
             pi.DeloadAll();
             UpdateUI();
+            Audio.Play("returnBase2",Vector3.Zero);
         }
 
         void UpdateUI() {

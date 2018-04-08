@@ -105,6 +105,7 @@ namespace BRS.Scripts.PlayerScripts {
                 _rigidBody.RotationY = MathHelper.ToRadians(_rotation);
                 _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
             }
+            Audio.Play("car1",Vector3.Zero);
         }
 
         public void SetSlowdown(bool b) {

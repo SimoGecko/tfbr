@@ -5599,23 +5599,125 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/white.png
 
-#begin Audio/effects/mono/phi.wav
+#begin Audio/effects/attack1.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/effects/mono/phi.wav
+/build:Audio/effects/attack1.wav
 
-#begin Audio/effects/boing.wav
+#begin Audio/effects/attack2.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/effects/boing.wav
+/build:Audio/effects/attack2.wav
 
-#begin Audio/effects/boom.wav
+#begin Audio/effects/bigbreak.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/effects/boom.wav
+/build:Audio/effects/bigbreak.wav
+
+#begin Audio/effects/bombtimer.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/bombtimer.wav
+
+#begin Audio/effects/bomb_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/bomb_pickup.wav
+
+#begin Audio/effects/brake.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/brake.wav
+
+#begin Audio/effects/break1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/break1.wav
+
+#begin Audio/effects/break2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/break2.wav
+
+#begin Audio/effects/breakglass.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/breakglass.wav
+
+#begin Audio/effects/breakwood.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/breakwood.wav
+
+#begin Audio/effects/capacity_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/capacity_pickup.wav
+
+#begin Audio/effects/car1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/car1.wav
+
+#begin Audio/effects/car2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/car2.wav
+
+#begin Audio/effects/car3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/car3.wav
+
+#begin Audio/effects/car4.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/car4.wav
+
+#begin Audio/effects/cash_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/cash_pickup.wav
+
+#begin Audio/effects/crash1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/crash1.wav
+
+#begin Audio/effects/crash2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/crash2.wav
+
+#begin Audio/effects/crash3.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/crash3.wav
+
+#begin Audio/effects/diamond_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/diamond_pickup.wav
 
 #begin Audio/effects/dropCash.wav
 /importer:WavImporter
@@ -5623,11 +5725,41 @@
 /processorParam:Quality=Best
 /build:Audio/effects/dropCash.wav
 
-#begin Audio/effects/phi.wav
+#begin Audio/effects/explosion.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
-/build:Audio/effects/phi.wav
+/build:Audio/effects/explosion.wav
+
+#begin Audio/effects/gold_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/gold_pickup.wav
+
+#begin Audio/effects/health_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/health_pickup.wav
+
+#begin Audio/effects/key_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/key_pickup.wav
+
+#begin Audio/effects/loser.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/loser.wav
+
+#begin Audio/effects/menuChange.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/menuChange.wav
 
 #begin Audio/effects/police.wav
 /importer:WavImporter
@@ -5635,39 +5767,81 @@
 /processorParam:Quality=Best
 /build:Audio/effects/police.wav
 
+#begin Audio/effects/returnBase1.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/returnBase1.wav
+
+#begin Audio/effects/returnBase2.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/returnBase2.wav
+
+#begin Audio/effects/shield_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/shield_pickup.wav
+
+#begin Audio/effects/speed_pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/speed_pickup.wav
+
+#begin Audio/effects/talking.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/talking.wav
+
+#begin Audio/effects/useCapacity.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/useCapacity.wav
+
+#begin Audio/effects/useHealth.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/useHealth.wav
+
+#begin Audio/effects/useKey.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/useKey.wav
+
+#begin Audio/effects/useShield.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/useShield.wav
+
+#begin Audio/effects/useSpeed.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/useSpeed.wav
+
+#begin Audio/effects/winner.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/winner.wav
+
 #begin Audio/songs/Background.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Audio/songs/Background.mp3
 
-#begin Audio/songs/Boosting.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Boosting.mp3
-
 #begin Audio/songs/Happy Happy Game Show.mp3
 /importer:Mp3Importer
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Audio/songs/Happy Happy Game Show.mp3
-
-#begin Audio/songs/Talking.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Talking.mp3
-
-#begin Audio/songs/useKey.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/useKey.mp3
-
-#begin Audio/songs/Winner.mp3
-/importer:Mp3Importer
-/processor:SongProcessor
-/processorParam:Quality=Best
-/build:Audio/songs/Winner.mp3
 

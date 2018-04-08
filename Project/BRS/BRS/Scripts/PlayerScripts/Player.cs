@@ -87,7 +87,7 @@ namespace BRS.Scripts.PlayerScripts {
                 _pM.Boosting = boosting;
                 if (boosting) {
                     _pS.UseStaminaForBoost();
-                    Audio.PlaySong("Boosting");
+                    Audio.Play("useSpeed",Vector3.Zero);
                 }
 
                 Vector2 moveInput = MoveInput().Rotate(CamController.YRotation);
@@ -96,8 +96,7 @@ namespace BRS.Scripts.PlayerScripts {
                 if (PowerupInput()) _pP.UsePowerup(this);
                 if (DropCashInput()) {
                     _pI.DropMoney();
-                    Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
-                    Audio.Play("dropCash",_soundPosition);
+                    Audio.Play("dropCash",Vector3.Zero);
                 }
 
                 if (AttackInput() && _pS.HasStaminaForAttack()) {

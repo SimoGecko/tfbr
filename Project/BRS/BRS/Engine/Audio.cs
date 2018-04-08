@@ -33,11 +33,7 @@ namespace BRS.Engine
             BuildAudioLibrary();
             BuildSongLibrary();
 
-            //PlaySong("Happy Happy Game Show");
-            //PlaySong("useKey");
-
-           //Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
-           //Play("useKey",_soundPosition);
+            PlaySong("Happy Happy Game Show");
             SetMusicVolume(.05f);
             SetSoundVolume(1f);
         }
@@ -45,7 +41,7 @@ namespace BRS.Engine
 
         public static void Update()
         {
-            sounds["mono/phi"].Apply3D(Listener(), em);
+            //sounds["mono/phi"].Apply3D(Listener(), em);
 
         }
 
@@ -81,7 +77,7 @@ namespace BRS.Engine
             if (!sounds.ContainsKey(name)) { Debug.LogError("No sound " + name); return; }
 
             em = new AudioEmitter();
-            em.Position = position;
+            //em.Position = position;
             em.Forward = Vector3.Forward;
             em.Up = Vector3.Up;
 
@@ -152,7 +148,7 @@ namespace BRS.Engine
         static void BuildAudioLibrary()
         {
             //extend this string array with all the sounds (use correct names)
-            string[] soundsString = new string[] { "mono/phi", "boing", "police","boom", "dropCash"};
+            string[] soundsString = new string[] {"car1", "car2", "car3","cash_pickup","useSpeed","police","winner", "loser","useKey","useHealth","attack1","health_pickup","break1","break2"};
 
             foreach (string s in soundsString)
             {
@@ -164,7 +160,7 @@ namespace BRS.Engine
 
         static void BuildSongLibrary()
         {
-            string[] songsString = new string[] { "Happy Happy Game Show", "Winner", "Talking", "Boosting", "Background", "useKey" };
+            string[] songsString = new string[] { "Happy Happy Game Show"};
 
             foreach (string s in songsString)
             {

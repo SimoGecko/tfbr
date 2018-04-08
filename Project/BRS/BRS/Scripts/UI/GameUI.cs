@@ -75,7 +75,8 @@ namespace BRS.Scripts.UI {
 
             if (_showWinner) {
                 UserInterface.Instance.DrawStringBig(centerPos + new Vector2(-250, 150), _winnerString);
-                Audio.PlaySong("Winner");
+                Audio.Play("winner", _soundPosition);
+                Audio.Play("loser", _soundPosition);
             }
         }
 

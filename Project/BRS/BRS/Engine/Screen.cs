@@ -16,8 +16,10 @@ namespace BRS.Engine {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int Width = 1920; // 1920x1080, 2560x1440
-        public const int Height = 1080;
+       // public const int Width = 1920; // 1920x1080, 2560x1440
+        //public const int Height = 1080;
+        public const int Width = 1366; // 1920x1080, 2560x1440
+        public const int Height = 720;
         public const string Title = "GAME TITLE";
 
         public static int SplitWidth, SplitHeight;

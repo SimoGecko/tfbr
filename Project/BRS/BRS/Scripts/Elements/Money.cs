@@ -6,6 +6,7 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     class Money : Pickup {
@@ -54,7 +55,11 @@ namespace BRS.Scripts.Elements {
                 pi.Collect(this);
                 ElementManager.Instance.Remove(this);
                 GameObject.Destroy(GameObject);
+
+                Audio.Play("cash_pickup",this.transform.position);
             }
+
+           
         }
 
 
