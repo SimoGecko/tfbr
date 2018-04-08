@@ -20,7 +20,7 @@ namespace BRS.Scripts.Managers {
 
 
         //private
-        private int _roundNumber;
+        private static int _roundNumber;
         private int[] _teamWins;
         private static State _gameState; // CONTROLS STATE OF THE GAME
         private bool _paused;
@@ -103,7 +103,7 @@ namespace BRS.Scripts.Managers {
 
 
         // queries
-        public int RoundNumber { get { return _roundNumber; } }
+        public static int RoundNumber { get { return _roundNumber; } }
         public static bool GameActive { get { return _gameState == State.Playing; } }
         public static bool GamePaused { get { return _gameState == State.Paused; } }
 
