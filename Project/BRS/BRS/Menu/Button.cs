@@ -16,6 +16,7 @@ namespace BRS.Menu {
         private MouseState _previousMouse;
 
         public bool IsHovering;
+        public bool IsCurrentSelection;
         public Texture2D Texture;
 
         public EventHandler Click;
@@ -34,7 +35,10 @@ namespace BRS.Menu {
         Texture2D _textureClicked;
         public int Index { get; set; }
 
-        public List<Button> Neighbors;
+        public Button NeighborUp { get; set; }
+        public Button NeighborDown { get; set; }
+        public Button NeighborLeft { get; set; }
+        public Button NeighborRight { get; set; }
 
         public Rectangle Rectangle {
             get {
@@ -49,7 +53,6 @@ namespace BRS.Menu {
             OffsetTexture = new Vector2(t.Width / 2, t.Height / 2);
             IsClicked = false;
             Active = true;
-            Neighbors = new List<Button>();
             _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
         }
 
@@ -57,20 +60,58 @@ namespace BRS.Menu {
             base.Start();
         }
 
+        private void UpdateSelection(Input.Stick state) {
+            Input.uniqueFrameInputUsed = true;
+            switch (state) {
+                case Input.Stick.Up:
+                    if (NeighborUp != null) {
+                        NeighborUp.IsCurrentSelection = true;
+                        IsCurrentSelection = false;
+                    }
+                    break;
+                case Input.Stick.Right:
+                    if (NeighborRight != null) {
+                        NeighborRight.IsCurrentSelection = true;
+                        IsCurrentSelection = false;
+                    }
+                    break;
+                case Input.Stick.Down:
+                    if (NeighborDown != null) {
+                        NeighborDown.IsCurrentSelection = true;
+                        IsCurrentSelection = false;
+                    }
+                    break;
+                case Input.Stick.Left:
+                    if (NeighborLeft != null) {
+                        NeighborLeft.IsCurrentSelection = true;
+                        IsCurrentSelection = false;
+                    }
+                    break;
+            }
+        }
+
         public override void Update() {
             if (Active) {
                 base.Update();
 
-                _previousMouse = _currentMouse;
-                _currentMouse = Mouse.GetState();
+                //_previousMouse = _currentMouse;
+                //_currentMouse = Mouse.GetState();
+                //var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
 
-                var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+                if (IsCurrentSelection && !Input.uniqueFrameInputUsed) {
+                    if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp))
+                        UpdateSelection(Input.Stick.Up);
+                    else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight)) UpdateSelection(Input.Stick.Right);
+                    else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown))
+                        UpdateSelection(Input.Stick.Down);
+                    else if (Input.GetKeyUp(Keys.Left) || Input.GetButtonUp(Buttons.LeftThumbstickLeft)) UpdateSelection(Input.Stick.Left);
+                }
 
                 IsHovering = false;
-                if (mouseRectangle.Intersects(Rectangle)) {
+                if (IsCurrentSelection /*mouseRectangle.Intersects(Rectangle)*/) {
                     IsHovering = true;
-                    if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed
-                        || Input.GetButtonUp(Buttons.A)) {
+                    if (!Input.uniqueFrameInputUsed && (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
+                        Input.uniqueFrameInputUsed = true;
                         Click?.Invoke(this, new EventArgs());
                     }
                 }

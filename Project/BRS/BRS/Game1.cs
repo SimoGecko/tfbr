@@ -102,11 +102,11 @@ namespace BRS {
             if (/*GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||*/ Keyboard.GetState().IsKeyDown(Keys.Escape)) Exit();
 
             Time.Update(gameTime);
-
+            Input.Update();
             _menuManager.Update();
 
             if (!MenuDisplay) {
-                Input.Update();
+                //Input.Update();
                 Audio.Update();
 
                 foreach (GameObject go in GameObject.All) go.Update();

@@ -223,10 +223,11 @@
     <Content Include="Load\Rankings\ranking5min.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
-    <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

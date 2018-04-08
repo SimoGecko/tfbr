@@ -80,12 +80,29 @@ namespace BRS.Menu {
             _menuRect.Add(PlayerInfoMenu.name, PlayerInfoMenu);
         }
 
-        public void HighlightBorders(object sender, EventArgs e) {
+        /*public void HighlightBordersAndGoDown(object sender, EventArgs e) {
             Button button = (Button)sender;
-            foreach (Button bu in button.Neighbors) {
-                bu.IsClicked = false;
-            }
+            button.IsCurrentSelection = false;
+            if (button.NeighborDown != null) button.NeighborDown.IsCurrentSelection = true;
             button.IsClicked = true;
+        }*/
+
+        public void GoDown(object sender, EventArgs e) {
+            Button button = (Button)sender;
+            
+            if (button.NeighborDown != null) {
+                button.NeighborDown.IsCurrentSelection = true;
+                button.IsCurrentSelection = false;
+            }
+        }
+
+        public void GoRight(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            if (button.NeighborRight != null) {
+                button.NeighborRight.IsCurrentSelection = true;
+                button.IsCurrentSelection = false;
+            }
         }
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
@@ -130,6 +147,11 @@ namespace BRS.Menu {
                                 lC.Active = true;
                             else
                                 lC.Active = false;
+
+                            if (count == GameManager.NumPlayers - 1) {
+                                ((Button)lC).NeighborRight = (Button)listComp.Components[0];
+                                ((Button)listComp.Components[0]).NeighborLeft = (Button)lC;
+                            }
                             ++count;
                         }
                     }
