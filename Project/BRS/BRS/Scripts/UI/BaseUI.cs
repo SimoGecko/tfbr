@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -18,7 +19,9 @@ namespace BRS.Scripts.UI {
         //private
         private BaseUIStruct[] _baseUi;
         private Texture2D _baseIcon;
+        private Texture2D _ribbon;
         private readonly int[] _baseUIwins = new int[2];
+        private Texture2D _barIcons; // 256x256
 
 
         //reference
@@ -30,6 +33,8 @@ namespace BRS.Scripts.UI {
             Instance = this;
             _baseUi = new BaseUIStruct[2];
             _baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
+            _ribbon = File.Load<Texture2D>("Images/UI/ribbon");
+            _barIcons = File.Load<Texture2D>("Images/UI/bar_icons");
         }
 
         public override void Update() {
@@ -41,25 +46,23 @@ namespace BRS.Scripts.UI {
         // --------------------- CUSTOM METHODS ----------------
 
         public void Draw(int index) {
-            Vector2 position = new Vector2(100, 970);
-            position += Vector2.UnitX* UserInterface.Instance.GetOffset(index);
+            UserInterface.Instance.DrawString("Team 1", new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true);
+            UserInterface.Instance.DrawPicture(_baseIcon, new Rectangle(-20, 40, 80, 80), null, Align.TopRight);
 
-            UserInterface.Instance.DrawPicture(position, _baseIcon, _baseIcon.Bounds.GetCenter(), .4f);
+            UserInterface.Instance.DrawPicture(_ribbon, new Rectangle(-120, 18, 60, 60), null, Align.TopRight);
+            UserInterface.Instance.DrawString("1.", new Rectangle(-135, 28, 30, 30), Align.TopRight, Align.TopRight, Align.Center, scale: .5f, bold: true);
 
-            //name
-            string baseName = "Team " + (index + 1).ToString();
-            UserInterface.Instance.DrawString(position + new Vector2(-70, -110), baseName);
+            UserInterface.Instance.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f);
+            float capacityPercent = (float)_baseUi[index].TotalMoneyInBase / RoundManager.MoneyToWinRound;
+            Color yellowColor = new Color(255, 198, 13);
+            UserInterface.Instance.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight);
+            string baseValueString = Utility.IntToMoneyString(_baseUi[index].TotalMoneyInBase);
+            UserInterface.Instance.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top);
+            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight);
 
-            //health
-            float healthPercent = _baseUi[index].BaseHealth / _baseUi[index].BaseMaxHealth;
-            UserInterface.Instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Orange);
-
-            //cash
-            string baseValueString = "$" + _baseUi[index].TotalMoneyInBase.ToString("N0");//ToString("#,##0")
-            UserInterface.Instance.DrawString(position + new Vector2(50, -20), baseValueString);
             //wins
             string winsString = "wins: " + _baseUIwins[index];
-            UserInterface.Instance.DrawString(position + new Vector2(-70, 50), winsString);
+            UserInterface.Instance.DrawString(winsString, new Rectangle(-20, 120, 80, 20), Align.TopRight, Align.TopRight, Align.Center, scale: .7f);
         }
 
 
@@ -91,6 +94,29 @@ namespace BRS.Scripts.UI {
             UserInterface.instance.DrawString(new Vector2(75 + offset, 310), baseHealthstring);
             */
         }
+        void DrawOld2(int index) {
+            /*
+            Vector2 position = new Vector2(100, 970);
+            //position += Vector2.UnitX* UserInterface.Instance.GetOffset(index);
+
+            //UserInterface.Instance.DrawPicture(position, _baseIcon, _baseIcon.Bounds.GetCenter(), .4f);
+
+            //name
+            string baseName = "Team " + (index + 1).ToString();
+            UserInterface.Instance.DrawStringOLD(position + new Vector2(-70, -110), baseName);
+
+            //health
+            float healthPercent = _baseUi[index].BaseHealth / _baseUi[index].BaseMaxHealth;
+            UserInterface.Instance.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Orange);
+
+            //cash
+            string baseValueString = "$" + _baseUi[index].TotalMoneyInBase.ToString("N0");//ToString("#,##0")
+            UserInterface.Instance.DrawStringOLD(position + new Vector2(50, -20), baseValueString);
+            //wins
+            string winsString = "wins: " + _baseUIwins[index];
+            UserInterface.Instance.DrawStringOLD(position + new Vector2(-70, 50), winsString);
+            */
+        }
 
         // queries
 
@@ -98,5 +124,5 @@ namespace BRS.Scripts.UI {
 
         // other
 
+        }
     }
-}

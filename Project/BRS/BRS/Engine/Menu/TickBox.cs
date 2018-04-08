@@ -62,9 +62,9 @@ namespace BRS.Menu {
                 colour = Color.Gray;
 
             if (IsClicked)
-                UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
+                UserInterface.Instance.DrawPictureOLD(Rectangle, _textureClicked, colour);
             else
-                UserInterface.Instance.DrawPicture(Rectangle, _textureNotClicked, colour);
+                UserInterface.Instance.DrawPictureOLD(Rectangle, _textureNotClicked, colour);
         }
     }
 }

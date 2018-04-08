@@ -18,6 +18,7 @@ namespace BRS.Scripts.Managers {
         //public
         public static int RoundTime = 120;
         public const int TimeBeforePolice = 10;
+        public const int MoneyToWinRound = 2000;
 
         //private
         private Timer _rt;

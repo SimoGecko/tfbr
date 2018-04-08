@@ -84,15 +84,15 @@ namespace BRS.Menu {
                     colour = Color.Gray;
 
                 if (IsClicked && _textureClicked != null)
-                    UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
+                    UserInterface.Instance.DrawPictureOLD(Rectangle, _textureClicked, colour);
                 else if (Texture != null)
-                    UserInterface.Instance.DrawPicture(Rectangle, Texture, colour);
+                    UserInterface.Instance.DrawPictureOLD(Rectangle, Texture, colour);
 
                 if (!string.IsNullOrEmpty(Text)) {
-                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).X / 2);
-                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).Y / 2);
+                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.Instance.DrawString(new Vector2(x, y), Text, Color.Black);
+                    UserInterface.Instance.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
                 }
             }
         }

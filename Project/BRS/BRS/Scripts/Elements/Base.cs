@@ -78,8 +78,8 @@ namespace BRS.Scripts.Elements {
         }
 
         public override void TakeDamage(float damage) {
-            base.TakeDamage(damage);
-            UpdateUI();
+            //base.TakeDamage(damage);
+            //UpdateUI();
         }
 
         public void NotifyRoundEnd() {

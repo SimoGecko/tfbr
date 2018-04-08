@@ -133,7 +133,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
-            base.TakeDamage(damage); // don't override state
+            //base.TakeDamage(damage); // don't override state
 
             if (!Dead) {
                 _state = State.Stun;
@@ -142,12 +142,13 @@ namespace BRS.Scripts.PlayerScripts {
             }
         }
 
+        /*
         protected override void Die() {
             base.Die();
             _state = State.Dead;
             _pI.LoseAllMoney();
             Timer timer = new Timer(RespawnTime, Respawn);
-        }
+        }*/
 
         protected override void Respawn() {
             base.Respawn();

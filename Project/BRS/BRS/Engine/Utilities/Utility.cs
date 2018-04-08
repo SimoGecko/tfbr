@@ -118,6 +118,10 @@ namespace BRS.Engine {
             return result;
         }
 
+        public static string IntToMoneyString(int value) {
+            return "CHF " + value.ToString("N0") + ".-";//"$" + value.ToString("N0")
+        }
+
 
 
         //TRANSORM METHODS
