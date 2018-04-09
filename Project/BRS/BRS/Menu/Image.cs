@@ -7,6 +7,7 @@ namespace BRS.Menu {
     class Image : Component {
         private readonly Texture2D _texture;
         public Vector2 Position { get; set; }
+        public Vector2 StartPos;
 
         public Rectangle Rectangle {
             get {

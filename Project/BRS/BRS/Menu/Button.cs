@@ -133,7 +133,7 @@ namespace BRS.Menu {
                 if (IsClicked && _textureClicked != null)
                     UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
                 else if (Texture != null)
-                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, RectangleNotScaled, Align.TopLeft, Align.Center, colour, false);
+                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
                 //UserInterface.Instance.DrawPicture(Rectangle, Texture, colour);
                 //DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
 

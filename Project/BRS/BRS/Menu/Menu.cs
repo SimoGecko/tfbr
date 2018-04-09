@@ -67,6 +67,16 @@ namespace BRS.Menu {
             linkedButtonLeftRight.Clear();
         }
 
+        public void BuildMenuPanels() {
+            BuildMainMenu();
+            BuildPlayMenu();
+            BuildTutorialMenu();
+            BuildRankingMenu();
+            BuildOptionsMenu();
+            BuildCreditsMenu();
+            BuildPlayerInfoMenu();
+        }
+
         public void BuildMainMenu() {
             Vector2[] offset = { new Vector2(0, -0.2f), new Vector2(0, -0.1f), new Vector2(0, 0), new Vector2(0, 0.1f), new Vector2(0, 0.2f) };
             string[] textButtons = { "Play", "Tutorial", "Ranking", "Options", "Credits" };
@@ -79,8 +89,9 @@ namespace BRS.Menu {
                     ScaleHeight = 1.5f,
                     //ScaleWidth = 1.5f
                 };
-                playButton.Click += MenuManager.Instance.SwitchToMenu;
-                MenuManager.Instance.MainMenu.AddComponent(playButton);
+                if (i == 0) playButton.Click += MenuManager.Instance.TransitionUI;
+                else playButton.Click += MenuManager.Instance.SwitchToMenu;
+                MenuManager.Instance.MenuRect["main"].AddComponent(playButton);
 
                 linkedButtonDownUp.Add(playButton);
             }
@@ -89,6 +100,9 @@ namespace BRS.Menu {
         }
 
         public void BuildPlayMenu() {
+            var picturePage = new Image(File.Load<Texture2D>("Images/UI/Play1")) { Position = new Vector2(0, 0) };
+            picturePage.Active = false;
+            MenuManager.Instance.MenuRect["play1"].AddComponent(picturePage);
 
             string text = "Number of players";
             var chooseNumberPlayerText = new TextBox() {
@@ -121,7 +135,7 @@ namespace BRS.Menu {
 
                 buttonsCurrentPanel.Add(playButton);
 
-                MenuManager.Instance.PlayMenu1.AddComponent(playButton);
+                MenuManager.Instance.MenuRect["play1"].AddComponent(playButton);
             }
 
             string text2 = "Game duration";
@@ -159,11 +173,11 @@ namespace BRS.Menu {
             buttonsCurrentPanel[5].NeighborUp = buttonsCurrentPanel[2];
             buttonsCurrentPanel[6].NeighborUp = buttonsCurrentPanel[2];
 
-            MenuManager.Instance.PlayMenu1.AddComponent(chooseNumberPlayerText);
-            MenuManager.Instance.PlayMenu1.AddComponent(chooseDurationRoundText);
-            MenuManager.Instance.PlayMenu1.AddComponent(nextButton);
-            MenuManager.Instance.PlayMenu1.AddComponent(backButton1);
-            MenuManager.Instance.PlayMenu1.active = false;
+            MenuManager.Instance.MenuRect["play1"].AddComponent(chooseNumberPlayerText);
+            MenuManager.Instance.MenuRect["play1"].AddComponent(chooseDurationRoundText);
+            MenuManager.Instance.MenuRect["play1"].AddComponent(nextButton);
+            MenuManager.Instance.MenuRect["play1"].AddComponent(backButton1);
+            MenuManager.Instance.MenuRect["play1"].active = false;
 
             var startGameButton = new Button(_textureButton, _positionNextButton) { Text = "Start Game" };
             startGameButton.Click += MenuManager.Instance.StartGameFunction;
@@ -171,8 +185,8 @@ namespace BRS.Menu {
             var backButton2 = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "play1" };
             backButton2.Click += MenuManager.Instance.SwitchToMenu;
 
-            MenuManager.Instance.PlayMenu2.AddComponent(startGameButton);
-            MenuManager.Instance.PlayMenu2.AddComponent(backButton2);
+            MenuManager.Instance.MenuRect["play2"].AddComponent(startGameButton);
+            MenuManager.Instance.MenuRect["play2"].AddComponent(backButton2);
 
             linkedButtonLeftRight.Add(backButton2);
             linkedButtonLeftRight.Add(startGameButton);
@@ -201,8 +215,8 @@ namespace BRS.Menu {
                 linkedButtonLeftRight.Add(playerChangeButton);
             }
             SetNeighborsButtonLeftRight();
-            MenuManager.Instance.PlayMenu2.AddComponent(buttonPlayersChanges);
-            MenuManager.Instance.PlayMenu2.active = false;
+            MenuManager.Instance.MenuRect["play2"].AddComponent(buttonPlayersChanges);
+            MenuManager.Instance.MenuRect["play2"].active = false;
 
         }
 
@@ -213,7 +227,7 @@ namespace BRS.Menu {
                 Text = "",
                 NameIdentifier = "name_player"
             };
-            MenuManager.Instance.PlayerInfoMenu.AddComponent(namePlayer);
+            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(namePlayer);
 
             string[] firstLine = { "q", "w", "e", "r", "t", "z", "u", "i", "o", "p" };
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
@@ -231,7 +245,7 @@ namespace BRS.Menu {
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
                     ++count;
-                    MenuManager.Instance.PlayerInfoMenu.AddComponent(letterButton);
+                    MenuManager.Instance.MenuRect["playerInfos"].AddComponent(letterButton);
 
                     linkedButtonLeftRight.Add(letterButton);
                     buttonsCurrentPanel.Add(letterButton);
@@ -242,7 +256,7 @@ namespace BRS.Menu {
                         ScaleWidth = .5f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    MenuManager.Instance.PlayerInfoMenu.AddComponent(letterButton);
+                    MenuManager.Instance.MenuRect["playerInfos"].AddComponent(letterButton);
                     linkedButtonLeftRight.Add(letterButton);
                 }
                 SetNeighborsButtonLeftRight(false);
@@ -255,7 +269,7 @@ namespace BRS.Menu {
             };
             saveButton.Click += MenuManager.Instance.ChangeNamePlayer;
             saveButton.Click += MenuManager.Instance.SwitchToMenu;
-            MenuManager.Instance.PlayerInfoMenu.AddComponent(saveButton);
+            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(saveButton);
             
 
             for (int i=0; i<buttonsCurrentPanel.Count; ++i) {
@@ -286,9 +300,9 @@ namespace BRS.Menu {
                 NeighborUp = buttonsCurrentPanel[firstLine.Length + secondLine.Length]
             };
             backButton.Click += MenuManager.Instance.SwitchToMenu;
-            MenuManager.Instance.PlayerInfoMenu.AddComponent(backButton);
+            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(backButton);
 
-            MenuManager.Instance.PlayerInfoMenu.active = false;
+            MenuManager.Instance.MenuRect["playerInfos"].active = false;
 
             linkedButtonLeftRight.Add(saveButton);
             linkedButtonLeftRight.Add(backButton);
@@ -303,7 +317,7 @@ namespace BRS.Menu {
 
             for (int i = 0; i < noPages; ++i) {
                 var picturePage = new Image(File.Load<Texture2D>("Images/UI/" + namePics[i])) { Position = new Vector2(0, 0) };
-                MenuManager.Instance.TutorialMenu[i].AddComponent(picturePage);
+                MenuManager.Instance.MenuRect["tutorial" + (i+1).ToString()].AddComponent(picturePage);
 
                 if (i != noPages - 1) { 
                     var nextButtonTuto1 = new Button(_textureButton, _positionNextButton) {
@@ -312,7 +326,7 @@ namespace BRS.Menu {
                     };
                     nextButtonTuto1.Click += MenuManager.Instance.SwitchToMenu;
                     nextButtonTuto1.Click += MenuManager.Instance.GoRight;
-                    MenuManager.Instance.TutorialMenu[i].AddComponent(nextButtonTuto1);
+                    MenuManager.Instance.MenuRect["tutorial" + (i + 1).ToString()].AddComponent(nextButtonTuto1);
                     linkedButtonLeftRight.Add(nextButtonTuto1);
                 }
 
@@ -327,8 +341,8 @@ namespace BRS.Menu {
                 else backButton1.IsCurrentSelection = true;
 
 
-                MenuManager.Instance.TutorialMenu[i].AddComponent(backButton1);
-                MenuManager.Instance.TutorialMenu[i].active = false;
+                MenuManager.Instance.MenuRect["tutorial" + (i + 1).ToString()].AddComponent(backButton1);
+                MenuManager.Instance.MenuRect["tutorial" + (i + 1).ToString()].active = false;
             }
         }
 
@@ -362,11 +376,11 @@ namespace BRS.Menu {
                 rankings.AddComponent(listPersons);
             }
 
-            MenuManager.Instance.RankingMenu.AddComponent(rankings);
+            MenuManager.Instance.MenuRect["ranking"].AddComponent(rankings);
 
             var backButton = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
             backButton.Click += MenuManager.Instance.SwitchToMenu;
-            MenuManager.Instance.RankingMenu.AddComponent(backButton);
+            MenuManager.Instance.MenuRect["ranking"].AddComponent(backButton);
 
             Vector2[] offset = { new Vector2(-0.1f, -0.3f), new Vector2(0, -0.3f), new Vector2(0.1f, -0.3f) };
             string[] textButtons = { "2 min", "3 min", "5 min" };
@@ -379,14 +393,14 @@ namespace BRS.Menu {
                 };
                 playButton.Click += MenuManager.Instance.SwitchRankingDisplay;
                 playButton.ScaleWidth = .5f;
-                MenuManager.Instance.RankingMenu.AddComponent(playButton);
+                MenuManager.Instance.MenuRect["ranking"].AddComponent(playButton);
                 linkedButtonLeftRight.Add(playButton);
                 if (i == 0) backButton.NeighborUp = playButton;
             }
             SetNeighborsButtonLeftRight();
 
 
-            MenuManager.Instance.RankingMenu.active = false;
+            MenuManager.Instance.MenuRect["ranking"].active = false;
 
 
         }
@@ -406,18 +420,18 @@ namespace BRS.Menu {
             backButton.Click += MenuManager.Instance.SwitchToMenu;
             backButton.IsCurrentSelection = true;
 
-            MenuManager.Instance.OptionsMenu.AddComponent(testSlider);
-            MenuManager.Instance.OptionsMenu.AddComponent(testTickBox);
-            MenuManager.Instance.OptionsMenu.AddComponent(backButton);
-            MenuManager.Instance.OptionsMenu.active = false;
+            MenuManager.Instance.MenuRect["options"].AddComponent(testSlider);
+            MenuManager.Instance.MenuRect["options"].AddComponent(testTickBox);
+            MenuManager.Instance.MenuRect["options"].AddComponent(backButton);
+            MenuManager.Instance.MenuRect["options"].active = false;
         }
 
         public void BuildCreditsMenu() {
             var backButton = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
             backButton.Click += MenuManager.Instance.SwitchToMenu;
             backButton.IsCurrentSelection = true;
-            MenuManager.Instance.CreditsMenu.AddComponent(backButton);
-            MenuManager.Instance.CreditsMenu.active = false;
+            MenuManager.Instance.MenuRect["credits"].AddComponent(backButton);
+            MenuManager.Instance.MenuRect["credits"].active = false;
         }
 
 
