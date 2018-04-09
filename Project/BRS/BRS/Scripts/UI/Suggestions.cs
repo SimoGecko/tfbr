@@ -56,26 +56,32 @@ namespace BRS.Scripts.UI {
         public void Draw(int index) {
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
-                    Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);
+                    //Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);
                     bool wiggle = (int)Time.CurrentTime % 5 == 0;
                     float angle = (wiggle) ? (float)System.Math.Sin(Time.CurrentTime * 40) : 0;
-                    UserInterface.Instance.DrawPicture(destination, _xboxButtons, SourceRectangle(c.Button), 10 * angle);
+                    UserInterface.Instance.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
             //comic bubble
             Player p = ElementManager.Instance.Player(index);
-            if (p.GameObject.GetComponent<PlayerInventory>().IsFull()) {
+            if (p.gameObject.GetComponent<PlayerInventory>().IsFull()) {
+                /*
                 Point bubblePosition = Camera.Main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
                 Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));
-                UserInterface.Instance.DrawPicture(dest, _comicBubble);
-                UserInterface.Instance.DrawString(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
+                UserInterface.Instance.DrawPictureOLD(dest, _comicBubble);
+                UserInterface.Instance.DrawStringOLD(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
+                */
             }
 
             _commands.Clear();
         }
 
-        public void GiveCommand(int _index, Vector2 _position, XboxButtons _button) {
-            _commands.Add(new ButtonCommand() { Index = _index, Pos = _position, Button = _button });
+        public void GiveCommand(int _index, Rectangle _dest, XboxButtons _button, Align _anchor, bool flip=false) {
+            if (flip) {
+                _anchor = UserInterface.Flip(_anchor);
+                _dest.X *= -1;
+            }
+            _commands.Add(new ButtonCommand() { Index = _index, dest = _dest, Button = _button, anchor = _anchor });
         }
 
 
@@ -105,7 +111,8 @@ namespace BRS.Scripts.UI {
 
         struct ButtonCommand {
             public int Index;
-            public Vector2 Pos;
+            public Rectangle dest;
+            public Align anchor;
             public XboxButtons Button;
         }
 

@@ -1,10 +1,10 @@
-﻿using System;
+﻿// (c) Simone Guggiari 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using System;
 
 namespace BRS.Engine {
-
-    /// <summary>
-    /// TIMERS - create them and they will automatically call the callback function once they expire
-    /// </summary>
+    ////////// TIMERS - create them and they will automatically call the callback function once they expire //////////
     class Timer {
         public TimeSpan Span;
         public readonly Action Callback;

@@ -12,17 +12,18 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
         enum State { Playing, Paused, Finished, Menu};
 
+        private static State _gameState; // CONTROLS STATE OF THE GAME
+
         //public
         public static int NumPlayers = 2;
-        public static int LvlScene = 3;
+        public static int LvlScene = 4;
         public const int NumRounds = 3;
 
 
 
         //private
-        private int _roundNumber;
+        private static int _roundNumber;
         private int[] _teamWins;
-        private static State _gameState; // CONTROLS STATE OF THE GAME
         private bool _paused;
 
 
@@ -59,8 +60,8 @@ namespace BRS.Scripts.Managers {
         public void OnRoundEnd(int winner) {
             _teamWins[winner]++;
             _gameState = State.Finished;
-            new Timer(1, RestartCustom, true);
             BaseUI.Instance.UpdateBaseUIWins(winner);
+            new Timer(5, RestartCustom, true);
         }
 
 
@@ -80,7 +81,7 @@ namespace BRS.Scripts.Managers {
         void RestartCustom() { // it still slows down for some reason
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            //UserInterface.instance.Start();
+            //UserInterface.Instance.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 
@@ -103,7 +104,7 @@ namespace BRS.Scripts.Managers {
 
 
         // queries
-        public int RoundNumber { get { return _roundNumber; } }
+        public static int RoundNumber { get { return _roundNumber; } }
         public static bool GameActive { get { return _gameState == State.Playing; } }
         public static bool GamePaused { get { return _gameState == State.Paused; } }
 
