@@ -78,7 +78,6 @@ namespace BRS.Scripts.UI {
 
 
             //suggestions
-            Suggestions.Instance.GiveCommand(index, new Rectangle(0, 130, 40, 40), XboxButtons.X, Align.Top);
             //stamina button suggestions
             if (_playerUi[index].CanAttack) {
                 Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.A, Align.TopLeft, flip);

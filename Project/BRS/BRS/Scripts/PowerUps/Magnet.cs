@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using Microsoft.Xna.Framework;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PowerUps {
     class Magnet : Powerup {
@@ -26,6 +27,7 @@ namespace BRS.Scripts.PowerUps {
             //instantiate magnet slowing down stuff
             transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedMagnet = GameObject.Instantiate("plantedMagnetPrefab", transform);
+            ElementManager.Instance.Add(plantedMagnet);
         }
     }
 }

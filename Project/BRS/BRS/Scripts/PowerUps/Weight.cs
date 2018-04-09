@@ -30,6 +30,7 @@ namespace BRS.Scripts.PowerUps {
             Player randomEnemyPlayer = ElementManager.Instance.Enemy(Owner.TeamIndex);
             Vector3 spawnPos = randomEnemyPlayer.transform.position + Vector3.Up * WeightSpawnHeight;
             GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", spawnPos, MyRandom.YRotation());
+            ElementManager.Instance.Add(fallingWeight);
         }
     }
 }

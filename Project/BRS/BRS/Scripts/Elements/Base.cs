@@ -39,7 +39,7 @@ namespace BRS.Scripts.Elements {
             TotalMoney = 0;
 
             // Todo: This causes currently a strange loop. Players are need UI to be started already, but the UI which contains the Suggestions uses the player and bases to be startet first!
-            //UpdateUI();
+            UpdateUI();
         }
 
         public override void Update() {
@@ -89,6 +89,7 @@ namespace BRS.Scripts.Elements {
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                 }
             }
+            //SHOW money penalty (BUSTED!)
             UpdateUI();
         }
 

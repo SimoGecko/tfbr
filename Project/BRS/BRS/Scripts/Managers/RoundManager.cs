@@ -7,6 +7,8 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.UI;
+using Microsoft.Xna.Framework;
+
 
 namespace BRS.Scripts.Managers {
     class RoundManager : Component {
@@ -16,13 +18,14 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 120;
+        public static int RoundTime = 150;
         public const int TimeBeforePolice = 10;
         public const int MoneyToWinRound = 20000;
 
         //private
         private Timer _rt;
         private Base[] _bases;
+        bool calledPolice = false;
 
         //reference
         public static RoundManager Instance;
@@ -33,11 +36,13 @@ namespace BRS.Scripts.Managers {
             Instance = this;
             _rt = new Timer(0, RoundTime, OnRoundEnd);
             GameUI.Instance.StartMatch(_rt);
-            //FindBases(); // data race
         }
 
         public override void Update() {
-            if (_rt.Span.TotalSeconds < TimeBeforePolice) {
+            if (_rt.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
+                calledPolice = true;
+                Audio.SetLoop("police", true);
+                Audio.Play("police", Vector3.Zero);
                 GameUI.Instance.UpdatePoliceComing();
             }
         }
@@ -49,12 +54,14 @@ namespace BRS.Scripts.Managers {
 
         // commands
         void OnRoundEnd() {
-            FindBases();
+            Audio.Stop("police");
+            Audio.SetLoop("police", false);
+
             NotifyBases();
-            Debug.Log("notified bases");
+
             Tuple<int, int> winner = FindWinner();
             GameUI.Instance.UpdateGameWinnerUI(winner.Item1);
-            UpdateRanking();
+            //UpdateRanking();
             GameManager.Instance.OnRoundEnd(winner.Item1);
         }
 
@@ -70,7 +77,7 @@ namespace BRS.Scripts.Managers {
             File.WriteRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt", rankinglist, 5);
         }
 
-
+        /*
         void FindBases() {
             //find bases
             GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
@@ -81,7 +88,7 @@ namespace BRS.Scripts.Managers {
                 for (int i = 0; i < _bases.Length; i++)
                     _bases[i] = basesObject[i].GetComponent<Base>();
             }
-        }
+        }*/
 
         void NotifyBases() {
             //for (int i = 0; i < bases.Length; i++)

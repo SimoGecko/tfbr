@@ -25,6 +25,7 @@ namespace BRS.Scripts.Managers {
         private List<Money> _moneyList;
         private List<Crate> _crateList;
         private List<Powerup> _powerupList;
+        private List<GameObject> _variousObjects;
 
         //reference
         public static ElementManager Instance;
@@ -44,6 +45,9 @@ namespace BRS.Scripts.Managers {
 
             _powerupList = new List<Powerup>();
             _powerupList.Clear();
+
+            _variousObjects = new List<GameObject>();
+            _variousObjects.Clear();
         }
 
         public override void Update() {
@@ -75,6 +79,10 @@ namespace BRS.Scripts.Managers {
         //powerup
         public void Add(Powerup p) { _powerupList.Add(p); }
         public void Remove(Powerup p) { _powerupList.Remove(p); }
+
+        //gameobject
+        public void Add(GameObject g) { _variousObjects.Add(g); }
+        public void Remove(GameObject g) { _variousObjects.Remove(g); }
 
 
         // queries
@@ -150,6 +158,7 @@ namespace BRS.Scripts.Managers {
             foreach (var g in _moneyList) GameObject.Destroy(g.gameObject);
             foreach (var g in _crateList) GameObject.Destroy(g.gameObject);
             foreach (var g in _powerupList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _variousObjects) GameObject.Destroy(g);
             Start();
         }
 

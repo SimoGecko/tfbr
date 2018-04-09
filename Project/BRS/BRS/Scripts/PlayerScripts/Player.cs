@@ -31,6 +31,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //private
         State _state = State.Normal;
+        Vector3 startPosition;
 
         //reference
 
@@ -47,16 +48,19 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string name = "Simo") {
+        public Player(int playerIndex, int teamIndex, Vector3 startPos, string name = "Player") {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             PlayerName = name + (playerIndex + 1).ToString();
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
+            startPosition = startPos;
             //TODO make mesh have this color
         }
         public override void Start() {
             base.Start();
+            transform.position = startPosition;
+            transform.rotation = Quaternion.Identity;
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
             if (po != null) _other = po.GetComponent<Player>();
@@ -137,6 +141,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             if (!Dead) {
                 _state = State.Stun;
+                Audio.Play("stun", transform.position);
                 _pI.LoseMoney();
                 Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
             }

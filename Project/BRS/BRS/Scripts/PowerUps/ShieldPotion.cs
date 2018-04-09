@@ -27,6 +27,7 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- CUSTOM METHODS ----------------
         // commands
         public override void UsePowerup() {
+            base.UsePowerup();
             Base b = ElementManager.Instance.Base(Owner.TeamIndex);
             //GameObject b = GameObject.FindGameObjectWithName("base_" + Owner.TeamIndex);
             if (b != null)  b.AddHealth(ValuePotion);

@@ -51,7 +51,9 @@ namespace BRS.Scripts.PlayerScripts {
 
         // commands
         public void BeginAttack() {
-            Debug.Log(Time.CurrentTime);
+            Audio.Play("attack", transform.position);
+
+            //Debug.Log(Time.CurrentTime);
             _attacking = true;
             _attackRefTime = 0;
             _attackStartPos = transform.position;

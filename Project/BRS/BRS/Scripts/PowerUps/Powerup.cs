@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
@@ -67,6 +68,7 @@ namespace BRS.Scripts.PowerUps {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
+                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);
@@ -78,7 +80,10 @@ namespace BRS.Scripts.PowerUps {
             }
         }
 
-        public virtual void UsePowerup() { }
+        public virtual void UsePowerup() {
+                transform.position = Owner.transform.position;
+                Audio.Play(PowerupType.ToString().ToLower()+ "_use",  transform.position);
+        }
 
         // queries
         public virtual bool CanUse() {

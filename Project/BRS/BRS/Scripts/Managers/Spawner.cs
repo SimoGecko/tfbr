@@ -30,8 +30,8 @@ namespace BRS.Scripts.Managers {
 
 
         private static readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
-            { "bomb", .1f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", 1.1f }, { "shield", .1f },
-            { "speed", .1f }, { "trap", .1f }, { "explodingbox", .1f }, { "weight", .1f }, { "magnet", 1.0f } };
+            { "bomb", .3f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
+            { "speed", .1f }, { "trap", .3f }, { "explodingbox", .2f }, { "weight", .3f }, { "magnet", .2f } };
 
 
         const float clusterRadius = .5f;

@@ -58,8 +58,10 @@ namespace BRS.Scripts.Scenes {
                 GameObject forklift = new GameObject("player_" + i, File.Load<Model>("Models/vehicles/forklift"));
                 forklift.tag = ObjectTag.Player;
                 //forklift.transform.Scale(2);
-                forklift.transform.TranslateGlobal(new Vector3(30 * i, 1f, 0));
-                forklift.AddComponent(new Player(i, i % 2));
+                Vector3 startPos = new Vector3(30 * i, 1f, 0);
+
+                forklift.transform.TranslateGlobal(startPos);
+                forklift.AddComponent(new Player(i, i % 2, startPos));
                 forklift.AddComponent(new PlayerMovement());
                 forklift.AddComponent(new PlayerAttack());
                 forklift.AddComponent(new PlayerInventory());
