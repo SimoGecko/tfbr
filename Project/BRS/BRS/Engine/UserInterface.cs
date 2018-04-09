@@ -155,9 +155,13 @@ namespace BRS.Engine {
             DrawPicture(_barBig, position, new Rectangle(0, 0, (int)(BigBarWidth * percent), BarHeight), anchor: anchor, col: color, scale: .25f);
         }
 
-        public void DrawBarStriped(float percent, Rectangle dest, Color color, Align anchor = Align.TopLeft) {
+        public void DrawBarStriped(float percent, Rectangle dest, Color color, Align anchor = Align.TopLeft, bool flip = false) {
             Rectangle source = new Rectangle(0, 0, 185, 40);
-            DrawPicture(barStriped, dest, source, anchor: anchor, pivot:Align.TopLeft, col: Color.White);
+            if (flip) {
+                dest.X = -dest.X- dest.Width;
+                anchor = Flip(anchor);
+            }
+            DrawPicture(barStriped, dest, source, anchor: anchor, pivot: Align.TopLeft, col: Color.White);
             source = new Rectangle(0, 40, (int)Math.Round(185 * percent), 40);
             dest.Width = (int)Math.Round(dest.Width * percent);
             DrawPicture(barStriped, dest, source, anchor: anchor, pivot: Align.TopLeft, col: color);
@@ -247,7 +251,7 @@ namespace BRS.Engine {
             Vector2 origin = PivotPoint(pivot, src).ToVector2();
             dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + PivotPoint(paragraph, diff);//required bc pivot isn't used in call code
 
-            _sb.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
+            _sb.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
         }
 
         
@@ -309,7 +313,7 @@ namespace BRS.Engine {
             return new Point(pivotPosX, pivotPosY);
         }
 
-        Align Flip(Align al) { // switches left/right flag if present
+        public static Align Flip(Align al) { // switches left/right flag if present
             if      (al.HasFlag(Align.Left))  al += Align.Right - Align.Left;
             else if (al.HasFlag(Align.Right)) al -= Align.Right - Align.Left;
             return al;

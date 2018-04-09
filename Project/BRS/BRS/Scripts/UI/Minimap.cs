@@ -131,14 +131,14 @@ namespace BRS.Scripts.UI {
             //BASES
             foreach (var b in ElementManager.Instance.Bases()) {
                 Vector3 pos = b.transform.position;
-                if (IsInsideMini(pos, out finalPx))
+                if (IsInsideMiniProject(pos, out finalPx))
                     spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
             }
             //PLAYERS
             foreach (var p in ElementManager.Instance.Players()) {
                 Vector3 pos = p.transform.position;
                 float rotY = -p.transform.eulerAngles.Y;
-                if(IsInsideMini(pos, out finalPx))
+                if(IsInsideMiniProject(pos, out finalPx))
                     spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY+_cameraRot), _pivot, .3f, SpriteEffects.None, 1f);
             }
         }
@@ -152,10 +152,14 @@ namespace BRS.Scripts.UI {
 
         bool IsInsideMini(Vector3 pos, out Vector2 result) {
             result = _miniDest.GetCenter() + (Pos3D2Pix(pos) - _playerPos).Rotate(_cameraRot); // center + delta
-            result = _miniDest.Project(result);
-            return true;
+            //result = _miniDest.Project(result);
             return _miniDest.Contains(result);
             //miniDest.
+        }
+        bool IsInsideMiniProject(Vector3 pos, out Vector2 result) {
+            result = _miniDest.GetCenter() + (Pos3D2Pix(pos) - _playerPos).Rotate(_cameraRot); // center + delta
+            result = _miniDest.Project(result);
+            return true;
         }
 
 

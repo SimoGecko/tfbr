@@ -177,6 +177,7 @@ namespace BRS.Scripts.Scenes {
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
+                bases[i].transform.Scale(2);
                 bases[i].AddComponent(new StaticRigidBody(PhysicsManager.Instance, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();

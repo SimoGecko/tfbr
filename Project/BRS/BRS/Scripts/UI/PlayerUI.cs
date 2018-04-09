@@ -46,26 +46,28 @@ namespace BRS.Scripts.UI {
 
         // commands
         public void Draw(int index) {
-            UserInterface.Instance.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 200, 30), Align.TopLeft, scale: .5f, bold: true);
-            UserInterface.Instance.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 80, 80), null, Align.TopLeft);
+            bool flip = index % 2 != 0;
+
+            UserInterface.Instance.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 200, 30), Align.TopLeft, scale: .5f, bold: true, flip: flip);
+            UserInterface.Instance.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 80, 80), null, Align.TopLeft, flip: flip);
 
             //capacity
             Color greenColor = new Color(109, 202, 35);
-            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(100, 55, 20, 20), new Rectangle(0, 0, 200, 200), Align.TopLeft);
-            UserInterface.Instance.DrawString("carrying", new Rectangle(120, 35, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f);
+            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(100, 55, 20, 20), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);
+            UserInterface.Instance.DrawString("carrying", new Rectangle(120, 35, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
-            UserInterface.Instance.DrawBarStriped(capacityPercent, new Rectangle(120, 55, 100, 20), greenColor, Align.TopLeft);
+            UserInterface.Instance.DrawBarStriped(capacityPercent, new Rectangle(120, 55, 100, 20), greenColor, Align.TopLeft, flip: flip);
             string capacityString = _playerUi[index].CarryingWeight +  "/" + _playerUi[index].MaxCapacity;
-            UserInterface.Instance.DrawString(capacityString, new Rectangle(225, 55, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left);
+            UserInterface.Instance.DrawString(capacityString, new Rectangle(225, 55, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //fuel
             Color blueColor = new Color(0, 158, 255);
-            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(100, 95, 20, 20), new Rectangle(0, 200, 200, 200), Align.TopLeft);
-            UserInterface.Instance.DrawString("fuel", new Rectangle(120, 75, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f);
+            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(100, 95, 20, 20), new Rectangle(0, 200, 200, 200), Align.TopLeft, flip: flip);
+            UserInterface.Instance.DrawString("fuel", new Rectangle(120, 75, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
-            UserInterface.Instance.DrawBarStriped(staminaPercent, new Rectangle(120, 95, 100, 20), blueColor, Align.TopLeft);
+            UserInterface.Instance.DrawBarStriped(staminaPercent, new Rectangle(120, 95, 100, 20), blueColor, Align.TopLeft, flip: flip);
             string staminaString = (int)(_playerUi[index].Stamina / _playerUi[index].MaxStamina*100) + "%";
-            UserInterface.Instance.DrawString(staminaString, new Rectangle(225, 95, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left);
+            UserInterface.Instance.DrawString(staminaString, new Rectangle(225, 95, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //small bars
             Vector2 screenPosition = Camera.Main.WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
@@ -79,9 +81,9 @@ namespace BRS.Scripts.UI {
             Suggestions.Instance.GiveCommand(index, new Rectangle(0, 130, 40, 40), XboxButtons.X, Align.Top);
             //stamina button suggestions
             if (_playerUi[index].CanAttack) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.A, Align.TopLeft);
+                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.A, Align.TopLeft, flip);
             } else if (staminaPercent == 1) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.RT, Align.TopLeft);
+                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.RT, Align.TopLeft, flip);
             }
 
         }

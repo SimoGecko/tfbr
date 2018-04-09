@@ -46,23 +46,28 @@ namespace BRS.Scripts.UI {
         // --------------------- CUSTOM METHODS ----------------
 
         public void Draw(int index) {
-            UserInterface.Instance.DrawString("Team 1", new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true);
-            UserInterface.Instance.DrawPicture(_baseIcon, new Rectangle(-20, 40, 80, 80), null, Align.TopRight);
+            bool flip = index % 2 != 0;
 
-            UserInterface.Instance.DrawPicture(_ribbon, new Rectangle(-120, 18, 60, 60), null, Align.TopRight);
-            UserInterface.Instance.DrawString("1.", new Rectangle(-135, 28, 30, 30), Align.TopRight, Align.TopRight, Align.Center, scale: .5f, bold: true);
+            UserInterface.Instance.DrawString("Team " + (index+1), new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true, flip: flip);
+            UserInterface.Instance.DrawPicture(_baseIcon, new Rectangle(-20, 40, 80, 80), null, Align.TopRight, flip: flip);
 
-            UserInterface.Instance.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f);
+            int rank = RoundManager.GetRank(index);
+            if(rank==1)
+                UserInterface.Instance.DrawPicture(_ribbon, new Rectangle(-120, 18, 60, 60), null, Align.TopRight, flip: flip);
+            string rankString = RoundManager.RankToString(rank);
+            UserInterface.Instance.DrawString(rankString, new Rectangle(-135, 28, 30, 30), Align.TopRight, Align.TopRight, Align.Center, scale: .5f, bold: true, flip: flip);
+
+            UserInterface.Instance.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_baseUi[index].TotalMoneyInBase / RoundManager.MoneyToWinRound;
             Color yellowColor = new Color(255, 198, 13);
-            UserInterface.Instance.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight);
+            UserInterface.Instance.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight, flip: flip);
             string baseValueString = Utility.IntToMoneyString(_baseUi[index].TotalMoneyInBase);
-            UserInterface.Instance.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top);
-            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight);
+            UserInterface.Instance.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
+            UserInterface.Instance.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
 
             //wins
             string winsString = "wins: " + _baseUIwins[index];
-            UserInterface.Instance.DrawString(winsString, new Rectangle(-20, 120, 80, 20), Align.TopRight, Align.TopRight, Align.Center, scale: .7f);
+            UserInterface.Instance.DrawString(winsString, new Rectangle(-20, 120, 80, 20), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, flip: flip);
         }
 
 

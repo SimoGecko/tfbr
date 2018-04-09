@@ -18,7 +18,7 @@ namespace BRS.Scripts.Managers {
         //public
         public static int RoundTime = 120;
         public const int TimeBeforePolice = 10;
-        public const int MoneyToWinRound = 2000;
+        public const int MoneyToWinRound = 20000;
 
         //private
         private Timer _rt;
@@ -87,6 +87,15 @@ namespace BRS.Scripts.Managers {
             //for (int i = 0; i < bases.Length; i++)
             //bases[i].NotifyRoundEnd();
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
+        }
+
+        public static int GetRank(int teamIndex) {
+            int team = ElementManager.Instance.Base(teamIndex).TotalMoney;
+            int enemyTeam = ElementManager.Instance.Base(1-teamIndex).TotalMoney;
+            return (team > enemyTeam) ? 1 : (enemyTeam > team) ? 2 : 0; 
+        }
+        public static string RankToString(int rank) {
+            return rank == 1 ? "1." : rank == 2 ? "2." : "-";
         }
 
         // queries

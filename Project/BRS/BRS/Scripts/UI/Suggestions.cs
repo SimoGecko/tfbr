@@ -76,7 +76,11 @@ namespace BRS.Scripts.UI {
             _commands.Clear();
         }
 
-        public void GiveCommand(int _index, Rectangle _dest, XboxButtons _button, Align _anchor) {
+        public void GiveCommand(int _index, Rectangle _dest, XboxButtons _button, Align _anchor, bool flip=false) {
+            if (flip) {
+                _anchor = UserInterface.Flip(_anchor);
+                _dest.X *= -1;
+            }
             _commands.Add(new ButtonCommand() { Index = _index, dest = _dest, Button = _button, anchor = _anchor });
         }
 
