@@ -20,6 +20,10 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PackageCertificateKeyFile>BRS_TemporaryKey.pfx</PackageCertificateKeyFile>
     <MonoGamePlatform>WindowsStoreApp</MonoGamePlatform>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>ECDBE71A39FC0C5AD0EAC421D039A9F633F7903F</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -214,6 +218,7 @@
     <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="BRS_TemporaryKey.pfx" />
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
@@ -222,15 +227,18 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Logo.png" />
+    <Content Include="Assets\SmallLogo.png" />
     <Content Include="Load\Rankings\ranking2min.txt" />
     <Content Include="Load\Rankings\ranking3min.txt" />
     <Content Include="Load\Rankings\ranking5min.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
-    <Content Include="Load\UnitySceneData\lvl1\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\lvl2\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\lvl3\ObjectSceneUnity.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
+    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />

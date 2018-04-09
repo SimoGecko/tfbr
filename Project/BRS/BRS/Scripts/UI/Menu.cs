@@ -194,8 +194,9 @@ namespace BRS.Menu {
 
         public void BuildTutorialMenu() {
             string[] switchTo = { "main", "tutorial1", "tutorial2", "tutorial3", "tutorial4" };
-            int noPages = 4;
-            string[] namePics = { "xBox_ controller", "gameView", "minimapDisplay", "powerups" };
+            // Todo: Sorry, had to change this because it couldn't load the "powerups"
+            int noPages = 3; // 4;
+            string[] namePics = { "xBox_ controller", "gameView", "minimapDisplay" /* , "powerups" */ };
 
             for (int i = 0; i < noPages; ++i) {
                 var picturePage = new Image(File.Load<Texture2D>("Images/UI/" + namePics[i])) { Position = new Vector2(0, 0) };

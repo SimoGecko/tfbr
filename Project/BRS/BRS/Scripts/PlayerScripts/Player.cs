@@ -108,15 +108,16 @@ namespace BRS.Scripts.PlayerScripts {
                     _pL.Lift();
                 }
 
-                if (Input.GetKeyDown(Keys.V)) {
-                    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
+                // Todo: Can be removed, just here till this is finally tested
+                //if (Input.GetKeyDown(Keys.V)) {
+                //    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
 
-                    string tmp = "Contained: ";
-                    foreach (Collider collider in test) {
-                        tmp += collider.GameObject.tag + ",";
-                    }
-                    Debug.Log(tmp);
-                }
+                //    string tmp = "Contained: ";
+                //    foreach (Collider collider in test) {
+                //        tmp += collider.GameObject.tag + ",";
+                //    }
+                //    Debug.Log(tmp);
+                //}
             } else if (_state == State.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) _state = State.Normal;

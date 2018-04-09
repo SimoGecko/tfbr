@@ -69,6 +69,9 @@ namespace BRS {
             SceneManager.Start();
             if (_usePhysics)  SceneManager.Load("LevelPhysics"); // TODO make simple string to select level
             else SceneManager.Load("Level1");
+            //_ui = new UserInterface();
+            //_ui.Start();
+           
 
             //everything is loaded, call Start
             Start();

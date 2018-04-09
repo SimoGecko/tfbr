@@ -1,0 +1,126 @@
+<Ground>
+tag: Ground
+prefabName: ../vehicles/gplane
+amount: 1
+pos: -35 0 -0.3
+rot: 0 0 0
+sca: 8 1 5
+</Ground>
+
+<Bases>
+tag: Base
+prefabName: cube
+amount: 2
+pos: 0 0 -5
+rot: 0 0 0
+sca: 1 1 1
+pos: 0 0 5
+rot: 0 0 0
+sca: 1 1 1
+</Bases>
+
+<StaticObstacles>
+tag: StaticObstacle
+prefabName: cube
+amount: 21
+pos: -43.2 1 -16.4
+rot: 0 0 0
+sca: 1 2 18
+pos: -63.64634 0.5 -3.827435
+rot: 0 0 0
+sca: 0.8 7 12.24
+pos: -63.64634 0.5 3.999365
+rot: 0 0 0
+sca: 0.8 7 3.4
+pos: -63.8 1 19.8
+rot: 0 0 0
+sca: 1 2 10
+pos: -30.9 1 6.1
+rot: 0 0 0
+sca: 10 2 1
+pos: -67.99034 0.5 -9.614235
+rot: 0 0 0
+sca: 8 7 0.68
+pos: -55.2 1 -6.7
+rot: 0 45 0
+sca: 1 2 5
+pos: -26.5 1 -16.4
+rot: 0 0 0
+sca: 1 2 18
+pos: -42.8 1 15.3
+rot: 0 0 0
+sca: 1 2 18
+pos: -10.2 1 15.6
+rot: 0 0 0
+sca: 1 2 18
+pos: -67.99034 0.5 10.12616
+rot: 0 0 0
+sca: 8 7 0.68
+pos: -26.5 1 15.3
+rot: 0 0 0
+sca: 1 2 18
+pos: -55.5 1 7.5
+rot: 0 315 0
+sca: 1 2 5
+pos: -72.36634 0.5 0.2661648
+rot: 0 0 0
+sca: 0.8 7 20.4
+pos: -63.8 1 -21
+rot: 0 0 0
+sca: 1 2 10
+pos: -10.2 1 -16.1
+rot: 0 0 0
+sca: 1 2 18
+pos: -53.4 1 0.3000004
+rot: 0 0 0
+sca: 1 2 10
+pos: -14.6 1 6.1
+rot: 0 0 0
+sca: 10 2 1
+pos: -63.64634 0.5 8.092966
+rot: 0 0 0
+sca: 0.8 7 4.76
+pos: -38.4 1 -7.8
+rot: 0 0 0
+sca: 10 2 1
+pos: -21.7 1 -7.8
+rot: 0 0 0
+sca: 10 2 1
+</StaticObstacles>
+
+<DynamicObstacles>
+tag: DynamicObstacle
+prefabName: cube
+amount: 4
+pos: -30.3 1 -7.8
+rot: 0 0 0
+sca: 5 2 1
+pos: -22.9 1 6.1
+rot: 0 0 0
+sca: 5 2 1
+pos: -39.5 1 6.1
+rot: 0 0 0
+sca: 5 2 1
+pos: -13.7 1 -7.8
+rot: 0 0 0
+sca: 5 2 1
+</DynamicObstacles>
+
+<Boundaries>
+tag: Boundary
+prefabName: cube
+amount: 4
+pos: -75.02 0.5 0
+rot: 0 0 0
+sca: 0.8 7 50
+pos: -35.34 0.5 24.75
+rot: 0 0 0
+sca: 80 7 0.625
+pos: -35.34 0.5 -25.3
+rot: 0 0 0
+sca: 80 7 0.625
+pos: 4.5 0.5 0
+rot: 0 0 0
+sca: 0.8 7 50
+</Boundaries>
+
