@@ -80,26 +80,28 @@ namespace BRS.Menu {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public void TransitionUI(object sender, EventArgs e) {
+        public async void TransitionUI(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            float time = 0;
             Image test = MenuRect["play1"].GetComponent<Image>();
-            test.Position = test.Position + new Vector2(Screen.Width, 0);
             test.StartPos = test.Position;
+            test.Position = test.Position + new Vector2(Screen.Width, 0);
             test.Active = true;
 
-            Task.Run(() => {
+            float time = 0;
+            //Task.Run(() => {
                 while (time < transitionTime) {
                     float percent = time / transitionTime;
-                    test.Position = test.StartPos - percent * new Vector2(Screen.Width, 0);
-                    time += Time.DeltaTime;
+                    //test.Position = test.StartPos - percent * new Vector2(Screen.Width, 0);
+                    test.Position = Vector2.Lerp(test.Position, test.StartPos, percent);
+                    time += Time.DeltaTime - 0.001f;
+                    await Time.WaitForSeconds(0.001f);
                 }
                 if (_currentMenu != null)
                     _currentMenu.active = false;
                 _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                 _currentMenu.active = true;
-            });
+            //});
 
 
         }
