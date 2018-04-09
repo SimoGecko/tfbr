@@ -1,15 +1,15 @@
-﻿using BRS.Load;
+﻿using BRS.Engine.Physics.RigidBodies;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Engine.Physics.RigidBodies {
-    class MovingRigidBody : RigidBodyComponent {
+namespace BRS.Engine.Physics.Colliders {
+    class MovingCollider : Collider {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
+        public MovingCollider(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
@@ -45,10 +45,10 @@ namespace BRS.Engine.Physics.RigidBodies {
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
-                GameObject = GameObject
+                GameObject = GameObject,
+                Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 }
             };
 
-            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
 
             PhysicsManager.World.AddBody(RigidBody);
         }
@@ -60,7 +60,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             // Apply position and rotation from physics-world to the game-object
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
             transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-           
+
             //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
 
             base.Update();

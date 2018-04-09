@@ -4,6 +4,7 @@
 using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Jitter.LinearMath;
@@ -56,7 +57,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             playerInventory = GameObject.GetComponent<PlayerInventory>();
 
-            MovingRigidBody dynamicRigidBody = GameObject.GetComponent<MovingRigidBody>();
+            MovingCollider dynamicRigidBody = GameObject.GetComponent<MovingCollider>();
             _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
         }
 

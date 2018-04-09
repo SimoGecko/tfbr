@@ -1,5 +1,5 @@
 ﻿using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
@@ -36,7 +36,7 @@ namespace BRS.Scripts.Elements {
         }
 
         // --------------------- CUSTOM METHODS ----------------
-        public override void OnCollisionEnter(Collider c) {
+        public override void OnCollisionEnter(JRigidBody c) {
             if (_invokedDelete) return;
             if (c.GameObject.HasComponent<IDamageable>()) {
                 c.GameObject.GetComponent<IDamageable>().TakeDamage(FallDamage);

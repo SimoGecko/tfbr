@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
@@ -41,7 +42,7 @@ namespace BRS.Scripts.Elements {
 
         }
 
-        public override void OnCollisionEnter(Collider c) {
+        public override void OnCollisionEnter(JRigidBody c) {
             if(c.GameObject.tag == ObjectTag.Player) {
                 PlayerAttack pa = c.GameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
@@ -77,8 +78,8 @@ namespace BRS.Scripts.Elements {
 
         void Explode() {
             //same code as in bomb
-            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
-            foreach (Collider c in overlapColliders) {
+            JRigidBody[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
+            foreach (JRigidBody c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }

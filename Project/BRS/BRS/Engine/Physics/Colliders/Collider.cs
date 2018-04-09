@@ -1,16 +1,18 @@
-﻿using BRS.Load;
+﻿using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Utilities;
+using BRS.Load;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Engine.Physics.RigidBodies {
-    abstract class RigidBodyComponent : Component {
+namespace BRS.Engine.Physics.Colliders {
+    public abstract class Collider : Component {
+        public RigidBody RigidBody;
 
         protected ShapeType ShapeType;
         protected Shape CollisionShape;
-        public RigidBody RigidBody;
         protected PhysicsManager PhysicsManager;
         protected BodyTag Tag;
 
@@ -26,17 +28,16 @@ namespace BRS.Engine.Physics.RigidBodies {
         public override void Start() {
             CalculateShape(ShapeType);
 
-            RigidBody = new Collider(CollisionShape) {
+            RigidBody = new JRigidBody(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = Tag,
                 PureCollider = PureCollider,
-                GameObject = GameObject
+                GameObject = GameObject,
+                Material = new Material { Restitution = 0.0f }
             };
-
-            RigidBody.Material = new Material { Restitution = 0.0f };
 
             PhysicsManager.World.AddBody(RigidBody);
 
@@ -44,6 +45,7 @@ namespace BRS.Engine.Physics.RigidBodies {
         }
 
         public override void Destroy() {
+            Debug.Log("Remove world object for " + GameObject.name);
             PhysicsManager.World.RemoveBody(RigidBody);
 
             base.Destroy();

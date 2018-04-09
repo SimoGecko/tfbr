@@ -112,12 +112,14 @@
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
     <Compile Include="Engine\Particles\ParticleSystem.cs" />
+    <Compile Include="Engine\Physics\BodyTag.cs" />
     <Compile Include="Engine\Physics\ConvexHullHelper.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
-    <Compile Include="Engine\Physics\Collider.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\JRigidBody.cs" />
+    <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\CapsulePrimitive.cs" />
@@ -129,7 +131,7 @@
     <Compile Include="Engine\Physics\Primitives3D\TerrainPrimitive.cs" />
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\ShapeType.cs" />
+    <Compile Include="Engine\Physics\ShapeType.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
@@ -169,9 +171,9 @@
     <Compile Include="Scripts\PowerUps\Magnet.cs" />
     <Compile Include="Scripts\Elements\PlantedBomb.cs" />
     <Compile Include="Scripts\PowerUps\Weight.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\DynamicRigidBody.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\MovingRigidBody.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\StaticRigidBody.cs" />
+    <Compile Include="Engine\Physics\Colliders\DynamicCollider.cs" />
+    <Compile Include="Engine\Physics\Colliders\MovingCollider.cs" />
+    <Compile Include="Engine\Physics\Colliders\StaticCollider.cs" />
     <Compile Include="Engine\Physics\RigidBodies\SteerableRigidBody.cs" />
     <Compile Include="Scripts\PlayerScripts\CameraController.cs" />
     <Compile Include="Scripts\PowerUps\ShieldPotion.cs" />
@@ -187,7 +189,7 @@
     <Compile Include="Scripts\UI\GameUI.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
     <Compile Include="Scripts\Elements\Money.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
+    <Compile Include="Engine\Physics\Colliders\Collider.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\PlayerScripts\Player.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerLift.cs" />

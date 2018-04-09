@@ -20,15 +20,9 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-
         private UserInterface _ui;
-        private Display _display;
-        private DebugDrawer _debugDrawer;
         
         private RasterizerState _fullRasterizer, _wireRasterizer;
-
-
-        private static bool _usePhysics = false;
 
         private MenuManager _menuManager;
         public bool MenuDisplay = false;
@@ -42,11 +36,8 @@ namespace BRS {
         }
 
         protected override void Initialize() {
-            _debugDrawer = new DebugDrawer(this);
-            Components.Add(_debugDrawer);
-            _display = new Display(this);
-            Components.Add(_display);
-            PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
+            PhysicsDrawer.Initialize(this, GraphicsDevice);
+            //PhysicsManager.Initialize();
 
             base.Initialize();
 
@@ -59,11 +50,7 @@ namespace BRS {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            if (_usePhysics) {
-                Scene = new LevelPhysics(PhysicsManager.Instance);
-            } else {
-                Scene = new Level1(PhysicsManager.Instance);
-            }
+             Scene = new Level1(PhysicsManager.Instance);
 
             _ui = new UserInterface();
             _ui.Start();
@@ -126,6 +113,7 @@ namespace BRS {
                 foreach (GameObject go in GameObject.All) go.Update();
                 foreach (GameObject go in GameObject.All) go.LateUpdate();
 
+                PhysicsDrawer.Instance.Update(gameTime);
                 PhysicsManager.Instance.Update(gameTime);
             }
 
@@ -148,7 +136,7 @@ namespace BRS {
 
                     _graphics.GraphicsDevice.Viewport = cam.Viewport;
 
-                    PhysicsManager.Instance.Draw(cam);
+                    PhysicsDrawer.Instance.Draw(cam);
 
                     foreach (GameObject go in GameObject.All) go.Draw(cam);
                     //transform.Draw(camera);

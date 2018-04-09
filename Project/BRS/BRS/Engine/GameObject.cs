@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -57,7 +57,7 @@ namespace BRS.Engine {
             }
         }
 
-        public virtual void OnCollisionEnter(Collider col) {
+        public virtual void OnCollisionEnter(JRigidBody col) {
             if (active)
                 foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
@@ -129,6 +129,8 @@ namespace BRS.Engine {
             if (o == null) {
                 return;
             }
+
+            Debug.Log("Removed: " + o.name);
 
             o.active = false;
             //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders

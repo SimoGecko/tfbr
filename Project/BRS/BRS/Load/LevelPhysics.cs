@@ -1,6 +1,4 @@
 ﻿using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
-using BRS.Scripts;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -8,15 +6,14 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using BRS.Engine;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 
 namespace BRS.Load {
-    // Todo: To be refactored
-    public enum BodyTag { DrawMe, DontDrawMe }
-
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
@@ -66,7 +63,7 @@ namespace BRS.Load {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
                 forklift.AddComponent(new PlayerStamina());
-                forklift.AddComponent(new MovingRigidBody(PhysicsManager));
+                forklift.AddComponent(new MovingCollider(PhysicsManager));
 
                 Players.Add(forklift);
             }
@@ -79,7 +76,7 @@ namespace BRS.Load {
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
-                playerBase.AddComponent(new StaticRigidBody(PhysicsManager));
+                playerBase.AddComponent(new StaticCollider(PhysicsManager));
             }
 
 
@@ -88,7 +85,7 @@ namespace BRS.Load {
                     GameObject body = new GameObject("domino_" + i, File.Load<Model>("Models/primitives/cube"));
                     body.tag = ObjectTag.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
-                    body.AddComponent(new DynamicRigidBody(PhysicsManager, pureCollider: true));
+                    body.AddComponent(new DynamicCollider(PhysicsManager, pureCollider: true));
                 }
             }
 
@@ -120,7 +117,7 @@ namespace BRS.Load {
             groundPlane.transform.position = new Vector3(5*10,0,5*10);
             groundPlane.tag = ObjectTag.Ground;
 
-            Collider rbGround = new Collider(new BoxShape(5*10, 10, 5*10));
+            JRigidBody rbGround = new JRigidBody(new BoxShape(5*10, 10, 5*10));
             rbGround.Position = new JVector(0, -5, 0);
             rbGround.IsStatic = true;
             rbGround.Material = material;
@@ -136,25 +133,25 @@ namespace BRS.Load {
                 GameObject body = new GameObject("wall_" + (4 * x), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticCollider(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticCollider(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticCollider(PhysicsManager));
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager));
+                body.AddComponent(new StaticCollider(PhysicsManager));
             }
         }
 

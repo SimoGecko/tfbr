@@ -2,12 +2,13 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -24,8 +25,6 @@ namespace BRS.Scripts.PowerUps {
         //private
         //protected bool destroyOnUse = true;
         private bool _rotate = true;
-
-        //private float _rotationAngle = 0.0f;
 
         // const
         private const float RotSpeed = 1;
@@ -44,14 +43,12 @@ namespace BRS.Scripts.PowerUps {
             base.Update();
 
             if (_rotate) {
-                //_rotationAngle += RotSpeed * Time.DeltaTime;
+                //DynamicCollider rbc = GameObject.GetComponent<DynamicCollider>();
+                //if (rbc != null) {
+                //    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                //}
 
-                RigidBodyComponent rbc = GameObject.GetComponent<DynamicRigidBody>();
-                if (rbc != null) {
-                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
-                }
-
-                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
+                transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
             }
 
         }

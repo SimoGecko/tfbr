@@ -1,24 +1,20 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // BoxPrimitive.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
+// Managed for this project by Andreas Emch
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace BRS.Engine.Physics.Primitives3D {
     /// <summary>
     /// Geometric primitive class for drawing cubes.
     /// </summary>
     public class BoxPrimitive : GeometricPrimitive {
+
         /// <summary>
         /// Constructs a new cube primitive, using default settings.
         /// </summary>

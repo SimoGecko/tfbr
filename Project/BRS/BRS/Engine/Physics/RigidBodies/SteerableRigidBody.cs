@@ -1,11 +1,11 @@
-﻿using Jitter.Collision.Shapes;
+﻿using BRS.Engine.Physics.Colliders;
+using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
 namespace BRS.Engine.Physics.RigidBodies {
-    class SteerableRigidBody : Collider {
+    class SteerableRigidBody : JRigidBody {
         public float RotationY { get; set; }
-        private JVector _preSpeed = JVector.Zero;
         public JVector Speed { get; set; }
         private readonly float _height;
 
@@ -21,11 +21,6 @@ namespace BRS.Engine.Physics.RigidBodies {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 
-        public override void PreStep(float timestep) {
-            //AddForce(-1*_preSpeed);
-
-            base.PreStep(timestep);
-        }
 
         public override void PostStep(float timestep) {
             Position = new JVector(Position.X, _height * .5f, Position.Z);

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -116,18 +116,18 @@ namespace BRS.Engine {
                                 //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
                                 break;
                             case ObjectTag.Ground:
-                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
+                                go.AddComponent(new StaticCollider(physics, isGround: true));
                                 break;
                             case ObjectTag.DynamicObstacle:
-                                go.AddComponent(new DynamicRigidBody(physics));
+                                go.AddComponent(new DynamicCollider(physics));
                                 break;
                             default:
-                                go.AddComponent(new StaticRigidBody(physics));
+                                go.AddComponent(new StaticCollider(physics));
                                 break;
                         }
 
-                        // Todo: Refactor..
-                        go.Start();
+                        //// Todo: Refactor..
+                        //go.Start();
                     }
 
                     nameContent = reader.ReadLine();

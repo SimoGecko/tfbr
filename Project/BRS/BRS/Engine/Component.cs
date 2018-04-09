@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Engine {
     ////////// base class for scripting language //////////
@@ -13,7 +13,7 @@ namespace BRS.Engine {
         void Start();
         void Update();
         void LateUpdate();
-        void OnCollisionEnter(Collider c);
+        void OnCollisionEnter(JRigidBody c);
         void Draw();
 
         object Clone();
@@ -29,7 +29,7 @@ namespace BRS.Engine {
         public virtual void Update() { }
         public virtual void LateUpdate() { } // really necessary?
         public virtual void Destroy() { }
-        public virtual void OnCollisionEnter(Collider c) { }
+        public virtual void OnCollisionEnter(JRigidBody c) { }
         public virtual void Draw() { }
 
         public virtual object Clone() {

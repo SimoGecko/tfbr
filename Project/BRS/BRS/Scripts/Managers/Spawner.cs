@@ -21,7 +21,7 @@ namespace BRS.Scripts.Managers {
 
 
         //prob distributions (no need to sum up to 1)
-        static readonly Dictionary<string, float> MoneyDistribution   = new Dictionary<string, float> {
+        static readonly Dictionary<string, float> MoneyDistribution = new Dictionary<string, float> {
             { "money1", .6f }, { "money3", .4f }, { "money10", .2f }, { "gold", .1f } };
 
         private static readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
@@ -53,16 +53,16 @@ namespace BRS.Scripts.Managers {
         public override void Start() {
             Instance = this;
 
-            for(int k=1; k<=10; k++) {
-                SpawnKCashAt(new Vector3(-10+ k*2, 0, -5), k);
+            for (int k = 1; k <= 10; k++) {
+                SpawnKCashAt(new Vector3(-10 + k * 2, 0.5f, -5), k);
             }
-            
+
             SpawnInitialMoney();
             SpawnInitialVaultGold();
             SpawnInitialCrates();
             SpawnInitialPowerup();
 
-            
+
             SpawnCashContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
@@ -106,12 +106,13 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnKCashAt(Vector3 position, int k) {
-            //spqwns a stack of cash
+            return;
+            //spawns a stack of cash
             float radius = .5f;
             float thickness = .1f;
-            for(int i=0; i<k; i++) {
-                int lvl = (int)Math.Log(i+1);
-                Vector3 pos = MyRandom.InsideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + position;
+            for (int i = 0; i < k; i++) {
+                int lvl = (int)Math.Log(i + 1);
+                Vector3 pos = MyRandom.InsideUnitCircle().To3() * radius * (float)Math.Pow(.8f, lvl) + Vector3.Up * thickness * lvl + Vector3.Up * i + position;
                 GameObject newmoney = GameObject.Instantiate("money1Prefab", pos, MyRandom.YRotation());
                 ElementManager.Instance.Add(newmoney.GetComponent<Money>());
             }
@@ -142,7 +143,7 @@ namespace BRS.Scripts.Managers {
         void SpawnInitialPowerup() {
             for (int i = 0; i < PowerupAmount; i++)
                 SpawnOnePowerupRandom();
-                //SpawnOnePowerupAt(new Vector3(i * 3, 0, -10));
+            //SpawnOnePowerupAt(new Vector3(i * 3, 0, -10));
         }
 
         void SpawnOnePowerupRandom() {

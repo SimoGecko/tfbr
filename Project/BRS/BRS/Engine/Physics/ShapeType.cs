@@ -1,4 +1,4 @@
-﻿namespace BRS.Engine.Physics.RigidBodies {
+﻿namespace BRS.Engine.Physics {
     public enum ShapeType {
         Box,
         BoxUniform,

@@ -1,12 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
+using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -46,7 +47,7 @@ namespace BRS.Scripts.Elements {
             //UpdateUI();
         }
 
-        public override void OnCollisionEnter(Collider c) {
+        public override void OnCollisionEnter(JRigidBody c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();

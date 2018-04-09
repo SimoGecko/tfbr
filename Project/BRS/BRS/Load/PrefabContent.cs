@@ -2,8 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
-using BRS.Scripts;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.Elements;
 using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework.Graphics;
@@ -33,7 +32,7 @@ namespace BRS.Engine {
                 moneyPrefab.transform.Scale(2f);
                 moneyPrefab.transform.SetStatic();
                 moneyPrefab.AddComponent(new Money(100*values[i], values[i], Money.Type.Cash));
-                moneyPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+                moneyPrefab.AddComponent(new DynamicCollider(physics, shapeType: valuableShapeType, pureCollider: true));
                 AddPrefab(moneyPrefab);
             }
             
@@ -51,7 +50,7 @@ namespace BRS.Engine {
             GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
             goldPrefab.transform.Scale(2f);
             goldPrefab.AddComponent(new Money(3000, 3, Money.Type.Gold));
-            goldPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            goldPrefab.AddComponent(new DynamicCollider(physics, shapeType: valuableShapeType, pureCollider: true));
             AddPrefab(goldPrefab);
 
 
@@ -59,7 +58,7 @@ namespace BRS.Engine {
             GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/primitives/cube"));
             cratePrefab.transform.Scale(.5f);
             cratePrefab.AddComponent(new Crate());
-            cratePrefab.AddComponent(new DynamicRigidBody(physics, shapeType: valuableShapeType, pureCollider: true));
+            cratePrefab.AddComponent(new DynamicCollider(physics, shapeType: valuableShapeType, pureCollider: true));
             //cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
             AddPrefab(cratePrefab);
 
@@ -73,7 +72,7 @@ namespace BRS.Engine {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
                 powerupPrefab.transform.Scale(.3f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
-                powerupPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
+                powerupPrefab.AddComponent(new DynamicCollider(physics, shapeType: powerupShapeType, pureCollider: true, updateRotation: false));
                 AddPrefab(powerupPrefab);
             }
             /*
@@ -174,7 +173,7 @@ namespace BRS.Engine {
             oilPrefab.transform.Scale(.6f);
             oilPrefab.transform.SetStatic();
             oilPrefab.AddComponent(new OilTrap());
-            oilPrefab.AddComponent(new StaticRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
+            oilPrefab.AddComponent(new StaticCollider(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             //oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
             AddPrefab(oilPrefab);
 
@@ -183,21 +182,21 @@ namespace BRS.Engine {
             plantedBombPrefab.transform.Scale(.3f);
             plantedBombPrefab.transform.SetStatic();
             plantedBombPrefab.AddComponent(new PlantedBomb());
-            plantedBombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
+            plantedBombPrefab.AddComponent(new StaticCollider(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(plantedBombPrefab);
 
             //falling weight
             GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/elements/weight"));
             fallingWeight.transform.Scale(.5f);
             fallingWeight.AddComponent(new FallingWeight());
-            fallingWeight.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
+            fallingWeight.AddComponent(new DynamicCollider(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(fallingWeight);
 
             //planted magnet
             GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/elements/magnet"));
             plantedMagnet.transform.Scale(.3f);
             plantedMagnet.AddComponent(new PlantedMagnet());
-            plantedMagnet.AddComponent(new DynamicRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
+            plantedMagnet.AddComponent(new StaticCollider(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(plantedMagnet);
 
             //speed boost
@@ -205,7 +204,7 @@ namespace BRS.Engine {
             speedpadPrefab.transform.Scale(1f);
             speedpadPrefab.transform.SetStatic();
             speedpadPrefab.AddComponent(new SpeedPad());
-            speedpadPrefab.AddComponent(new StaticRigidBody(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
+            speedpadPrefab.AddComponent(new StaticCollider(physics, shapeType: ShapeType.BoxUniform, pureCollider: true));
             //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
             AddPrefab(speedpadPrefab);
 

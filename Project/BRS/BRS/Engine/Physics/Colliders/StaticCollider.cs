@@ -1,14 +1,14 @@
-﻿using BRS.Load;
+﻿using BRS.Engine.Physics.RigidBodies;
 using Jitter.Collision.Shapes;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Engine.Physics.RigidBodies {
-    class StaticRigidBody : RigidBodyComponent {
+namespace BRS.Engine.Physics.Colliders {
+    class StaticCollider : Collider {
         private readonly bool _isGround;
 
-        public StaticRigidBody(PhysicsManager physicsManager, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
+        public StaticCollider(PhysicsManager physicsManager, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             PhysicsManager = physicsManager;
             IsStatic = true;
             IsActive = isActive;
@@ -30,7 +30,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     bbSize.Z * GameObject.transform.scale.Z);
                 CollisionShape = new BoxShape(bbSize);
 
-                RigidBody = new Collider(CollisionShape) {
+                RigidBody = new JRigidBody(CollisionShape) {
                     Position = Conversion.ToJitterVector(transform.position - new Vector3(0, 5, 0)),
                     Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                     IsStatic = IsStatic,
