@@ -15,9 +15,10 @@ namespace BRS.Menu {
 
         public static Menu Instance;
 
-        readonly Vector2 _positionNextButton = new Vector2(Screen.Width / 2 + 200, Screen.Height - 400);
-        readonly Vector2 _positionBackButton = new Vector2(Screen.Width / 2 - 200, Screen.Height - 400);
         readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
+        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
+        readonly Vector2 _positionNextButton = new Vector2(Screen.Width / 2 + 0.1f *Screen.Width, Screen.Height - 0.3f * Screen.Height) ;
+        readonly Vector2 _positionBackButton = new Vector2(Screen.Width / 2 - 0.1f * Screen.Width, Screen.Height - 0.3f * Screen.Height);
 
         List<Button> linkedButtonDownUp = new List<Button>();
         List<Button> linkedButtonLeftRight = new List<Button>();
@@ -67,14 +68,16 @@ namespace BRS.Menu {
         }
 
         public void BuildMainMenu() {
-            Vector2[] offset = { new Vector2(0, -200), new Vector2(0, -100), new Vector2(0, 0), new Vector2(0, 100), new Vector2(0, 200) };
+            Vector2[] offset = { new Vector2(0, -0.2f), new Vector2(0, -0.1f), new Vector2(0, 0), new Vector2(0, 0.1f), new Vector2(0, 0.2f) };
             string[] textButtons = { "Play", "Tutorial", "Ranking", "Options", "Credits" };
             string[] switchTo = { "play1", "tutorial1", "ranking", "options", "credits" };
 
             for (int i=0; i<textButtons.Length; ++i) {
-                var playButton = new Button(_textureButton, _middleScreen +  offset[i]) {
+                var playButton = new Button(_textureButton, _middleScreen + offset[i]*_screenSizeVec) {
                     Text = textButtons[i],
                     NameMenuToSwitchTo = switchTo[i],
+                    ScaleHeight = 1.5f,
+                    //ScaleWidth = 1.5f
                 };
                 playButton.Click += MenuManager.Instance.SwitchToMenu;
                 MenuManager.Instance.MainMenu.AddComponent(playButton);
@@ -89,16 +92,16 @@ namespace BRS.Menu {
 
             string text = "Number of players";
             var chooseNumberPlayerText = new TextBox() {
-                InitPos = _middleScreen + new Vector2(0,-200),
+                InitPos = _middleScreen + new Vector2(0,-0.2f)*_screenSizeVec,
                 Text = text
             };
 
-            Vector2[] offset = { new Vector2(-200, -100), new Vector2(200, -100), new Vector2(-175, 100), new Vector2(88, 100), new Vector2(350, 100) };
+            Vector2[] offset = { new Vector2(-0.1f, -0.1f), new Vector2(0.1f, -0.1f), new Vector2(-0.12f, 0.1f), new Vector2(0, 0.1f), new Vector2(0.12f, 0.1f) };
             string[] textButtons = { "2", "4", "2 min", "3 min", "5 min" };
 
             List<Button> buttonsCurrentPanel = new List<Button>();
             for (int i = 0; i < textButtons.Length; ++i) {
-                var playButton = new Button(_textureButton, _middleScreen + offset[i]) {
+                var playButton = new Button(_textureButton, _middleScreen + offset[i]*_screenSizeVec) {
                     Text = textButtons[i],
                 };
                 if (i < 2) {
@@ -109,6 +112,7 @@ namespace BRS.Menu {
                     playButton.Click += MenuManager.Instance.UpdateRoundDuration;
                     playButton.Click += MenuManager.Instance.GoDown;
                     playButton.ScaleWidth = .5f;
+                    //playButton.Texture.Width *= .5f;
                 }
 
                 linkedButtonLeftRight.Add(playButton);
@@ -175,11 +179,11 @@ namespace BRS.Menu {
             SetNeighborsButtonLeftRight(false);
 
             ListComponents buttonPlayersChanges = new ListComponents("playerInfoToChange");
-            Vector2[] offsetPlayersChanges = { new Vector2(-275, -300), new Vector2(-12, -300), new Vector2(250, -300), new Vector2(512, -300) };
+            Vector2[] offsetPlayersChanges = { new Vector2(-0.15f, -0.3f), new Vector2(-0.05f, -0.3f), new Vector2(0.05f, -0.3f), new Vector2(0.15f, -0.3f) };
             string[] textButtonsPlayersChanges = { "player 1", "player 2", "player 3", "player 4" };
 
             for (int i = 0; i < textButtonsPlayersChanges.Length; ++i) {
-                var playerChangeButton = new Button(_textureButton, _middleScreen + offsetPlayersChanges[i]) {
+                var playerChangeButton = new Button(_textureButton, _middleScreen + offsetPlayersChanges[i] * _screenSizeVec) {
                     Text = textButtonsPlayersChanges[i],
                     Index = i,
                     NameMenuToSwitchTo = "playerInfos",
@@ -205,7 +209,7 @@ namespace BRS.Menu {
         internal void BuildPlayerInfoMenu() {
 
             var namePlayer = new TextBox() {
-                InitPos = _middleScreen + new Vector2(0, -400),
+                InitPos = _middleScreen + new Vector2(0, -0.4f)*_screenSizeVec,
                 Text = "",
                 NameIdentifier = "name_player"
             };
@@ -215,13 +219,13 @@ namespace BRS.Menu {
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            Vector2[] startoffset = { new Vector2(-500, -300), new Vector2(-400, -200), new Vector2(-200, -100) };
+            Vector2[] startoffset = { new Vector2(-0.3f, -0.3f), new Vector2(-0.25f, -0.2f), new Vector2(-0.2f, -0.1f) };
 
             List<Button> buttonsCurrentPanel = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
                 int count = 0;
                 foreach (var elem in keyboard[i]) {
-                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i] + count * new Vector2(.5f * _textureButton.Width, 0)) {
+                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i]*_screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
                         Text = elem,
                         ScaleWidth = .5f
                     };
@@ -233,9 +237,9 @@ namespace BRS.Menu {
                     buttonsCurrentPanel.Add(letterButton);
                 }
                 if (i == keyboard.Length - 1) {
-                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i] + count * new Vector2(.5f * _textureButton.Width, 0)) {
+                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i]*_screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
                         Text = "remove",
-                        //ScaleWidth = .5f
+                        ScaleWidth = .5f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
                     MenuManager.Instance.PlayerInfoMenu.AddComponent(letterButton);
@@ -332,7 +336,7 @@ namespace BRS.Menu {
 
             ListComponents rankings = new ListComponents("rankings_game");
             string[] pathRankings = { "ranking2min.txt", "ranking3min.txt", "ranking5min.txt" };
-            Vector2[] offsetStart = { new Vector2(-200, -200), new Vector2(100, -200) };
+            Vector2[] offsetStart = { new Vector2(-0.05f, -0.2f), new Vector2(0.05f, -0.2f) };
 
             for (int i=0; i<pathRankings.Length; ++i) {
                 List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/" + pathRankings[i]);
@@ -341,12 +345,12 @@ namespace BRS.Menu {
                 int count = 0;
                 foreach (var aPerson in rankinglist) {
                     var namePerson = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[0] + new Vector2(0, count*100),
+                        InitPos = _middleScreen + offsetStart[0]*_screenSizeVec + new Vector2(0, count*100),
                         Text = aPerson.Item1
                     };
 
                     var score = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[1] + new Vector2(0, count * 100),
+                        InitPos = _middleScreen + offsetStart[1]*_screenSizeVec + new Vector2(0, count * 100),
                         Text = aPerson.Item2 
                     };
 
@@ -364,11 +368,11 @@ namespace BRS.Menu {
             backButton.Click += MenuManager.Instance.SwitchToMenu;
             MenuManager.Instance.RankingMenu.AddComponent(backButton);
 
-            Vector2[] offset = { new Vector2(-175, -300), new Vector2(88, -300), new Vector2(350, -300) };
+            Vector2[] offset = { new Vector2(-0.1f, -0.3f), new Vector2(0, -0.3f), new Vector2(0.1f, -0.3f) };
             string[] textButtons = { "2 min", "3 min", "5 min" };
 
             for (int i = 0; i < textButtons.Length; ++i) {
-                var playButton = new Button(_textureButton, _middleScreen + offset[i]) {
+                var playButton = new Button(_textureButton, _middleScreen + offset[i]*_screenSizeVec) {
                     Text = textButtons[i],
                     Index = i,
                     NeighborDown = backButton
