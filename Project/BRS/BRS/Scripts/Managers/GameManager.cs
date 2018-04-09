@@ -14,7 +14,7 @@ namespace BRS.Scripts.Managers {
 
         //public
         public static int NumPlayers = 2;
-        public static int LvlScene = 3;
+        public static int LvlScene = 4;
         public const int NumRounds = 3;
 
 
