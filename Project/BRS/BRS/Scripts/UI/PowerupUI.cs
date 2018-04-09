@@ -24,6 +24,7 @@ namespace BRS.Scripts.UI {
         private Texture2D _powerupsAtlas;
         private Rectangle[] _powerupsRectangle;
         private Texture2D _slot;
+        private Texture2D smallButton;
 
         private PowerupUIStruct[] _powerupUi;
 
@@ -47,7 +48,7 @@ namespace BRS.Scripts.UI {
                 powerupsPng[i] = File.Load<Texture2D>("Images/powerup/" + ((PowerupType)i).ToString() + "_pic");
                 //if (!powerupStringToIndex.ContainsKey(pngNames[i])) powerupStringToIndex.Add(pngNames[i], i);
             }*/
-            _powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups"); // atlas
+            _powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups_clear"); // atlas
             _powerupsRectangle = new Rectangle[_numPowerups];
             for (int i = 0; i < _numPowerups; ++i) {
                 int column = i%4;
@@ -56,6 +57,7 @@ namespace BRS.Scripts.UI {
             }
 
             _slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
+            smallButton = File.Load<Texture2D>("Images/UI/small_button");
         }
 
         public override void Update() {
@@ -69,19 +71,36 @@ namespace BRS.Scripts.UI {
 
         // commands
         public void Draw(int index) { // TODO clean out this code
+            UserInterface.Instance.DrawString("powerup", new Rectangle(0, 30, 100, 20), Align.Top, Align.Top, Align.Bottom, scale:.7f);
+            UserInterface.Instance.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 0, 64, 64), Align.Top);
+
+            if (_powerupUi[index].CurrentPowerups.Length > 0) { // it's going to draw just one
+                foreach (int powerup in _powerupUi[index].CurrentPowerups) {
+                    //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
+                    UserInterface.Instance.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 64, 64, 64), Align.Top, col:Color.Orange);
+                    UserInterface.Instance.DrawPicture(_powerupsAtlas, new Rectangle(0, 57, 44, 44), _powerupsRectangle[powerup], Align.Top);
+                    Suggestions.Instance.GiveCommand(index, new Rectangle(0, 130, 40, 40), XboxButtons.X, Align.Top);
+                }
+            }
+        }
+
+
+        public void DrawOLD2(int index) {
+            /*
             Vector2 position = new Vector2(300, 100);
             position += Vector2.UnitX * UserInterface.Instance.GetOffset(index);
             Rectangle destRect = new Rectangle((int)position.X, (int)position.Y, 50, 50);
 
-            UserInterface.Instance.DrawPicture(destRect, _slot);
+            UserInterface.Instance.DrawPictureOLD(destRect, _slot);
 
-            if (_powerupUi[index].CurrentPowerups.Length>0) { // it's going to draw just one
+            if (_powerupUi[index].CurrentPowerups.Length > 0) { // it's going to draw just one
                 foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
                     UserInterface.Instance.DrawPicture(destRect, _powerupsAtlas, _powerupsRectangle[powerup]);
                     Suggestions.Instance.GiveCommand(index, destRect.Evaluate(new Vector2(.5f, 1)) + new Vector2(0, 30), XboxButtons.X);
                 }
             }
+            */
         }
 
         public void UpdatePlayerPowerupUI(int index, int[] powerupList) {

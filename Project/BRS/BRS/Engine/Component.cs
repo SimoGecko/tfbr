@@ -8,26 +8,31 @@ namespace BRS.Engine {
     ////////// base class for scripting language //////////
 
     public interface IComponent {
-        GameObject GameObject { get; set; }
+        GameObject gameObject { get; set; }
 
+        void Awake();
         void Start();
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
-        void Draw();
+        void Draw(); // WHY?
 
         object Clone();
     }
 
-    public class Component : IComponent {
-        public bool Active { get; set; }
-        public GameObject GameObject { get; set; }
-        // ReSharper disable once InconsistentNaming
-        public Transform  transform  { get { return GameObject.transform; } }
 
+    //TODO remove this Component duplicate
+    public class Component : IComponent {
+        public bool Active { get; set; } // TODO remove this
+        public GameObject gameObject { get; set; }
+        // ReSharper disable once InconsistentNaming
+        public Transform  transform  { get { return gameObject.transform; } }
+
+        public virtual void Awake() { }
         public virtual void Start() { }
         public virtual void Update() { }
-        public virtual void LateUpdate() { } // really necessary?
+        public virtual void LateUpdate() { }
+
         public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
         public virtual void Draw() { }
@@ -41,7 +46,7 @@ namespace BRS.Engine {
         }
     }
 
-    public class ListComponents : Component {
+    public class ListComponents : Component { // WHAT IS THIS
         public readonly List<Component> Components;
         public readonly string NameIdentifier;
 

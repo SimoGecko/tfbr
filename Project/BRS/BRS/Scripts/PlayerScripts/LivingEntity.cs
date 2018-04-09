@@ -5,7 +5,6 @@ using BRS.Engine;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PlayerScripts {
-    // Todo: Doesn't this belong into the Engine?
     public interface IDamageable : IComponent {
         void TakeDamage(float damage);
     }

@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
@@ -24,6 +25,8 @@ namespace BRS.Scripts.PowerUps {
         //private
         //protected bool destroyOnUse = true;
         private bool _rotate = true;
+        protected bool _useInstantly = false;
+
 
         //private float _rotationAngle = 0.0f;
 
@@ -38,6 +41,7 @@ namespace BRS.Scripts.PowerUps {
             base.Start();
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
+            CreateUseCallbacks();
         }
 
         public override void Update() {
@@ -46,14 +50,13 @@ namespace BRS.Scripts.PowerUps {
             if (_rotate) {
                 //_rotationAngle += RotSpeed * Time.DeltaTime;
 
-                RigidBodyComponent rbc = GameObject.GetComponent<DynamicRigidBody>();
+                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
                 if (rbc != null) {
                     rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
                 }
 
                 //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
             }
-
         }
 
 
@@ -63,24 +66,33 @@ namespace BRS.Scripts.PowerUps {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerPowerup pp = p.GameObject.GetComponent<PlayerPowerup>();
+            PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
+                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
                 Owner = p;
-                pp.Collect(this);
+                if (_useInstantly) UsePowerup();
+                else pp.Collect(this);
 
                 ElementManager.Instance.Remove(this);
 
                 //if(!destroyOnUse) gameObject.active = false;
-                GameObject.Destroy(GameObject);
+                GameObject.Destroy(gameObject);
             }
         }
 
-        public virtual void UsePowerup() { }
+        public virtual void UsePowerup() {
+                transform.position = Owner.transform.position;
+                Audio.Play(PowerupType.ToString().ToLower()+ "_use",  transform.position);
+        }
 
         // queries
         public virtual bool CanUse() {
             //fill 
             return true;
+        }
+
+        void CreateUseCallbacks() {
+
         }
 
 

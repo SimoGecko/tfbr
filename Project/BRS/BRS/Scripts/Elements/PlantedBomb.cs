@@ -13,17 +13,19 @@ namespace BRS.Scripts.Elements {
         private const float ExplosionDamage = 60;
 
         public override void Start() {
+            Audio.Play("bomb_timer", transform.position);
             new Timer(TimeBeforeExplosion, Explode);
         }
 
         void Explode() {
+            Audio.Play("explosion", transform.position);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
-            GameObject.Destroy(GameObject);
+            GameObject.Destroy(gameObject);
         }
 
         // queries
