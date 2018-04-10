@@ -1,16 +1,14 @@
-﻿namespace BRS.Engine.Physics.RigidBodies {
-    class DynamicRigidBody : RigidBodyComponent {
-        private readonly bool _updateRotation;
+﻿using Jitter.LinearMath;
 
-        public DynamicRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, bool updateRotation = true, float size = 1.0f) {
-            PhysicsManager = physicsManager;
+namespace BRS.Engine.Physics.RigidBodies {
+    class DynamicRigidBody : RigidBodyComponent {
+        public DynamicRigidBody(bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, float size = 1.0f) {
             IsStatic = false;
             IsActive = isActive;
             ShapeType = shapeType;
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
             Size = size;
-            _updateRotation = updateRotation;
         }
 
         /// <summary>
@@ -19,7 +17,7 @@
         public override void Update() {
             // Apply position and rotation from physics-world to the game-object
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
-            //transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
+            transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
 
             base.Update();
         }

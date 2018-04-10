@@ -2,7 +2,6 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine.Physics.Primitives3D;
-using BRS.Load;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;

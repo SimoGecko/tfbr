@@ -8,8 +8,7 @@ namespace BRS.Engine.Physics.RigidBodies {
     class StaticRigidBody : RigidBodyComponent {
         private readonly bool _isGround;
 
-        public StaticRigidBody(PhysicsManager physicsManager, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
-            PhysicsManager = physicsManager;
+        public StaticRigidBody(bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             IsStatic = true;
             IsActive = isActive;
             ShapeType = shapeType;
@@ -22,12 +21,12 @@ namespace BRS.Engine.Physics.RigidBodies {
         // todo: refactor again, just testing
         public override void Start() {
             if (_isGround) {
-                Model model = GameObject.Model;
+                Model model = gameObject.Model;
                 BoundingBox bb = BoundingBoxHelper.Calculate(model);
                 JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-                bbSize = new JVector(bbSize.X * GameObject.transform.scale.X,
+                bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
                     10,
-                    bbSize.Z * GameObject.transform.scale.Z);
+                    bbSize.Z * gameObject.transform.scale.Z);
                 CollisionShape = new BoxShape(bbSize);
 
                 RigidBody = new Collider(CollisionShape) {
@@ -36,10 +35,10 @@ namespace BRS.Engine.Physics.RigidBodies {
                     IsStatic = IsStatic,
                     IsActive = IsActive,
                     Tag = Tag,
-                    GameObject = GameObject
+                    GameObject = gameObject
                 };
 
-                PhysicsManager.World.AddBody(RigidBody);
+                PhysicsManager.Instance.World.AddBody(RigidBody);
             } else {
                 base.Start();
             }

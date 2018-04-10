@@ -6,10 +6,12 @@ using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using System;
 
 namespace BRS.Engine {
     static class Audio {
-        //static class that contains all audio in the game and allows playback
+        ////////// static class that contains all audio in the game and allows playback //////////
+
         //static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, SoundEffectInstance> sounds;
         static Dictionary<string, Song> songs;
@@ -30,15 +32,14 @@ namespace BRS.Engine {
             BuildAudioLibrary();
             BuildSongLibrary();
 
-            //PlaySong("Happy Happy Game Show");
-            SetMusicVolume(.05f);
+            PlaySong("Happy Happy Game Show");
+            SetMusicVolume(.01f);
             SetSoundVolume(1f);
         }
 
 
         public static void Update() {
-            sounds["mono/phi"].Apply3D(Listener(), em);
-
+            //sounds["mono/phi"].Apply3D(Listener(), em); // TODO
         }
 
         //COMMANDS
@@ -132,12 +133,19 @@ namespace BRS.Engine {
         // AUDIO AND SONGS IN THE GAME
         static void BuildAudioLibrary() {
             //extend this string array with all the sounds (use correct names)
-            string[] soundsString = new string[] { "mono/phi", "boing" };
+            string[] soundsString = new string[] {
+                "attacks/attack", "attacks/break", "attacks/stun",
+                "elements/bomb_timer", "elements/explosion", "elements/speedpad",
+                "game/police",
+                "powerups/bomb_pickup", "powerups/capacity_pickup", "powerups/health_pickup","powerups/key_pickup", "powerups/shield_pickup", "powerups/speed_pickup",
+                "powerups/key_use", "powerups/shield_use",
+                "valuables/cash_pickup", "valuables/gold_pickup", "valuables/diamond_pickup", };
+
 
             foreach(string s in soundsString) {
-                SoundEffect soundEffect = File.Load<SoundEffect>("Audio/test/" + s);
-                sounds.Add(s, soundEffect.CreateInstance());
-                //sounds[s].IsLooped = true;
+                SoundEffect soundEffect = File.Load<SoundEffect>("Audio/effects/" + s);
+                string name = s.Split('/')[1];
+                sounds.Add(name, soundEffect.CreateInstance());
             }
         }
 

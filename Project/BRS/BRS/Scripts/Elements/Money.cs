@@ -6,23 +6,24 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 
 namespace BRS.Scripts.Elements {
-    class Money : Pickup {
+    class Money : Pickup { // TODO rename valuable
         ////////// represents an amount of money that can be collected  //////////
 
         // --------------------- VARIABLES ---------------------
         //public
-        public enum Type { Cash, Diamond, Gold };
+        public enum Type { cash, gold, diamond };
 
         // Todo: Do we really want to have it that each money has different value? Doesn't it make it too unpredictable? (Andy)
-        public const float randomizer = .1f; // how much to deviate from actual value
+        public const float randomizer = .0f; // how much to deviate from actual value
 
 
         //private
         int value = 1;
         int weight = 1;
-        Type type;
+        public Type type;
 
         //reference
 
@@ -49,11 +50,13 @@ namespace BRS.Scripts.Elements {
 
         // commands
         protected override void DoPickup(Player p) {
-            PlayerInventory pi = p.GameObject.GetComponent<PlayerInventory>();
+            PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
+                Audio.Play(type.ToString().ToLower()+ "_pickup", transform.position);
                 pi.Collect(this);
                 ElementManager.Instance.Remove(this);
-                GameObject.Destroy(GameObject);
+                MoneyUI.Instance.PickedupValuable(transform.position, value, p.PlayerIndex);
+                GameObject.Destroy(gameObject);
             }
         }
 

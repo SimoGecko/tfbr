@@ -1,5 +1,4 @@
 ﻿using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -12,7 +11,6 @@ namespace BRS.Engine.Physics.RigidBodies {
 
         protected ShapeType ShapeType;
         protected Shape CollisionShape;
-        protected PhysicsManager PhysicsManager;
         protected BodyTag Tag;
 
         protected bool IsStatic;
@@ -35,31 +33,31 @@ namespace BRS.Engine.Physics.RigidBodies {
                 IsActive = IsActive,
                 Tag = Tag,
                 PureCollider = PureCollider,
-                GameObject = GameObject,
+                GameObject = gameObject,
                 Material = new Material { Restitution = 0.0f },
                 Mass = 20.0f
             };
 
-            PhysicsManager.World.AddBody(RigidBody);
+            PhysicsManager.Instance.World.AddBody(RigidBody);
 
             base.Start();
         }
 
         public override void Destroy() {
-            Debug.Log("Remove world object for " + GameObject.name);
-            PhysicsManager.World.RemoveBody(RigidBody);
+            Debug.Log("Remove world object for " + gameObject.name);
+            PhysicsManager.Instance.World.RemoveBody(RigidBody);
 
             base.Destroy();
         }
 
         private void CalculateShape(ShapeType type) {
-            Model model = GameObject.Model;
+            Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
             bbSize = new JVector(
-                bbSize.X * Size * GameObject.transform.scale.X,
-                bbSize.Y * Size * GameObject.transform.scale.Y,
-                bbSize.Z * Size * GameObject.transform.scale.Z
+                bbSize.X * Size * gameObject.transform.scale.X,
+                bbSize.Y * Size * gameObject.transform.scale.Y,
+                bbSize.Z * Size * gameObject.transform.scale.Z
                 );
 
             float maxDimension = MathHelper.Max(bbSize.X, MathHelper.Max(bbSize.Y, bbSize.Z));

@@ -28,9 +28,9 @@ namespace BRS.Scripts.PlayerScripts {
         private float _targetRotation;
 
         // const
-        private const float MinSpeed = 5f;
-        private const float MaxSpeed = 10f;
-        private const float MaxTurningRate = 720; // deg/sec
+        private const float MinSpeed = 3f;
+        private const float MaxSpeed = 7f;
+        private const float MaxTurningRate = 360; // deg/sec
         private const float BoostSpeedMultiplier = 1.5f;
 
         private const float SlowdownMalus = .3f;
@@ -55,9 +55,9 @@ namespace BRS.Scripts.PlayerScripts {
             //transform.Rotate(Vector3.Up, -90);
             //rotation = targetRotation = -90;
 
-            playerInventory = GameObject.GetComponent<PlayerInventory>();
+            playerInventory = gameObject.GetComponent<PlayerInventory>();
 
-            MovingRigidBody dynamicRigidBody = GameObject.GetComponent<MovingRigidBody>();
+            MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
             _collider = dynamicRigidBody?.RigidBody as SteerableCollider;
         }
 
