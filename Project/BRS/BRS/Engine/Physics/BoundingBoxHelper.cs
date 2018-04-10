@@ -2,11 +2,27 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics {
+    /// <summary>
+    /// Helper to calculate the bounding box of a given model.
+    /// </summary>
     public static class BoundingBoxHelper {
+
+        /// <summary>
+        /// Calculate the bounding-box of the model without special world-transformation.
+        /// </summary>
+        /// <param name="model">XNA-model file</param>
+        /// <returns>XNA-bounding-box</returns>
         public static BoundingBox Calculate(Model model) {
             return Calculate(model, Matrix.Identity);
         }
 
+        
+        /// <summary>
+        /// Calculate the bounding-box of the model with a specified world-transformation.
+        /// </summary>
+        /// <param name="model">XNA-model file</param>
+        /// <param name="worldTransform">World-transformation matrix</param>
+        /// <returns>XNA-bounding-box</returns>
         public static BoundingBox Calculate(Model model, Matrix worldTransform) {
             // Initialize minimum and maximum corners of the bounding box to max and min values
             Vector3 min = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
@@ -33,8 +49,9 @@ namespace BRS.Engine.Physics {
                 }
             }
 
-            // Create and return bounding box
             return new BoundingBox(min, max);
         }
+
+
     }
 }

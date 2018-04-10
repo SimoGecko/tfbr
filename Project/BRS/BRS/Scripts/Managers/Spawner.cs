@@ -90,18 +90,22 @@ namespace BRS.Scripts.Managers {
             Vector2 sample = new Vector2(MyRandom.Value, (float)Math.Sqrt(MyRandom.Value)); // distribution more dense above
             //Vector2 sample = new Vector2(MyRandom.Value, Utility.InverseCDF(MyRandom.Value, .5f)); // todo fix (doesn't work)
             Vector2 position = _spawnArea.Evaluate(sample);
-            SpawnOneMoneyAt(position.To3());
+            SpawnOneMoneyAt(position.To3() + new Vector3(0, 5, 0), Vector3.Zero);
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius) {
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
-            SpawnOneMoneyAt(pos);
+            SpawnOneMoneyAt(pos, Vector3.Zero);
         }
 
-        void SpawnOneMoneyAt(Vector3 pos) {
-            pos += new Vector3(0, 5, 0);
+        public void SpawnMoneyFromCenter(Vector3 p, float radius) {
+            p.Y = MathHelper.Max(p.Y, 0.5f);
+            SpawnOneMoneyAt(p, MyRandom.UpsideLinearVelocity() * radius);
+        }
+
+        void SpawnOneMoneyAt(Vector3 pos, Vector3 linearVelocity) {
             string prefabName = Utility.EvaluateDistribution(MoneyDistribution) + "Prefab";
-            GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation());
+            GameObject newmoney = GameObject.Instantiate(prefabName, pos, MyRandom.YRotation(), linearVelocity);
             ElementManager.Instance.Add(newmoney.GetComponent<Money>());
         }
 
@@ -148,16 +152,20 @@ namespace BRS.Scripts.Managers {
 
         void SpawnOnePowerupRandom() {
             Vector2 position = MyRandom.InsideRectangle(_spawnArea);
-            SpawnOnePowerupAt(position.To3());
+            SpawnOnePowerupAt(position.To3() + new Vector3(0, 2, 0), Vector3.Zero);
         }
         public void SpawnPowerupAround(Vector3 p, float radius) {
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
-            SpawnOnePowerupAt(pos);
+            SpawnOnePowerupAt(pos, Vector3.Zero);
+        }
+        
+        public void SpawnPowerupFromCenter(Vector3 p, float radius) {
+            p.Y = MathHelper.Max(p.Y, 0.5f);
+            SpawnOnePowerupAt(p, MyRandom.UpsideLinearVelocity() * radius);
         }
 
-        void SpawnOnePowerupAt(Vector3 position) {
-            position += new Vector3(0, 2, 0);
-            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity);
+        void SpawnOnePowerupAt(Vector3 position, Vector3 linearVelocity) {
+            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity, linearVelocity);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 

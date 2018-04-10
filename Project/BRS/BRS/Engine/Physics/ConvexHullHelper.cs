@@ -5,11 +5,28 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics {
+    /// <summary>
+    /// Helper to calculate the bounding box of a given model.
+    /// Todo: (to Andy from Andy) Check if really used, otherwise delete
+    /// </summary>
     public static class ConvexHullHelper {
+
+        /// <summary>
+        /// Calculate the convex-hull of the model without special world-transformation.
+        /// </summary>
+        /// <param name="model">XNA-model file</param>
+        /// <returns>Jitter-shape</returns>
         public static ConvexHullShape Calculate(Model model) {
             return Calculate(model, Matrix.Identity);
         }
 
+
+        /// <summary>
+        /// Calculate the convex-hull of the model without special world-transformation.
+        /// </summary>
+        /// <param name="model">XNA-model file</param>
+        /// <param name="worldTransform">World-transformation matrix</param>
+        /// <returns>Jitter-shape</returns>
         public static ConvexHullShape Calculate(Model model, Matrix worldTransform) {
             List<JVector> vertices = new List<JVector>();
 
@@ -33,8 +50,9 @@ namespace BRS.Engine.Physics {
                 }
             }
 
-            // Create and return convex hull
             return new ConvexHullShape(vertices);
         }
+
+
     }
 }

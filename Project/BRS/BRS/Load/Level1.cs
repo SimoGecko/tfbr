@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Load {
     class Level1 : Scene {
@@ -90,7 +91,7 @@ namespace BRS.Load {
             vault.transform.position = new Vector3(5, 1.5f, -62);
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new StaticCollider(PhysicsManager));
+            vault.AddComponent(new StaticRigidBody(PhysicsManager));
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
 
             // Todo: refactor
@@ -118,7 +119,7 @@ namespace BRS.Load {
                 player.transform.position = new Vector3(-5 + 10 * i, 0, 0);
 
                 player.AddComponent(new Player(i, i % 2));
-                player.AddComponent(new MovingCollider(PhysicsManager));
+                player.AddComponent(new MovingRigidBody(PhysicsManager));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
@@ -152,7 +153,7 @@ namespace BRS.Load {
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
                 bases[i].AddComponent(new Base(i));
-                bases[i].AddComponent(new StaticCollider(PhysicsManager, pureCollider: true));
+                bases[i].AddComponent(new StaticRigidBody(PhysicsManager, pureCollider: true));
                 //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
                 bases[i].transform.SetStatic();
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());

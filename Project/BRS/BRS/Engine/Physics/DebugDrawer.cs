@@ -59,6 +59,7 @@ namespace BRS.Engine.Physics {
             _basicEffect = basicEffect;
         }
 
+
         /// <summary>
         /// Set the specified element of the vector.
         /// </summary>
@@ -75,6 +76,7 @@ namespace BRS.Engine.Physics {
             else
                 throw new ArgumentOutOfRangeException(nameof(index));
         }
+
 
         /// <summary>
         /// Get the specified element of the vector.
@@ -125,6 +127,7 @@ namespace BRS.Engine.Physics {
             base.Initialize();
         }
 
+
         /// <summary>
         /// Draw method of monogame.
         /// </summary>
@@ -167,6 +170,7 @@ namespace BRS.Engine.Physics {
             DrawLine(start, end, Color.Black);
         }
 
+
         /// <summary>
         /// Draws a point.
         /// TODO: Not implemented
@@ -175,6 +179,7 @@ namespace BRS.Engine.Physics {
         public void DrawPoint(JVector pos) {
             //DrawPoint(pos, Color.Red);
         }
+
 
         /// <summary>
         /// Draws a triangle.
@@ -212,6 +217,7 @@ namespace BRS.Engine.Physics {
             _lineList[_lineIndex - 1].Position = Conversion.ToXnaVector(p1);
         }
 
+
         /// <summary>
         /// Draws a triangle on the screen.
         /// </summary>
@@ -238,6 +244,13 @@ namespace BRS.Engine.Physics {
             _triangleList[_triangleIndex - 3].Position = Conversion.ToXnaVector(p2);
         }
 
+
+        /// <summary>
+        /// Draws an axis-aligned-bounding-box on the screen forvisualization.
+        /// </summary>
+        /// <param name="from">Min-point</param>
+        /// <param name="to">Max-point</param>
+        /// <param name="color">Color of lines</param>
         public void DrawAabb(JVector from, JVector to, Color color) {
             JVector halfExtents = (to - from) * 0.5f;
             JVector center = (to + from) * 0.5f;

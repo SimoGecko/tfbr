@@ -37,7 +37,7 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Start() { _attacking = false; }
         public override void Update() { }
 
-        public override void OnCollisionEnter(JRigidBody c) {
+        public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && _attacking) {
                 Player p = c.GameObject.GetComponent<Player>();
@@ -69,7 +69,7 @@ namespace BRS.Scripts.PlayerScripts {
                 
                 // Apply new position to the rigid-body
                 // Todo by Andy for Andy: can be surely written better :-)
-                MovingCollider mrb = GameObject.GetComponent<MovingCollider>();
+                MovingRigidBody mrb = GameObject.GetComponent<MovingRigidBody>();
                 mrb.RigidBody.Position = new JVector(newPosition.X, mrb.RigidBody.Position.Y, newPosition.Z);
             } else {
                 _attacking = false;

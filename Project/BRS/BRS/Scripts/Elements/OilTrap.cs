@@ -1,6 +1,5 @@
 using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {
@@ -29,7 +28,7 @@ namespace BRS.Scripts.Elements {
         public override void Update() {
         }
 
-        public override void OnCollisionEnter(JRigidBody c) {
+        public override void OnCollisionEnter(Collider c) {
             bool isplayer = c.GameObject.tag == ObjectTag.Player;
 
             if (isplayer && _inUse) {

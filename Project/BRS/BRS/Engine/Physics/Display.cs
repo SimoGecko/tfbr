@@ -10,12 +10,26 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics {
+    /// <summary>
+    /// Display some states about the physics engine to debug the performance.
+    /// </summary>
     public class Display : DrawableGameComponent {
+
+        #region Properties and attributes
+
+        // Reference to the content to load the needed assets
         private readonly ContentManager _content;
+
+        // Sprite batch to draw on
         private SpriteBatch _spriteBatch;
+
+        // Fonts used for the texts
         private SpriteFont _font1, _font2;
+
+        // Logo of the game-lab
         private Texture2D _texture;
 
+        // Accumulated update time to check if enough time passed to have accurate numbers
         private float _accUpdateTime;
         private int _frameRate;
         private int _frameCounter;
@@ -27,6 +41,8 @@ namespace BRS.Engine.Physics {
         private readonly List<string> _displayText;
 
         private bool DoDrawings => PhysicsDrawer.Instance?.DoDrawings ?? false;
+
+        #endregion
 
         public Display(Game game)
             : base(game) {

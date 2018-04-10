@@ -3,7 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PowerUps;
 
 namespace BRS.Scripts.Elements {
@@ -40,9 +40,9 @@ namespace BRS.Scripts.Elements {
         }
 
         void OpenVault() {
-            JRigidBody[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
 
-            foreach (JRigidBody c in overlapColliders) {
+            foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IOpenable>()) {
                     c.GameObject.GetComponent<IOpenable>().Open();
                 }
@@ -57,9 +57,9 @@ namespace BRS.Scripts.Elements {
 
         bool ThereIsOneOpenableInRange() {
             transform.position = Owner.transform.position;
-            JRigidBody[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
 
-            foreach (JRigidBody c in overlapColliders) {
+            foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IOpenable>()) return true;
             }
 

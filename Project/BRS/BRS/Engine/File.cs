@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -116,13 +116,13 @@ namespace BRS.Engine {
                                 //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
                                 break;
                             case ObjectTag.Ground:
-                                go.AddComponent(new StaticCollider(physics, isGround: true));
+                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
                                 break;
                             case ObjectTag.DynamicObstacle:
-                                go.AddComponent(new DynamicCollider(physics));
+                                go.AddComponent(new DynamicRigidBody(physics));
                                 break;
                             default:
-                                go.AddComponent(new StaticCollider(physics));
+                                go.AddComponent(new StaticRigidBody(physics));
                                 break;
                         }
 

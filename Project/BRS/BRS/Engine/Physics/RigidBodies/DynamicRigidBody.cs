@@ -1,16 +1,15 @@
-﻿using Jitter.LinearMath;
-
-namespace BRS.Engine.Physics.Colliders {
-    class DynamicCollider : Collider {
+﻿namespace BRS.Engine.Physics.RigidBodies {
+    class DynamicRigidBody : RigidBodyComponent {
         private readonly bool _updateRotation;
 
-        public DynamicCollider(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, bool updateRotation = true) {
+        public DynamicRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, bool updateRotation = true, float size = 1.0f) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
             ShapeType = shapeType;
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
+            Size = size;
             _updateRotation = updateRotation;
         }
 

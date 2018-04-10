@@ -1,15 +1,15 @@
-﻿using BRS.Engine.Physics.RigidBodies;
+﻿using BRS.Engine.Physics.Colliders;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Engine.Physics.Colliders {
-    class MovingCollider : Collider {
+namespace BRS.Engine.Physics.RigidBodies {
+    class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingCollider(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
+        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;
@@ -38,7 +38,7 @@ namespace BRS.Engine.Physics.Colliders {
                 com.Z > _treshold ? com.Z : 0);
 
 
-            RigidBody = new SteerableRigidBody(CollisionShape) {
+            RigidBody = new SteerableCollider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,

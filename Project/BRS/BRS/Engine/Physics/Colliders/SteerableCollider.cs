@@ -1,23 +1,22 @@
-﻿using BRS.Engine.Physics.Colliders;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
-namespace BRS.Engine.Physics.RigidBodies {
-    class SteerableRigidBody : JRigidBody {
+namespace BRS.Engine.Physics.Colliders {
+    class SteerableCollider : Collider {
         public float RotationY { get; set; }
         public JVector Speed { get; set; }
         private readonly float _height;
 
-        public SteerableRigidBody(Shape shape) : base(shape) {
+        public SteerableCollider(Shape shape) : base(shape) {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 
-        public SteerableRigidBody(Shape shape, Material material) : base(shape, material) {
+        public SteerableCollider(Shape shape, Material material) : base(shape, material) {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 
-        public SteerableRigidBody(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
+        public SteerableCollider(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 

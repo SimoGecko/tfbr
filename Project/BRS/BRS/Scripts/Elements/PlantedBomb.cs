@@ -1,6 +1,6 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {
@@ -18,8 +18,8 @@ namespace BRS.Scripts.Elements {
         }
 
         void Explode() {
-            JRigidBody[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
-            foreach (JRigidBody c in overlapColliders) {
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
+            foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }

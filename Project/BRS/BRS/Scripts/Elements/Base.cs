@@ -7,7 +7,6 @@ using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -47,7 +46,7 @@ namespace BRS.Scripts.Elements {
             //UpdateUI();
         }
 
-        public override void OnCollisionEnter(JRigidBody c) {
+        public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();

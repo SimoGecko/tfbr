@@ -3,6 +3,8 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
@@ -57,7 +59,7 @@ namespace BRS.Engine {
             }
         }
 
-        public virtual void OnCollisionEnter(JRigidBody col) {
+        public virtual void OnCollisionEnter(Collider col) {
             if (active)
                 foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
@@ -87,15 +89,19 @@ namespace BRS.Engine {
 
         //INSTANTIATION
         public static GameObject Instantiate(string name) {
-            return Instantiate(name, Vector3.Zero, Quaternion.Identity);
+            return Instantiate(name, Vector3.Zero, Quaternion.Identity, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Transform t) {
             //return Instantiate(name, t.World.Translation, t.World.Rotation);
-            return Instantiate(name, t.position, t.rotation);
+            return Instantiate(name, t.position, t.rotation, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation) {
+            return Instantiate(name, position, rotation, Vector3.Zero);
+        }
+
+        public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation, Vector3 linearVelocity) {
             GameObject tocopy = Prefabs.GetPrefab(name);
             if (tocopy == null) {
                 Debug.LogError("Prefab not found");
@@ -108,6 +114,14 @@ namespace BRS.Engine {
             //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
             result.Start();
+            
+            if (result.HasComponent<DynamicRigidBody>()) {
+                DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
+                dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;
+                //dc.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity) * 5);
+                Debug.Log(dc.RigidBody.Mass);
+            }
+
             return result;
         }
 
@@ -133,7 +147,7 @@ namespace BRS.Engine {
             Debug.Log("Removed: " + o.name);
 
             o.active = false;
-            //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
+            //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
 
             //TODO free up memory

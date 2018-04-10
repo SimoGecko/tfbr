@@ -9,7 +9,6 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Engine.Physics {
     /// <summary>
@@ -45,7 +44,7 @@ namespace BRS.Engine.Physics {
         private CollisionState _status;
 
         // Collection of all colliders which are collected in a manual-collision-detection
-        private List<JRigidBody> _colliders;
+        private List<Collider> _colliders;
 
         /// <summary>
         /// Stores the physical world.
@@ -101,8 +100,8 @@ namespace BRS.Engine.Physics {
         /// <param name="arg1">Rigidbody 1</param>
         /// <param name="arg2">Rigidbody 2</param>
         private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
-            JRigidBody body1 = arg1 as JRigidBody;
-            JRigidBody body2 = arg2 as JRigidBody;
+            Collider body1 = arg1 as Collider;
+            Collider body2 = arg2 as Collider;
 
             if (Instance._status == CollisionState.SaveInList) {
                 if (body1 != null && (body1.Tag is BodyTag && (BodyTag)body1.Tag != BodyTag.TestObject)) {
@@ -124,8 +123,8 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="obj"></param>
         private void Events_ContactCreated(Contact obj) {
-            JRigidBody body1 = obj.Body1 as JRigidBody;
-            JRigidBody body2 = obj.Body2 as JRigidBody;
+            Collider body1 = obj.Body1 as Collider;
+            Collider body2 = obj.Body2 as Collider;
 
             bool body1IsPlayer = body1?.GameObject?.tag == ObjectTag.Player;
             bool body2IsPLayer = body2?.GameObject?.tag == ObjectTag.Player;
@@ -158,9 +157,9 @@ namespace BRS.Engine.Physics {
         /// <param name="radius">Radius of the sphere.</param>
         /// <param name="collisionTag">Only check for a specific tag.</param>
         /// <returns>List of all colliders which are contained in the given sphere.</returns>
-        public static JRigidBody[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
+        public static Collider[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
             SphereShape sphere = new SphereShape(radius);
-            JRigidBody rbSphere = new JRigidBody(sphere) {
+            Collider rbSphere = new Collider(sphere) {
                 Position = Conversion.ToJitterVector(position),
                 PureCollider = true,
                 Tag = BodyTag.TestObject
@@ -168,10 +167,10 @@ namespace BRS.Engine.Physics {
 
             // Prepare the instance to handle the detected collisions correctly
             Instance._status = CollisionState.SaveInList;
-            Instance._colliders = new List<JRigidBody>();
+            Instance._colliders = new List<Collider>();
 
             foreach (RigidBody rb in Instance.World.RigidBodies) {
-                JRigidBody c = rb as JRigidBody;
+                Collider c = rb as Collider;
                 if (c != null && ((collisionTag != ObjectTag.Default && c.GameObject.tag != collisionTag) || !c.GameObject.active)) {
                     continue;
                 }

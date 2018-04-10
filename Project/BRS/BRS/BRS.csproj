@@ -118,7 +118,7 @@
     <Compile Include="Engine\Physics\Conversion.cs" />
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\JRigidBody.cs" />
+    <Compile Include="Engine\Physics\Colliders\Collider.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
@@ -171,10 +171,10 @@
     <Compile Include="Scripts\PowerUps\Magnet.cs" />
     <Compile Include="Scripts\Elements\PlantedBomb.cs" />
     <Compile Include="Scripts\PowerUps\Weight.cs" />
-    <Compile Include="Engine\Physics\Colliders\DynamicCollider.cs" />
-    <Compile Include="Engine\Physics\Colliders\MovingCollider.cs" />
-    <Compile Include="Engine\Physics\Colliders\StaticCollider.cs" />
-    <Compile Include="Engine\Physics\RigidBodies\SteerableRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\DynamicRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\MovingRigidBody.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\StaticRigidBody.cs" />
+    <Compile Include="Engine\Physics\Colliders\SteerableCollider.cs" />
     <Compile Include="Scripts\PlayerScripts\CameraController.cs" />
     <Compile Include="Scripts\PowerUps\ShieldPotion.cs" />
     <Compile Include="Scripts\PowerUps\StaminaPotion.cs" />
@@ -189,7 +189,7 @@
     <Compile Include="Scripts\UI\GameUI.cs" />
     <Compile Include="Scripts\UI\Minimap.cs" />
     <Compile Include="Scripts\Elements\Money.cs" />
-    <Compile Include="Engine\Physics\Colliders\Collider.cs" />
+    <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\PlayerScripts\Player.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerLift.cs" />

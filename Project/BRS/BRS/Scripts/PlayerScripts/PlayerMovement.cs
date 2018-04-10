@@ -47,7 +47,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //reference
         PlayerInventory playerInventory;
-        private SteerableRigidBody _rigidBody;
+        private SteerableCollider _collider;
 
 
         // --------------------- BASE METHODS ------------------
@@ -57,8 +57,8 @@ namespace BRS.Scripts.PlayerScripts {
 
             playerInventory = GameObject.GetComponent<PlayerInventory>();
 
-            MovingCollider dynamicRigidBody = GameObject.GetComponent<MovingCollider>();
-            _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
+            MovingRigidBody dynamicRigidBody = GameObject.GetComponent<MovingRigidBody>();
+            _collider = dynamicRigidBody?.RigidBody as SteerableCollider;
         }
 
         public override void Update() {
@@ -101,9 +101,9 @@ namespace BRS.Scripts.PlayerScripts {
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
-            if (_rigidBody != null) {
-                _rigidBody.RotationY = MathHelper.ToRadians(_rotation);
-                _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
+            if (_collider != null) {
+                _collider.RotationY = MathHelper.ToRadians(_rotation);
+                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _collider.Orientation);
             }
         }
 

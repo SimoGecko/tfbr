@@ -4,7 +4,7 @@
 using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
@@ -107,10 +107,10 @@ namespace BRS.Scripts.PlayerScripts {
 
                 // Todo: Remove
                 if (Input.GetKeyDown(Keys.V)) {
-                    JRigidBody[] test = PhysicsManager.OverlapSphere(transform.position, 10);
+                    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
 
                     string tmp = "Contained: ";
-                    foreach (JRigidBody collider in test) {
+                    foreach (Collider collider in test) {
                         tmp += collider.GameObject.tag + ",";
                     }
                     Debug.Log(tmp);
@@ -124,7 +124,7 @@ namespace BRS.Scripts.PlayerScripts {
             UpdateUI();
         }
 
-        public override void OnCollisionEnter(JRigidBody c) {
+        public override void OnCollisionEnter(Collider c) {
             if (c.IsStatic) {
                 CamController.Shake(.3f);
             }

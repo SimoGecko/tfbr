@@ -3,7 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
@@ -22,10 +22,10 @@ namespace BRS.Scripts.Elements {
         private const float ExplosionDamage = 30;
 
         //private
-        private const float CrackSpawnRadius = 2f;
+        private const float CrackSpawnRadius = 1f;
         private const int MinNumCoins = 1;
         private const int MaxNumCoins = 8;
-        private const float ProbOfPowerup = .2f;
+        private const float ProbOfPowerup = 1.2f;
 
         private bool _explosionRigged;
         private bool _cracked;
@@ -36,13 +36,14 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _explosionRigged = _cracked = false;
+            new Timer(2.5f, CrackCrate);
         }
 
         public override void Update() {
 
         }
 
-        public override void OnCollisionEnter(JRigidBody c) {
+        public override void OnCollisionEnter(Collider c) {
             if(c.GameObject.tag == ObjectTag.Player) {
                 PlayerAttack pa = c.GameObject.GetComponent<PlayerAttack>();
                 if (pa.IsAttacking)
@@ -68,18 +69,18 @@ namespace BRS.Scripts.Elements {
         void SpawnValuables() {
             int numCoins = MyRandom.Range(MinNumCoins, MaxNumCoins + 1);
             for (int i = 0; i < numCoins; i++) {
-                Spawner.Instance.SpawnMoneyAround(transform.position, CrackSpawnRadius);
+                Spawner.Instance.SpawnMoneyFromCenter(transform.position, CrackSpawnRadius);
             }
 
             if (MyRandom.Value <= ProbOfPowerup) {
-                Spawner.Instance.SpawnPowerupAround(transform.position, CrackSpawnRadius);
+                Spawner.Instance.SpawnPowerupFromCenter(transform.position, CrackSpawnRadius);
             }
         }
 
         void Explode() {
             //same code as in bomb
-            JRigidBody[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
-            foreach (JRigidBody c in overlapColliders) {
+            Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
+            foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }

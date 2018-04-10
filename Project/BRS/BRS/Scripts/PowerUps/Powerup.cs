@@ -43,7 +43,7 @@ namespace BRS.Scripts.PowerUps {
             base.Update();
 
             if (_rotate) {
-                //DynamicCollider rbc = GameObject.GetComponent<DynamicCollider>();
+                //DynamicRigidBodyComponent rbc = GameObject.GetComponent<DynamicRigidBodyComponent>();
                 //if (rbc != null) {
                 //    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
                 //}
