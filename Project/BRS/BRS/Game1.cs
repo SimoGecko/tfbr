@@ -147,6 +147,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
             }
+            Gizmos.ClearOrders();
 
             //-----2D-----
             int i = 0;

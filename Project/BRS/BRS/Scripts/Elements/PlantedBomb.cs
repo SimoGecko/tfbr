@@ -13,6 +13,10 @@ namespace BRS.Scripts.Elements {
         private const float ExplosionDamage = 60;
 
         public override void Start() {
+            
+        }
+
+        public void Plant() {
             Audio.Play("bomb_timer", transform.position);
             new Timer(TimeBeforeExplosion, Explode);
         }

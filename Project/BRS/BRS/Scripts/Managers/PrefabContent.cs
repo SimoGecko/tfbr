@@ -34,30 +34,34 @@ namespace BRS.Engine {
                 AddPrefab(moneyPrefab);
             }*/
 
+
+            GameObject police = new GameObject("policePrefab", File.Load<Model>("Models/vehicles/police"));
+            police.AddComponent(new Police());
+            AddPrefab(police);
+
+
             //simple cash note
-            GameObject moneyPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
-            moneyPrefab.transform.Scale(2f);
-            moneyPrefab.AddComponent(new Money(100, 1, Money.Type.cash));
-            moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(moneyPrefab);
-
-
-            //diamond
-            /*
-            GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/valuables/diamond"));
-            diamondPrefab.transform.Scale(1f);
-            diamondPrefab.AddComponent(new Money(300, 2, Money.Type.Diamond));
-            diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(diamondPrefab);*/
+            GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
+            cashPrefab.transform.Scale(2f);
+            cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
+            cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            AddPrefab(cashPrefab);
 
             //gold
-
-            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
+            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
-            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.gold));
+            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
             goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(goldPrefab);
 
+            //diamond
+            GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Jewellery_Ring_01"));
+            //GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/primitives/capsule"));
+            diamondPrefab.transform.Scale(5f);
+            diamondPrefab.AddComponent(new Money(3000, 1, Money.Type.Diamond));
+            //diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
+            diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            AddPrefab(diamondPrefab);
 
             //crate prefab
             GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/primitives/cube"));

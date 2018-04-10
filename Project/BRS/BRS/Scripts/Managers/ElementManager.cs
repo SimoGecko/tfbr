@@ -152,6 +152,13 @@ namespace BRS.Scripts.Managers {
         public Player[] Players() { return _playerList.ToArray(); }
         public Base[] Bases() { return _baseList.ToArray(); }
 
+        public Transform[] PlayerTransforms() {
+            List<Transform> result = new List<Transform>();
+            foreach (Player p in _playerList)
+                result.Add(p.transform);
+            return result.ToArray();
+        }
+
 
         // other
         public void Restart() {
