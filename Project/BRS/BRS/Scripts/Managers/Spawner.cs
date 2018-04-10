@@ -30,7 +30,7 @@ namespace BRS.Scripts.Managers {
 
 
         private static readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
-            { "bomb", .3f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
+            { "bomb", 3.3f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
             { "speed", .1f }, { "trap", .3f }, { "explodingbox", .2f }, { "weight", .3f }, { "magnet", .2f } };
 
 

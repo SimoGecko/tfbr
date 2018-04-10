@@ -89,6 +89,7 @@ namespace BRS.Engine {
             GameUI.Instance.Draw();
             Minimap.Instance.DrawSmall(spriteBatch, index);
             MoneyUI.Instance.Draw(index);
+            ParticleUI.Instance.Draw(index);
 
 
 

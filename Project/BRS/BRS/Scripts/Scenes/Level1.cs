@@ -39,6 +39,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
             UiManager.AddComponent(new MoneyUI());
+            UiManager.AddComponent(new ParticleUI());
             Add(UiManager);
 
             GameObject Manager = new GameObject("manager");

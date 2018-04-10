@@ -133,6 +133,7 @@
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
+    <Compile Include="Engine\SpriteSheet.cs" />
     <Compile Include="Engine\Time.cs" />
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
@@ -209,6 +210,7 @@
     <Compile Include="Scripts\PowerUps\Trap.cs" />
     <Compile Include="Scripts\Elements\Vault.cs" />
     <Compile Include="Scripts\UI\MoneyUI.cs" />
+    <Compile Include="Scripts\UI\ParticleUI.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PlayerUIStruct.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />

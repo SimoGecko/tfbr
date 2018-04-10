@@ -29,6 +29,7 @@ namespace BRS.Scripts.Elements {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
             GameObject.Destroy(gameObject);
         }
 

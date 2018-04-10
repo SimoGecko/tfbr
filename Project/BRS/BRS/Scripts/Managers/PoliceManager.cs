@@ -41,7 +41,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            DrawPoints();
+            //DrawPoints();
         }
 
 

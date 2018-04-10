@@ -108,7 +108,7 @@ namespace BRS.Scripts.PlayerScripts {
                     _pL.Lift();
                 }
 
-                if (Input.GetKeyDown(Keys.V)) {
+                if (Input.GetKeyDown(Keys.V)) { // TODO remove this
                     Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
 
                     string tmp = "Contained: ";
@@ -142,6 +142,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (!Dead) {
                 _state = State.Stun;
                 Audio.Play("stun", transform.position);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
                 _pI.LoseMoney();
                 Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
             }
