@@ -40,6 +40,9 @@ namespace BRS.Menu {
         public Button NeighborLeft { get; set; }
         public Button NeighborRight { get; set; }
 
+        public Color TextColor = new Color(144, 144, 144);
+        public Color ImageColor = new Color(247, 239, 223);
+
         public Rectangle Rectangle {
             get {
                 return new Rectangle((int)Position.X - (int)(Texture.Width * (1-ScaleWidth) / 2), (int)Position.Y - (int)(Texture.Height * (1 - ScaleHeight) / 2), (int)(Texture.Width * ScaleWidth), (int)(Texture.Height * ScaleHeight));
@@ -126,23 +129,19 @@ namespace BRS.Menu {
 
         public override void Draw() {
             if (Active) {
-                var colour = Color.White;
                 if (IsHovering)
-                    colour = Color.Gray;
+                    ImageColor = Color.Gray;
                
                 if (IsClicked && _textureClicked != null)
-                    UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
+                    UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, ImageColor);
                 else if (Texture != null)
-                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
-                //UserInterface.Instance.DrawPicture(Rectangle, Texture, colour);
-                //DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
+                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, null, Align.TopLeft, Align.Center, ImageColor, false);
 
                 if (!string.IsNullOrEmpty(Text)) {
                     var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).X / 2);
                     var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).Y / 2);
 
-                    //UserInterface.Instance.DrawString(new Vector2(x, y), Text, Color.Black);
-                    UserInterface.Instance.DrawStringAlign(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, Color.Black, false);
+                    UserInterface.Instance.DrawStringAlign(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, TextColor, false);
                 }
             }
         }

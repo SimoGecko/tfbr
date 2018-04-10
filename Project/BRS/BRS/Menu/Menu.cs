@@ -26,7 +26,7 @@ namespace BRS.Menu {
         public void LoadContent() {
             Instance = this;
 
-            _textureButton = File.Load<Texture2D>("Images/UI/button");
+            _textureButton = File.Load<Texture2D>("Images/UI/panel");
             _textureButtonSlider = File.Load<Texture2D>("Images/UI/sliderButton");
             _textureTickBoxCliqued = File.Load<Texture2D>("Images/UI/tickbox_clicked");
             _textureTickBoxNotCliqued = File.Load<Texture2D>("Images/UI/tickbox_notclicked");
@@ -78,6 +78,23 @@ namespace BRS.Menu {
         }
 
         public void BuildMainMenu() {
+            var ButtonName = new Button(_textureButton, _middleScreen + new Vector2(0,-0.35f) * _screenSizeVec) {
+                Text = "Menu",
+                //ScaleHeight = 1.5f,
+                ScaleWidth = 4f
+            };
+            ButtonName.TextColor = Color.White;
+            ButtonName.ImageColor = new Color(148,148,148);
+            MenuManager.Instance.MenuRect["main"].AddComponent(ButtonName);
+
+            var ButtonBackground = new Button(_textureButton, _middleScreen + new Vector2(0, -0.1f) * _screenSizeVec) {
+                //ScaleHeight = 1f,
+                ScaleWidth = 6f
+            };
+            ButtonBackground.ImageColor = Color.White;
+            MenuManager.Instance.MenuRect["main"].AddComponent(ButtonBackground);
+
+
             Vector2[] offset = { new Vector2(0, -0.2f), new Vector2(0, -0.1f), new Vector2(0, 0), new Vector2(0, 0.1f), new Vector2(0, 0.2f) };
             string[] textButtons = { "Play", "Tutorial", "Ranking", "Options", "Credits" };
             string[] switchTo = { "play1", "tutorial1", "ranking", "options", "credits" };
@@ -86,11 +103,12 @@ namespace BRS.Menu {
                 var playButton = new Button(_textureButton, _middleScreen + offset[i]*_screenSizeVec) {
                     Text = textButtons[i],
                     NameMenuToSwitchTo = switchTo[i],
-                    ScaleHeight = 1.5f,
-                    //ScaleWidth = 1.5f
+                    //ScaleHeight = 1.5f,
+                    ScaleWidth = 2f
                 };
-                if (i == 0) playButton.Click += MenuManager.Instance.TransitionUI;
-                else playButton.Click += MenuManager.Instance.SwitchToMenu;
+                //if (i == 0) playButton.Click += MenuManager.Instance.TransitionUI;
+                //else
+                playButton.Click += MenuManager.Instance.SwitchToMenu;
                 MenuManager.Instance.MenuRect["main"].AddComponent(playButton);
 
                 linkedButtonDownUp.Add(playButton);
