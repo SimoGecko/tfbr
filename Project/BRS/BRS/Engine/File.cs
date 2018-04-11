@@ -138,6 +138,7 @@ namespace BRS.Engine {
 
         //simo code
         public static void ReadHeistScene(string pathName) {
+            Vector3 offset = new Vector3(0, 0, 10); // Turn this off to avoid offset
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
@@ -159,21 +160,18 @@ namespace BRS.Engine {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
-
-                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
-                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2] + 180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
-
-                        Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
+                        Vector3 pos = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), float.Parse(pSplit[3]));
+                        Vector3 rot = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
+                        Vector3 sca = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
                         GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName));
-
-                        go.transform.position = position + new Vector3(0, 0, 30);
-                        go.transform.scale = scale;
-                        go.transform.rotation = rotation; // rotation not parsed correctly? or use euler angles
+                        //NOW DO CONVERSION
+                        go.transform.position = new Vector3(pos.X, pos.Y, -pos.Z) + offset;
+                        go.transform.eulerAngles = new Vector3(-rot.X, -rot.Y + 180, rot.Z); // +180 is probably due to not scaling with -1
+                        go.transform.scale = new Vector3(sca.X, sca.Y, sca.Z);
                     }
-
-                    nameContent = reader.ReadLine(); // <end>
+                    // <end>
+                    nameContent = reader.ReadLine(); 
                 }
             }
         }
