@@ -29,7 +29,7 @@ namespace BRS.Menu {
 
         public Vector2 OffsetTexture = new Vector2(0, 0);
         public Vector2 InitPos;
-        private Vector2 Position { get { return InitPos /*- OffsetTexture*/; } }
+        private Vector2 Position { get { return InitPos + new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) /*- OffsetTexture*/; } }
 
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
@@ -51,13 +51,13 @@ namespace BRS.Menu {
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)Position.X - (int)(Texture.Width * (1-ScaleWidth) / 2), (int)Position.Y - (int)(Texture.Height * (1 - ScaleHeight) / 2), (int)(Texture.Width * ScaleWidth), (int)(Texture.Height * ScaleHeight));
+                return new Rectangle((int)(Position.X - (Texture.Width * Screen.Width / 1920f * (1-ScaleWidth) / 2)), (int)Position.Y - (int)(Texture.Height * Screen.Height / 1080f * (1 - ScaleHeight) / 2), (int)(Texture.Width * Screen.Width / 1920f * ScaleWidth), (int)(Texture.Height * Screen.Height / 1080f * ScaleHeight));
             }
         }
 
         public Rectangle RectangleNotScaled {
             get {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)(Texture.Width ), (int)(Texture.Height ));
+                return new Rectangle((int)Position.X, (int)Position.Y, (int)(Texture.Width * Screen.Width / 1920f), (int)(Texture.Height * Screen.Height / 1080f));
             }
         }
 
