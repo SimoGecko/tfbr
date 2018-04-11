@@ -61,7 +61,7 @@ namespace BRS.Engine {
 
         public Vector2 WorldToScreenPoint(Vector3 world) {
             Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
-            return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y));
+            return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
             /* // DUMB me that cannot have this snippet of code work
             Vector4 worldH = new Vector4(world, 1);
             Vector4 view = Vector4.Transform(worldH, View);
