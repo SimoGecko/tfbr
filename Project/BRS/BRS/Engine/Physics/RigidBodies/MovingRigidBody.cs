@@ -9,11 +9,12 @@ namespace BRS.Engine.Physics.RigidBodies {
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(bool isActive = true, ShapeType shapeType = ShapeType.Box) {
+        public MovingRigidBody(bool isActive = true, ShapeType shapeType = ShapeType.Box, float size = 1.0f) {
             IsStatic = false;
             IsActive = isActive;
             ShapeType = shapeType;
             Tag = BodyTag.DrawMe;
+            Size = size;
         }
 
         /// <summary>
@@ -23,9 +24,11 @@ namespace BRS.Engine.Physics.RigidBodies {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
-                bbSize.Y * gameObject.transform.scale.Y,
-                bbSize.Z * gameObject.transform.scale.Z);
+            bbSize = new JVector(
+                bbSize.X * Size * gameObject.transform.scale.X,
+                bbSize.Y * Size * gameObject.transform.scale.Y,
+                bbSize.Z * Size * gameObject.transform.scale.Z
+            );
             CollisionShape = new BoxShape(bbSize);
 
             JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
@@ -45,7 +48,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
                 GameObject = gameObject,
-                Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 }
+                Material = new Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
 

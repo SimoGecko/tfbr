@@ -113,6 +113,7 @@ namespace BRS {
                 foreach (GameObject go in GameObject.All) go.Update();
                 foreach (GameObject go in GameObject.All) go.LateUpdate();
 
+                PhysicsDrawer.Instance.Update(gameTime);
                 PhysicsManager.Instance.Update(gameTime);
             }
 

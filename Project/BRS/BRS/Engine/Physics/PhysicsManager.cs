@@ -9,6 +9,7 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Engine.Physics {
     /// <summary>
@@ -132,16 +133,19 @@ namespace BRS.Engine.Physics {
             bool body1IsPureCollider = body1?.PureCollider == true;
             bool body2IsPureCollider = body2?.PureCollider == true;
 
-            if (body1IsPlayer && !body2IsPureCollider) {
+            bool body1IsStatic = body1?.IsStatic == true;
+            bool body2IsStatic = body2?.IsStatic == true;
+
+            if (body1IsPlayer && !body2IsPureCollider && body2IsStatic) {
                 //body1.AddForce(obj.Normal * 100);
                 //body1.LinearVelocity -= obj.Normal * 5;
                 //Debug.Log(obj.Normal, "Force to body 1: ");
-                body1.Position -= obj.Normal * 0.1f;
-            } else if (body2IsPLayer && !body1IsPureCollider) {
+                body1.Position -= obj.Normal * 0.5f;
+            } else if (body2IsPLayer && !body1IsPureCollider && body1IsStatic) {
                 //body2.AddForce(obj.Normal * -100);
                 //body2.LinearVelocity += obj.Normal * 5;
                 //Debug.Log(obj.Normal, "Force to body 2: ");
-                body2.Position += obj.Normal * 0.1f;
+                body2.Position += obj.Normal * 0.5f;
             }
         }
 

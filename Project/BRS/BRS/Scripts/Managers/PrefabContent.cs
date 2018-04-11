@@ -36,7 +36,7 @@ namespace BRS.Engine {
             GameObject moneyPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
             moneyPrefab.transform.Scale(2f);
             moneyPrefab.AddComponent(new Money(100, 1, Money.Type.cash));
-            moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: 1.5f));
             AddPrefab(moneyPrefab);
 
 
@@ -53,7 +53,7 @@ namespace BRS.Engine {
             GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
             goldPrefab.transform.Scale(2f);
             goldPrefab.AddComponent(new Money(1000, 1, Money.Type.gold));
-            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: 2.5f));
             AddPrefab(goldPrefab);
 
 

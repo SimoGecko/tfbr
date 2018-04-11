@@ -27,7 +27,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             CalculateShape(ShapeType);
 
             RigidBody = new Collider(CollisionShape) {
-                Position = Conversion.ToJitterVector(transform.position),
+                Position = Conversion.ToJitterVector(transform.position) - CenterOfMass,
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 IsStatic = IsStatic,
                 IsActive = IsActive,
@@ -50,7 +50,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             base.Destroy();
         }
 
-        private void CalculateShape(ShapeType type) {
+        protected virtual void CalculateShape(ShapeType type) {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);

@@ -101,8 +101,7 @@ namespace BRS.Engine {
             if (result.HasComponent<DynamicRigidBody>()) {
                 DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
                 dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;
-                //dc.RigidBody.AddForce(Conversion.ToJitterVector(linearVelocity) * 5);
-                Debug.Log(dc.RigidBody.Mass);
+                dc.RigidBody.AddTorque(Conversion.ToJitterVector(linearVelocity) * 0.25f);
             }
 
             return result;
