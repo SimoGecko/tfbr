@@ -20,7 +20,7 @@ namespace BRS.Menu {
 
         readonly Menu _menuGame = new Menu();
 
-        int _noCharacters = 3;
+        int _noCharacters = 4;
         const float RotSpeed = 90;
         public readonly List<GameObject> CharacterToChoose = new List<GameObject>();
 
@@ -32,7 +32,7 @@ namespace BRS.Menu {
             Instance = this;
             _menuGame.LoadContent();
 
-            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "playerInfos" };
+            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits"};
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
@@ -44,10 +44,16 @@ namespace BRS.Menu {
             PlayersInfo = new Dictionary<string, Tuple<string, Model>>();
             NamePlayerInfosToChange = "player_0";
 
-            float[] posX = { 0, -5, 5 };
+            float[] posX = { 0, -5, -5, -5 };
             for (int i = 0; i < _noCharacters; ++i) {
                 GameObject playerCharacter = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex"));
                 playerCharacter.transform.position = new Vector3(posX[i], 0, 0);
+                
+                if (i == 1)
+                    playerCharacter.active = true;
+                else
+                    playerCharacter.active = false;
+
                 CharacterToChoose.Add(playerCharacter);
             }
 
@@ -61,21 +67,22 @@ namespace BRS.Menu {
             foreach (var go in GameObject.All)
                 go.Update();
 
-            foreach (GameObject go in CharacterToChoose)
-                go.transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
+            /*foreach (GameObject go in CharacterToChoose)
+                go.transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);*/
 
         }
 
         public void Draw() {
             foreach (var go in GameObject.All)
                 if (go.active)
-                    foreach (var component in go.components)
-                        component.Draw();
+                    foreach (Component component in go.components)
+                        if (component.Active)
+                            component.Draw();
 
-            if (_currentMenu == MenuRect["play2"]) 
+            /*if (_currentMenu == MenuRect["play2"]) 
                 foreach (Camera cam in Screen.Cameras) 
                     foreach (GameObject go in CharacterToChoose)
-                        go.Draw(cam);
+                        go.Draw(cam);*/
         }
 
         // --------------------- CUSTOM METHODS ----------------
@@ -117,7 +124,7 @@ namespace BRS.Menu {
         }
 
         public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.NumPlayers != 2 || GameManager.NumPlayers != 4)
+            if (GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
                 GameManager.NumPlayers = 2;
         }
 
@@ -170,10 +177,10 @@ namespace BRS.Menu {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect["playerInfos"].components) {
+            foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
-                        if (button.Text == "remove") {
+                        if (button.Text == "del") {
                             if (textBox.Text.Length > 0)
                                 textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
                         }
@@ -199,6 +206,10 @@ namespace BRS.Menu {
                                 ((Button)lC).NeighborRight = (Button)listComp.Components[0];
                                 ((Button)listComp.Components[0]).NeighborLeft = (Button)lC;
                             }
+                            if (count == 1 && GameManager.NumPlayers == 4) {
+                                ((Button)lC).NeighborRight = (Button)listComp.Components[2];
+                                ((Button)listComp.Components[2]).NeighborLeft = (Button)lC;
+                            }
                             ++count;
                         }
                     }
@@ -207,7 +218,7 @@ namespace BRS.Menu {
         }
 
         public void ChangeNamePlayer(object sender, EventArgs e) {
-            foreach (var elem in MenuRect["playerInfos"].components) {
+            foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
                         if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
@@ -223,11 +234,29 @@ namespace BRS.Menu {
         }
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
-            Model test = File.Load<Model>("Models/vehicles/forklift_tex");
+            Button button = (Button)sender;
+
+            Model toChange = File.Load<Model>("Models/vehicles/forklift_tex");
+            foreach (var elem in CharacterToChoose)
+                elem.active = false;
+
+            toChange = CharacterToChoose[button.Index].Model;
+            CharacterToChoose[button.Index+1].active = true;
+
+
             if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, test);
+                PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, toChange);
             else
-                PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, test));
+                PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, toChange));
+
+            foreach (var elem in MenuRect["play2"].components) {
+                if (elem is Image img) {
+                    if (img.NameIdentifier == "pictureModel" + (button.Index+1).ToString()) 
+                        img.Active = true;
+                    else
+                        img.Active = false;
+                }
+            }
         }
 
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
@@ -235,12 +264,14 @@ namespace BRS.Menu {
             NamePlayerInfosToChange = "player_" + button.Index.ToString();
         }
 
-        /*public void HighlightBordersAndGoDown(object sender, EventArgs e) {
+        public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
-            button.IsCurrentSelection = false;
-            if (button.NeighborDown != null) button.NeighborDown.IsCurrentSelection = true;
+            foreach (Button bu in button.neighbors) {
+                bu.IsClicked = false;
+            }
             button.IsClicked = true;
-        }*/
+        }
+
 
         public void GoDown(object sender, EventArgs e) {
             Button button = (Button)sender;

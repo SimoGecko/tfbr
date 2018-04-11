@@ -10,6 +10,10 @@ namespace BRS.Menu {
         public Vector2 InitPos { get; set; }
         public Vector2 Position { get { return InitPos - UserInterface.Instance.SmallFont.MeasureString(Text) / 2; } }
 
+        public TextBox() {
+            Active = true;
+        }
+
         public override void Draw() {
             base.Draw();
             UserInterface.Instance.DrawString(Position, Text, Color.Black);

@@ -9,16 +9,24 @@ namespace BRS.Menu {
     public class Menu {
 
         private Texture2D _textureButton;
+        private Texture2D _textureButtonBackground;
+        private Texture2D _textureButtonBigBackground;
+        private Texture2D _textureButtonTitle;
+        private Texture2D _textureButtonCircle;
         private Texture2D _textureButtonSlider;
         private Texture2D _textureTickBoxCliqued;
         private Texture2D _textureTickBoxNotCliqued;
+        private Texture2D _textureArrowLeft;
+        private Texture2D _textureArrowRight;
+        private Texture2D _textureButtonAccept;
+        private Texture2D _textureButtonForkLift;
 
         public static Menu Instance;
 
         readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
         readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
-        readonly Vector2 _positionNextButton = new Vector2(Screen.Width / 2 + 0.1f *Screen.Width, Screen.Height - 0.3f * Screen.Height) ;
-        readonly Vector2 _positionBackButton = new Vector2(Screen.Width / 2 - 0.1f * Screen.Width, Screen.Height - 0.3f * Screen.Height);
+        readonly Vector2 _positionNextButton = new Vector2(Screen.Width / 2 + 0.05f *Screen.Width, Screen.Height - 0.265f * Screen.Height) ;
+        readonly Vector2 _positionBackButton = new Vector2(Screen.Width / 2 - 0.05f * Screen.Width, Screen.Height - 0.265f * Screen.Height);
 
         List<Button> linkedButtonDownUp = new List<Button>();
         List<Button> linkedButtonLeftRight = new List<Button>();
@@ -27,9 +35,17 @@ namespace BRS.Menu {
             Instance = this;
 
             _textureButton = File.Load<Texture2D>("Images/UI/panel");
+            _textureButtonBackground = File.Load<Texture2D>("Images/UI/panel_Background");
+            _textureButtonBigBackground = File.Load<Texture2D>("Images/UI/panel_BigBackground");
+            _textureButtonTitle = File.Load<Texture2D>("Images/UI/panel_Title");
+            _textureButtonCircle = File.Load<Texture2D>("Images/UI/CircleSmall");
             _textureButtonSlider = File.Load<Texture2D>("Images/UI/sliderButton");
             _textureTickBoxCliqued = File.Load<Texture2D>("Images/UI/tickbox_clicked");
             _textureTickBoxNotCliqued = File.Load<Texture2D>("Images/UI/tickbox_notclicked");
+            _textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
+            _textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
+            _textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
+            _textureButtonForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
         }
 
         private void SetNeighborsButtonUpDown(bool setSelectionFirstElem = true) {
@@ -74,26 +90,23 @@ namespace BRS.Menu {
             BuildRankingMenu();
             BuildOptionsMenu();
             BuildCreditsMenu();
-            BuildPlayerInfoMenu();
         }
 
         public void BuildMainMenu() {
-            var ButtonName = new Button(_textureButton, _middleScreen + new Vector2(0,-0.35f) * _screenSizeVec) {
-                Text = "Menu",
-                //ScaleHeight = 1.5f,
-                ScaleWidth = 4f
-            };
-            ButtonName.TextColor = Color.White;
-            ButtonName.ImageColor = new Color(148,148,148);
-            MenuManager.Instance.MenuRect["main"].AddComponent(ButtonName);
 
-            var ButtonBackground = new Button(_textureButton, _middleScreen + new Vector2(0, -0.1f) * _screenSizeVec) {
-                //ScaleHeight = 1f,
-                ScaleWidth = 6f
+            var ButtonBackground = new Button(_textureButtonBackground, _middleScreen + new Vector2(0, 0) * _screenSizeVec) {
+                ScaleHeight = 0.87f,
+                ScaleWidth = 0.87f
             };
             ButtonBackground.ImageColor = Color.White;
             MenuManager.Instance.MenuRect["main"].AddComponent(ButtonBackground);
 
+            var ButtonName = new Button(_textureButtonTitle, _middleScreen + new Vector2(0,-0.35f) * _screenSizeVec) {
+                Text = "Menu",
+            };
+            ButtonName.InsideObjectColor = Color.White;
+            ButtonName.ImageColor = new Color(148,148,148);
+            MenuManager.Instance.MenuRect["main"].AddComponent(ButtonName);
 
             Vector2[] offset = { new Vector2(0, -0.2f), new Vector2(0, -0.1f), new Vector2(0, 0), new Vector2(0, 0.1f), new Vector2(0, 0.2f) };
             string[] textButtons = { "Play", "Tutorial", "Ranking", "Options", "Credits" };
@@ -118,20 +131,31 @@ namespace BRS.Menu {
         }
 
         public void BuildPlayMenu() {
-            var picturePage = new Image(File.Load<Texture2D>("Images/UI/Play1")) { Position = new Vector2(0, 0) };
-            picturePage.Active = false;
-            MenuManager.Instance.MenuRect["play1"].AddComponent(picturePage);
+            var ButtonBackground = new Button(_textureButtonBackground, _middleScreen + new Vector2(0, 0) * _screenSizeVec) {
+                ScaleHeight = 0.87f,
+                ScaleWidth = 0.87f
+            };
+            ButtonBackground.ImageColor = Color.White;
+            MenuManager.Instance.MenuRect["play1"].AddComponent(ButtonBackground);
+
+            var ButtonName = new Button(_textureButtonTitle, _middleScreen + new Vector2(0, -0.35f) * _screenSizeVec) {
+                Text = "Game Settings",
+            };
+            ButtonName.InsideObjectColor = Color.White;
+            ButtonName.ImageColor = new Color(148, 148, 148);
+            MenuManager.Instance.MenuRect["play1"].AddComponent(ButtonName);
 
             string text = "Number of players";
             var chooseNumberPlayerText = new TextBox() {
-                InitPos = _middleScreen + new Vector2(0,-0.2f)*_screenSizeVec,
+                InitPos = _middleScreen + new Vector2(0,-0.235f)*_screenSizeVec,
                 Text = text
             };
 
-            Vector2[] offset = { new Vector2(-0.1f, -0.1f), new Vector2(0.1f, -0.1f), new Vector2(-0.12f, 0.1f), new Vector2(0, 0.1f), new Vector2(0.12f, 0.1f) };
+            Vector2[] offset = { new Vector2(-0.05f, -0.135f), new Vector2(0.05f, -0.135f), new Vector2(-0.08f, 0.065f), new Vector2(0, 0.065f), new Vector2(0.08f, 0.065f) };
             string[] textButtons = { "2", "4", "2 min", "3 min", "5 min" };
 
             List<Button> buttonsCurrentPanel = new List<Button>();
+            List<Button> linkedButton = new List<Button>();
             for (int i = 0; i < textButtons.Length; ++i) {
                 var playButton = new Button(_textureButton, _middleScreen + offset[i]*_screenSizeVec) {
                     Text = textButtons[i],
@@ -143,9 +167,10 @@ namespace BRS.Menu {
                 else {
                     playButton.Click += MenuManager.Instance.UpdateRoundDuration;
                     playButton.Click += MenuManager.Instance.GoDown;
-                    playButton.ScaleWidth = .5f;
+                    //playButton.ScaleWidth = .5f;
                     //playButton.Texture.Width *= .5f;
                 }
+                playButton.Click += MenuManager.Instance.HighlightBorders;
 
                 linkedButtonLeftRight.Add(playButton);
                 if (i == 1) SetNeighborsButtonLeftRight();
@@ -153,25 +178,45 @@ namespace BRS.Menu {
 
                 buttonsCurrentPanel.Add(playButton);
 
+                if (i == 2) linkedButton.Clear();
+                linkedButton.Add(playButton);
+                foreach (var bu in linkedButton) {
+                    if (bu != playButton) {
+                        playButton.neighbors.Add(bu);
+                        bu.neighbors.Add(playButton);
+                    }
+                }
+
+
                 MenuManager.Instance.MenuRect["play1"].AddComponent(playButton);
             }
 
             string text2 = "Game duration";
             var chooseDurationRoundText = new TextBox(){
-                InitPos = _middleScreen,
+                InitPos = _middleScreen + new Vector2(0,-0.035f) * _screenSizeVec,
                 Text = text2
             };
 
-            var backButton1 = new Button(_textureButton, _positionBackButton) {
-                Text = "go back", NameMenuToSwitchTo = "main"
+            var backButton1 = new Button(_textureButtonCircle, _positionBackButton) {
+                NameMenuToSwitchTo = "main",
+                ScaleHeight = 1.5f, ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f, ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowLeft
             };
+            backButton1.ImageColor = new Color(250,139,139);
+            backButton1.InsideObjectColor = Color.White;
             backButton1.Click += MenuManager.Instance.SwitchToMenu;
             buttonsCurrentPanel.Add(backButton1);
             linkedButtonLeftRight.Add(backButton1);
 
-            var nextButton = new Button(_textureButton, _positionNextButton) {
-                Text = "next", NameMenuToSwitchTo = "play2"
+            var nextButton = new Button(_textureButtonCircle, _positionNextButton) {
+                NameMenuToSwitchTo = "play2",
+                ScaleHeight = 1.5f, ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f, ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowRight
             };
+            nextButton.ImageColor = new Color(110, 235, 150);
+            nextButton.InsideObjectColor = Color.White;
             nextButton.Click += MenuManager.Instance.SetDefaultParametersGame;
             nextButton.Click += MenuManager.Instance.SwitchToMenu;
             nextButton.Click += MenuManager.Instance.UpdatePlayersChangeTo;
@@ -197,10 +242,41 @@ namespace BRS.Menu {
             MenuManager.Instance.MenuRect["play1"].AddComponent(backButton1);
             MenuManager.Instance.MenuRect["play1"].active = false;
 
-            var startGameButton = new Button(_textureButton, _positionNextButton) { Text = "Start Game" };
+            var ButtonBackgroundPlay2 = new Button(_textureButtonBigBackground, _middleScreen + new Vector2(0, 0) * _screenSizeVec) {
+                ScaleHeight = 0.87f,
+                ScaleWidth = 0.87f
+            };
+            ButtonBackgroundPlay2.ImageColor = Color.White;
+            MenuManager.Instance.MenuRect["play2"].AddComponent(ButtonBackgroundPlay2);
+
+            var ButtonNamePlay2 = new Button(_textureButtonTitle, _middleScreen + new Vector2(0, -0.35f) * _screenSizeVec) {
+                Text = "Game Settings",
+            };
+            ButtonNamePlay2.InsideObjectColor = Color.White;
+            ButtonNamePlay2.ImageColor = new Color(148, 148, 148);
+            MenuManager.Instance.MenuRect["play2"].AddComponent(ButtonNamePlay2);
+
+            var startGameButton = new Button(_textureButtonCircle, _positionNextButton) {
+                ScaleHeight = 1.5f,
+                ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f,
+                ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowRight
+            };
+            startGameButton.ImageColor = new Color(110, 235, 150);
+            startGameButton.InsideObjectColor = Color.White;
             startGameButton.Click += MenuManager.Instance.StartGameFunction;
 
-            var backButton2 = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "play1" };
+            var backButton2 = new Button(_textureButtonCircle, _positionBackButton) {
+                NameMenuToSwitchTo = "play1",
+                ScaleHeight = 1.5f,
+                ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f,
+                ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowLeft
+            };
+            backButton2.ImageColor = new Color(250, 139, 139);
+            backButton2.InsideObjectColor = Color.White;
             backButton2.Click += MenuManager.Instance.SwitchToMenu;
 
             MenuManager.Instance.MenuRect["play2"].AddComponent(startGameButton);
@@ -211,122 +287,182 @@ namespace BRS.Menu {
             SetNeighborsButtonLeftRight(false);
 
             ListComponents buttonPlayersChanges = new ListComponents("playerInfoToChange");
-            Vector2[] offsetPlayersChanges = { new Vector2(-0.15f, -0.3f), new Vector2(-0.05f, -0.3f), new Vector2(0.05f, -0.3f), new Vector2(0.15f, -0.3f) };
+            Vector2[] offsetPlayersChanges = { new Vector2(-0.3f, -0.2f), new Vector2(-0.1f, -0.2f), new Vector2(0.1f, -0.2f), new Vector2(0.3f, -0.2f) };
             string[] textButtonsPlayersChanges = { "player 1", "player 2", "player 3", "player 4" };
 
+            linkedButton.Clear();
             for (int i = 0; i < textButtonsPlayersChanges.Length; ++i) {
                 var playerChangeButton = new Button(_textureButton, _middleScreen + offsetPlayersChanges[i] * _screenSizeVec) {
                     Text = textButtonsPlayersChanges[i],
                     Index = i,
-                    NameMenuToSwitchTo = "playerInfos",
-                    NeighborDown = startGameButton
+                    NeighborDown = startGameButton,
+                    ScaleWidth = 2f
                 };
                 playerChangeButton.Click += MenuManager.Instance.UpdatePlayersNameInfosToChange;
-                playerChangeButton.Click += MenuManager.Instance.SwitchToMenu;
-                playerChangeButton.ScaleWidth = .5f;
+                playerChangeButton.Click += MenuManager.Instance.HighlightBorders;
+                //playerChangeButton.Click += MenuManager.Instance.SwitchToMenu;
+                //playerChangeButton.ScaleWidth = .5f;
                 buttonPlayersChanges.AddComponent(playerChangeButton);
 
                 if (i == 0) {
+                    playerChangeButton.IsClicked = true;
                     backButton2.NeighborUp = playerChangeButton;
                     startGameButton.NeighborUp = playerChangeButton;
                 }
                 linkedButtonLeftRight.Add(playerChangeButton);
+
+                linkedButton.Add(playerChangeButton);
+                foreach (var bu in linkedButton) {
+                    if (bu != playerChangeButton) {
+                        playerChangeButton.neighbors.Add(bu);
+                        bu.neighbors.Add(playerChangeButton);
+                    }
+                }
             }
             SetNeighborsButtonLeftRight();
             MenuManager.Instance.MenuRect["play2"].AddComponent(buttonPlayersChanges);
             MenuManager.Instance.MenuRect["play2"].active = false;
 
-        }
+            List<Button> listModelButton = new List<Button>();
+            Vector2[] offsetPlayersChanges2 = { new Vector2(-0.4f, -0.05f), new Vector2(-0.4f, 0.05f), new Vector2(-0.4f, 0.15f) };
+            string[] textButtonsPlayersChanges2 = { "model 1", "model 2", "model 3" };
 
-        internal void BuildPlayerInfoMenu() {
+            linkedButton.Clear();
+            for (int i = 0; i < textButtonsPlayersChanges2.Length; ++i) {
+                var playerChangeButton = new Button(_textureButton, _middleScreen + offsetPlayersChanges2[i] * _screenSizeVec) {
+                    Text = textButtonsPlayersChanges2[i],
+                    Index = i,
+                    NameMenuToSwitchTo = "playerInfos",
+                    ScaleWidth = 1.5f
+                };
+                playerChangeButton.Click += MenuManager.Instance.ChangeModelPlayer;
+                //playerChangeButton.Click += MenuManager.Instance.SwitchToMenu;
+                MenuManager.Instance.MenuRect["play2"].AddComponent(playerChangeButton);
+                //playerChangeButton.ScaleWidth = .5f;
+
+                linkedButtonDownUp.Add(playerChangeButton);
+                listModelButton.Add(playerChangeButton);
+
+                if (i == 0) {
+                    foreach (var el in buttonPlayersChanges.Components)
+                        ((Button)el).NeighborUp = playerChangeButton;
+                    playerChangeButton.IsClicked = true;
+                }
+
+                linkedButton.Add(playerChangeButton);
+                foreach (var bu in linkedButton) {
+                    if (bu != playerChangeButton) {
+                        playerChangeButton.neighbors.Add(bu);
+                        bu.neighbors.Add(playerChangeButton);
+                    }
+                }
+            }
+            SetNeighborsButtonUpDown(false);
+            listModelButton[0].NeighborUp = (Button)buttonPlayersChanges.Components[0];
+
+            MenuManager.Instance.MenuRect["play2"].active = false;
 
             var namePlayer = new TextBox() {
-                InitPos = _middleScreen + new Vector2(0, -0.4f)*_screenSizeVec,
+                InitPos = _middleScreen + new Vector2(0.25f, -0.075f) * _screenSizeVec,
                 Text = "",
                 NameIdentifier = "name_player"
             };
-            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(namePlayer);
+            namePlayer.Active = true;
+            MenuManager.Instance.MenuRect["play2"].AddComponent(namePlayer);
 
             string[] firstLine = { "q", "w", "e", "r", "t", "z", "u", "i", "o", "p" };
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            Vector2[] startoffset = { new Vector2(-0.3f, -0.3f), new Vector2(-0.25f, -0.2f), new Vector2(-0.2f, -0.1f) };
+            Vector2[] startoffset = { new Vector2(0.1f, 0f), new Vector2(0.13f, 0.05f), new Vector2(0.15f, 0.1f) };
 
-            List<Button> buttonsCurrentPanel = new List<Button>();
+            List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
                 int count = 0;
                 foreach (var elem in keyboard[i]) {
-                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i]*_screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
+                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i] * _screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
                         Text = elem,
-                        ScaleWidth = .5f
+                        ScaleWidth = .5f,
+                        ScaleHeight = .5f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    ++count;
-                    MenuManager.Instance.MenuRect["playerInfos"].AddComponent(letterButton);
+                    MenuManager.Instance.MenuRect["play2"].AddComponent(letterButton);
 
                     linkedButtonLeftRight.Add(letterButton);
-                    buttonsCurrentPanel.Add(letterButton);
+                    buttonsCurrentPanel2.Add(letterButton);
+
+                    if (i == 0 && count == 0) {
+                        foreach (var el in buttonPlayersChanges.Components) 
+                            ((Button)el).NeighborDown = letterButton;
+                        foreach (var el in listModelButton)
+                            ((Button)el).NeighborRight = letterButton;
+                    }
+                    if (i == 0)
+                        letterButton.NeighborUp = (Button)buttonPlayersChanges.Components[0];
+
+                    ++count;
+
                 }
                 if (i == keyboard.Length - 1) {
-                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i]*_screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
-                        Text = "remove",
-                        ScaleWidth = .5f
+                    var letterButton = new Button(_textureButton, _middleScreen + startoffset[i] * _screenSizeVec + count * new Vector2(.5f * _textureButton.Width, 0)) {
+                        Text = "del",
+                        ScaleWidth = .5f,
+                        ScaleHeight = .5f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    MenuManager.Instance.MenuRect["playerInfos"].AddComponent(letterButton);
+                    MenuManager.Instance.MenuRect["play2"].AddComponent(letterButton);
                     linkedButtonLeftRight.Add(letterButton);
                 }
                 SetNeighborsButtonLeftRight(false);
             }
 
-            var saveButton = new Button(_textureButton, _positionNextButton) {
-                Text = "Save changes",
+            var saveButton = new Button(_textureButtonCircle, _positionNextButton + new Vector2(0.2f, 0) * _screenSizeVec) {
                 NameMenuToSwitchTo = "play2",
-                NeighborUp = buttonsCurrentPanel[firstLine.Length + secondLine.Length]
+                NeighborUp = buttonsCurrentPanel2[firstLine.Length + secondLine.Length],
+                NeighborLeft = startGameButton,
             };
+            saveButton.InsideImage = _textureButtonAccept;
+            saveButton.InsideObjectColor = Color.White;
+            saveButton.ImageColor = new Color(110, 235, 150);
             saveButton.Click += MenuManager.Instance.ChangeNamePlayer;
             saveButton.Click += MenuManager.Instance.SwitchToMenu;
-            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(saveButton);
-            
+            MenuManager.Instance.MenuRect["play2"].AddComponent(saveButton);
 
-            for (int i=0; i<buttonsCurrentPanel.Count; ++i) {
+
+            for (int i = 0; i < buttonsCurrentPanel2.Count; ++i) {
                 if (i < firstLine.Length) {
-                    int offset = firstLine.Length;
-                    if (i > secondLine.Length - 1) offset = secondLine.Length;
+                    int offsetTmp = firstLine.Length;
+                    if (i > secondLine.Length - 1) offsetTmp = secondLine.Length;
 
-                    buttonsCurrentPanel[i].NeighborDown = buttonsCurrentPanel[i + offset];
+                    buttonsCurrentPanel2[i].NeighborDown = buttonsCurrentPanel2[i + offsetTmp];
                 }
                 else if (i < firstLine.Length + secondLine.Length) {
-                    int offset = secondLine.Length;
-                    if (i - firstLine.Length > thirdLine.Length - 1) offset = thirdLine.Length;
+                    int offsetTmp = secondLine.Length;
+                    if (i - firstLine.Length > thirdLine.Length - 1) offsetTmp = thirdLine.Length;
 
-                    buttonsCurrentPanel[i].NeighborDown = buttonsCurrentPanel[i + offset];
-                    buttonsCurrentPanel[i].NeighborUp = buttonsCurrentPanel[i - firstLine.Length];
+                    buttonsCurrentPanel2[i].NeighborDown = buttonsCurrentPanel2[i + offsetTmp];
+                    buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - firstLine.Length];
                 }
                 else {
-                    buttonsCurrentPanel[i].NeighborDown = saveButton;
-                    buttonsCurrentPanel[i].NeighborUp = buttonsCurrentPanel[i - secondLine.Length];
+                    buttonsCurrentPanel2[i].NeighborDown = saveButton;
+                    buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - secondLine.Length];
                 }
             }
 
+            listModelButton[2].NeighborDown = backButton2;
+            backButton2.NeighborLeft = listModelButton[2];
+            startGameButton.NeighborRight = saveButton;
 
+            Image pictureModel1 = new Image(_textureButtonForkLift) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel1"}; pictureModel1.Active = true;
+            Image pictureModel2 = new Image(_textureButtonCircle) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel2" }; pictureModel2.Active = false;
+            Image pictureModel3 = new Image(_textureButton) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel3" }; pictureModel3.Active = false;
 
-            var backButton = new Button(_textureButton, _positionBackButton) {
-                Text = "go back",
-                NameMenuToSwitchTo = "play2",
-                NeighborUp = buttonsCurrentPanel[firstLine.Length + secondLine.Length]
-            };
-            backButton.Click += MenuManager.Instance.SwitchToMenu;
-            MenuManager.Instance.MenuRect["playerInfos"].AddComponent(backButton);
-
-            MenuManager.Instance.MenuRect["playerInfos"].active = false;
-
-            linkedButtonLeftRight.Add(saveButton);
-            linkedButtonLeftRight.Add(backButton);
-            SetNeighborsButtonLeftRight();
+            MenuManager.Instance.MenuRect["play2"].AddComponent(pictureModel1);
+            MenuManager.Instance.MenuRect["play2"].AddComponent(pictureModel2);
+            MenuManager.Instance.MenuRect["play2"].AddComponent(pictureModel3);
 
         }
+
 
         public void BuildTutorialMenu() {
             string[] switchTo = { "main", "tutorial1", "tutorial2", "tutorial3", "tutorial4" };
@@ -338,17 +474,32 @@ namespace BRS.Menu {
                 MenuManager.Instance.MenuRect["tutorial" + (i+1).ToString()].AddComponent(picturePage);
 
                 if (i != noPages - 1) { 
-                    var nextButtonTuto1 = new Button(_textureButton, _positionNextButton) {
-                        Text = "next",
+                    var nextButtonTuto1 = new Button(_textureButtonCircle, _positionNextButton) {
+                        ScaleHeight = 1.5f,
+                        ScaleWidth = 1.5f,
+                        ScaleHeightInside = 1.5f,
+                        ScaleWidthInside = 1.5f,
+                        InsideImage = _textureArrowRight,
                         NameMenuToSwitchTo = switchTo[i + 2],
                     };
+                    nextButtonTuto1.ImageColor = new Color(110, 235, 150);
+                    nextButtonTuto1.InsideObjectColor = Color.White;
                     nextButtonTuto1.Click += MenuManager.Instance.SwitchToMenu;
                     nextButtonTuto1.Click += MenuManager.Instance.GoRight;
                     MenuManager.Instance.MenuRect["tutorial" + (i + 1).ToString()].AddComponent(nextButtonTuto1);
                     linkedButtonLeftRight.Add(nextButtonTuto1);
                 }
 
-                var backButton1 = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = switchTo[i] };
+                var backButton1 = new Button(_textureButtonCircle, _positionBackButton) {
+                    NameMenuToSwitchTo = switchTo[i],
+                    ScaleHeight = 1.5f,
+                    ScaleWidth = 1.5f,
+                    ScaleHeightInside = 1.5f,
+                    ScaleWidthInside = 1.5f,
+                    InsideImage = _textureArrowLeft
+                };
+                backButton1.ImageColor = new Color(250, 139, 139);
+                backButton1.InsideObjectColor = Color.White;
                 backButton1.Click += MenuManager.Instance.SwitchToMenu;
                 backButton1.Click += MenuManager.Instance.GoRight;
 
@@ -365,10 +516,23 @@ namespace BRS.Menu {
         }
 
         public void BuildRankingMenu() {
+            var ButtonBackground = new Button(_textureButtonBackground, _middleScreen + new Vector2(0, 0) * _screenSizeVec) {
+                ScaleHeight = 0.87f,
+                ScaleWidth = 0.87f
+            };
+            ButtonBackground.ImageColor = Color.White;
+            MenuManager.Instance.MenuRect["ranking"].AddComponent(ButtonBackground);
+
+            var ButtonName = new Button(_textureButtonTitle, _middleScreen + new Vector2(0, -0.35f) * _screenSizeVec) {
+                Text = "Rankings",
+            };
+            ButtonName.InsideObjectColor = Color.White;
+            ButtonName.ImageColor = new Color(148, 148, 148);
+            MenuManager.Instance.MenuRect["ranking"].AddComponent(ButtonName);
 
             ListComponents rankings = new ListComponents("rankings_game");
             string[] pathRankings = { "ranking2min.txt", "ranking3min.txt", "ranking5min.txt" };
-            Vector2[] offsetStart = { new Vector2(-0.05f, -0.2f), new Vector2(0.05f, -0.2f) };
+            Vector2[] offsetStart = { new Vector2(-0.05f, -0.1f), new Vector2(0.05f, -0.1f) };
 
             for (int i=0; i<pathRankings.Length; ++i) {
                 List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/" + pathRankings[i]);
@@ -377,12 +541,12 @@ namespace BRS.Menu {
                 int count = 0;
                 foreach (var aPerson in rankinglist) {
                     var namePerson = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[0]*_screenSizeVec + new Vector2(0, count*100),
+                        InitPos = _middleScreen + offsetStart[0]*_screenSizeVec + new Vector2(0, count*65),
                         Text = aPerson.Item1
                     };
 
                     var score = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[1]*_screenSizeVec + new Vector2(0, count * 100),
+                        InitPos = _middleScreen + offsetStart[1]*_screenSizeVec + new Vector2(0, count * 65),
                         Text = aPerson.Item2 
                     };
 
@@ -396,11 +560,22 @@ namespace BRS.Menu {
 
             MenuManager.Instance.MenuRect["ranking"].AddComponent(rankings);
 
-            var backButton = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
+            var backButton = new Button(_textureButtonCircle, _positionBackButton) {
+                NameMenuToSwitchTo = "main",
+                ScaleHeight = 1.5f,
+                ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f,
+                ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowLeft
+            };
+            backButton.ImageColor = new Color(250, 139, 139);
+            backButton.InsideObjectColor = Color.White;
             backButton.Click += MenuManager.Instance.SwitchToMenu;
             MenuManager.Instance.MenuRect["ranking"].AddComponent(backButton);
 
-            Vector2[] offset = { new Vector2(-0.1f, -0.3f), new Vector2(0, -0.3f), new Vector2(0.1f, -0.3f) };
+
+
+            Vector2[] offset = { new Vector2(-0.1f, -0.2f), new Vector2(0, -0.2f), new Vector2(0.1f, -0.2f) };
             string[] textButtons = { "2 min", "3 min", "5 min" };
 
             for (int i = 0; i < textButtons.Length; ++i) {
@@ -410,7 +585,7 @@ namespace BRS.Menu {
                     NeighborDown = backButton
                 };
                 playButton.Click += MenuManager.Instance.SwitchRankingDisplay;
-                playButton.ScaleWidth = .5f;
+                //playButton.ScaleWidth = .5f;
                 MenuManager.Instance.MenuRect["ranking"].AddComponent(playButton);
                 linkedButtonLeftRight.Add(playButton);
                 if (i == 0) backButton.NeighborUp = playButton;
@@ -424,31 +599,54 @@ namespace BRS.Menu {
         }
 
         public void BuildOptionsMenu() {
-            var testSlider = new Slider {
-                Position = new Vector2(200, 500),
-
-                ButtonSlider = new Button(_textureButtonSlider, new Vector2(200 - _textureButtonSlider.Width / 2, 500 - (_textureButtonSlider.Height - UserInterface.BarHeight) / 2))
+            var ButtonBackground = new Button(_textureButtonBackground, _middleScreen + new Vector2(0, 0) * _screenSizeVec) {
+                ScaleHeight = 0.87f,
+                ScaleWidth = 0.87f
             };
+            ButtonBackground.ImageColor = Color.White;
+            MenuManager.Instance.MenuRect["options"].AddComponent(ButtonBackground);
 
-            var testTickBox = new TickBox(_textureTickBoxNotCliqued, _textureTickBoxCliqued) {
-                Position = new Vector2(200, 400),
+            var ButtonName = new Button(_textureButtonTitle, _middleScreen + new Vector2(0, -0.35f) * _screenSizeVec) {
+                Text = "Options",
             };
+            ButtonName.InsideObjectColor = Color.White;
+            ButtonName.ImageColor = new Color(148, 148, 148);
+            MenuManager.Instance.MenuRect["options"].AddComponent(ButtonName);
 
-            var backButton = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
-            backButton.Click += MenuManager.Instance.SwitchToMenu;
+            var backButton = new Button(_textureButtonCircle, _positionBackButton) {
+                NameMenuToSwitchTo = "main",
+                ScaleHeight = 1.5f,
+                ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f,
+                ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowLeft
+            };
+            backButton.ImageColor = new Color(250, 139, 139);
+            backButton.InsideObjectColor = Color.White;
             backButton.IsCurrentSelection = true;
+            backButton.Click += MenuManager.Instance.SwitchToMenu;
+            MenuManager.Instance.MenuRect["options"].AddComponent(backButton);
 
-            MenuManager.Instance.MenuRect["options"].AddComponent(testSlider);
-            MenuManager.Instance.MenuRect["options"].AddComponent(testTickBox);
             MenuManager.Instance.MenuRect["options"].AddComponent(backButton);
             MenuManager.Instance.MenuRect["options"].active = false;
         }
 
         public void BuildCreditsMenu() {
-            var backButton = new Button(_textureButton, _positionBackButton) { Text = "go back", NameMenuToSwitchTo = "main" };
-            backButton.Click += MenuManager.Instance.SwitchToMenu;
+
+            var backButton = new Button(_textureButtonCircle, _positionBackButton) {
+                NameMenuToSwitchTo = "main",
+                ScaleHeight = 1.5f,
+                ScaleWidth = 1.5f,
+                ScaleHeightInside = 1.5f,
+                ScaleWidthInside = 1.5f,
+                InsideImage = _textureArrowLeft
+            };
+            backButton.ImageColor = new Color(250, 139, 139);
+            backButton.InsideObjectColor = Color.White;
             backButton.IsCurrentSelection = true;
+            backButton.Click += MenuManager.Instance.SwitchToMenu;
             MenuManager.Instance.MenuRect["credits"].AddComponent(backButton);
+
             MenuManager.Instance.MenuRect["credits"].active = false;
         }
 

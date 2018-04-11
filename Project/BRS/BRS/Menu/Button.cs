@@ -24,12 +24,16 @@ namespace BRS.Menu {
         public float ScaleWidth { get; set; } = 1;
         public float ScaleHeight { get; set; } = 1;
 
+        public float ScaleWidthInside { get; set; } = 1;
+        public float ScaleHeightInside { get; set; } = 1;
+
         public Vector2 OffsetTexture = new Vector2(0, 0);
         public Vector2 InitPos;
         private Vector2 Position { get { return InitPos /*- OffsetTexture*/; } }
 
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
+        public Texture2D InsideImage { get; set; } // instead of text
 
         public bool IsClicked;
         Texture2D _textureClicked;
@@ -40,8 +44,10 @@ namespace BRS.Menu {
         public Button NeighborLeft { get; set; }
         public Button NeighborRight { get; set; }
 
-        public Color TextColor = new Color(144, 144, 144);
+        public Color InsideObjectColor = new Color(144, 144, 144);
         public Color ImageColor = new Color(247, 239, 223);
+
+        public List<Button> neighbors;
 
         public Rectangle Rectangle {
             get {
@@ -55,14 +61,22 @@ namespace BRS.Menu {
             }
         }
 
+        public Rectangle RectangleInsideObject {
+            get {
+                Vector2 offsetInside = new Vector2((Texture.Width - InsideImage.Width) / 2 * (1 - ScaleWidth) * (1 - ScaleWidthInside), (Texture.Height - InsideImage.Height) / 2 * (1 - ScaleHeight) * (1 - ScaleHeightInside));
+                return new Rectangle((int)(Position.X + offsetInside.X), (int)(Position.Y + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside), (int)(InsideImage.Height * ScaleHeightInside));
+            }
+        }
+
         // --------------------- BASE METHODS ------------------
         public Button(Texture2D t, Vector2 pos) {
             Texture = t;
             InitPos = pos;
-            OffsetTexture = new Vector2(t.Width / 2, t.Height / 2);
+            //OffsetTexture = new Vector2(t.Width / 2, t.Height / 2);
             IsClicked = false;
             Active = true;
             _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
+            neighbors = new List<Button>();
         }
 
         public override void Start() {
@@ -129,19 +143,25 @@ namespace BRS.Menu {
 
         public override void Draw() {
             if (Active) {
+                var colour = ImageColor;
+
+                if (IsClicked)
+                    colour = Color.DeepSkyBlue;
+
                 if (IsHovering)
-                    ImageColor = Color.Gray;
-               
-                if (IsClicked && _textureClicked != null)
-                    UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, ImageColor);
-                else if (Texture != null)
-                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, null, Align.TopLeft, Align.Center, ImageColor, false);
+                    colour = Color.Gray;
+
+                if (Texture != null)
+                    UserInterface.Instance.DrawPictureAlign(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
+
+                if (InsideImage != null)
+                    UserInterface.Instance.DrawPictureAlign(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
 
                 if (!string.IsNullOrEmpty(Text)) {
                     var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).X / 2);
                     var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.SmallFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.Instance.DrawStringAlign(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, TextColor, false);
+                    UserInterface.Instance.DrawStringAlign(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
                 }
             }
         }
