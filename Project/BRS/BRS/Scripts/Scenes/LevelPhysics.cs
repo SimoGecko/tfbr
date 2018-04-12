@@ -35,12 +35,12 @@ namespace BRS.Scripts.Scenes {
             UIManager.AddComponent(new GameUI());
 
             GameObject rootScene = new GameObject("manager");
-            //rootScene.AddComponent(new CameraController());
+            rootScene.AddComponent(new CameraController());
             rootScene.AddComponent(new ElementManager());
             rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new RoundManager());
-            rootScene.AddComponent(new Spawner());
-            rootScene.AddComponent(new Minimap());
+            //rootScene.AddComponent(new Spawner());
+            //rootScene.AddComponent(new Minimap());
 
 
 
@@ -69,6 +69,12 @@ namespace BRS.Scripts.Scenes {
 
                 Players.Add(forklift);
             }
+
+
+            GameObject staticObject = new GameObject("staticGameObject", File.Load<Model>("Models/primitives/cube"));
+            staticObject.transform.Scale(2.0f);
+            staticObject.transform.TranslateGlobal(new Vector3(-5, 5, 5));
+            staticObject.AddComponent(new StaticRigidBody());
 
 
 

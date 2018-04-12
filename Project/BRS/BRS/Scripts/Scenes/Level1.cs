@@ -129,6 +129,13 @@ namespace BRS.Scripts.Scenes {
             
 
             CreatePlayers();
+
+            // Todo: Delete after testing
+            GameObject staticObject = new GameObject("staticGameObject", File.Load<Model>("Models/primitives/cube"));
+            staticObject.transform.Scale(2.0f);
+            staticObject.transform.TranslateGlobal(new Vector3(-5, 0, -5));
+            staticObject.AddComponent(new StaticRigidBody());
+
         }
 
         void CreatePlayers() {
@@ -138,7 +145,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 0, 0);
+                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0);
 
                 player.AddComponent(new Player(i, i % 2, startPos, "Player " +(i+1)));
                 player.AddComponent(new MovingRigidBody());

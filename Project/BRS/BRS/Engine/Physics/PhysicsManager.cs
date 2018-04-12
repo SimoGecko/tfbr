@@ -9,7 +9,6 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Engine.Physics {
     /// <summary>
@@ -140,13 +139,27 @@ namespace BRS.Engine.Physics {
                 //body1.AddForce(obj.Normal * 100);
                 //body1.LinearVelocity -= obj.Normal * 5;
                 //Debug.Log(obj.Normal, "Force to body 1: ");
-                body1.Position -= obj.Normal * 0.5f;
+                JVector newPosition = GetPosition(body1.BoundingBoxSize, body1.GameObject,  obj.Normal,
+                    Conversion.ToJitterVector(body1.GameObject.transform.Forward), obj.Position2);
+                //body1.Position -= obj.Normal * 0.5f;
+                body1.Position = newPosition;
+
+                (body1 as SteerableCollider).PositionUpdatedByCollision = true;
             } else if (body2IsPLayer && !body1IsPureCollider && body1IsStatic) {
                 //body2.AddForce(obj.Normal * -100);
                 //body2.LinearVelocity += obj.Normal * 5;
                 //Debug.Log(obj.Normal, "Force to body 2: ");
-                body2.Position += obj.Normal * 0.5f;
+                //body2.Position += obj.Normal * 0.5f;
+                JVector newPosition = GetPosition(body2.BoundingBoxSize, body2.GameObject, obj.Normal,
+                    Conversion.ToJitterVector(body2.GameObject.transform.Forward), obj.Position1);
+                body2.Position = newPosition;
+
+                (body2 as SteerableCollider).PositionUpdatedByCollision = true;
             }
+        }
+
+        private bool RaycastCallback(RigidBody body, JVector normal, float fraction) {
+            return body.IsStatic && body.PureCollider == false;
         }
 
         #endregion
@@ -186,6 +199,77 @@ namespace BRS.Engine.Physics {
 
             return Instance._colliders.ToArray();
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rigidBody"></param>
+        /// <param name="gameObject"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public Vector3 DetectCollision(RigidBody rigidBody, GameObject gameObject, Vector3 start, Vector3 end) {
+            JVector p = Conversion.ToJitterVector(start) + rigidBody.CenterOfMass;
+            JVector d = Conversion.ToJitterVector(end - start);
+
+            JVector bbSize = rigidBody.BoundingBox.Max - rigidBody.BoundingBox.Min;
+
+            RigidBody resBody;
+            JVector hitNormal;
+            float fraction;
+            //ProjectOn(new JVector(2, 3, 1), new JVector(5, -2, 2));
+            bool result = World.CollisionSystem.Raycast(p,
+                d, RaycastCallback, out resBody,
+                out hitNormal, out fraction);
+
+            if (result) {
+                JVector collisionAt = p + fraction * d;
+                return Conversion.ToXnaVector(GetPosition(bbSize, gameObject, hitNormal, p, collisionAt));
+            }
+
+            //try {
+            //    GameObject.Destroy((resBody as Collider).GameObject);
+            //} catch {
+            //}
+
+            return end;
+        }
+
+        private JVector ProjectOn(JVector v, JVector u) {
+            return JVector.Dot(v, u) / u.LengthSquared() * u;
+        }
+
+        private JVector GetPosition(JVector bbSize, GameObject gameObject, JVector hitNormal, JVector d, JVector end) {
+            JVector forward = 1.5f * bbSize.Z * Conversion.ToJitterVector(gameObject.transform.Forward);
+            JVector right = 1.5f * bbSize.X * Conversion.ToJitterVector(gameObject.transform.Right);
+            d.Normalize();
+
+            if (JVector.Dot(forward, hitNormal) < 0.0f) {
+                forward = -1 * forward;
+            }
+
+            if (JVector.Dot(right, hitNormal) < 0.0f) {
+                right = -1 * right;
+            }
+
+            JVector lengthOnNormal = ProjectOn(forward, hitNormal);
+            JVector widthOnNormal = ProjectOn(right, hitNormal);
+            JVector distanceToHit = lengthOnNormal + widthOnNormal;
+
+            if (JVector.Dot(distanceToHit, d) < 0.0f) {
+                distanceToHit = -1 * distanceToHit;
+            }
+
+            JVector margin = ProjectOn(distanceToHit, d);
+
+            Debug.Log("Collision detected! ");
+            Debug.Log("Margin: " + margin);
+            PhysicsDrawer.Instance.PointsToDraw.Add(Conversion.ToXnaVector(end - margin));
+
+            return end - margin;
+        }
+
 
         #endregion
     }

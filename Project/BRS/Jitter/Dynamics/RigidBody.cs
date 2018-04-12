@@ -650,7 +650,15 @@ namespace Jitter.Dynamics
             }
         }
 
+        /// <summary>
+        /// By Andy: Add a flag if the rigid body is only considered as a collision-test-object and interfers only with static elements.
+        /// </summary>
         public bool PureCollider { get; set; }
+
+        /// <summary>
+        /// By Andy: Stores the center of mass from the loaded model
+        /// </summary>
+        public JVector CenterOfMass { get; set; }
 
         private List<JVector> hullPoints = new List<JVector>();
 

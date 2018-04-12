@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine.Physics.Primitives3D;
 using Jitter;
 using Jitter.Collision;
@@ -54,6 +55,8 @@ namespace BRS.Engine.Physics {
         /// Flag if physics-debug-information is drawn or not.
         /// </summary>
         public bool DoDrawings { get; private set; }
+
+        public List<Vector3> PointsToDraw { get; set; } = new List<Vector3>();
 
         #endregion
 
@@ -117,6 +120,10 @@ namespace BRS.Engine.Physics {
 
             _basicEffect.PreferPerPixelLighting = true;
             _basicEffect.LightingEnabled = true;
+            
+            foreach (Vector3 vector3 in PointsToDraw) {
+                Gizmos.DrawWireSphere(vector3, 1.0f);
+            }
 
             // Draw all shapes
             foreach (RigidBody body in World.RigidBodies) {

@@ -43,6 +43,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             RigidBody = new SteerableCollider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
+                CenterOfMass =  CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,

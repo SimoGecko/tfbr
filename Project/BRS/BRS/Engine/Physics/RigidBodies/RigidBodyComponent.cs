@@ -29,6 +29,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             RigidBody = new Collider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position) - CenterOfMass,
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
+                CenterOfMass =  CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = Tag,

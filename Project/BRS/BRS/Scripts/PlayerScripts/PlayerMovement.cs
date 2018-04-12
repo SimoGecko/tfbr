@@ -115,6 +115,11 @@ namespace BRS.Scripts.PlayerScripts {
             _speedPad = b;
         }
 
+        public void ResetSmoothMatnitude()
+        {
+            _smoothMagnitude = 0.0f;
+        }
+
 
         // queries
         float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }
