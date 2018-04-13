@@ -8,7 +8,7 @@ namespace BRS.Engine.Physics.Colliders {
     class SteerableCollider : Collider {
         public float RotationY { get; set; }
         public JVector Speed { get; set; }
-        public bool PositionUpdatedByCollision { get; set; }
+        //public bool PositionUpdatedByCollision { get; set; }
 
         public SteerableCollider(Shape shape) : base(shape) {
         }
@@ -21,14 +21,14 @@ namespace BRS.Engine.Physics.Colliders {
 
 
         public override void PostStep(float timestep) {
-            if (!PositionUpdatedByCollision) {
-                AddForce(Speed);
-                LinearVelocity = Speed;
-            } else {
-                AddForce(JVector.Zero);
-                LinearVelocity = JVector.Zero;
-                GameObject.GetComponent<PlayerMovement>().ResetSmoothMatnitude();
-            }
+            //if (!PositionUpdatedByCollision) {
+            AddForce(Speed);
+            LinearVelocity = Speed;
+            //} else {
+            //AddForce(JVector.Zero);
+            //LinearVelocity = JVector.Zero;
+            //GameObject.GetComponent<PlayerMovement>().ResetSmoothMatnitude();
+            //}
             Position = new JVector(Position.X, Height * .5f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
 
@@ -39,7 +39,7 @@ namespace BRS.Engine.Physics.Colliders {
 
             //LinearVelocity = JVector.Dot(new JVector(Speed.X, 0, Speed.Z), Orientation);
 
-            PositionUpdatedByCollision = false;
+            //PositionUpdatedByCollision = false;
 
             base.PostStep(timestep);
         }

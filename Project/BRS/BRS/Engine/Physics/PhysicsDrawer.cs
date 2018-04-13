@@ -56,7 +56,8 @@ namespace BRS.Engine.Physics {
         /// </summary>
         public bool DoDrawings { get; private set; }
 
-        public List<Vector3> PointsToDraw { get; set; } = new List<Vector3>();
+        private const int CollisionPointsToDraw = 20;
+        private readonly List<Vector3> _pointsToDraw = new List<Vector3>();
 
         #endregion
 
@@ -120,8 +121,8 @@ namespace BRS.Engine.Physics {
 
             _basicEffect.PreferPerPixelLighting = true;
             _basicEffect.LightingEnabled = true;
-            
-            foreach (Vector3 vector3 in PointsToDraw) {
+
+            foreach (Vector3 vector3 in _pointsToDraw) {
                 Gizmos.DrawWireSphere(vector3, 1.0f);
             }
 
@@ -247,6 +248,18 @@ namespace BRS.Engine.Physics {
 
                     AddShapeToDrawList(ts.Shape, ori, pos);
                 }
+            }
+        }
+
+        #endregion
+
+        #region Other methods
+
+        public void AddPointToDraw(Vector3 point) {
+            _pointsToDraw.Add(point);
+
+            if (_pointsToDraw.Count > CollisionPointsToDraw) {
+                _pointsToDraw.RemoveAt(0);
             }
         }
 

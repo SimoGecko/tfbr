@@ -152,6 +152,7 @@
     </Compile>
     <Compile Include="Game1.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />
     <Compile Include="Scripts\Scenes\LevelPhysics.cs" />

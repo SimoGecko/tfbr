@@ -156,6 +156,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerPowerup());
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
+                player.AddComponent(new PlayerCollider());
 
                 Add(player);
 
