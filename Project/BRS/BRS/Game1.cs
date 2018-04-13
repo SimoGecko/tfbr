@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Menu;
 using BRS.Scripts;
+using BRS.Engine.PostProcessing;
 
 namespace BRS {
 
@@ -14,6 +15,9 @@ namespace BRS {
         //default - don't touch
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        // Render the scene to this target
+        RenderTarget2D renderTarget;
 
         //@andy including these
         private Display _display;
@@ -40,6 +44,18 @@ namespace BRS {
             _display = new Display(this);
             Components.Add(_display);
             PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
+
+            // init the rendertarget with the graphics device
+            renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            // set up the post processing manager
+            PostProcessingManager.SetUpPostProcessing(Content);
 
             base.Initialize();
         }
@@ -111,11 +127,13 @@ namespace BRS {
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             PhysicsManager.Instance.Update(gameTime);
+            PostProcessingManager.Instance.Update(gameTime);
             
 
         }
 
         protected override void Draw(GameTime gameTime) {
+            GraphicsDevice.SetRenderTarget(renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
 
@@ -135,6 +153,13 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
             }
+
+            
+            // apply post processing
+            PostProcessingManager.Instance.Draw(renderTarget, _spriteBatch, GraphicsDevice);
+            // Drop the render target
+            GraphicsDevice.SetRenderTarget(null);
+
 
             //-----2D-----
             int i = 0;

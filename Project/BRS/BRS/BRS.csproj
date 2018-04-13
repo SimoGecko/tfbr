@@ -134,6 +134,8 @@
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
     <Compile Include="Engine\Physics\RigidBodies\ShapeType.cs" />
+    <Compile Include="Engine\PostProcessing\PostProcessingEffect.cs" />
+    <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
