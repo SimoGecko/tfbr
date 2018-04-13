@@ -51,7 +51,7 @@ namespace BRS.Scripts {
 
         // commands
         void SpawnNewPolice(int pathToFollow) {
-            Police pol = GameObject.Instantiate("policePrefab").GetComponent<Police>();
+            Police pol = GameObject.Instantiate("policePrefab", new Vector3(pathToFollow*4, 0, 0), Quaternion.Identity).GetComponent<Police>();
             pol.StartFollowing(waypoints[pathToFollow]);
         }
 

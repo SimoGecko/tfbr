@@ -39,7 +39,6 @@ namespace BRS.Scripts {
                 fileName = Char.ToLowerInvariant(fileName[0]) + fileName.Substring(1); // first letter lowercase
                 //spritesheets[i] = new SpriteSheet(File.Load<Texture2D>("Images/particles/" + fileName), rows, cols);
                 spritesheets[i] = new SpriteSheet(File.Load<Texture2D>("Images/particles/" + fileName), is128[i]?128:256);
-
             }
         }
 
@@ -66,8 +65,6 @@ namespace BRS.Scripts {
         }
 
         public void Draw(int index) {
-            SpriteSheetFromType(ParticleType.Energy).Draw(Vector2.One*200, 6);
-
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
                 SpriteSheetFromType(p.effect).Draw(position, p.frame);

@@ -237,8 +237,8 @@ namespace BRS.Engine {
             }
             Rectangle src = source ?? tex.Bounds;
             Vector2 origin = PivotPoint(pivot, src).ToVector2();//is relative to the texture
-            //dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
-            dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + origin.ToPoint();
+            dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
+            //dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + origin.ToPoint();
 
             _sb.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
 
