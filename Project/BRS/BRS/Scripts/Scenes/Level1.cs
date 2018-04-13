@@ -39,6 +39,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
             UiManager.AddComponent(new MoneyUI());
+            UiManager.AddComponent(new ParticleUI());
             Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
@@ -49,6 +50,7 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
+            Manager.AddComponent(new PoliceManager());
             Add(Manager);
 
 
@@ -135,7 +137,7 @@ namespace BRS.Scripts.Scenes {
             List<GameObject> objects = new List<GameObject>();
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
                 Vector3 startPos =  new Vector3(-5 + 10 * i, 0, 0);

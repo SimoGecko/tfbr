@@ -112,6 +112,7 @@ namespace BRS.Scripts.PlayerScripts {
                 //if (Input.GetKeyDown(Keys.V)) {
                 //    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
 
+
                 //    string tmp = "Contained: ";
                 //    foreach (Collider collider in test) {
                 //        tmp += collider.GameObject.tag + ",";
@@ -142,6 +143,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (!Dead) {
                 _state = State.Stun;
                 Audio.Play("stun", transform.position);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
                 _pI.LoseMoney();
                 Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
             }

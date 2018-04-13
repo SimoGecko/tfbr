@@ -58,6 +58,7 @@ namespace BRS.Scripts.Elements {
         void CrackCrate() {
             _cracked = true;
             Audio.Play("break", transform.position);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Drill);
             if (_explosionRigged) Explode();
             else SpawnValuables();
 

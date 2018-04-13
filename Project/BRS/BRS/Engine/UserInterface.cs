@@ -87,6 +87,7 @@ namespace BRS.Engine {
 
             if (GameManager.state == GameManager.State.Menu)
                 _menuManager.Draw();
+
             
         }
 
@@ -102,6 +103,7 @@ namespace BRS.Engine {
             GameUI.Instance.Draw();
             Minimap.Instance.DrawSmall(spriteBatch, index);
             MoneyUI.Instance.Draw(index);
+            ParticleUI.Instance.Draw(index);
 
             //test draw
             /*

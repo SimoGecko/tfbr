@@ -70,7 +70,8 @@ namespace BRS.Scripts.UI {
             UserInterface.Instance.DrawString(staminaString, new Rectangle(225, 95, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //small bars
-            Vector2 screenPosition = Camera.Main.WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
+            //TODO works only with player one
+            Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
             Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-25, -60), new Point(50, 5));
             UserInterface.Instance.DrawBarStriped(capacityPercent, smallBar, greenColor);
             smallBar.Y += 6;
