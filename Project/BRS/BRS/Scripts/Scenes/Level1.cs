@@ -108,6 +108,7 @@ namespace BRS.Scripts.Scenes {
             Add(speedpad);
 
             //LOAD UNITY SCENE
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
             var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" +  GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
@@ -139,7 +140,7 @@ namespace BRS.Scripts.Scenes {
                 player.transform.Scale(1.0f);
                 Vector3 startPos =  new Vector3(-5 + 10 * i, 0, 0);
 
-                player.AddComponent(new Player(i, i % 2, startPos, "Player " +(i+1)));
+                player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody(PhysicsManager.Instance));
                 //subcomponents
                 player.AddComponent(new PlayerMovement());
@@ -189,9 +190,9 @@ namespace BRS.Scripts.Scenes {
             }
 
             // todo: (andy) is this necessary here? // SIMO surely NOT!!
-            foreach (GameObject go in objects) {
+            //foreach (GameObject go in objects) {
                 //go.Start();
-            }
+            //}
 
         }
     }

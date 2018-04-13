@@ -79,7 +79,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void Update() {
-
+            UpdateUI();
             if (!GameManager.GameActive) {
                 _pM.Move(Vector3.Zero); // smooth stop
                 return;
@@ -124,7 +124,6 @@ namespace BRS.Scripts.PlayerScripts {
             }
 
             _pS.UpdateStamina();
-            UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
