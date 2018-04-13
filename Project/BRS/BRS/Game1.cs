@@ -26,7 +26,8 @@ namespace BRS {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             File.content = Content;
-            Graphics.gD = GraphicsDevice;
+            Graphics.gDM = _graphics;
+            UserInterface.sB = _spriteBatch;
         }
 
         protected override void Initialize() {
@@ -49,13 +50,13 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             new UserInterface();
-            Screen.AdditionalSetup(_graphics);
+            Screen.SetupViewportsAndCameras(_graphics, GameManager.NumPlayers);
 
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
             if (_usePhysics)  SceneManager.Load("LevelPhysics"); // TODO make simple string to select level
-            else SceneManager.Load("Level1");
+            else SceneManager.Load("Level2");
             //_ui = new UserInterface();
             //_ui.Start();
            
@@ -95,16 +96,14 @@ namespace BRS {
             if (Input.GetKeyDown(Keys.D9)) {
                 Debug.Log("changing scene...");
                 SceneManager.Load("Level2");
-                Screen.AdditionalSetup(_graphics);
+                foreach (GameObject go in GameObject.All) go.Awake();
                 foreach (GameObject go in GameObject.All) go.Start();
-
             }
             if (Input.GetKeyDown(Keys.D0)) {
                 Debug.Log("changing scene...");
                 SceneManager.Load("Level1");
-                Screen.AdditionalSetup(_graphics);
+                foreach (GameObject go in GameObject.All) go.Awake();
                 foreach (GameObject go in GameObject.All) go.Start();
-
             }
 
             foreach (GameObject go in GameObject.All) go.Update();

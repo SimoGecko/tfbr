@@ -18,6 +18,7 @@ namespace BRS.Engine {
 
             Add("Level1", new Level1());
             Add("Level2", new Level2());
+            Add("Level3", new Level3());
             Add("LevelPhysics", new LevelPhysics());
             
         }
@@ -29,6 +30,8 @@ namespace BRS.Engine {
         public static void Load(string sceneName) {
             if (currentScene != null) currentScene.Unload();
             currentScene = scenes[sceneName];
+            GameObject.ClearAll();
+            Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.numPlayers);
             if (currentScene != null) currentScene.Load();
         }
     }
@@ -39,6 +42,7 @@ namespace BRS.Engine {
 
         //can create scene graph
         List<GameObject> objectsInScene = new List<GameObject>();
+        public int numPlayers = 1;
 
         /*
         protected PhysicsManager PhysicsManager { get; set; }

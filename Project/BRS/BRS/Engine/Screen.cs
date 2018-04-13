@@ -49,12 +49,6 @@ namespace BRS.Engine {
             SetupRasterizers(graphicsDevice);
         }
 
-        public static void AdditionalSetup(GraphicsDeviceManager graphics) {
-            //called on scene change to reset cameras and viewports
-            SetupViewports(graphics);
-            SetupCameras();
-        }
-
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
             //window size
             graphics.PreferredBackBufferWidth = Width;
@@ -70,20 +64,28 @@ namespace BRS.Engine {
             _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
-        static void SetupViewports(GraphicsDeviceManager graphics) {
-            int numPlayers = GameManager.NumPlayers;
+        //----------------------
+
+        public static void SetupViewportsAndCameras(GraphicsDeviceManager graphics, int numCameras) {
+            //called on scene change to reset cameras and viewports
+            SetupViewports(graphics, numCameras);
+            SetupCameras(numCameras);
+        }
+        
+
+        static void SetupViewports(GraphicsDeviceManager graphics, int numCameras) {
             //make viewports
             FullViewport = graphics.GraphicsDevice.Viewport;
-            _splitViewport = new Viewport[numPlayers];
+            _splitViewport = new Viewport[numCameras];
             SplitWidth = Width; SplitHeight = Height;
 
-            if (numPlayers == 1) {
+            if (numCameras == 1) {
                 _splitViewport[0] = new Viewport(0, 0, Width, Height, 0, 1);
-            } else if (numPlayers == 2) {
+            } else if (numCameras == 2) {
                 SplitWidth = Width / 2;
                 _splitViewport[0] = new Viewport(0, 0, Width / 2, Height, 0, 1);
                 _splitViewport[1] = new Viewport(Width / 2, 0, Width / 2, Height, 0, 1);
-            } else if (numPlayers == 4) {
+            } else if (numCameras == 4) {
                 int h2 = SplitHeight = Height / 2;
                 int w2 = SplitWidth = Width / 2;
                 _splitViewport[0] = new Viewport(0, 0, w2, h2, 0, 1);
@@ -93,13 +95,16 @@ namespace BRS.Engine {
             }
         }
 
-        static void SetupCameras() {
-            Cameras = new Camera[GameManager.NumPlayers];
+        static void SetupCameras(int numCameras) {
+            if(Cameras!=null)
+                for(int i=0; i<Cameras.Length; i++) {
+                    GameObject.Destroy(Cameras[i].gameObject);
+                }
 
-            for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject camObject = new GameObject("camera_" + i);
+            Cameras = new Camera[numCameras];
+            for (int i = 0; i < numCameras; i++) {
+                GameObject camObject = new GameObject("camera_" + i); // CREATES gameobject
                 camObject.AddComponent(new Camera(_splitViewport[i]));
-                
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }

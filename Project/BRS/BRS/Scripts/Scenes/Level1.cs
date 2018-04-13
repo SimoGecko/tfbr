@@ -30,6 +30,7 @@ namespace BRS.Scripts.Scenes {
         /// Scene setup for level1
         /// </summary>
         public override void Load() {
+            numPlayers = GameManager.NumPlayers;
 
             //MANAGERS
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager

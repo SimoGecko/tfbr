@@ -24,7 +24,8 @@ namespace BRS.Engine {
         //COMMANDS (do not modify)
         static void AddPrefab(GameObject o) {
             _allprefabs.Add(o.name, o);
-            //o.Start(); // no need as already called from gameobject
+            //o.Start(); // no need as already called from gameobject (not anymore)
+            GameObject.ConsiderPrefab(o);
             o.active = false;
         }
 

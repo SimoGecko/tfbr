@@ -42,7 +42,7 @@ namespace BRS.Engine {
 
         //reference
         public static UserInterface Instance;
-        private SpriteBatch _sb;
+        public static SpriteBatch sB;
 
         MenuManager _menuManager;
 
@@ -80,7 +80,7 @@ namespace BRS.Engine {
         }*/
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            _sb = spriteBatch;
+            sB = spriteBatch;
             //Minimap.Instance.Draw(_sb);
             //GameUI.Instance.Draw();
             //Heatmap.instance.Draw();
@@ -92,10 +92,11 @@ namespace BRS.Engine {
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
-            _sb = spriteBatch;
+            sB = spriteBatch;
 
             if (!GameManager.GameActive) return;
 
+            /*
             PlayerUI.Instance.Draw(index);
             PowerupUI.Instance.Draw(index);
             BaseUI.Instance.Draw(index%2);
@@ -103,7 +104,7 @@ namespace BRS.Engine {
             GameUI.Instance.Draw();
             Minimap.Instance.DrawSmall(spriteBatch, index);
             MoneyUI.Instance.Draw(index);
-            ParticleUI.Instance.Draw(index);
+            ParticleUI.Instance.Draw(index);*/
 
             //test draw
             /*
@@ -240,7 +241,7 @@ namespace BRS.Engine {
             dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
             //dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + origin.ToPoint();
 
-            _sb.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
+            sB.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
 
         }
 
@@ -265,7 +266,7 @@ namespace BRS.Engine {
             Vector2 origin = PivotPoint(pivot, src).ToVector2();
             dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + PivotPoint(paragraph, diff);//required bc pivot isn't used in call code
 
-            _sb.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
+            sB.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
         }
 
         

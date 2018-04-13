@@ -111,7 +111,10 @@ namespace BRS.Engine {
         // ---------- DELETION ----------
 
         public static void ClearAll() {
-            foreach (GameObject o in allGameObjects) Destroy(o);
+            //foreach (GameObject o in allGameObjects) Destroy(o);
+            while (allGameObjects.Count > 0) {
+                Destroy(allGameObjects[0]);
+            }
             allGameObjects.Clear();
         }
 
@@ -129,6 +132,9 @@ namespace BRS.Engine {
             //await Task.Delay((int)(lifetime * 1000));
         }
 
+        public static void ConsiderPrefab(GameObject o) {
+            allGameObjects.Remove(o);
+        }
 
 
         // ---------- SEARCH ----------
