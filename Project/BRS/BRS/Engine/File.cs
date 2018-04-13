@@ -43,6 +43,7 @@ namespace BRS.Engine {
 
 
         // commands
+        // Todo: a lot of unused code :-)
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
             

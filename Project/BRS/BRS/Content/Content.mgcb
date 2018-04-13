@@ -4982,12 +4982,6 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/polygonheist/SM_Env_Pillar_Exterior_04.fbx
 
-#begin Audio/test/boing.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/test/boing.wav
-
 #begin Audio/test/boom.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
