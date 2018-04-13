@@ -1,10 +1,8 @@
 ﻿using BRS.Engine;
-using BRS.Scripts.Managers;
 using BRS.Engine.Physics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Menu;
 using BRS.Scripts;
 using BRS.Engine.PostProcessing;
 
@@ -17,7 +15,7 @@ namespace BRS {
         private SpriteBatch _spriteBatch;
 
         // Render the scene to this target
-        RenderTarget2D renderTarget;
+        RenderTarget2D _renderTarget;
 
         //@andy including these
         private Display _display;
@@ -46,7 +44,7 @@ namespace BRS {
             PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
 
             // init the rendertarget with the graphics device
-            renderTarget = new RenderTarget2D(
+            _renderTarget = new RenderTarget2D(
                 GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
                 Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
@@ -134,7 +132,7 @@ namespace BRS {
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.SetRenderTarget(renderTarget);
+            GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
 
@@ -157,7 +155,7 @@ namespace BRS {
 
             
             // apply post processing
-            PostProcessingManager.Instance.Draw(renderTarget, _spriteBatch, GraphicsDevice);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice);
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
 
