@@ -43,10 +43,18 @@ namespace BRS.Engine {
 
 
         // commands
-        public static T Load<T>(string s) {
+        public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
+            
+            string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
+            string fullPath = filePath + s + ".fbx";
+            bool fileExists = false;// System.IO.File.Exists(fullPath);
+            if(false && !fileExists && typeof(T) == typeof(Model)) {
+                Debug.Log("File " + s + " doesn't exist!");
+                //return content.Load<T>("Models/primitives/cube");
+            }
+
             T result = content.Load<T>(s);
-            if (result == null) Debug.LogError("incorrect path to file: " + s);
             return result;
         }
 
@@ -164,7 +172,7 @@ namespace BRS.Engine {
                         Vector3 rot = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
                         Vector3 sca = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
-                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName));
+                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName, true));
                         //NOW DO CONVERSION
                         go.transform.position = new Vector3(pos.X, pos.Y, -pos.Z) + offset;
                         go.transform.eulerAngles = new Vector3(-rot.X, -rot.Y + 180, rot.Z); // +180 is probably due to not scaling with -1

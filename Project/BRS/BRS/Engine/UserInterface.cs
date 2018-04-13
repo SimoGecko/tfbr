@@ -76,7 +76,7 @@ namespace BRS.Engine {
             _sb = spriteBatch;
             //Minimap.Instance.Draw(_sb);
             //GameUI.Instance.Draw();
-            //Heatmap.instance.Draw();
+            Heatmap.instance.Draw();
             
         }
 

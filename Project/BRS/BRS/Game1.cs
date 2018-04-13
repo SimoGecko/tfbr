@@ -149,6 +149,10 @@ namespace BRS {
             }
             Gizmos.ClearOrders();
 
+
+
+
+
             //-----2D-----
             int i = 0;
             foreach (Camera cam in Screen.Cameras) {

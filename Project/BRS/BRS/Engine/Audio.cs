@@ -32,7 +32,7 @@ namespace BRS.Engine {
             BuildAudioLibrary();
             BuildSongLibrary();
 
-            //PlaySong("Happy Happy Game Show");
+            PlaySong("Happy Happy Game Show");
             SetMusicVolume(.01f);
             SetSoundVolume(1f);
         }
