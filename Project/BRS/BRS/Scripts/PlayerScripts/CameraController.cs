@@ -4,7 +4,9 @@
 using BRS.Engine;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
+using BRS.Scripts;
 using Curve = BRS.Engine.Utilities.Curve;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -62,6 +64,8 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void LateUpdate() { // after player has moved
+            if (!GameManager.GameActive) return;
+
             ProcessInput();
             FollowSmoothAndRotate();
             ProcessShake();

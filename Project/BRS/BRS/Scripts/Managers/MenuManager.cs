@@ -139,7 +139,7 @@ namespace BRS.Menu {
         }
 
         public void StartGameFunction(object sender, EventArgs e) {
-            GameManager._gameState = GameManager.State.Playing;
+            GameManager.state = GameManager.State.Playing;
             /*Game1.Instance.MenuDisplay = false;
             _currentMenu.active = false;
 

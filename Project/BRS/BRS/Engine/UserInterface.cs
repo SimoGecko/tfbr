@@ -85,13 +85,15 @@ namespace BRS.Engine {
             //GameUI.Instance.Draw();
             //Heatmap.instance.Draw();
 
-            if (GameManager._gameState == GameManager.State.Menu)
+            if (GameManager.state == GameManager.State.Menu)
                 _menuManager.Draw();
             
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             _sb = spriteBatch;
+
+            if (!GameManager.GameActive) return;
 
             PlayerUI.Instance.Draw(index);
             PowerupUI.Instance.Draw(index);
