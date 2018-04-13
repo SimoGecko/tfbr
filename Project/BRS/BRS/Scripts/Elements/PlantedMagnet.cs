@@ -28,7 +28,7 @@ namespace BRS.Scripts.Elements {
             _active = false;
             _pMAffected = new List<PlayerMovement>();
             Invoke(StartDelay, () => _active = true);
-            GameObject.Destroy(GameObject, Duration);
+            GameObject.Destroy(gameObject, Duration);
         }
 
         public override void Update() {
@@ -48,8 +48,8 @@ namespace BRS.Scripts.Elements {
             _pMAffected.Clear();
 
             foreach (Player p in ElementManager.Instance.Players()) {
-                if (InActionRadius(p.GameObject)) {
-                    PlayerMovement pM = p.GameObject.GetComponent<PlayerMovement>();
+                if (InActionRadius(p.gameObject)) {
+                    PlayerMovement pM = p.gameObject.GetComponent<PlayerMovement>();
                     pM.SetSlowdown(true);
                     _pMAffected.Add(pM);
                 }

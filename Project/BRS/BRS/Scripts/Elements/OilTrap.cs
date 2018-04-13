@@ -35,7 +35,7 @@ namespace BRS.Scripts.Elements {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSlowdown(true);
                 new Timer(SlowdownTime, () => pM.SetSlowdown(false));
-                GameObject.Destroy(GameObject);
+                GameObject.Destroy(gameObject);
             }
         }
 

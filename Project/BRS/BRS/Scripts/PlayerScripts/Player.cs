@@ -31,6 +31,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //private
         State _state = State.Normal;
+        Vector3 startPosition;
 
         //reference
 
@@ -47,16 +48,19 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public Player(int playerIndex, int teamIndex, string name = "Simo") {
+        public Player(int playerIndex, int teamIndex, Vector3 startPos, string name = "Player") {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             PlayerName = name + (playerIndex + 1).ToString();
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
+            startPosition = startPos;
             //TODO make mesh have this color
         }
         public override void Start() {
             base.Start();
+            transform.position = startPosition;
+            transform.rotation = Quaternion.Identity;
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
             if (po != null) _other = po.GetComponent<Player>();
@@ -66,16 +70,16 @@ namespace BRS.Scripts.PlayerScripts {
             CamController.Start();
 
             //subcomponents (shorten)
-            _pA = GameObject.GetComponent<PlayerAttack>();
-            _pM = GameObject.GetComponent<PlayerMovement>();
-            _pI = GameObject.GetComponent<PlayerInventory>();
-            _pP = GameObject.GetComponent<PlayerPowerup>();
-            _pS = GameObject.GetComponent<PlayerStamina>();
-            _pL = GameObject.GetComponent<PlayerLift>();
+            _pA = gameObject.GetComponent<PlayerAttack>();
+            _pM = gameObject.GetComponent<PlayerMovement>();
+            _pI = gameObject.GetComponent<PlayerInventory>();
+            _pP = gameObject.GetComponent<PlayerPowerup>();
+            _pS = gameObject.GetComponent<PlayerStamina>();
+            _pL = gameObject.GetComponent<PlayerLift>();
         }
 
         public override void Update() {
-
+            UpdateUI();
             if (!GameManager.GameActive) {
                 _pM.Move(Vector3.Zero); // smooth stop
                 return;
@@ -104,22 +108,22 @@ namespace BRS.Scripts.PlayerScripts {
                     _pL.Lift();
                 }
 
-                if (Input.GetKeyDown(Keys.V)) {
-                    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
+                // Todo: Can be removed, just here till this is finally tested
+                //if (Input.GetKeyDown(Keys.V)) {
+                //    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
 
-                    string tmp = "Contained: ";
-                    foreach (Collider collider in test) {
-                        tmp += collider.GameObject.tag + ",";
-                    }
-                    Debug.Log(tmp);
-                }
+                //    string tmp = "Contained: ";
+                //    foreach (Collider collider in test) {
+                //        tmp += collider.GameObject.tag + ",";
+                //    }
+                //    Debug.Log(tmp);
+                //}
             } else if (_state == State.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) _state = State.Normal;
             }
 
             _pS.UpdateStamina();
-            UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {
@@ -133,21 +137,23 @@ namespace BRS.Scripts.PlayerScripts {
 
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
-            base.TakeDamage(damage); // don't override state
+            //base.TakeDamage(damage); // don't override state
 
             if (!Dead) {
                 _state = State.Stun;
+                Audio.Play("stun", transform.position);
                 _pI.LoseMoney();
                 Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
             }
         }
 
+        /*
         protected override void Die() {
             base.Die();
             _state = State.Dead;
             _pI.LoseAllMoney();
             Timer timer = new Timer(RespawnTime, Respawn);
-        }
+        }*/
 
         protected override void Respawn() {
             base.Respawn();

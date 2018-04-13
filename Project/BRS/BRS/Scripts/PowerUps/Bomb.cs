@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using Microsoft.Xna.Framework;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PowerUps {
     class Bomb : Powerup {
@@ -12,13 +13,6 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         
-
-        //private
-
-
-        //reference
-
-
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -27,13 +21,12 @@ namespace BRS.Scripts.PowerUps {
 
 
         // --------------------- CUSTOM METHODS ----------------
-
-
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
             transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedBomb = GameObject.Instantiate("plantedBombPrefab", transform);
+            ElementManager.Instance.Add(plantedBomb);
         }
     }
 }

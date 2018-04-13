@@ -10,8 +10,7 @@ using Microsoft.Xna.Framework.Graphics;
 namespace BRS.Engine {
     class Screen {
         ////////// deals with window issues, such as screen size, title, fullscreen and splitscreen //////////
-        ////////// creates all the cameras that will be in the game //////////
-
+        ////////// also creates all the cameras that will be in the game //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -28,10 +27,13 @@ namespace BRS.Engine {
 
         //reference
         public static Camera[] Cameras;
+        public static RasterizerState _fullRasterizer, _wireRasterizer;
 
 
         // --------------------- BASE METHODS ------------------
-        public void Start() { }
+        public void Start() {
+
+        }
 
         public void Update() { }
 
@@ -41,25 +43,31 @@ namespace BRS.Engine {
 
 
         // commands
-        public static void Setup(GraphicsDeviceManager graphics, Game game) {
+        public static void InitialSetup(GraphicsDeviceManager graphics, Game game, GraphicsDevice graphicsDevice) {
+            //called just once at the beginning of the game
             SetupWindow(graphics, game);
-            //SetupViewports(graphics);
-            //SetupCameras();
+            SetupRasterizers(graphicsDevice);
         }
 
-        public static void AdditionalSetup(GraphicsDeviceManager graphics, Game game) {
-            //SetupWindow(graphics, game);
+        public static void AdditionalSetup(GraphicsDeviceManager graphics) {
+            //called on scene change to reset cameras and viewports
             SetupViewports(graphics);
             SetupCameras();
         }
 
         static void SetupWindow(GraphicsDeviceManager graphics, Game game) {
             //window size
-            //graphics.PreferredBackBufferWidth = WIDTH;
-            //graphics.PreferredBackBufferHeight = HEIGHT;
+            graphics.PreferredBackBufferWidth = Width;
+            graphics.PreferredBackBufferHeight = Height;
             graphics.ApplyChanges();
             game.Window.Title = "New Title";
             game.IsMouseVisible = true;
+        }
+
+        static void SetupRasterizers(GraphicsDevice graphicsDevice) {
+            _fullRasterizer = graphicsDevice.RasterizerState;
+            _wireRasterizer = new RasterizerState();
+            _wireRasterizer.FillMode = FillMode.WireFrame;
         }
 
         static void SetupViewports(GraphicsDeviceManager graphics) {
@@ -91,8 +99,7 @@ namespace BRS.Engine {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject camObject = new GameObject("camera_" + i);
                 camObject.AddComponent(new Camera(_splitViewport[i]));
-                camObject.AddComponent(new CameraController()); // TODO move out this creation code
-                camObject.GetComponent<CameraController>().CamIndex = i;
+                
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }
@@ -100,6 +107,13 @@ namespace BRS.Engine {
         // queries
         static float AspectRatio {
             get { return (float)Width / Height; }
+        }
+
+        public static Rectangle Full {
+            get { return new Rectangle(0, 0, Width, Height); }
+        }
+        public static Rectangle Split {
+            get { return new Rectangle(0, 0, SplitWidth, SplitHeight); }
         }
 
 

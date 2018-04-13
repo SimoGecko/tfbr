@@ -135,6 +135,8 @@ namespace BRS.Engine {
             }
         }
 
+
+        //simo code
         public static void ReadHeistScene(string pathName) {
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
@@ -168,7 +170,7 @@ namespace BRS.Engine {
 
                         go.transform.position = position + new Vector3(0, 0, 30);
                         go.transform.scale = scale;
-                        go.transform.rotation = rotation; // rotation not parsed correctly?
+                        go.transform.rotation = rotation; // rotation not parsed correctly? or use euler angles
                     }
 
                     nameContent = reader.ReadLine(); // <end>

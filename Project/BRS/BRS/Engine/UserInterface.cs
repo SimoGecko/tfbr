@@ -6,94 +6,119 @@ using BRS.Engine.Utilities;
 using BRS.Menu;
 using BRS.Scripts;
 using BRS.Scripts.UI;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine {
 
     [Flags]
-    public enum Align { Center = 0, Left = 1, Right = 2, Top = 4, Bottom = 8, TopLeft = 5, TopRight = 6, BotLeft = 9, BotRight = 10 }
+    public enum Align { Center = 0, Left = 1, Right = 2, Top = 4, Bottom = 8, TopLeft = 5, TopRight = 6, BotLeft = 9, BotRight = 10, Undef = 16 }
     //public enum Align2 { M=0, L=1, R=2, T=4, B=8, TL=5, TR=6, BL=9, BR=10 }
+    //public enum Align3 { TL, RM, TR, ML, MM, MR, BL, BM, BR} // (top, middle, bottom) x (left, middle, right)
 
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
 
-
         // --------------------- VARIABLES ---------------------
 
-        //public enum VerticalAnchor { Top, Middle, Bottom}; // how to align the UI
-        //public enum HorizontAnchor { Left, Middle, Right};
-        //public enum Align { TL, RM, TR, ML, MM, MR, BL, BM, BR} // top, middle, bottom x left, middle, right
+        //TODO make it agnostic to this game
+
         //public
         public const int BarWidth = 128;
-        public const int BarBigWidth = 256;
+        public const int BigBarWidth = 256;
         public const int BarHeight = 16;
 
 
-
         //private
-        public SpriteFont SmallFont { get; private set; }
-        public SpriteFont ComicFont { get; private set; }
-        public SpriteFont BigFont { get; private set; }
-        private Texture2D _bar;
-        private Texture2D _barBig;
+        //public SpriteFont arialFont { get; private set; }
+        public SpriteFont comicFont { get; private set; }
+        public SpriteFont archerFont   { get; private set; }
+
+        private Texture2D _bar, _barBig;
+        private Texture2D barStriped;
 
         private Rectangle _barRect, _bigRect, _smallRect;
-        private Texture2D _white;
 
         //reference
         public static UserInterface Instance;
         private SpriteBatch _sb;
 
+        MenuManager _menuManager;
+
 
         // --------------------- BASE METHODS ------------------
+        public UserInterface() { Instance = this; }
+
         public void Start() {
             Instance = this;
-            SmallFont = File.Load<SpriteFont>("Other/font/font1");
-            ComicFont = File.Load<SpriteFont>("Other/font/comicFont");
-            BigFont   = File.Load<SpriteFont>("Other/font/font2");
+            //arialFont = File.Load<SpriteFont>("Other/font/debugFont");
+            comicFont = File.Load<SpriteFont>("Other/font/comic");
+            archerFont   = File.Load<SpriteFont>("Other/font/archer");
 
             _bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
             _barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
-            _white     = File.Load<Texture2D>("Images/UI/white");
+            barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
 
             _barRect = new Rectangle(0, 0, BarWidth, BarHeight);
-            _bigRect = new Rectangle(0, 0, BarBigWidth, BarHeight);
-            _smallRect = new Rectangle(0, 0, BarBigWidth/4, BarHeight/4);
+            _bigRect = new Rectangle(0, 0, BigBarWidth, BarHeight);
+            _smallRect = new Rectangle(0, 0, BigBarWidth/4, BarHeight/4);
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
+
+            _menuManager = new MenuManager();
+            _menuManager.LoadContent();
+
         }
 
-        public void DrawMenu(SpriteBatch spriteBatch) {
+
+
+        // ---------- CALLBACKS ----------
+
+        /*public void DrawMenu(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             MenuManager.Instance.Draw();
-        }
+        }*/
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
-            //callbacks
-            //Minimap.instance.Draw(sB);
-            GameUI.Instance.Draw();
+            //Minimap.Instance.Draw(_sb);
+            //GameUI.Instance.Draw();
+            //Heatmap.instance.Draw();
+
+            if (GameManager._gameState == GameManager.State.Menu)
+                _menuManager.Draw();
+            
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             _sb = spriteBatch;
-            //callbacks
-            
-            /*
-            BaseUI.instance.Draw(index%2);
-            PlayerUI.instance.Draw(index);
-            PowerupUI.instance.Draw(index);
-            Suggestions.instance.Draw(index);
-            Minimap.instance.DrawSmall(spriteBatch, index);
-            */
+
+            PlayerUI.Instance.Draw(index);
+            PowerupUI.Instance.Draw(index);
+            BaseUI.Instance.Draw(index%2);
+            Suggestions.Instance.Draw(index);
+            GameUI.Instance.Draw();
+            Minimap.Instance.DrawSmall(spriteBatch, index);
+            MoneyUI.Instance.Draw(index);
 
             //test draw
+            /*
+            Rectangle src = new Rectangle(0, 0, 64, 64);
+            Rectangle dst = new Rectangle(100, 100, 128, 128);
+            Rectangle dst2 = new Rectangle(-100, -100, 128, 128);
             
-            DrawPictureAlign(_white, new Rectangle(53, 53, 100, 100), null, Align.TopLeft, Align.Center, Color.Gray, false);
-            //DrawPictureAlign(white, new Rectangle(100, 100, 150, 100), null, Align.TopLeft, Align.TopLeft, Color.LightGray, true);
+            DrawPictureAlign(test_grid, dst, src, Align.TopLeft, Align.Center, rot: Time.CurrentTime * 0, flip: false);
+            DrawPictureAlign(test_grid, dst2, src, Align.BotRight, Align.Center, rot: Time.CurrentTime * 0, flip: false);
 
-            DrawStringAlign("Text one", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black);
-            DrawStringAlign("Text two", new Rectangle(10, 10, 300, 100), Align.TopLeft, Align.TopLeft, Align.BotRight, Color.Black, true);
+            DrawStringAlign("BR", dst, Align.TopLeft, Align.Center, Align.BotRight, scale: .5f);
+            DrawStringAlign("BL", dst, Align.TopLeft, Align.Center, Align.BotLeft);
+            DrawStringAlign("TR", dst, Align.TopLeft, Align.Center, Align.TopRight, scale:2f);
+            DrawStringAlign("TL", dst, Align.TopLeft, Align.Center, Align.TopLeft);
+
+            DrawStringAlign("BR", dst2, Align.BotRight, Align.Center, Align.BotRight, scale: .5f, flip:false);
+            DrawStringAlign("BL", dst2, Align.BotRight, Align.Center, Align.BotLeft, flip: false);
+            DrawStringAlign("TR", dst2, Align.BotRight, Align.Center, Align.TopRight, scale: 2f, flip: false);
+            DrawStringAlign("TL", dst2, Align.BotRight, Align.Center, Align.TopLeft, flip: false);*/
         }
 
 
@@ -105,39 +130,57 @@ namespace BRS.Engine {
         //DRAW CALLBACKS
 
         //BARS
-        public void DrawBar(Vector2 position, float percent, Color color) {
-            _barRect.Width = BarWidth;
+        public void DrawBar(float percent, Vector2 position, Color color, Align anchor) {
+            /*_barRect.Width = BarWidth;
             _sb.Draw(_bar, position, _barRect, Color.LightGray);
             _barRect.Width = (int)(BarWidth * percent);
-            _sb.Draw(_bar, position, _barRect, color);
+            _sb.Draw(_bar, position, _barRect, color);*/
+            DrawPicture(_bar, position, anchor: anchor, col: Color.LightGray);
+            DrawPicture(_bar, position, new Rectangle(0,0, (int)(BarWidth * percent), BarHeight), anchor: anchor, col: color);
         }
+        /*
         public void DrawBarVertical(Vector2 position, float percent, Color color) {
             _barRect.Width = BarWidth;
-            //sB.Draw(bar, position, barRect, Color.LightGray);
             _sb.Draw(_bar, position, _barRect, Color.LightGray, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
             _barRect.Width = (int)(BarWidth * percent);
-            //sB.Draw(bar, position, barRect, color);
             _sb.Draw(_bar, position, _barRect, color, MathHelper.ToRadians(-90), Vector2.Zero, 1f, SpriteEffects.None, 1);
-        }
-        public void DrawBarBig(Vector2 position, float percent, Color color) {
-            _bigRect.Width = BarBigWidth;
+        }*/
+        public void DrawBarBig(float percent, Vector2 position, Color color, Align anchor) {
+            /*
+            _bigRect.Width = BigBarWidth;
             _sb.Draw(_barBig, position, _bigRect, Color.LightGray);
-            _bigRect.Width = (int)(BarBigWidth * percent);
-            _sb.Draw(_barBig, position, _bigRect, color);
+            _bigRect.Width = (int)(BigBarWidth * percent); 
+            _sb.Draw(_barBig, position, _bigRect, color);*/
+            DrawPicture(_barBig, position, anchor: anchor, pivot:Align.TopLeft, col: Color.LightGray);
+            DrawPicture(_barBig, position, new Rectangle(0, 0, (int)(BigBarWidth * percent), BarHeight), anchor: anchor, pivot: Align.TopLeft, col: color);
         }
-        public void DrawBarSmall(Vector2 position, float percent, Color color) {
-            _bigRect.Width = BarBigWidth;
+        public void DrawBarSmall(float percent, Vector2 position, Color color, Align anchor = Align.TopLeft) {
+            /*_bigRect.Width = BigBarWidth;
             _sb.Draw(_barBig, position, _bigRect, Color.LightGray, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
-            _bigRect.Width = (int)(BarBigWidth * percent);
-            _sb.Draw(_barBig, position, _bigRect, color, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);
+            _bigRect.Width = (int)(BigBarWidth * percent);
+            _sb.Draw(_barBig, position, _bigRect, color, 0, Vector2.Zero, .25f, SpriteEffects.None, 1);*/
+            DrawPicture(_barBig, position, anchor: anchor, col: Color.LightGray, scale:.25f);
+            DrawPicture(_barBig, position, new Rectangle(0, 0, (int)(BigBarWidth * percent), BarHeight), anchor: anchor, col: color, scale: .25f);
         }
 
+        public void DrawBarStriped(float percent, Rectangle dest, Color color, Align anchor = Align.TopLeft, bool flip = false) {
+            Rectangle source = new Rectangle(0, 0, 185, 40);
+            if (flip) {
+                dest.X = -dest.X- dest.Width;
+                anchor = Flip(anchor);
+            }
+            DrawPicture(barStriped, dest, source, anchor: anchor, pivot: Align.TopLeft, col: Color.White);
+            source = new Rectangle(0, 40, (int)Math.Round(185 * percent), 40);
+            dest.Width = (int)Math.Round(dest.Width * percent);
+            DrawPicture(barStriped, dest, source, anchor: anchor, pivot: Align.TopLeft, col: color);
+        }
 
+        /*
         public void DrawString(Vector2 position, string text, Color colour = default(Color)) {
-            _sb.DrawString(SmallFont, text, position, colour == default(Color)? Color.White : colour);
+            _sb.DrawString(comicFont, text, position, colour == default(Color)? Color.White : colour);
         }
         public void DrawStringBig(Vector2 position, string text, Color colour = default(Color)) {
-            _sb.DrawString(BigFont, text, position, colour == default(Color) ? Color.White : colour);
+            _sb.DrawString(archerFont, text, position, colour == default(Color) ? Color.White : colour);
         }
 
         public void DrawPicture(Rectangle destination, Texture2D pic, Color colour = default(Color)) {
@@ -154,55 +197,92 @@ namespace BRS.Engine {
             Vector2 origin = new Vector2(src.Width / 2, src.Height / 2);
             _sb.Draw(pic, dest, src, Color.White, MathHelper.ToRadians(rotation), origin, SpriteEffects.None, 1);
         }
-
+        */
 
 
         //queries
-        public int GetOffset(int index) { return index % 2 == 0 ? 0 : +680; }
+
+        //OLD SIGNATURES --> CHANGE!!
+        public void DrawPictureOLD(Rectangle destination, Texture2D pic, Color colour = default(Color)) {
+            DrawPicture(pic, destination, col: colour);
+        }
+        public void DrawStringOLD(Vector2 position, string text, Color colour = default(Color)) {
+            DrawString(text, position, col: colour);
+        }
 
 
 
-        
+
+        // --------------------- ALIGN ----------------
 
         //pivot  = where is the center of the rectangle
         //anchor = which corner of the screen to follow
         //paragraph = how to align the paragraph
-        public void DrawStringAlign(string text, Rectangle bounds, Align anchor, Align pivot, Align paragraph, Color? col, bool flip = false) { // bounds includes position offset and rectangle size
-            if (flip) {
-                bounds.X *= -1;
-                pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
-            }
-            bounds = AlignRect(bounds, anchor, pivot);
-            
-            Color color = col ?? Color.White;
 
-            Vector2 size = SmallFont.MeasureString(text);
-            Vector2 pos = bounds.GetCenter();
-            Vector2 origin = size * 0.5f;
-
-            if (paragraph.HasFlag(Align.Left))   origin.X += bounds.Width / 2  - size.X / 2;
-            if (paragraph.HasFlag(Align.Right))  origin.X -= bounds.Width / 2  - size.X / 2;
-            if (paragraph.HasFlag(Align.Top))    origin.Y += bounds.Height / 2 - size.Y / 2;
-            if (paragraph.HasFlag(Align.Bottom)) origin.Y -= bounds.Height / 2 - size.Y / 2;
-            
-            _sb.DrawString(SmallFont, text, pos, color, 0, origin, 1, SpriteEffects.None, 0);
+        public void DrawPicture(Texture2D tex, Vector2 pos, Rectangle? source = null, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Color? col = null, bool flip = false, float rot = 0, float scale = 1) {
+            Rectangle src = source ?? tex.Bounds;
+            Rectangle dest = new Rectangle(pos.ToPoint(), (src.Size.ToVector2()*scale).ToPoint());
+            DrawPicture(tex, dest, source, anchor, pivot, col, flip, rot);
         }
 
-        public void DrawPictureAlign(Texture2D tex, Rectangle bounds, Rectangle? source, Align anchor, Align pivot, Color? col, bool flip = false, float rot = 0) {
+        public void DrawPicture(Texture2D tex, Rectangle dst, Rectangle? source = null, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Color? col = null, bool flip = false, float rot = 0) {
+            if (pivot == Align.Undef) pivot = anchor;
             if (flip) {
-                bounds.X *= -1;
+                dst.X *= -1; rot *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor);
             }
-            Vector2 origin = PivotPoint(pivot, tex.Bounds).ToVector2();//is relative to the texture
-            bounds.Location += AnchorPos(anchor) - PivotPoint(pivot, bounds) + origin.ToPoint();
+            Rectangle src = source ?? tex.Bounds;
+            Vector2 origin = PivotPoint(pivot, src).ToVector2();//is relative to the texture
+            //dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
+            dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + origin.ToPoint();
 
-            Color color = col ?? Color.White;
-            _sb.Draw(tex, bounds, source, color, MathHelper.ToRadians(rot), origin, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None, 1);
+            _sb.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
+
         }
 
+        //Rotation not supported
+        public void DrawString(string text, Vector2 pos, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale = 1, bool bold = false) { // bounds includes position offset and rectangle size
+            SpriteFont font = bold ? archerFont : comicFont;
+            Rectangle dest = new Rectangle(pos.ToPoint(), (font.MeasureString(text) * scale).ToPoint());
+            DrawString(text, dest, anchor, pivot, paragraph, col, flip, scale, bold);
+        }
+
+        public void DrawString(string text, Rectangle dst, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale=1, bool bold = false) { // bounds includes position offset and rectangle size
+            if (pivot == Align.Undef) pivot = anchor;
+            if (paragraph == Align.Undef) paragraph = anchor;
+            if (flip) {
+                dst.X *= -1;
+                pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
+            }
+            SpriteFont font = bold ? archerFont : comicFont;
+            Rectangle src = new Rectangle(Point.Zero, (font.MeasureString(text)*scale).ToPoint());
+            Rectangle diff = new Rectangle(Point.Zero,  dst.Size - src.Size);
+
+            Vector2 origin = PivotPoint(pivot, src).ToVector2();
+            dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + PivotPoint(paragraph, diff);//required bc pivot isn't used in call code
+
+            _sb.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
+        }
+
+        
 
 
         //OLD CODE
+        /*
+           Vector2 origin = size * 0.5f;
+           Vector2 pos = dst.GetCenter();
+           //Vector2 pos = dst.Location.ToVector2();
+           if (paragraph.HasFlag(Align.Left)) pos.X += dst.Width / 2  - size.X / 2;
+           if (paragraph.HasFlag(Align.Right)) pos.X -= dst.Width / 2  - size.X / 2;
+           if (paragraph.HasFlag(Align.Top)) pos.Y += dst.Height / 2 - size.Y / 2;
+           if (paragraph.HasFlag(Align.Bottom)) pos.Y -= dst.Height / 2 - size.Y / 2;
+           */
+
+
+        //int pivotPosX = paragraph.HasFlag(Align.Left) ? 0 : paragraph.HasFlag(Align.Right) ? diff.X : diff.X / 2;
+        //int pivotPosY = paragraph.HasFlag(Align.Top) ? 0 : paragraph.HasFlag(Align.Bottom) ? diff.Y : diff.Y / 2;
+
+
         //horiz
         /*
         if (anchor.HasFlag(Alignment.Left)) bounds.X = (int)position.X;
@@ -227,24 +307,23 @@ namespace BRS.Engine {
         */
         //sB.Draw(tex, pos, color, 0, origin, 1, SpriteEffects.None, 0);
 
+        /*
         Rectangle AlignRect(Rectangle rect, Align anchor, Align pivot) {
             rect.Location += AnchorPos(anchor)-PivotPoint(pivot, rect);
             return rect;
+        }*/
+
+        Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
+            return splitScreen ? PivotPoint(anchor, Screen.Split) : PivotPoint(anchor, Screen.Full);
         }
 
-        Point AnchorPos(Align anchor) {
-            int anchorPosX = anchor.HasFlag(Align.Left) ? 0 : anchor.HasFlag(Align.Right) ? Screen.SplitWidth : Screen.SplitWidth / 2;
-            int anchorPosY = anchor.HasFlag(Align.Top) ? 0 : anchor.HasFlag(Align.Bottom) ? Screen.SplitHeight : Screen.SplitHeight / 2;
-            return new Point(anchorPosX, anchorPosY);
-        }
-
-        Point PivotPoint(Align pivot, Rectangle rect) {
-            int pivotPosX = pivot.HasFlag(Align.Left) ? 0 : pivot.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
-            int pivotPosY = pivot.HasFlag(Align.Top) ? 0 : pivot.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
+        Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
+            int pivotPosX = align.HasFlag(Align.Left) ? 0 : align.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
+            int pivotPosY = align.HasFlag(Align.Top) ? 0 : align.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
             return new Point(pivotPosX, pivotPosY);
         }
 
-        Align Flip(Align al) {
+        public static Align Flip(Align al) { // switches left/right flag if present
             if      (al.HasFlag(Align.Left))  al += Align.Right - Align.Left;
             else if (al.HasFlag(Align.Right)) al -= Align.Right - Align.Left;
             return al;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BRS.Engine.Physics.Primitives3D;
-using BRS.Load;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;
@@ -13,6 +12,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Physics {
+    public enum BodyTag { DrawMe, DontDrawMe }
+
     public class PhysicsManager {
         public static PhysicsManager Instance { get; private set; }
 

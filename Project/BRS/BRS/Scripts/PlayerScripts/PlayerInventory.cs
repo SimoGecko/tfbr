@@ -21,7 +21,7 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         const float TimeBetweenDrops = .1f;
         const float DropcashRadius = .5f;
-        const float LosecashRadius = 2f;
+        const float LosecashRadius = 3f;
 
         //MONEY
         int _carryingWeight = 0;
@@ -79,7 +79,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //lose = leave on ground by attack
         public void LoseMoney() {
-            RemoveMoneyAmount(Math.Max(_carryingMoney.Count/2, 3), LosecashRadius);
+            RemoveMoneyAmount(Math.Max(_carryingMoney.Count/2, 5), LosecashRadius);
         }
 
         public void LoseAllMoney() {
@@ -92,7 +92,7 @@ namespace BRS.Scripts.PlayerScripts {
             for (int i = 0; i < amount; i++){
                 Money money = _carryingMoney.Pop();
                 //Spawn money somewhere
-                Spawner.Instance.SpawnMoneyAround(transform.position, radius);
+                Spawner.Instance.SpawnMoneyAround(transform.position, radius, money.type.ToString());
                 _carryingValue -= money.Value;
                 _carryingWeight -= money.Weight;
             }
@@ -108,7 +108,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool IsFull() {
-            return _carryingWeight >= _capacity-3;
+            return _carryingWeight >= _capacity-0;
         }
 
         /*
