@@ -1,39 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// (c) Alexander Lelidis 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace BRS.Engine.PostProcessing
-{
-    class PostProcessingEffect
-    {
+namespace BRS.Engine.PostProcessing {
+    class PostProcessingEffect {
+        // type of the effect
+        public PostprocessingType Type { get; }
         // how many time should this effect be applied
         public int Passes = 1;
         // is this effect active
         public bool Active = false;
         // mg effect
-        public Effect Effect;
+        public Effect Effect { get; }
         // the name of the effect
-        public String Name;
+        public string Name => Type.ToString();
 
-        public PostProcessingEffect(int passes, bool active, Effect effect, String name)
-        {
+
+        public PostProcessingEffect(PostprocessingType type, int passes, bool active, Effect effect) {
+            Type = type;
             Passes = passes;
             Active = active;
             Effect = effect;
-            Name = name;
-        }
-
-        public void SetParameter(String name, Vector2 arg)
-        {
-            this.Effect.Parameters[name].SetValue(arg);
         }
 
 
-
+        public void SetParameter(string name, Vector2 arg) {
+            Effect.Parameters[name].SetValue(arg);
+        }
     }
 }

@@ -55,7 +55,7 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            PostProcessingManager.SetUpPostProcessing(Content);
+            PostProcessingManager.Initialize(Content);
 
             base.Initialize();
         }
@@ -74,7 +74,7 @@ namespace BRS {
             else SceneManager.Load("Level1");
             //_ui = new UserInterface();
             //_ui.Start();
-           
+
 
             //everything is loaded, call Start
             Start();
@@ -86,6 +86,7 @@ namespace BRS {
             UserInterface.Instance.Start();
             Input.Start();
             Audio.Start();
+            PostProcessingManager.Instance.Start(_spriteBatch);
 
             //foreach (Camera cam in Screen.cameras) cam.Start(); // cameras are gameobjects
             foreach (GameObject go in GameObject.All) go.Awake();

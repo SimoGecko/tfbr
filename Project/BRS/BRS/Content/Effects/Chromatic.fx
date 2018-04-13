@@ -33,7 +33,7 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 
 //-------------------------- TECHNIQUES ----------------------------------------
 // This technique is pretty simple - only one pass, and only a pixel shader
-technique VIGNETTE
+technique Chromatic
 {
     pass Pass1
     {

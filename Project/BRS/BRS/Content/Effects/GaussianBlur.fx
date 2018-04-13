@@ -21,13 +21,14 @@ float3x3 kernel = float3x3(
 // This pixel shader samples the 3x3-neighborhood around the pixel and averages
 // the colors based on the kernel weights.
 float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 textureCoordinate : TEXCOORD0) : COLOR0
-{int kernelSize = 3;
+{
+	int kernelSize = 3;
     float4 result = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
-	for (int i = 0; i < 3; ++i) {
-		for (int j = 0; j < 3; ++j) {
-			float2 dis = float2(2*(-1 + i) / screenSize.x, 2*(-1 + j) / screenSize.y);
-			result += tex2D(TextureSampler, textureCoordinate.xy + dis) * kernel[i][j];
+	for (int i = -1; i < 2; ++i) {
+		for (int j = -1; j < 2; ++j) {
+			float2 dis = float2(i / screenSize.x, j / screenSize.y);
+			result += tex2D(TextureSampler, textureCoordinate.xy + dis) * kernel[i+1][j+1];
 		}
 	}
     
@@ -40,12 +41,6 @@ technique GaussianBlur
 {
     pass Pass1
     {
-#if SM4
-        PixelShader = compile ps_4_0_level_9_1 PixelShaderFunction();
-#elif SM3
-        PixelShader = compile ps_3_0 PixelShaderFunction();
-#else
-        PixelShader = compile ps_2_0 PixelShaderFunction();
-#endif
+        PixelShader = compile ps_4_0 PixelShaderFunction();
     }
 }
