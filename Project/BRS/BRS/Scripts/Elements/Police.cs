@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using BRS.Engine;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using BRS.Engine.Physics;
 
 namespace BRS.Scripts {
     class Police : Component {
@@ -66,7 +67,15 @@ namespace BRS.Scripts {
 
             }
 
-            CheckCollision();
+            //CheckCollision();
+        }
+
+        public override void OnCollisionEnter(Collider c) {
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+            if (isPlayer) {
+                Player p = c.GameObject.GetComponent<Player>();
+                p.TakeDamage(20);
+            }
         }
 
 

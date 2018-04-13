@@ -37,6 +37,7 @@ namespace BRS.Engine {
 
             GameObject police = new GameObject("policePrefab", File.Load<Model>("Models/vehicles/police"));
             police.AddComponent(new Police());
+            police.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             AddPrefab(police);
 
 

@@ -66,7 +66,9 @@ namespace BRS.Scripts {
         }
 
         public void Draw(int index) {
-            foreach(ParticleOrder p in particleOrders) {
+            SpriteSheetFromType(ParticleType.Energy).Draw(Vector2.One*200, 6);
+
+            foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
                 SpriteSheetFromType(p.effect).Draw(position, p.frame);
             }
