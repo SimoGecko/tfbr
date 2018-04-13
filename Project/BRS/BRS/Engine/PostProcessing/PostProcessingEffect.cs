@@ -9,9 +9,9 @@ namespace BRS.Engine.PostProcessing {
         // type of the effect
         public PostprocessingType Type { get; }
         // how many time should this effect be applied
-        public int Passes = 1;
+        public int Passes;
         // is this effect active
-        public bool Active = false;
+        public bool Active;
         // mg effect
         public Effect Effect { get; }
         // the name of the effect
