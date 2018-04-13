@@ -6,6 +6,7 @@ using BRS.Engine.Utilities;
 using BRS.Menu;
 using BRS.Scripts;
 using BRS.Scripts.UI;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -43,6 +44,8 @@ namespace BRS.Engine {
         public static UserInterface Instance;
         private SpriteBatch _sb;
 
+        MenuManager _menuManager;
+
 
         // --------------------- BASE METHODS ------------------
         public UserInterface() { Instance = this; }
@@ -61,27 +64,37 @@ namespace BRS.Engine {
             _bigRect = new Rectangle(0, 0, BigBarWidth, BarHeight);
             _smallRect = new Rectangle(0, 0, BigBarWidth/4, BarHeight/4);
             //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
+
+            _menuManager = new MenuManager();
+            _menuManager.LoadContent();
+
         }
 
 
 
         // ---------- CALLBACKS ----------
 
-        public void DrawMenu(SpriteBatch spriteBatch) {
+        /*public void DrawMenu(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             MenuManager.Instance.Draw();
-        }
+        }*/
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
             _sb = spriteBatch;
             //Minimap.Instance.Draw(_sb);
             //GameUI.Instance.Draw();
             //Heatmap.instance.Draw();
+
+            if (GameManager.state == GameManager.State.Menu)
+                _menuManager.Draw();
             
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
             _sb = spriteBatch;
+
+            if (!GameManager.GameActive) return;
+
             PlayerUI.Instance.Draw(index);
             PowerupUI.Instance.Draw(index);
             BaseUI.Instance.Draw(index%2);
@@ -89,9 +102,6 @@ namespace BRS.Engine {
             GameUI.Instance.Draw();
             Minimap.Instance.DrawSmall(spriteBatch, index);
             MoneyUI.Instance.Draw(index);
-
-
-
 
             //test draw
             /*
@@ -225,9 +235,11 @@ namespace BRS.Engine {
             }
             Rectangle src = source ?? tex.Bounds;
             Vector2 origin = PivotPoint(pivot, src).ToVector2();//is relative to the texture
-            dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
+            //dst.Location += AnchorPos(anchor);// - PivotPoint(pivot, dst); // not needed as the origin takes care of that
+            dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + origin.ToPoint();
 
             _sb.Draw(tex, dst, src, (col ?? Color.White), MathHelper.ToRadians(rot), origin, (flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 1);
+
         }
 
         //Rotation not supported

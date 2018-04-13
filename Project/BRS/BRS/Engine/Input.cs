@@ -9,13 +9,15 @@ namespace BRS.Engine {
     static class Input {
 
         public enum Axis { Horizontal, Vertical }
-        public enum Stick { Right, Left }
+        public enum Stick { Right, Left, Up, Down }
 
         private static KeyboardState _kState, _oldKstate;
         private static MouseState _mState, _oldMstate;
         private static GamePadState[] _gState, _oldGstate;
 
         private static bool[] _vibrating = new bool[4];
+
+        public static bool uniqueFrameInputUsed;
 
         public static void Start() {
             _gState  = new GamePadState[4];
@@ -27,6 +29,9 @@ namespace BRS.Engine {
                 _gState[i] = GamePad.GetState(i);
 
             //old stuff for mouse
+            //_oldMstate = Mouse.GetState();
+
+            uniqueFrameInputUsed = false;
             //_oldMstate = Mouse.GetState();
         }
 
@@ -52,6 +57,8 @@ namespace BRS.Engine {
                     }
                 }
             }*/
+
+            uniqueFrameInputUsed = false;
         }
 
         //AXIS

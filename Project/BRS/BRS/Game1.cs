@@ -15,11 +15,6 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-
-        //@nico all these should not be here - remove
-        private MenuManager _menuManager;
-        public bool MenuDisplay = false;
-
         //@andy including these
         private Display _display;
         private DebugDrawer _debugDrawer; // these should also not exist
@@ -53,16 +48,8 @@ namespace BRS {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //@nico this should also not be here
-            //CREATE UI MANAGER
-            if (MenuDisplay) {
-                _menuManager = new MenuManager();
-                _menuManager.LoadContent();
-            } else {
-                Screen.AdditionalSetup(_graphics);
-            }
             new UserInterface();
-
+            Screen.AdditionalSetup(_graphics);
 
             //load prefabs and scene
             Prefabs.Start();
@@ -100,33 +87,31 @@ namespace BRS {
             base.Update(gameTime);
             Time.Update(gameTime);
 
-            if (MenuDisplay) {
-                _menuManager.Update(); //@nico this shouldn't be here -> put it in Userinterface.Update()
+            Input.Update();
+
+
+            Audio.Update();
+
+            if (Input.GetKeyDown(Keys.D9)) {
+                Debug.Log("changing scene...");
+                SceneManager.Load("Level2");
+                Screen.AdditionalSetup(_graphics);
+                foreach (GameObject go in GameObject.All) go.Start();
+
             }
-            else {
-                Input.Update();
-                Audio.Update();
+            if (Input.GetKeyDown(Keys.D0)) {
+                Debug.Log("changing scene...");
+                SceneManager.Load("Level1");
+                Screen.AdditionalSetup(_graphics);
+                foreach (GameObject go in GameObject.All) go.Start();
 
-                if (Input.GetKeyDown(Keys.D9)) {
-                    Debug.Log("changing scene...");
-                    SceneManager.Load("Level2");
-                    Screen.AdditionalSetup(_graphics);
-                    foreach (GameObject go in GameObject.All) go.Start();
-
-                }
-                if (Input.GetKeyDown(Keys.D0)) {
-                    Debug.Log("changing scene...");
-                    SceneManager.Load("Level1");
-                    Screen.AdditionalSetup(_graphics);
-                    foreach (GameObject go in GameObject.All) go.Start();
-
-                }
-
-                foreach (GameObject go in GameObject.All) go.Update();
-                foreach (GameObject go in GameObject.All) go.LateUpdate();
-
-                PhysicsManager.Instance.Update(gameTime);
             }
+
+            foreach (GameObject go in GameObject.All) go.Update();
+            foreach (GameObject go in GameObject.All) go.LateUpdate();
+
+            PhysicsManager.Instance.Update(gameTime);
+            
 
         }
 
@@ -163,9 +148,6 @@ namespace BRS {
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
             UserInterface.Instance.DrawGlobal(_spriteBatch);
-            if (MenuDisplay) {
-                UserInterface.Instance.DrawMenu(_spriteBatch);
-            }
             _spriteBatch.End();
         }
     }
