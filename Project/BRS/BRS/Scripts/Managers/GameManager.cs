@@ -10,9 +10,9 @@ namespace BRS.Scripts.Managers {
         ////////// controls the game state, ie round time, ... //////////
 
         // --------------------- VARIABLES ---------------------
-        enum State { Playing, Paused, Finished, Menu};
+        public enum State { Menu, Playing, Paused, Finished };
 
-        private static State _gameState; // CONTROLS STATE OF THE GAME
+        public static State state; // CONTROLS STATE OF THE GAME
 
         //public
         public static int NumPlayers = 2;
@@ -34,7 +34,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
-            _gameState = State.Playing;
+            state = State.Playing;
             _teamWins = new int[2];
             _roundNumber = 1;
         }
@@ -50,16 +50,16 @@ namespace BRS.Scripts.Managers {
 
         // commands 
         void CheckForPause() {
-            if (!(_gameState == State.Playing || _gameState == State.Paused)) return;
+            if (!(state == State.Playing || state == State.Paused)) return;
             if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
                 _paused = !_paused;
-                _gameState = _paused ? State.Paused : State.Playing;
+                state = _paused ? State.Paused : State.Playing;
             }
         }
 
         public void OnRoundEnd(int winner) {
             _teamWins[winner]++;
-            _gameState = State.Finished;
+            state = State.Finished;
             BaseUI.Instance.UpdateBaseUIWins(winner);
             new Timer(5, RestartCustom, true);
         }
@@ -93,7 +93,7 @@ namespace BRS.Scripts.Managers {
             GameObject vault = GameObject.FindGameObjectWithName("vault");
             if (vault != null) vault.Start();
 
-            _gameState = State.Playing;
+            state = State.Playing;
             _roundNumber++;
         }
 
@@ -105,8 +105,8 @@ namespace BRS.Scripts.Managers {
 
         // queries
         public static int RoundNumber { get { return _roundNumber; } }
-        public static bool GameActive { get { return _gameState == State.Playing; } }
-        public static bool GamePaused { get { return _gameState == State.Paused; } }
+        public static bool GameActive { get { return state == State.Playing; } }
+        public static bool GamePaused { get { return state == State.Paused; } }
 
 
 
