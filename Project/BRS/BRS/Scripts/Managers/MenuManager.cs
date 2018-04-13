@@ -7,6 +7,7 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using System.Threading.Tasks;
+using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Menu {
     class MenuManager {
@@ -20,9 +21,10 @@ namespace BRS.Menu {
 
         readonly Menu _menuGame = new Menu();
 
-        int _noCharacters = 4;
-        const float RotSpeed = 90;
-        public readonly List<GameObject> CharacterToChoose = new List<GameObject>();
+        int _noCharacters = 3;
+        public List<Model> modelCharacter;
+        //const float RotSpeed = 90;
+        //public readonly List<GameObject> CharacterToChoose = new List<GameObject>();
 
         public Dictionary<string, Tuple<string, Model>> PlayersInfo; // playerName -> userName, Model 
         public string NamePlayerInfosToChange;
@@ -60,6 +62,11 @@ namespace BRS.Menu {
             //Game1.Instance.ScreenAdditionalSetup(); // don't do this
             GameObject camObject = GameObject.FindGameObjectWithName("camera_0");
             camObject.Start();*/
+
+            modelCharacter = new List<Model>();
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
 
         }
 
@@ -219,14 +226,18 @@ namespace BRS.Menu {
         }
 
         public void ChangeNamePlayer(object sender, EventArgs e) {
+            Button button = (Button)sender;
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
-                        if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                        /*if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                             PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, PlayersInfo[NamePlayerInfosToChange].Item2);
                         else
                             PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
-
+                        */
+                        //GameObject.FindGameObjectWithName(NamePlayerInfosToChange).GetComponent<Player>().PlayerName = textBox.Text;
+                        int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
+                        ElementManager.Instance.Player(playerIndex).PlayerName = textBox.Text;
                         textBox.Text = "";
                     }
                 }
@@ -237,7 +248,7 @@ namespace BRS.Menu {
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            Model toChange = File.Load<Model>("Models/vehicles/forklift_tex");
+            /*Model toChange = File.Load<Model>("Models/vehicles/forklift_tex");
             foreach (var elem in CharacterToChoose)
                 elem.active = false;
             NamePlayerInfosToChange = "player_" + button.Index.ToString();
@@ -249,6 +260,11 @@ namespace BRS.Menu {
                 PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, toChange);
             else
                 PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, toChange));
+            */
+
+            //GameObject.FindGameObjectWithName(NamePlayerInfosToChange).Model = modelCharacter[button.Index];
+            int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
+            ElementManager.Instance.Player(playerIndex).gameObject.Model = modelCharacter[button.Index];
 
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is Image img) {

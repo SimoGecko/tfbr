@@ -336,7 +336,7 @@ namespace BRS.Menu {
                     ScaleWidth = 1.5f
                 };
                 playerChangeButton.Click += MenuManager.Instance.ChangeModelPlayer;
-                //playerChangeButton.Click += MenuManager.Instance.SwitchToMenu;
+                playerChangeButton.Click += MenuManager.Instance.HighlightBorders;
                 MenuManager.Instance.MenuRect["play2"].AddComponent(playerChangeButton);
                 //playerChangeButton.ScaleWidth = .5f;
 
@@ -453,9 +453,9 @@ namespace BRS.Menu {
             backButton2.NeighborLeft = listModelButton[2];
             startGameButton.NeighborRight = saveButton;
 
-            Image pictureModel1 = new Image(_textureButtonForkLift) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel1"}; pictureModel1.Active = true;
-            Image pictureModel2 = new Image(_textureButtonCircle) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel2" }; pictureModel2.Active = false;
-            Image pictureModel3 = new Image(_textureButton) { Position = new Vector2(0.25f, 0.45f) * _screenSizeVec, NameIdentifier = "pictureModel3" }; pictureModel3.Active = false;
+            Image pictureModel1 = new Image(_textureButtonForkLift) { Position = new Vector2(0.3f, 0.55f) * _screenSizeVec, NameIdentifier = "pictureModel1"}; pictureModel1.Active = true;
+            Image pictureModel2 = new Image(_textureButtonCircle) { Position = new Vector2(0.25f, 0.55f) * _screenSizeVec, NameIdentifier = "pictureModel2" }; pictureModel2.Active = false;
+            Image pictureModel3 = new Image(_textureButton) { Position = new Vector2(0.25f, 0.55f) * _screenSizeVec, NameIdentifier = "pictureModel3" }; pictureModel3.Active = false;
 
             MenuManager.Instance.MenuRect["play2"].AddComponent(pictureModel1);
             MenuManager.Instance.MenuRect["play2"].AddComponent(pictureModel2);
