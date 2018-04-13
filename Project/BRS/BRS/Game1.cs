@@ -146,12 +146,15 @@ namespace BRS {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
                 UserInterface.Instance.DrawSplitscreen(_spriteBatch, i++);
+                foreach (GameObject go in GameObject.All) go.Draw2D(cam);
+
                 _spriteBatch.End();
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            UserInterface.Instance.DrawGlobal(_spriteBatch);
+            //foreach (GameObject go in GameObject.All) go.Draw2D(cam);
+            //UserInterface.Instance.DrawGlobal(_spriteBatch);
             _spriteBatch.End();
         }
     }

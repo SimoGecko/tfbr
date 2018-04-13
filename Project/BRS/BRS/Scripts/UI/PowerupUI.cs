@@ -70,7 +70,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public void Draw(int index) { // TODO clean out this code
+        public override void Draw(int index) { // TODO clean out this code
             UserInterface.Instance.DrawString("powerup", new Rectangle(0, 30, 100, 20), Align.Top, Align.Top, Align.Bottom, scale:.7f);
             UserInterface.Instance.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 0, 64, 64), Align.Top);
 

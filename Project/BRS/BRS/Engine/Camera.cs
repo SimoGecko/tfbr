@@ -12,37 +12,33 @@ namespace BRS.Engine {
         public enum Projection { Orthographic, Perspective};
 
         //public
-        public static Camera Main;
-        static readonly List<Camera> Cameras = new List<Camera>();
+        private const float Near = 0.3f;
+        private const float Far = 1000f;
 
         //private
         Projection projectiontype = Projection.Perspective;
 
-        private readonly float _fov; // degrees
+        readonly float _fov; // degrees
         readonly float _aspectRatio;
-        private const float Near = 0.3f;
-        private const float Far = 1000f;
+        readonly int _index;
 
         public Viewport Viewport { get; }
 
         public Matrix Proj; // precomputed
-        public Matrix View {
-            get { return Matrix.Invert(transform.World); }
-        }
+        public Matrix View { get { return Matrix.Invert(transform.World); } }
+        public int Index { get { return _index; } }
 
-        public Camera(Viewport vp, float fov = 60)  {
-            if (Main == null) Main = this;
-
+        public Camera(int index, Viewport vp, float fov = 60)  {
+            _index = index;
             _fov = fov;
             _aspectRatio = vp.AspectRatio;
             Viewport = vp;
 
-            Cameras.Add(this);
-            MakeProjMatrix(projectiontype);
+            ComputeProj(projectiontype);
         }
 
 
-        void MakeProjMatrix(Projection projectionType) {
+        void ComputeProj(Projection projectionType) {
             if (projectionType == Projection.Perspective) {
                 Proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(_fov), _aspectRatio, Near, Far);
             } else {
@@ -50,7 +46,7 @@ namespace BRS.Engine {
             }
         }
 
-        //static METHODS
+        //conversion methods
         public Ray ScreenPointToRay(Vector2 point) {
             Vector3 nearPoint = Viewport.Unproject(new Vector3(point.X, point.Y, 0.0f), Proj, View, Matrix.Identity);
             Vector3 farPoint  = Viewport.Unproject(new Vector3(point.X, point.Y, 1.0f), Proj, View, Matrix.Identity);
@@ -62,15 +58,10 @@ namespace BRS.Engine {
         public Vector2 WorldToScreenPoint(Vector3 world) {
             Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
             return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
-            /* // DUMB me that cannot have this snippet of code work
-            Vector4 worldH = new Vector4(world, 1);
-            Vector4 view = Vector4.Transform(worldH, View);
-            Vector4 result = Vector4.Transform(view, Proj);
-            return new Vector2(result.X/result.W, result.Y / result.W);*/
         }
 
-        public static Camera GetCamera(int i) {
-            return Cameras[i];
-        }
+        //static METHODS
+        public static Camera Main { get { return Screen.Cameras[0]; } }
+        public static Camera GetCamera(int i) {  return Screen.Cameras[i]; }
     }
 }

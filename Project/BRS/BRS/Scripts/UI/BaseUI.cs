@@ -29,9 +29,12 @@ namespace BRS.Scripts.UI {
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
+        public override void Awake() {
             Instance = this;
             _baseUi = new BaseUIStruct[2];
+        }
+
+        public override void Start() {
             _baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
             _ribbon = File.Load<Texture2D>("Images/UI/ribbon");
             _barIcons = File.Load<Texture2D>("Images/UI/bar_icons");
@@ -45,7 +48,7 @@ namespace BRS.Scripts.UI {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public void Draw(int index) {
+        public override void Draw(int index) {
             bool flip = index % 2 != 0;
 
             UserInterface.Instance.DrawString("Team " + (index+1), new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true, flip: flip);

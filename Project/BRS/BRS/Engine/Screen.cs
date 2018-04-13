@@ -104,7 +104,7 @@ namespace BRS.Engine {
             Cameras = new Camera[numCameras];
             for (int i = 0; i < numCameras; i++) {
                 GameObject camObject = new GameObject("camera_" + i); // CREATES gameobject
-                camObject.AddComponent(new Camera(_splitViewport[i]));
+                camObject.AddComponent(new Camera(i, _splitViewport[i]));
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }

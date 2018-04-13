@@ -53,7 +53,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public void Draw(int index) {
+        public override void Draw(int index) {
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
                     //Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);

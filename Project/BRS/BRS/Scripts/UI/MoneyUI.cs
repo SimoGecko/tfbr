@@ -39,7 +39,7 @@ namespace BRS.Scripts.UI {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public void Draw(int index) {
+        public override void Draw(int index) {
             for(int i=0; i<orderList.Count; i++) {
                 DrawValuableOrder dvo = orderList[i];
                 if (dvo.index == index) {

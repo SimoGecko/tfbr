@@ -36,29 +36,39 @@ namespace BRS.Engine {
 
 
         // ---------- CALLBACKS ----------
-        public virtual void Awake() {
+        public void Awake() {
             foreach (IComponent c in components)  c.Awake();
         }
-        public virtual void Start() {
+        public void Start() {
             foreach (IComponent c in components)  c.Start();
         }
 
-        public virtual void Update() {
+        public void Update() {
             if (active)  foreach (IComponent c in components)  c.Update();
         }
-        public virtual void LateUpdate() {
+        public void LateUpdate() {
             if (active) foreach (IComponent c in components) c.LateUpdate();
         }
 
-        public virtual void OnCollisionEnter(Collider col) {
+        public void OnCollisionEnter(Collider col) {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
-        public virtual void Draw(Camera cam) {
-            if (Model != null && active) {
-                Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+        public void Draw(Camera cam) {
+            if (active) {
+                if (Model != null && active) {
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                }
+                //foreach (IComponent c in components) c.Draw(cam.Index);
             }
         }
+
+        public void Draw2D(Camera cam) {
+            if (active) {
+                foreach (IComponent c in components) c.Draw(cam.Index);
+            }
+        }
+
 
 
 

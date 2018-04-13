@@ -45,5 +45,9 @@ namespace BRS.Engine {
             return Task.Delay(1);// gt.ElapsedGameTime.Milliseconds/2);
         }
 
+        public static void ClearTimers() {
+            timers.Clear();
+        }
+
     }
 }

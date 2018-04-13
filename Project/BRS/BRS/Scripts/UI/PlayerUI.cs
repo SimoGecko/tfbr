@@ -45,7 +45,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public void Draw(int index) {
+        public override void Draw(int index) {
             bool flip = index % 2 != 0;
 
             UserInterface.Instance.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 200, 30), Align.TopLeft, scale: .5f, bold: true, flip: flip);

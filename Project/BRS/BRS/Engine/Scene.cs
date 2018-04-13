@@ -29,8 +29,8 @@ namespace BRS.Engine {
 
         public static void Load(string sceneName) {
             if (currentScene != null) currentScene.Unload();
-            currentScene = scenes[sceneName];
             GameObject.ClearAll();
+            currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.numPlayers);
             if (currentScene != null) currentScene.Load();
         }
@@ -44,16 +44,6 @@ namespace BRS.Engine {
         List<GameObject> objectsInScene = new List<GameObject>();
         public int numPlayers = 1;
 
-        /*
-        protected PhysicsManager PhysicsManager { get; set; }
-
-        public Scene(PhysicsManager physics) {
-            PhysicsManager = physics;
-        }*/
-
-
-
-
         public virtual void Load() { // levels inherit and fill this
 
         }
@@ -65,9 +55,6 @@ namespace BRS.Engine {
         protected void Add(GameObject o) {
             objectsInScene.Add(o);
         }
-
-        //CHANGE SCENE
-
 
     }
 

@@ -64,7 +64,7 @@ namespace BRS.Scripts {
             }
         }
 
-        public void Draw(int index) {
+        public override void Draw(int index) {
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
                 SpriteSheetFromType(p.effect).Draw(position, p.frame);

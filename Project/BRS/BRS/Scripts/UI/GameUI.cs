@@ -46,7 +46,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public override void Draw() {
+        public override void Draw(int i) {
             string roundString = "round " + GameManager.RoundNumber + "/" + GameManager.NumRounds;
             UserInterface.Instance.DrawString(roundString, new Rectangle(-20, -390, 200, 20), Align.BotRight, Align.BotRight, Align.Center);
 

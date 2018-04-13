@@ -117,7 +117,7 @@ namespace BRS.Scripts {
             heatmapPic.Dispose();
         }
 
-        public void Draw() {
+        public override void Draw(int index) {
             UserInterface.Instance.DrawPictureOLD(heatmapPic.Bounds, heatmapPic);
 
         }

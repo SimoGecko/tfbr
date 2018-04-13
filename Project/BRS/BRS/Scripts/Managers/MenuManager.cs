@@ -84,7 +84,7 @@ namespace BRS.Menu {
                 if (go.active)
                     foreach (Component component in go.components)
                         if (component.Active)
-                            component.Draw();
+                            component.Draw(0);
 
             /*if (_currentMenu == MenuRect["play2"]) 
                 foreach (Camera cam in Screen.Cameras) 
