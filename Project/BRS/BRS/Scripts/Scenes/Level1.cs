@@ -65,6 +65,8 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager());
             //Add(Manager);
+
+            //new MenuManager().LoadContent(); // TODO add as component to manager
         }
 
         void CreatePlayers() {

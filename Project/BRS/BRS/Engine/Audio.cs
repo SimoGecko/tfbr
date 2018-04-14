@@ -18,11 +18,8 @@ namespace BRS.Engine {
 
         static List<SoundEmit> currentlyPlayingEffects = new List<SoundEmit>();
 
-        //static Transform listener = GameObject.FindGameObjectWithName("player_0").transform;
-        static Transform listenerTransf = Camera.Main.transform;
         static AudioListener listener = new AudioListener();
-
-        static AudioEmitter em = new AudioEmitter();
+        static Transform listenerTransf = Camera.Main.transform;
 
         //-------------------------------------------------------------------------------
 
@@ -36,16 +33,20 @@ namespace BRS.Engine {
 
 
         public static void Update() {
-            //re-apply 3d
-            AudioListener listener = Listener();
-            foreach(SoundEmit se in currentlyPlayingEffects) {
+            Apply3DPositionToPlayingSounds();
+            RemoveFinishedEffects();
+        }
+
+        static void Apply3DPositionToPlayingSounds() {
+            listener = Listener();
+            foreach (SoundEmit se in currentlyPlayingEffects) {
                 se.soundInstance.Apply3D(listener, se.emitter);
             }
+        }
 
-            //remove finished effects
-            for(int i=0; i<currentlyPlayingEffects.Count; i++) {
-                if(Time.CurrentTime > currentlyPlayingEffects[i].endTime) {
-                    //remove it
+        static void RemoveFinishedEffects() {
+            for (int i = 0; i < currentlyPlayingEffects.Count; i++) {
+                if (Time.CurrentTime > currentlyPlayingEffects[i].endTime) {
                     currentlyPlayingEffects.RemoveAt(i--);
                 }
             }
@@ -68,18 +69,20 @@ namespace BRS.Engine {
 
         //MASTER SETTINGS
         public static void SetSoundVolume(float v) {
+            v = Utility.Clamp01(v);
             SoundEffect.MasterVolume = v;
         }
         public static void SetMusicVolume(float v) {
+            v = Utility.Clamp01(v);
             MediaPlayer.Volume = v;
         }
 
 
-        //EFFECTS
+        //-----------------------------EFFECTS-----------------------------
         public static void Play(string name, Vector3 position, float volume = 1, bool changePitch = false) {
             if (!sounds.ContainsKey(name)) { Debug.LogError("No sound " + name); return; }
 
-            em = new AudioEmitter();
+            AudioEmitter em = new AudioEmitter();
             em.Position = position;
             em.Forward = Vector3.Forward;
             em.Up = Vector3.Up;
@@ -115,7 +118,7 @@ namespace BRS.Engine {
         }*/
 
 
-        //SONGS
+        //-----------------------------SONGS-----------------------------
         public static void PlaySong(string name) {
             if (!songs.ContainsKey(name)) { Debug.LogError("No song " + name); return; }
             MediaPlayer.Play(songs[name]);

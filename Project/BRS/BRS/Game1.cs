@@ -50,7 +50,7 @@ namespace BRS {
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level2");
+            SceneManager.LoadScene("Level1");
 
             //start other big components
             UserInterface.Start();

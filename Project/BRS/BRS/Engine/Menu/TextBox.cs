@@ -16,7 +16,7 @@ namespace BRS.Menu {
 
         public override void Draw(int i) {
             base.Draw(i);
-            UserInterface.DrawStringOLD(Position, Text, Color.Black);
+            UserInterface.DrawString(Text, Position,col: Color.Black);
         }
     }
 }

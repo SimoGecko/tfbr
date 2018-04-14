@@ -24,47 +24,32 @@ namespace BRS.Engine {
 
 
         //public
-        public const int BarWidth = 128;
         public const int BigBarWidth = 256;
-        public const int BarHeight = 16;
 
 
         //private
-        //public SpriteFont arialFont { get; private set; }
+        public static SpriteFont arialFont { get; private set; }
         public static SpriteFont comicFont { get; private set; }
         public static SpriteFont archerFont   { get; private set; }
 
-        private static Texture2D _bar, _barBig;
         private static Texture2D barStriped;
-
-        private static Rectangle _barRect, _bigRect, _smallRect;
 
         //reference
         public static SpriteBatch sB;
-
-        static MenuManager _menuManager;
 
 
         // --------------------- BASE METHODS ------------------
 
         public static void Start() {
-            //arialFont = File.Load<SpriteFont>("Other/font/debugFont");
+            arialFont = File.Load<SpriteFont>("Other/font/debugFont");
             comicFont = File.Load<SpriteFont>("Other/font/comic");
             archerFont   = File.Load<SpriteFont>("Other/font/archer");
 
-            _bar       = File.Load<Texture2D>("Images/UI/progress_bar_small");
-            _barBig    = File.Load<Texture2D>("Images/UI/progress_bar");
             barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
 
-            _barRect = new Rectangle(0, 0, BarWidth, BarHeight);
-            _bigRect = new Rectangle(0, 0, BigBarWidth, BarHeight);
-            _smallRect = new Rectangle(0, 0, BigBarWidth/4, BarHeight/4);
-            //fgRect = new Rectangle(0, BARHEIGHT, BARWIDTH, BARHEIGHT);
 
-            _menuManager = new MenuManager();
-            _menuManager.LoadContent();
+           
         }
-
 
 
         // ---------- CALLBACKS ----------
@@ -74,22 +59,7 @@ namespace BRS.Engine {
 
         //DRAW CALLBACKS
 
-        //BARS
-        /*
-        public static void DrawBar(float percent, Vector2 position, Color color, Align anchor) {
-            DrawPicture(_bar, position, anchor: anchor, col: Color.LightGray);
-            DrawPicture(_bar, position, new Rectangle(0,0, (int)(BarWidth * percent), BarHeight), anchor: anchor, col: color);
-        }
-        public static void DrawBarBig(float percent, Vector2 position, Color color, Align anchor) {
-            DrawPicture(_barBig, position, anchor: anchor, pivot:Align.TopLeft, col: Color.LightGray);
-            DrawPicture(_barBig, position, new Rectangle(0, 0, (int)(BigBarWidth * percent), BarHeight), anchor: anchor, pivot: Align.TopLeft, col: color);
-        }
-        public static void DrawBarSmall(float percent, Vector2 position, Color color, Align anchor = Align.TopLeft) {
-            DrawPicture(_barBig, position, anchor: anchor, col: Color.LightGray, scale:.25f);
-            DrawPicture(_barBig, position, new Rectangle(0, 0, (int)(BigBarWidth * percent), BarHeight), anchor: anchor, col: color, scale: .25f);
-        }*/
-
-        public static void DrawBarStriped(float percent, Rectangle dest, Color color, Align anchor = Align.TopLeft, bool flip = false) {
+        public static void DrawBarStriped(float percent, Rectangle dest, Color color, Align anchor = Align.TopLeft, bool flip = false) { // todo move out of here
             Rectangle source = new Rectangle(0, 0, 185, 40);
             if (flip) {
                 dest.X = -dest.X- dest.Width;
@@ -99,14 +69,6 @@ namespace BRS.Engine {
             source = new Rectangle(0, 40, (int)Math.Round(185 * percent), 40);
             dest.Width = (int)Math.Round(dest.Width * percent);
             DrawPicture(barStriped, dest, source, anchor: anchor, pivot: Align.TopLeft, col: color);
-        }
-
-        //OLD SIGNATURES --> CHANGE!!
-        public static void DrawPictureOLD(Rectangle destination, Texture2D pic, Color colour = default(Color)) {
-            DrawPicture(pic, destination, col: colour);
-        }
-        public static void DrawStringOLD(Vector2 position, string text, Color colour = default(Color)) {
-            DrawString(text, position, col: colour);
         }
 
 

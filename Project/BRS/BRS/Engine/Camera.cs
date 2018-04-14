@@ -20,20 +20,19 @@ namespace BRS.Engine {
 
         readonly float _fov; // degrees
         readonly float _aspectRatio;
-        readonly int _index;
+        //readonly int _index;
 
         public Viewport Viewport { get; }
 
         public Matrix Proj; // precomputed
         public Matrix View { get { return Matrix.Invert(transform.World); } }
-        public int Index { get { return _index; } }
+        //public int Index { get { return _index; } }
 
-        public Camera(int index, Viewport vp, float fov = 60)  {
-            _index = index;
+        public Camera(Viewport vp, float fov = 60)  {
+            //_index = index;
             _fov = fov;
             _aspectRatio = vp.AspectRatio;
             Viewport = vp;
-
             ComputeProj(projectiontype);
         }
 

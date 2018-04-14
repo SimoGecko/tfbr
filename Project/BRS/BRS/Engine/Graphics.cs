@@ -48,7 +48,7 @@ namespace BRS.Engine {
                         effect.EnableDefaultLighting();
                         //effect.LightingEnabled = mat.lit;
                         //effect.DiffuseColor = mat.diffuse.ToVector3();
-                        effect.Alpha = mat.Diffuse.A;
+                        //effect.Alpha = mat.Diffuse.A;
                         //effect.CurrentTechnique = EffectTechnique
                         //effect.Texture
                     }

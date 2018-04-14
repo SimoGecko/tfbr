@@ -118,7 +118,7 @@ namespace BRS.Scripts {
         }
 
         public override void Draw(int index) {
-            UserInterface.DrawPictureOLD(heatmapPic.Bounds, heatmapPic);
+            UserInterface.DrawPicture(heatmapPic, Vector2.One * 100);
 
         }
 

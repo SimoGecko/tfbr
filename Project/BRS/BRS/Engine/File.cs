@@ -45,7 +45,6 @@ namespace BRS.Engine {
         // commands
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
-            
             string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
             string fullPath = filePath + s + ".fbx";
             bool fileExists = false;// System.IO.File.Exists(fullPath);

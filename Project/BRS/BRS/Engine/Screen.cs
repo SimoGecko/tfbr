@@ -67,7 +67,6 @@ namespace BRS.Engine {
         //----------------------
 
         public static void SetupViewportsAndCameras(GraphicsDeviceManager graphics, int numCameras) {
-            Debug.Log("called with " + numCameras);
             //called on scene change to reset cameras and viewports
             SetupViewports(graphics, numCameras);
             SetupCameras(numCameras);
@@ -97,16 +96,17 @@ namespace BRS.Engine {
         }
 
         static void SetupCameras(int numCameras) {
-            if(Cameras!=null)
-                for(int i=0; i<Cameras.Length; i++) {
-                    GameObject.Destroy(Cameras[i].gameObject);
+            /*if (Cameras != null) {
+                for (int i = 0; i < Cameras.Length; i++) {
+                    GameObject.Destroy(Cameras[i].gameObject); // needed?
                 }
+            }*/
 
             Cameras = new Camera[numCameras];
 
             for (int i = 0; i < numCameras; i++) {
                 GameObject camObject = new GameObject("camera_" + i); // CREATES gameobject
-                camObject.AddComponent(new Camera(i, _splitViewport[i]));
+                camObject.AddComponent(new Camera(_splitViewport[i]));
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }

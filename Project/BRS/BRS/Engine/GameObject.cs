@@ -59,7 +59,6 @@ namespace BRS.Engine {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
                 }
-                //foreach (IComponent c in components) c.Draw(cam.Index);
             }
         }
 
@@ -99,6 +98,7 @@ namespace BRS.Engine {
             result.transform.rotation = rotation;
             //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
+            result.Awake();
             result.Start(); // because instantiated at runtime
             return result;
         }
@@ -121,7 +121,6 @@ namespace BRS.Engine {
         // ---------- DELETION ----------
 
         public static void ClearAll() {
-            //foreach (GameObject o in allGameObjects) Destroy(o);
             while (allGameObjects.Count > 0) {
                 Destroy(allGameObjects[0]);
             }
@@ -139,7 +138,6 @@ namespace BRS.Engine {
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
             new Timer(lifetime, () => Destroy(o));
-            //await Task.Delay((int)(lifetime * 1000));
         }
 
         public static void ConsiderPrefab(GameObject o) {

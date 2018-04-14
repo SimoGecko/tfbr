@@ -17,8 +17,6 @@ namespace BRS.Engine {
 
         private static bool[] _vibrating = new bool[4];
 
-        public static bool uniqueFrameInputUsed;
-
         public static void Start() {
             _gState  = new GamePadState[4];
             _oldGstate = new GamePadState[4];
@@ -27,12 +25,6 @@ namespace BRS.Engine {
             _mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 _gState[i] = GamePad.GetState(i);
-
-            //old stuff for mouse
-            //_oldMstate = Mouse.GetState();
-
-            uniqueFrameInputUsed = false;
-            //_oldMstate = Mouse.GetState();
         }
 
         public static void Update() {
@@ -57,8 +49,6 @@ namespace BRS.Engine {
                     }
                 }
             }*/
-
-            uniqueFrameInputUsed = false;
         }
 
         //AXIS

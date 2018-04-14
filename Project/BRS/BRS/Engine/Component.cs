@@ -46,6 +46,8 @@ namespace BRS.Engine {
         }
     }
 
+
+    //@nico remove this
     public class ListComponents : Component { // WHAT IS THIS
         public readonly List<Component> Components;
         public readonly string NameIdentifier;
