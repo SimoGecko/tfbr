@@ -104,7 +104,6 @@ namespace BRS.Scripts.UI {
                 UserInterface.DrawStringBig(centerPos + new Vector2(-250, 150), _winnerString);
             } 
             */
->>>>>>> develop
         }
 
         public void UpdateGameWinnerUI(int winner) {

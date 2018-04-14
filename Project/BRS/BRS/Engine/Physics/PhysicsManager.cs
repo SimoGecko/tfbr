@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using BRS.Engine.Physics.Primitives3D;
-using BRS.Load;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;
@@ -263,7 +262,7 @@ namespace BRS.Engine.Physics {
         }
 
         private void AddBodyToDrawList(RigidBody rb) {
-            if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
+            if (rb.Tag is 12BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
 
             Collider c = rb as Collider;
             //if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;

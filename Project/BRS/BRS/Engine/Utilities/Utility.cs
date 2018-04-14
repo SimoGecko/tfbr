@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Engine.Utilities {
+namespace BRS.Engine {
     static class Utility {
         ////////// class that provides useful methods (mostly math and on existing objects) - Imitates Unity //////////
 
