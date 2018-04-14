@@ -22,7 +22,6 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
-        //TODO make it agnostic to this game
 
         //public
         public const int BarWidth = 128;
@@ -67,7 +66,6 @@ namespace BRS.Engine {
 
             _menuManager = new MenuManager();
             _menuManager.LoadContent();
-
         }
 
 
@@ -80,19 +78,18 @@ namespace BRS.Engine {
         }*/
 
         public void DrawGlobal(SpriteBatch spriteBatch) {
-            sB = spriteBatch;
+            //sB = spriteBatch;
             //Minimap.Instance.Draw(_sb);
             //GameUI.Instance.Draw();
             //Heatmap.instance.Draw();
 
-            if (GameManager.state == GameManager.State.Menu)
-                _menuManager.Draw();
-
+            //if (GameManager.state == GameManager.State.Menu)
+                //_menuManager.Draw();
             
         }
 
         public void DrawSplitscreen(SpriteBatch spriteBatch, int index) { // call all subcomponents that are drawn on each split screen
-            sB = spriteBatch;
+            //sB = spriteBatch;
 
             if (!GameManager.GameActive) return;
 
@@ -269,7 +266,22 @@ namespace BRS.Engine {
             sB.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
         }
 
-        
+        Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
+            return splitScreen ? PivotPoint(anchor, Screen.Split) : PivotPoint(anchor, Screen.Full);
+        }
+
+        Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
+            int pivotPosX = align.HasFlag(Align.Left) ? 0 : align.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
+            int pivotPosY = align.HasFlag(Align.Top) ? 0 : align.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
+            return new Point(pivotPosX, pivotPosY);
+        }
+
+        public static Align Flip(Align al) { // switches left/right flag if present
+            if (al.HasFlag(Align.Left)) al += Align.Right - Align.Left;
+            else if (al.HasFlag(Align.Right)) al -= Align.Right - Align.Left;
+            return al;
+        }
+
 
 
         //OLD CODE
@@ -318,21 +330,7 @@ namespace BRS.Engine {
             return rect;
         }*/
 
-        Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
-            return splitScreen ? PivotPoint(anchor, Screen.Split) : PivotPoint(anchor, Screen.Full);
-        }
 
-        Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
-            int pivotPosX = align.HasFlag(Align.Left) ? 0 : align.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
-            int pivotPosY = align.HasFlag(Align.Top) ? 0 : align.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
-            return new Point(pivotPosX, pivotPosY);
-        }
-
-        public static Align Flip(Align al) { // switches left/right flag if present
-            if      (al.HasFlag(Align.Left))  al += Align.Right - Align.Left;
-            else if (al.HasFlag(Align.Right)) al -= Align.Right - Align.Left;
-            return al;
-        }
 
     }
 

@@ -151,6 +151,7 @@
     </Compile>
     <Compile Include="Game1.cs" />
     <Compile Include="Scripts\Elements\Police.cs" />
+    <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />

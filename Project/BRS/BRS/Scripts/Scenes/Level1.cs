@@ -20,8 +20,9 @@ namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
         ////////// first game level, loads all the things //////////
 
+        public override int GetNumCameras() { return GameManager.NumPlayers; } 
+
         public override void Load() {
-            numPlayers = GameManager.NumPlayers;
             LoadUnityScene();
             CreateManagers();
             CreatePlayers();
@@ -29,6 +30,7 @@ namespace BRS.Scripts.Scenes {
             CreateBases();
             CreateSpecialObjects();
         }
+
 
         void LoadUnityScene() {
             //LOAD UNITY SCENE
@@ -97,7 +99,7 @@ namespace BRS.Scripts.Scenes {
             int i = 0;
             foreach (Camera c in Screen.Cameras) {
                 GameObject camObject = c.gameObject;
-                Add(camObject);
+                //Add(camObject);
                 camObject.AddComponent(new CameraController()); // TODO move out this creation code
                 camObject.GetComponent<CameraController>().CamIndex = i++;
             }
@@ -114,7 +116,7 @@ namespace BRS.Scripts.Scenes {
                 bases[i].transform.SetStatic();
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
-                Add(bases[i]);
+                //Add(bases[i]);
             }
             //BASE // TODO have this code make the base
             /*for (int i = 0; i < GameManager.numPlayers; i++) {
@@ -140,12 +142,12 @@ namespace BRS.Scripts.Scenes {
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
-            Add(vault);
+            //Add(vault);
 
 
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
-            Add(speedpad);
+            //Add(speedpad);
         }
     }
 }

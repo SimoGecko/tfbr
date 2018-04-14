@@ -15,9 +15,9 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        //@andy including these
+        //@andy remove these
         private Display _display;
-        private DebugDrawer _debugDrawer; // these should also not exist
+        private DebugDrawer _debugDrawer;
         private static bool _usePhysics = false;
 
 
@@ -27,12 +27,10 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
-            UserInterface.sB = _spriteBatch;
         }
 
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
-
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
 
             //@andy remove this - hide everything inside PhysicsManager.Setup();
@@ -48,6 +46,7 @@ namespace BRS {
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            UserInterface.sB = _spriteBatch;
 
             new UserInterface();
             Screen.SetupViewportsAndCameras(_graphics, GameManager.NumPlayers);
@@ -55,8 +54,8 @@ namespace BRS {
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            if (_usePhysics)  SceneManager.Load("LevelPhysics"); // TODO make simple string to select level
-            else SceneManager.Load("Level2");
+            if (_usePhysics)  SceneManager.LoadAndStart("LevelPhysics"); // TODO make simple string to select level
+            else SceneManager.LoadAndStart("Level1");
             //_ui = new UserInterface();
             //_ui.Start();
            
@@ -67,14 +66,13 @@ namespace BRS {
 
         public void Start() {
             //all the objects are present in memory but still don't hold references. Initialize variables and start
-
             UserInterface.Instance.Start();
             Input.Start();
             Audio.Start();
 
             //foreach (Camera cam in Screen.cameras) cam.Start(); // cameras are gameobjects
-            foreach (GameObject go in GameObject.All) go.Awake();
-            foreach (GameObject go in GameObject.All) go.Start();
+            //foreach (GameObject go in GameObject.All) go.Awake();
+            //foreach (GameObject go in GameObject.All) go.Start();
         }
 
 
@@ -89,21 +87,16 @@ namespace BRS {
             Time.Update(gameTime);
 
             Input.Update();
-
-
             Audio.Update();
 
             if (Input.GetKeyDown(Keys.D9)) {
                 Debug.Log("changing scene...");
-                SceneManager.Load("Level2");
-                foreach (GameObject go in GameObject.All) go.Awake();
-                foreach (GameObject go in GameObject.All) go.Start();
+                SceneManager.LoadAndStart("Level2");
+                
             }
             if (Input.GetKeyDown(Keys.D0)) {
                 Debug.Log("changing scene...");
-                SceneManager.Load("Level1");
-                foreach (GameObject go in GameObject.All) go.Awake();
-                foreach (GameObject go in GameObject.All) go.Start();
+                SceneManager.LoadAndStart("Level1");
             }
 
             foreach (GameObject go in GameObject.All) go.Update();
@@ -135,8 +128,6 @@ namespace BRS {
                 Gizmos.DrawFull(cam);
             }
             Gizmos.ClearOrders();
-
-
 
 
 

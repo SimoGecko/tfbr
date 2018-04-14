@@ -15,39 +15,38 @@ namespace BRS.Engine {
         public static void Start() {
             scenes = new Dictionary<string, Scene>();
 
-
+            //FILL here all the scenes in the game
             Add("Level1", new Level1());
             Add("Level2", new Level2());
             Add("Level3", new Level3());
             Add("LevelPhysics", new LevelPhysics());
-            
         }
 
         static void Add(string sceneName, Scene scene) {
             scenes.Add(sceneName, scene);
         }
 
-        public static void Load(string sceneName) {
-            if (currentScene != null) currentScene.Unload();
+        public static void LoadAndStart(string sceneName) {
             GameObject.ClearAll();
             currentScene = scenes[sceneName];
-            Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.numPlayers);
+            Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();
+
+            foreach (GameObject go in GameObject.All) go.Awake();
+            foreach (GameObject go in GameObject.All) go.Start();
         }
     }
 
 
     public class Scene {
-        ////////// contains all gameobjects in the scene //////////
+        ////////// loads all gameobjects in a scene //////////
 
-        //can create scene graph
-        List<GameObject> objectsInScene = new List<GameObject>();
-        public int numPlayers = 1;
+        public virtual void Load() { }// levels inherit and fill this
 
-        public virtual void Load() { // levels inherit and fill this
+        public virtual int GetNumCameras() { return 1; } // override this for more than 1 player
 
-        }
-
+        /*
+        List<GameObject> objectsInScene = new List<GameObject>();//can create scene graph
         public void Unload() {
             foreach (GameObject o in objectsInScene) GameObject.Destroy(o);
         }
@@ -55,6 +54,7 @@ namespace BRS.Engine {
         protected void Add(GameObject o) {
             objectsInScene.Add(o);
         }
+        */
 
     }
 

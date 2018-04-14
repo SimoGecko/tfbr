@@ -8,7 +8,7 @@ namespace BRS.Scripts.Elements {
     /// </summary>
     class PlantedBomb : Component {
 
-        private const float TimeBeforeExplosion = 3f;
+        private const float TimeBeforeExplosion = 4f;
         private const float ExplosionRadius = 4f;
         private const float ExplosionDamage = 60;
 
