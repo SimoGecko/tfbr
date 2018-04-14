@@ -54,7 +54,7 @@ namespace BRS.Engine {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
-        public void Draw(Camera cam) {
+        public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
@@ -63,9 +63,9 @@ namespace BRS.Engine {
             }
         }
 
-        public void Draw2D(Camera cam) {
+        public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
-                foreach (IComponent c in components) c.Draw(cam.Index);
+                foreach (IComponent c in components) c.Draw(i);
             }
         }
 

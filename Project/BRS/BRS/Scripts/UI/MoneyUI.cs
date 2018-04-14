@@ -40,13 +40,16 @@ namespace BRS.Scripts.UI {
         // --------------------- CUSTOM METHODS ----------------
 
         public override void Draw(int index) {
-            for(int i=0; i<orderList.Count; i++) {
+            if (index == 0) return;
+            index--;
+
+            for (int i=0; i<orderList.Count; i++) {
                 DrawValuableOrder dvo = orderList[i];
                 if (dvo.index == index) {
                     dvo.percent += Time.DeltaTime * duration;
                     if (dvo.percent > 1) orderList.RemoveAt(i--);
                     Vector2 screenPos = Camera.GetCamera(index).WorldToScreenPoint(dvo.position + Vector3.Up * dvo.percent * displacement);
-                    UserInterface.Instance.DrawStringOLD(screenPos, "+" + Utility.IntToMoneyString(dvo.value), Color.Lerp(Color.White, Color.White, dvo.percent));
+                    UserInterface.DrawStringOLD(screenPos, "+" + Utility.IntToMoneyString(dvo.value), Color.Lerp(Color.White, Color.White, dvo.percent));
                 }
             }
         }

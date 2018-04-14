@@ -81,7 +81,7 @@ namespace BRS.Scripts.Managers {
         void RestartCustom() { // it still slows down for some reason
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            //UserInterface.Instance.Start();
+            //UserInterface.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 

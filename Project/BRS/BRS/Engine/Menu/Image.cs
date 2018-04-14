@@ -23,8 +23,8 @@ namespace BRS.Menu {
 
         public override void Draw(int i) {
             base.Draw(i);
-            //UserInterface.Instance.DrawPictureOLD(Rectangle, _texture);
-            UserInterface.Instance.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
+            //UserInterface.DrawPictureOLD(Rectangle, _texture);
+            UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
         }
     }
 }

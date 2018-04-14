@@ -8,7 +8,7 @@ namespace BRS.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos - UserInterface.Instance.comicFont.MeasureString(Text) / 2; } }
+        public Vector2 Position { get { return InitPos - UserInterface.comicFont.MeasureString(Text) / 2; } }
 
         public TextBox() {
             Active = true;
@@ -16,7 +16,7 @@ namespace BRS.Menu {
 
         public override void Draw(int i) {
             base.Draw(i);
-            UserInterface.Instance.DrawStringOLD(Position, Text, Color.Black);
+            UserInterface.DrawStringOLD(Position, Text, Color.Black);
         }
     }
 }

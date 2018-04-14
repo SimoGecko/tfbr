@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using BRS.Engine.Physics;
 using BRS.Scripts.Scenes;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine {
     public class SceneManager {
@@ -22,16 +23,25 @@ namespace BRS.Engine {
             Add("LevelPhysics", new LevelPhysics());
         }
 
+        public static void Update() {
+            if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
+            if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
+            if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
+        }
+
         static void Add(string sceneName, Scene scene) {
             scenes.Add(sceneName, scene);
         }
 
-        public static void LoadAndStart(string sceneName) {
+        public static void LoadScene(string sceneName) {
             GameObject.ClearAll();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();
+            StartScene();
+        }
 
+        public static void StartScene() {
             foreach (GameObject go in GameObject.All) go.Awake();
             foreach (GameObject go in GameObject.All) go.Start();
         }

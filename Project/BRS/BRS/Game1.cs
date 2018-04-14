@@ -18,7 +18,6 @@ namespace BRS {
         //@andy remove these
         private Display _display;
         private DebugDrawer _debugDrawer;
-        private static bool _usePhysics = false;
 
 
         public Game1() {
@@ -48,31 +47,15 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
 
-            new UserInterface();
-            Screen.SetupViewportsAndCameras(_graphics, GameManager.NumPlayers);
-
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            if (_usePhysics)  SceneManager.LoadAndStart("LevelPhysics"); // TODO make simple string to select level
-            else SceneManager.LoadAndStart("Level1");
-            //_ui = new UserInterface();
-            //_ui.Start();
-           
+            SceneManager.LoadScene("Level2");
 
-            //everything is loaded, call Start
-            Start();
-        }
-
-        public void Start() {
-            //all the objects are present in memory but still don't hold references. Initialize variables and start
-            UserInterface.Instance.Start();
+            //start other big components
+            UserInterface.Start();
             Input.Start();
             Audio.Start();
-
-            //foreach (Camera cam in Screen.cameras) cam.Start(); // cameras are gameobjects
-            //foreach (GameObject go in GameObject.All) go.Awake();
-            //foreach (GameObject go in GameObject.All) go.Start();
         }
 
 
@@ -88,23 +71,12 @@ namespace BRS {
 
             Input.Update();
             Audio.Update();
-
-            if (Input.GetKeyDown(Keys.D9)) {
-                Debug.Log("changing scene...");
-                SceneManager.LoadAndStart("Level2");
-                
-            }
-            if (Input.GetKeyDown(Keys.D0)) {
-                Debug.Log("changing scene...");
-                SceneManager.LoadAndStart("Level1");
-            }
+            SceneManager.Update(); // check for scene change (can remove later)
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             PhysicsManager.Instance.Update(gameTime);
-            
-
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -116,11 +88,8 @@ namespace BRS {
 
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
-
-                PhysicsManager.Instance.Draw(cam); // why is this here??
-
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
-
+                PhysicsManager.Instance.Draw(cam);
+                foreach (GameObject go in GameObject.All) go.Draw3D(cam);
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
@@ -129,23 +98,19 @@ namespace BRS {
             }
             Gizmos.ClearOrders();
 
-
-
             //-----2D-----
-            int i = 0;
+            int i = 1;
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                UserInterface.Instance.DrawSplitscreen(_spriteBatch, i++);
-                foreach (GameObject go in GameObject.All) go.Draw2D(cam);
-
+                foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
+                i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            //foreach (GameObject go in GameObject.All) go.Draw2D(cam);
-            //UserInterface.Instance.DrawGlobal(_spriteBatch);
+            foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
         }
     }

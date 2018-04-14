@@ -71,14 +71,17 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw(int index) { // TODO clean out this code
-            UserInterface.Instance.DrawString("powerup", new Rectangle(0, 30, 100, 20), Align.Top, Align.Top, Align.Bottom, scale:.7f);
-            UserInterface.Instance.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 0, 64, 64), Align.Top);
+            if (index == 0) return;
+            index--;
+
+            UserInterface.DrawString("powerup", new Rectangle(0, 30, 100, 20), Align.Top, Align.Top, Align.Bottom, scale:.7f);
+            UserInterface.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 0, 64, 64), Align.Top);
 
             if (_powerupUi[index].CurrentPowerups.Length > 0) { // it's going to draw just one
                 foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
-                    UserInterface.Instance.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 64, 64, 64), Align.Top, col:Color.Orange);
-                    UserInterface.Instance.DrawPicture(_powerupsAtlas, new Rectangle(0, 57, 44, 44), _powerupsRectangle[powerup], Align.Top);
+                    UserInterface.DrawPicture(smallButton, new Rectangle(0, 55, 50, 50), new Rectangle(0, 64, 64, 64), Align.Top, col:Color.Orange);
+                    UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 57, 44, 44), _powerupsRectangle[powerup], Align.Top);
                     Suggestions.Instance.GiveCommand(index, new Rectangle(0, 130, 40, 40), XboxButtons.X, Align.Top);
                 }
             }
@@ -88,15 +91,15 @@ namespace BRS.Scripts.UI {
         public void DrawOLD2(int index) {
             /*
             Vector2 position = new Vector2(300, 100);
-            position += Vector2.UnitX * UserInterface.Instance.GetOffset(index);
+            position += Vector2.UnitX * UserInterface.GetOffset(index);
             Rectangle destRect = new Rectangle((int)position.X, (int)position.Y, 50, 50);
 
-            UserInterface.Instance.DrawPictureOLD(destRect, _slot);
+            UserInterface.DrawPictureOLD(destRect, _slot);
 
             if (_powerupUi[index].CurrentPowerups.Length > 0) { // it's going to draw just one
                 foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
-                    UserInterface.Instance.DrawPicture(destRect, _powerupsAtlas, _powerupsRectangle[powerup]);
+                    UserInterface.DrawPicture(destRect, _powerupsAtlas, _powerupsRectangle[powerup]);
                     Suggestions.Instance.GiveCommand(index, destRect.Evaluate(new Vector2(.5f, 1)) + new Vector2(0, 30), XboxButtons.X);
                 }
             }

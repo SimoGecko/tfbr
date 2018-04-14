@@ -56,7 +56,7 @@ namespace BRS.Menu {
             base.Draw(i);
 
             float percentPosButon =  ((ButtonSlider.InitPos.X - Position.X + ButtonSlider.Texture.Width/2) / UserInterface.BigBarWidth);
-            //UserInterface.Instance.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
+            //UserInterface.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
 
             ButtonSlider.Draw(i);
         }

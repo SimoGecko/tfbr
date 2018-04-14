@@ -35,7 +35,7 @@ namespace BRS.Engine {
             int row = currentFrame / columns;
             int column = currentFrame % columns;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            UserInterface.Instance.DrawPicture(texture, location, sourceRectangle, Align.TopLeft, Align.Center);
+            UserInterface.DrawPicture(texture, location, sourceRectangle, Align.TopLeft, Align.Center);
         }
 
         public bool FrameEnded(int frame) {

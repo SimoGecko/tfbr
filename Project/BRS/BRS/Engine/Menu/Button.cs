@@ -152,21 +152,21 @@ namespace BRS.Menu {
                     colour = Color.Gray;
 
                 if (Texture != null)
-                    UserInterface.Instance.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
-                //UserInterface.Instance.DrawPictureOLD(Rectangle, Texture, colour);
+                    UserInterface.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
+                //UserInterface.DrawPictureOLD(Rectangle, Texture, colour);
 
 
                 if (InsideImage != null)
-                    UserInterface.Instance.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
-                    //UserInterface.Instance.DrawPictureOLD(RectangleInsideObject, InsideImage, InsideObjectColor);
+                    UserInterface.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
+                    //UserInterface.DrawPictureOLD(RectangleInsideObject, InsideImage, InsideObjectColor);
                 
 
                 if (!string.IsNullOrEmpty(Text)) {
-                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).X / 2);
-                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).Y / 2);
+                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.Instance.DrawString(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
-                    //UserInterface.Instance.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
+                    UserInterface.DrawString(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
+                    //UserInterface.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
 
                 }
             }

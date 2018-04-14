@@ -54,12 +54,15 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw(int index) {
+            if (index == 0) return;
+            index--;
+
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
                     //Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);
                     bool wiggle = (int)Time.CurrentTime % 5 == 0;
                     float angle = (wiggle) ? (float)System.Math.Sin(Time.CurrentTime * 40) : 0;
-                    UserInterface.Instance.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
+                    UserInterface.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
             //comic bubble
@@ -68,8 +71,8 @@ namespace BRS.Scripts.UI {
                 /*
                 Point bubblePosition = Camera.Main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
                 Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));
-                UserInterface.Instance.DrawPictureOLD(dest, _comicBubble);
-                UserInterface.Instance.DrawStringOLD(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
+                UserInterface.DrawPictureOLD(dest, _comicBubble);
+                UserInterface.DrawStringOLD(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
                 */
             }
 
