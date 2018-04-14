@@ -1,4 +1,5 @@
-﻿using Jitter.Collision.Shapes;
+﻿using BRS.Load;
+using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -20,18 +21,18 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// Initialization of the rigid-body
         /// </summary>
         public override void Start() {
-            Model model = gameObject.Model;
+            Model model = GameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
-                bbSize.Y * gameObject.transform.scale.Y,
-                bbSize.Z * gameObject.transform.scale.Z);
+            bbSize = new JVector(bbSize.X * GameObject.transform.scale.X,
+                bbSize.Y * GameObject.transform.scale.Y,
+                bbSize.Z * GameObject.transform.scale.Z);
             CollisionShape = new BoxShape(bbSize);
 
             JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
-            com = new JVector(com.X * gameObject.transform.scale.X,
-                com.Y * gameObject.transform.scale.Y,
-                com.Z * gameObject.transform.scale.Z);
+            com = new JVector(com.X * GameObject.transform.scale.X,
+                com.Y * GameObject.transform.scale.Y,
+                com.Z * GameObject.transform.scale.Z);
             CenterOfMass = new JVector(com.X > _treshold ? com.X : 0,
                 com.Y > _treshold ? com.Y : 0,
                 com.Z > _treshold ? com.Z : 0);
@@ -44,7 +45,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
-                GameObject = gameObject
+                GameObject = GameObject
             };
 
             RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace BRS.Engine {
+namespace BRS.Engine.Utilities {
     static class Debug {
         public static void Log(string s) {
             //Console.WriteLine(s);

@@ -1,13 +1,14 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine {
-    ////////// Class that represents a virtual camera in space with projection characteristics //////////
+    /// <summary>
+    /// Class that represents a virtual camera in space with projection characteristics
+    /// </summary>
     public class Camera : Component {
         public enum Projection { Orthographic, Perspective};
 
@@ -19,7 +20,7 @@ namespace BRS.Engine {
         Projection projectiontype = Projection.Perspective;
 
         private readonly float _fov; // degrees
-        readonly float _aspectRatio;
+        readonly float _aspectRatio; //1280/720 or 1920/1080 =1.7778, 1200/900 = 1.3333
         private const float Near = 0.3f;
         private const float Far = 1000f;
 
@@ -50,6 +51,9 @@ namespace BRS.Engine {
             }
         }
 
+        public override void Start() { }
+        public override void Update() { }
+
         //static METHODS
         public Ray ScreenPointToRay(Vector2 point) {
             Vector3 nearPoint = Viewport.Unproject(new Vector3(point.X, point.Y, 0.0f), Proj, View, Matrix.Identity);
@@ -61,7 +65,7 @@ namespace BRS.Engine {
 
         public Vector2 WorldToScreenPoint(Vector3 world) {
             Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
-            return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
+            return new Vector2((int)System.Math.Round(result.X), (int)System.Math.Round(result.Y));
             /* // DUMB me that cannot have this snippet of code work
             Vector4 worldH = new Vector4(world, 1);
             Vector4 view = Vector4.Transform(worldH, View);

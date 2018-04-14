@@ -5,19 +5,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine {
-    ////////// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration. //////////
+    /// <summary>
+    /// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration.
+    /// </summary>
     static class Input {
 
         public enum Axis { Horizontal, Vertical }
-        public enum Stick { Right, Left, Up, Down }
+        public enum Stick { Right, Left }
 
         private static KeyboardState _kState, _oldKstate;
         private static MouseState _mState, _oldMstate;
         private static GamePadState[] _gState, _oldGstate;
 
         private static bool[] _vibrating = new bool[4];
-
-        public static bool uniqueFrameInputUsed;
 
         public static void Start() {
             _gState  = new GamePadState[4];
@@ -29,10 +29,7 @@ namespace BRS.Engine {
                 _gState[i] = GamePad.GetState(i);
 
             //old stuff for mouse
-            //_oldMstate = Mouse.GetState();
-
-            uniqueFrameInputUsed = false;
-            //_oldMstate = Mouse.GetState();
+            _oldMstate = Mouse.GetState();
         }
 
         public static void Update() {
@@ -57,8 +54,6 @@ namespace BRS.Engine {
                     }
                 }
             }*/
-
-            uniqueFrameInputUsed = false;
         }
 
         //AXIS
@@ -68,7 +63,7 @@ namespace BRS.Engine {
         private static bool DownAxis()  { return _kState.IsKeyDown(Keys.Down)  || _kState.IsKeyDown(Keys.S); }
 
 
-        internal static float GetAxisRaw(Axis axis) { // WASD, ARROWS and gamepad all work
+        internal static float GetAxisRaw(Axis axis, string v) { // WASD, ARROWS and gamepad all work
             if (axis == Axis.Horizontal) {
                 return LeftAxis() && !RightAxis() ? -1 : !LeftAxis() && RightAxis() ? 1 : 0 + GetThumbstick(Stick.Left).X;
             }
@@ -123,7 +118,7 @@ namespace BRS.Engine {
             }
             return false;
         }
-        public static bool GetMouseButton    (int index) { return  GetMouseButton(index, _mState); }
+        public static bool GetMouseButton(int index) { return GetMouseButton(index, _mState); }
         public static bool GetMouseButtonDown(int index) { return  GetMouseButton(index, _mState) && !GetMouseButton(index, _oldMstate); }
         public static bool GetMouseButtonUp  (int index) { return !GetMouseButton(index, _mState) &&  GetMouseButton(index, _oldMstate); }
 

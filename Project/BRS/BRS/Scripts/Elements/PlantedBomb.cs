@@ -11,6 +11,7 @@ namespace BRS.Scripts.Elements {
         private const float TimeBeforeExplosion = 3f;
         private const float ExplosionRadius = 4f;
         private const float ExplosionDamage = 60;
+        //Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
         public override void Start() {
             
@@ -22,7 +23,6 @@ namespace BRS.Scripts.Elements {
         }
 
         void Explode() {
-            Audio.Play("explosion", transform.position);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {

@@ -6,7 +6,11 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+<<<<<<< HEAD
+using Microsoft.Xna.Framework;
+=======
 using BRS.Scripts.UI;
+>>>>>>> develop
 
 namespace BRS.Scripts.Elements {
     class Money : Pickup { // TODO rename valuable
@@ -58,6 +62,8 @@ namespace BRS.Scripts.Elements {
                 MoneyUI.Instance.PickedupValuable(transform.position, value, p.PlayerIndex);
                 GameObject.Destroy(gameObject);
             }
+
+           
         }
 
 

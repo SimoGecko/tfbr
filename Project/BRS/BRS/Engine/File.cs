@@ -43,19 +43,10 @@ namespace BRS.Engine {
 
 
         // commands
-        // Todo: a lot of unused code :-)
-        public static T Load<T>(string s, bool check = false) {
+        public static T Load<T>(string s) {
             //TODO check first if file exists
-            
-            string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
-            string fullPath = filePath + s + ".fbx";
-            bool fileExists = false;// System.IO.File.Exists(fullPath);
-            if(false && !fileExists && typeof(T) == typeof(Model)) {
-                Debug.Log("File " + s + " doesn't exist!");
-                //return content.Load<T>("Models/primitives/cube");
-            }
-
             T result = content.Load<T>(s);
+            if (result == null) Debug.LogError("incorrect path to file: " + s);
             return result;
         }
 
@@ -97,7 +88,7 @@ namespace BRS.Engine {
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
                         Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(-float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[3])), MathHelper.ToRadians(float.Parse(rSplit[1])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
                         GameObject go = new GameObject(tagName + "_" + i.ToString(), File.Load<Model>("Models/primitives/" + prefabName));
@@ -144,10 +135,7 @@ namespace BRS.Engine {
             }
         }
 
-
-        //simo code
         public static void ReadHeistScene(string pathName) {
-            Vector3 offset = new Vector3(0, 0, 10); // Turn this off to avoid offset
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
@@ -169,18 +157,21 @@ namespace BRS.Engine {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
-                        Vector3 pos = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), float.Parse(pSplit[3]));
-                        Vector3 rot = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
-                        Vector3 sca = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
-                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName, true));
-                        //NOW DO CONVERSION
-                        go.transform.position = new Vector3(pos.X, pos.Y, -pos.Z) + offset;
-                        go.transform.eulerAngles = new Vector3(-rot.X, -rot.Y + 180, rot.Z); // +180 is probably due to not scaling with -1
-                        go.transform.scale = new Vector3(sca.X, sca.Y, sca.Z);
+                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
+                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2] + 180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+
+                        Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
+
+                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName));
+
+                        go.transform.position = position + new Vector3(0, 0, 30);
+                        go.transform.scale = scale;
+                        go.transform.rotation = rotation; // rotation not parsed correctly?
                     }
-                    // <end>
-                    nameContent = reader.ReadLine(); 
+
+                    nameContent = reader.ReadLine(); // <end>
                 }
             }
         }

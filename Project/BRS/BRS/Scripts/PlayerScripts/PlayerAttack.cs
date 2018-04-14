@@ -42,6 +42,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (isPlayer && _attacking) {
                 Player p = c.GameObject.GetComponent<Player>();
                 DealWithAttack(p);
+                Audio.Play("break1",Vector3.Zero);
             }
         }
 
@@ -61,6 +62,7 @@ namespace BRS.Scripts.PlayerScripts {
             _hasAppliedDamage = false;
             _attackStartTime = Time.CurrentTime;
             Invoke(AttackDuration, () => _attacking = false);
+            Audio.Play("attack1",_attackStartPos);
         }
 
         public void AttackCoroutine() {
