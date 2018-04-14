@@ -16,12 +16,10 @@ namespace BRS.Engine {
 
         //reference
         private readonly Transform _parent;
-        public static Billboard Instance;
 
         // --------------------- BASE METHODS ------------------
         public Billboard(Transform t) {
             _parent = t;
-            Instance = this;
         }
 
         public override void Start() {
@@ -30,11 +28,9 @@ namespace BRS.Engine {
 
         public override void Update() {
             transform.position = _parent.position;
-
             transform.LookAt(Camera.Main.transform.position);
             //Quaternion extraRot = Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(90));
             //transform.localRotation* extraRot;
-            
         }
 
 

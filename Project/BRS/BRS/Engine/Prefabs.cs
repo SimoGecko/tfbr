@@ -6,24 +6,26 @@ using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine {
-    static partial class Prefabs {
+    static class Prefabs {
         ////////// static class that contains all GameObjects stored as prefabs and allows access to instantiate them //////////
 
         static Dictionary<string, GameObject> _allprefabs = new Dictionary<string, GameObject>();
-        public static Model Emptymodel; // to represent a small transform without mesh - debug
-        public static Model CubeModel, SphereModel;
+
+        public static Model Emptymodel, CubeModel, SphereModel; // to represent a small transform without mesh - debug
 
         public static void Start() {
             Emptymodel  = File.Load<Model>("Models/primitives/emptyCol");
             CubeModel   = File.Load<Model>("Models/primitives/cube");
             SphereModel = File.Load<Model>("Models/primitives/sphere");
-            BuildPrefabs();
+
+            PrefabContent.BuildPrefabs();
         }
 
         //COMMANDS (do not modify)
-        static void AddPrefab(GameObject o) {
+        public static void AddPrefab(GameObject o) {
             _allprefabs.Add(o.name, o);
-            //o.Start(); // no need as already called from gameobject
+            //o.Start(); // no need as already called from gameobject (not anymore)
+            GameObject.ConsiderPrefab(o);
             o.active = false;
         }
 
@@ -32,7 +34,6 @@ namespace BRS.Engine {
                 Debug.LogError("No existing prefab with name " + name);
                 return null;
             }
-
             return _allprefabs[name];
         }
         

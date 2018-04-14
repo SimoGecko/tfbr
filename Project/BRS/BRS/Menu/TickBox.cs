@@ -55,16 +55,16 @@ namespace BRS.Menu {
         }
 
         // --------------------- CUSTOM METHODS ----------------
-        public override void Draw() {
+        public override void Draw(int i) {
             var colour = Color.White;
 
             if (_isHovering)
                 colour = Color.Gray;
 
             if (IsClicked)
-                UserInterface.Instance.DrawPicture(Rectangle, _textureClicked, colour);
+                UserInterface.DrawPicture(_textureClicked, Rectangle, col: colour);
             else
-                UserInterface.Instance.DrawPicture(Rectangle, _textureNotClicked, colour);
+                UserInterface.DrawPicture(_textureNotClicked, Rectangle, col: colour);
         }
     }
 }

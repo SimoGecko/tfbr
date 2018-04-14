@@ -5,13 +5,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine {
-    /// <summary>
-    /// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration.
-    /// </summary>
+    ////////// Static class that provides easy access to input (Mouse, Keyboard, Gamepad) as well as vibration. //////////
     static class Input {
 
         public enum Axis { Horizontal, Vertical }
-        public enum Stick { Right, Left }
+        public enum Stick { Right, Left, Up, Down }
 
         private static KeyboardState _kState, _oldKstate;
         private static MouseState _mState, _oldMstate;
@@ -27,9 +25,6 @@ namespace BRS.Engine {
             _mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 _gState[i] = GamePad.GetState(i);
-
-            //old stuff for mouse
-            _oldMstate = Mouse.GetState();
         }
 
         public static void Update() {
@@ -63,7 +58,7 @@ namespace BRS.Engine {
         private static bool DownAxis()  { return _kState.IsKeyDown(Keys.Down)  || _kState.IsKeyDown(Keys.S); }
 
 
-        internal static float GetAxisRaw(Axis axis, string v) { // WASD, ARROWS and gamepad all work
+        internal static float GetAxisRaw(Axis axis) { // WASD, ARROWS and gamepad all work
             if (axis == Axis.Horizontal) {
                 return LeftAxis() && !RightAxis() ? -1 : !LeftAxis() && RightAxis() ? 1 : 0 + GetThumbstick(Stick.Left).X;
             }
@@ -118,7 +113,7 @@ namespace BRS.Engine {
             }
             return false;
         }
-        public static bool GetMouseButton(int index) { return GetMouseButton(index, _mState); }
+        public static bool GetMouseButton    (int index) { return  GetMouseButton(index, _mState); }
         public static bool GetMouseButtonDown(int index) { return  GetMouseButton(index, _mState) && !GetMouseButton(index, _oldMstate); }
         public static bool GetMouseButtonUp  (int index) { return !GetMouseButton(index, _mState) &&  GetMouseButton(index, _oldMstate); }
 

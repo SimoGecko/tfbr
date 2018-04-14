@@ -8,11 +8,15 @@ namespace BRS.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos - UserInterface.Instance.SmallFont.MeasureString(Text) / 2; } }
+        public Vector2 Position { get { return InitPos - UserInterface.comicFont.MeasureString(Text) / 2; } }
 
-        public override void Draw() {
-            base.Draw();
-            UserInterface.Instance.DrawString(Position, Text, Color.Black);
+        public TextBox() {
+            Active = true;
+        }
+
+        public override void Draw(int i) {
+            base.Draw(i);
+            UserInterface.DrawString(Text, Position,col: Color.Black);
         }
     }
 }

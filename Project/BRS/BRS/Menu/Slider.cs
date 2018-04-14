@@ -47,18 +47,18 @@ namespace BRS.Menu {
                 ButtonSlider.InitPos = new Vector2(_currentMouse.Position.X - _offset, ButtonSlider.InitPos.Y);
                 if (ButtonSlider.InitPos.X + ButtonSlider.Texture.Width / 2 < Position.X)
                     ButtonSlider.InitPos = new Vector2(Position.X - ButtonSlider.Texture.Width / 2, ButtonSlider.InitPos.Y);
-                if (ButtonSlider.InitPos.X > Position.X + UserInterface.BarBigWidth - ButtonSlider.Texture.Width / 2)
-                    ButtonSlider.InitPos = new Vector2(Position.X + UserInterface.BarBigWidth - ButtonSlider.Texture.Width / 2, ButtonSlider.InitPos.Y);
+                if (ButtonSlider.InitPos.X > Position.X + UserInterface.BigBarWidth - ButtonSlider.Texture.Width / 2)
+                    ButtonSlider.InitPos = new Vector2(Position.X + UserInterface.BigBarWidth - ButtonSlider.Texture.Width / 2, ButtonSlider.InitPos.Y);
             }
         }
 
-        public override void Draw() {
-            base.Draw();
+        public override void Draw(int i) {
+            base.Draw(i);
 
-            float percentPosButon =  ((ButtonSlider.InitPos.X - Position.X + ButtonSlider.Texture.Width/2) / UserInterface.BarBigWidth);
-            UserInterface.Instance.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
+            float percentPosButon =  ((ButtonSlider.InitPos.X - Position.X + ButtonSlider.Texture.Width/2) / UserInterface.BigBarWidth);
+            //UserInterface.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
 
-            ButtonSlider.Draw();
+            ButtonSlider.Draw(i);
         }
 
         // --------------------- CUSTOM METHODS ----------------

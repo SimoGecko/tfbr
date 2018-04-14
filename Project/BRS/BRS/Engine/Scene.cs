@@ -1,42 +1,71 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Scripts.Scenes;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine {
+    public class SceneManager {
+        ////////// static class that allows to load and unload/change levels //////////
+
+        static Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
+        static Scene currentScene;
+
+        public static void Start() {
+            scenes = new Dictionary<string, Scene>();
+
+            //FILL here all the scenes in the game
+            Add("Level1", new Level1());
+            Add("Level2", new Level2());
+            Add("Level3", new Level3());
+            Add("LevelPhysics", new LevelPhysics());
+        }
+
+        public static void Update() {
+            if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
+            if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
+            if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
+            if (Input.GetKeyDown(Keys.D4)) LoadScene("LevelPhysics");
+        }
+
+        static void Add(string sceneName, Scene scene) {
+            scenes.Add(sceneName, scene);
+        }
+
+        public static void LoadScene(string sceneName) {
+            GameObject.ClearAll();
+            currentScene = scenes[sceneName];
+            Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
+            if (currentScene != null) currentScene.Load();
+            StartScene();
+        }
+
+        public static void StartScene() {
+            foreach (GameObject go in GameObject.All) go.Awake();
+            foreach (GameObject go in GameObject.All) go.Start();
+        }
+    }
+
+
     public class Scene {
-        ////////// static class that contains all gameobjects in the scene and allows to load new levels //////////
+        ////////// loads all gameobjects in a scene //////////
 
-        //can create scene graph
+        public virtual void Load() { }// levels inherit and fill this
 
-        protected PhysicsManager PhysicsManager { get; set; }
+        public virtual int GetNumCameras() { return 1; } // override this for more than 1 player
 
-        protected GameObject UiManager;
-        protected GameObject Managers;
-
-        public Scene(PhysicsManager physics) {
-            PhysicsManager = physics;
+        /*
+        List<GameObject> objectsInScene = new List<GameObject>();//can create scene graph
+        public void Unload() {
+            foreach (GameObject o in objectsInScene) GameObject.Destroy(o);
         }
 
-        public void Start() {
-            Build();
-            CreatePlayers();
-            StartManagers();
+        protected void Add(GameObject o) {
+            objectsInScene.Add(o);
         }
-
-        public void Update() { }
-
-        protected virtual void StartManagers() {
-
-        }
-
-        protected virtual void Build() { // levels inherit and fill this
-
-        }
-
-        protected virtual void CreatePlayers() {
-
-        }
+        */
 
     }
 
