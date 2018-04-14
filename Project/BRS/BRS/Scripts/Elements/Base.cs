@@ -39,7 +39,7 @@ namespace BRS.Scripts.Elements {
             TotalMoney = 0;
 
             // Todo: This causes currently a strange loop. Players are need UI to be started already, but the UI which contains the Suggestions uses the player and bases to be startet first!
-            //UpdateUI();
+            UpdateUI();
         }
 
         public override void Update() {
@@ -52,7 +52,7 @@ namespace BRS.Scripts.Elements {
                 Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == _baseIndex) {
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
-                    DeloadPlayerProgression(p.GameObject.GetComponent<PlayerInventory>());
+                    DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
             }
         }
@@ -79,17 +79,18 @@ namespace BRS.Scripts.Elements {
         }
 
         public override void TakeDamage(float damage) {
-            base.TakeDamage(damage);
-            UpdateUI();
+            //base.TakeDamage(damage);
+            //UpdateUI();
         }
 
         public void NotifyRoundEnd() {
             foreach(var p in TeamPlayers()) {
-                if (!PlayerInsideRange(GameObject)) {
+                if (!PlayerInsideRange(gameObject)) {
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                 }
             }
+            //SHOW money penalty (BUSTED!)
             UpdateUI();
         }
 
@@ -112,7 +113,7 @@ namespace BRS.Scripts.Elements {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
-            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.GameObject)) { 
+            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();

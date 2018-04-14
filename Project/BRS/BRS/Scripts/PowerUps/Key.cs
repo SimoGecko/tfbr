@@ -27,7 +27,6 @@ namespace BRS.Scripts.Elements {
         }
 
 
-
         // --------------------- CUSTOM METHODS ----------------
 
 

@@ -4,7 +4,9 @@
 using BRS.Engine;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
+using BRS.Scripts;
 using Curve = BRS.Engine.Utilities.Curve;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -37,7 +39,7 @@ namespace BRS.Scripts.PlayerScripts {
         private const float SmoothTime = .2f;
         private const float PositionSmoothTime = .1f;
         private const int AngleVariation = 5;
-        private const float ShakeAmount = .3f;
+        private const float ShakeAmount = .0f;
 
         //reference
         private Transform _player;
@@ -62,6 +64,8 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void LateUpdate() { // after player has moved
+            if (!GameManager.GameActive) return;
+
             ProcessInput();
             FollowSmoothAndRotate();
             ProcessShake();
@@ -89,7 +93,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         void FollowSmoothAndRotate() {
-            // Todo: used?
+            // Todo: used? yes
             Vector3 currentPosition = transform.position;
 
             transform.position = _player.position + Offset;
@@ -98,7 +102,7 @@ namespace BRS.Scripts.PlayerScripts {
             transform.RotateAround(_player.position, Vector3.Up, _yAngleSmooth);
             transform.RotateAround(_player.position, transform.Right, _xAngleSmooth);
 
-            // Todo: used?
+            // Todo: used? yes
             Vector3 targetPos = transform.position;
             //transform.position = Utility.SmoothDamp(currentPosition, targetPos, ref targetPosRef, positionSmoothTime);
 

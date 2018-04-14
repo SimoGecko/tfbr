@@ -14,18 +14,23 @@ namespace BRS.Scripts.Elements {
         //Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
         public override void Start() {
+            
+        }
+
+        public void Plant() {
+            Audio.Play("bomb_timer", transform.position);
             new Timer(TimeBeforeExplosion, Explode);
         }
 
         void Explode() {
-            //Audio.Play("explosion", _soundPosition);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
-            GameObject.Destroy(GameObject);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
+            GameObject.Destroy(gameObject);
         }
 
         // queries

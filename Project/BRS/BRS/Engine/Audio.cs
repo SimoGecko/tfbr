@@ -6,12 +6,20 @@ using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
+using System;
 
+<<<<<<< HEAD
 namespace BRS.Engine
 {
     static class Audio
     {
         //static class that contains all audio in the game and allows playback
+=======
+namespace BRS.Engine {
+    static class Audio {
+        ////////// static class that contains all audio in the game and allows playback //////////
+
+>>>>>>> develop
         //static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, SoundEffectInstance> sounds;
         static Dictionary<string, Song> songs;
@@ -34,15 +42,15 @@ namespace BRS.Engine
             BuildSongLibrary();
 
             PlaySong("Happy Happy Game Show");
-            SetMusicVolume(.05f);
+
+            SetMusicVolume(.01f);
             SetSoundVolume(1f);
         }
 
 
-        public static void Update()
-        {
-            //sounds["mono/phi"].Apply3D(Listener(), em);
 
+        public static void Update() {
+            //sounds["mono/phi"].Apply3D(Listener(), em); // TODO
         }
 
         //COMMANDS
@@ -148,13 +156,19 @@ namespace BRS.Engine
         static void BuildAudioLibrary()
         {
             //extend this string array with all the sounds (use correct names)
-            string[] soundsString = new string[] {"car1", "car2", "car3","cash_pickup","useSpeed","police","winner", "loser","useKey","useHealth","attack1","health_pickup","break1","break2"};
+            string[] soundsString = new string[] {
+                "attacks/attack", "attacks/break", "attacks/stun",
+                "elements/bomb_timer", "elements/explosion", "elements/speedpad",
+                "game/police",
+                "powerups/bomb_pickup", "powerups/capacity_pickup", "powerups/health_pickup","powerups/key_pickup", "powerups/shield_pickup", "powerups/speed_pickup",
+                "powerups/key_use", "powerups/shield_use",
+                "valuables/cash_pickup", "valuables/gold_pickup", "valuables/diamond_pickup", };
 
-            foreach (string s in soundsString)
-            {
+
+            foreach(string s in soundsString) {
                 SoundEffect soundEffect = File.Load<SoundEffect>("Audio/effects/" + s);
-                sounds.Add(s, soundEffect.CreateInstance());
-                //sounds[s].IsLooped = true;
+                string name = s.Split('/')[1];
+                sounds.Add(name, soundEffect.CreateInstance());
             }
         }
 

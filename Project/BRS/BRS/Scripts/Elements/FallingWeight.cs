@@ -31,7 +31,7 @@ namespace BRS.Scripts.Elements {
                 transform.position += Vector3.Down * FallSpeed * Time.DeltaTime;
             } else if (!_invokedDelete) {
                 _invokedDelete = true;
-                GameObject.Destroy(GameObject, Lifetime);
+                GameObject.Destroy(gameObject, Lifetime);
             }
         }
 

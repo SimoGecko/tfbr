@@ -25,6 +25,7 @@ namespace BRS.Scripts.Managers {
         private List<Money> _moneyList;
         private List<Crate> _crateList;
         private List<Powerup> _powerupList;
+        private List<GameObject> _variousObjects;
 
         //reference
         public static ElementManager Instance;
@@ -44,6 +45,9 @@ namespace BRS.Scripts.Managers {
 
             _powerupList = new List<Powerup>();
             _powerupList.Clear();
+
+            _variousObjects = new List<GameObject>();
+            _variousObjects.Clear();
         }
 
         public override void Update() {
@@ -76,13 +80,17 @@ namespace BRS.Scripts.Managers {
         public void Add(Powerup p) { _powerupList.Add(p); }
         public void Remove(Powerup p) { _powerupList.Remove(p); }
 
+        //gameobject
+        public void Add(GameObject g) { _variousObjects.Add(g); }
+        public void Remove(GameObject g) { _variousObjects.Remove(g); }
+
 
         // queries
         public Vector3[] AllMoneyPosition() {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Money m in _moneyList) {
-                result.Add(m.GameObject.transform.position);
+                result.Add(m.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -92,7 +100,7 @@ namespace BRS.Scripts.Managers {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Crate c in _crateList) {
-                result.Add(c.GameObject.transform.position);
+                result.Add(c.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -102,7 +110,7 @@ namespace BRS.Scripts.Managers {
             List<Vector3> result = new List<Vector3>();
 
             foreach (Powerup p in _powerupList) {
-                result.Add(p.GameObject.transform.position);
+                result.Add(p.gameObject.transform.position);
             }
 
             return result.ToArray();
@@ -144,12 +152,20 @@ namespace BRS.Scripts.Managers {
         public Player[] Players() { return _playerList.ToArray(); }
         public Base[] Bases() { return _baseList.ToArray(); }
 
+        public Transform[] PlayerTransforms() {
+            List<Transform> result = new List<Transform>();
+            foreach (Player p in _playerList)
+                result.Add(p.transform);
+            return result.ToArray();
+        }
+
 
         // other
         public void Restart() {
-            foreach (var g in _moneyList) GameObject.Destroy(g.GameObject);
-            foreach (var g in _crateList) GameObject.Destroy(g.GameObject);
-            foreach (var g in _powerupList) GameObject.Destroy(g.GameObject);
+            foreach (var g in _moneyList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _crateList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _powerupList) GameObject.Destroy(g.gameObject);
+            foreach (var g in _variousObjects) GameObject.Destroy(g);
             Start();
         }
 
