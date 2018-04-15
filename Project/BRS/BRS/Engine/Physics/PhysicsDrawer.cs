@@ -14,6 +14,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Physics {
+    /// <summary>
+    /// This class is only for visual-debugging purpose and can be removed in a later state.
+    /// Todo: (for Andy) Remove when not used anymore
+    /// </summary>
     class PhysicsDrawer {
 
         #region Singleton

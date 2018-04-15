@@ -6,7 +6,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics.RigidBodies {
+    /// <summary>
+    /// Component to connect the game-object with the physics-simulation.
+    /// </summary>
     public abstract class RigidBodyComponent : Component {
+
         public RigidBody RigidBody;
 
         protected ShapeType ShapeType;

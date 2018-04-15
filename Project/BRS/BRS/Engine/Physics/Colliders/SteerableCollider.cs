@@ -1,10 +1,14 @@
-﻿using Windows.Devices.Geolocation;
-using BRS.Scripts.PlayerScripts;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
 namespace BRS.Engine.Physics.Colliders {
+    /// <summary>
+    /// Handles the rigid body which can be controlled by the player
+    /// </summary>
     class SteerableCollider : Collider {
         public float RotationY { get; set; }
         public JVector Speed { get; set; }

@@ -1,4 +1,7 @@
-﻿using BRS.Engine.Physics.Colliders;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine.Physics.Colliders;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
@@ -6,6 +9,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics.RigidBodies {
+    /// <summary>
+    /// Represents a steerable rigid body in the physics simulation which is controlled by the physics simulation and the player.
+    /// </summary>
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 

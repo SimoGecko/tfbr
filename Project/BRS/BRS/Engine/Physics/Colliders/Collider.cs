@@ -1,9 +1,14 @@
-﻿using System.Numerics;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 
 namespace BRS.Engine.Physics.Colliders {
+    /// <summary>
+    /// Represents the rigid body extension for the physics to have access to the game-object during simulation.
+    /// </summary>
     public class Collider : RigidBody {
         public GameObject GameObject { get; set; }
 
