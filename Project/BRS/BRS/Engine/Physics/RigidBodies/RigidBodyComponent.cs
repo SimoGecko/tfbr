@@ -16,7 +16,7 @@ namespace BRS.Engine.Physics.RigidBodies {
         protected bool IsStatic;
         protected bool IsActive;
         protected bool PureCollider;
-        protected float Size = 1.0f;
+        protected JVector Size = JVector.One;
 
         protected JVector CenterOfMass;
 
@@ -56,9 +56,9 @@ namespace BRS.Engine.Physics.RigidBodies {
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
             bbSize = new JVector(
-                bbSize.X * Size * gameObject.transform.scale.X,
-                bbSize.Y * Size * gameObject.transform.scale.Y,
-                bbSize.Z * Size * gameObject.transform.scale.Z
+                bbSize.X * Size.X * gameObject.transform.scale.X,
+                bbSize.Y * Size.Y * gameObject.transform.scale.Y,
+                bbSize.Z * Size.Z * gameObject.transform.scale.Z
                 );
 
             float maxDimension = MathHelper.Max(bbSize.X, MathHelper.Max(bbSize.Y, bbSize.Z));

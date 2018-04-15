@@ -1,5 +1,4 @@
-﻿using BRS.Engine.Physics.Colliders;
-using Jitter.Collision.Shapes;
+﻿using Jitter.Collision.Shapes;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,13 +7,17 @@ namespace BRS.Engine.Physics.RigidBodies {
     class StaticRigidBody : RigidBodyComponent {
         private readonly bool _isGround;
 
-        public StaticRigidBody(bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, float size = 1.0f) {
+        public StaticRigidBody(float size = 1.0f, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false)
+            : this(new Vector3(size), isActive, isGround, shapeType, pureCollider) {
+        }
+
+        public StaticRigidBody(Vector3 size, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             IsStatic = true;
             IsActive = isActive;
             ShapeType = shapeType;
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
-            Size = size;
+            Size = Conversion.ToJitterVector(size);
 
             _isGround = isGround;
         }

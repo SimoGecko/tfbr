@@ -9,12 +9,16 @@ namespace BRS.Engine.Physics.RigidBodies {
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(bool isActive = true, ShapeType shapeType = ShapeType.Box, float size = 1.0f) {
+        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box)
+            : this(new Vector3(size), isActive, shapeType) {
+        }
+
+        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             IsStatic = false;
             IsActive = isActive;
             ShapeType = shapeType;
             Tag = BodyTag.DrawMe;
-            Size = size;
+            Size = Conversion.ToJitterVector(size);
         }
 
         /// <summary>
@@ -25,9 +29,9 @@ namespace BRS.Engine.Physics.RigidBodies {
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
             bbSize = new JVector(
-                bbSize.X * Size * gameObject.transform.scale.X,
-                bbSize.Y * Size * gameObject.transform.scale.Y,
-                bbSize.Z * Size * gameObject.transform.scale.Z
+                bbSize.X * Size.X * gameObject.transform.scale.X,
+                bbSize.Y * Size.Y * gameObject.transform.scale.Y,
+                bbSize.Z * Size.Z * gameObject.transform.scale.Z
             );
             CollisionShape = new BoxShape(bbSize);
 
@@ -43,7 +47,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             RigidBody = new SteerableCollider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
-                CenterOfMass =  CenterOfMass,
+                CenterOfMass = CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,
