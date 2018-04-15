@@ -29,6 +29,7 @@ namespace BRS.Engine.Physics.Colliders {
             //LinearVelocity = JVector.Zero;
             //GameObject.GetComponent<PlayerMovement>().ResetSmoothMatnitude();
             //}
+            Debug.Log(Position);
             Position = new JVector(Position.X, Height * .5f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
 

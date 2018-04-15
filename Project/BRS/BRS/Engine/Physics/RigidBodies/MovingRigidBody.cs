@@ -64,7 +64,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
             transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
 
-            //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
+            Debug.Log(RigidBody.Position, "MovingRigidBody:");
 
             base.Update();
         }

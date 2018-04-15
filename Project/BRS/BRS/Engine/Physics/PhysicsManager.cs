@@ -25,15 +25,7 @@ namespace BRS.Engine.Physics {
         /// <summary>
         /// Singleton-getter
         /// </summary>
-        public static PhysicsManager Instance {
-            get {
-                if (_instance == null) {
-                    _instance = new PhysicsManager();
-                }
-
-                return _instance;
-            }
-        }
+        public static PhysicsManager Instance => _instance ?? (_instance = new PhysicsManager());
 
         #endregion
 
@@ -137,49 +129,9 @@ namespace BRS.Engine.Physics {
             bool body2IsStatic = body2?.IsStatic == true;
 
             if (body1IsPlayer && !body2IsPureCollider && body2IsStatic) {
-                if (body1.GameObject.GetComponent<Player>().State == Player.PlayerState.Collided) {
-                    return;
-                }
-
-                //body1.AddForce(obj.Normal * 100);
-                //body1.LinearVelocity -= obj.Normal * 5;
-                //Debug.Log(obj.Normal, "Force to body 1: ");
-                JVector newPosition;
-                //newPosition = GetPosition(body1.BoundingBoxSize, body1.GameObject, obj.Normal,
-                //    Conversion.ToJitterVector(body1.GameObject.transform.Forward), obj.Position2);
-                //body1.Position -= obj.Normal * 0.5f;
-                //body1.Position = newPosition;
-
-                //(body1 as SteerableCollider).PositionUpdatedByCollision = true;
-
-                newPosition = obj.Position2 + ReflectOnNormal(Conversion.ToJitterVector(body1.GameObject.transform.Forward),
-                                  -1 * obj.Normal);
-
-                Debug.Log("NEW FUCKING COLLISION-POINT:");
-                Debug.Log(body1.Position);
-                Debug.Log(newPosition);
-                body1.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
+                HandlePlayerCollision(body1, obj.Position2, -1 * obj.Normal);
             } else if (body2IsPLayer && !body1IsPureCollider && body1IsStatic) {
-                if (body2.GameObject.GetComponent<Player>().State == Player.PlayerState.Collided) {
-                    return;
-                }
-
-                //body2.AddForce(obj.Normal * -100);
-                //body2.LinearVelocity += obj.Normal * 5;
-                //Debug.Log(obj.Normal, "Force to body 2: ");
-                //body2.Position += obj.Normal * 0.5f;
-                JVector newPosition;
-                //newPosition= GetPosition(body2.BoundingBoxSize, body2.GameObject, obj.Normal,
-                    //Conversion.ToJitterVector(body2.GameObject.transform.Forward), obj.Position1);
-                //body2.Position = newPosition;
-                newPosition = obj.Position1 + ReflectOnNormal(Conversion.ToJitterVector(body2.GameObject.transform.Forward),
-                                  obj.Normal);
-
-                Debug.Log("NEW FUCKING COLLISION-POINT:");
-                Debug.Log(body2.Position);
-                Debug.Log(newPosition);
-                //(body2 as SteerableCollider).PositionUpdatedByCollision = true;
-                body2.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
+                HandlePlayerCollision(body2, obj.Position1, obj.Normal);
             }
         }
 
@@ -235,8 +187,15 @@ namespace BRS.Engine.Physics {
         /// <param name="end"></param>
         /// <returns></returns>
         public Vector3 DetectCollision(RigidBody rigidBody, GameObject gameObject, Vector3 start, Vector3 end) {
-            JVector p = Conversion.ToJitterVector(start) + rigidBody.CenterOfMass;
-            JVector d = Conversion.ToJitterVector(end - start);
+            JVector jStart = Conversion.ToJitterVector(start);
+            JVector jEnd = Conversion.ToJitterVector(end);
+            JVector result = DetectCollision(rigidBody, gameObject, jStart, jEnd);
+            return Conversion.ToXnaVector(result);
+        }
+
+        public JVector DetectCollision(RigidBody rigidBody, GameObject gameObject, JVector start, JVector end) {
+            JVector p = start + rigidBody.CenterOfMass;
+            JVector d = end - start;
 
             JVector bbSize = rigidBody.BoundingBox.Max - rigidBody.BoundingBox.Min;
 
@@ -248,9 +207,9 @@ namespace BRS.Engine.Physics {
                 d, RaycastCallback, out resBody,
                 out hitNormal, out fraction);
 
-            if (result) {
+            if (result && fraction <= 1.0f) {
                 JVector collisionAt = p + fraction * d;
-                return Conversion.ToXnaVector(GetPosition(bbSize, gameObject, hitNormal, p, collisionAt));
+                return GetPosition(bbSize, gameObject, hitNormal, p, collisionAt);
             }
 
             //try {
@@ -266,9 +225,13 @@ namespace BRS.Engine.Physics {
         }
 
         private JVector GetPosition(JVector bbSize, GameObject gameObject, JVector hitNormal, JVector d, JVector end) {
-            JVector forward = 0.5f * bbSize.Z * Conversion.ToJitterVector(gameObject.transform.Forward);
-            JVector right = 0.5f * bbSize.X * Conversion.ToJitterVector(gameObject.transform.Right);
+            JVector forward = 0.5f * bbSize.X * Conversion.ToJitterVector(gameObject.transform.Forward);
+            JVector right = 0.5f * bbSize.Z * Conversion.ToJitterVector(gameObject.transform.Right);
             d.Normalize();
+
+            if (hitNormal.IsZero()) {
+                return bbSize.Z * -0.5f * Conversion.ToJitterVector(gameObject.transform.Forward);
+            }
 
             if (JVector.Dot(forward, hitNormal) < 0.0f) {
                 forward = -1 * forward;
@@ -290,6 +253,9 @@ namespace BRS.Engine.Physics {
 
             Debug.Log("Collision detected! ");
             Debug.Log("Margin: " + margin);
+            if (margin.IsNaN()) {
+                Debug.Log("Should not happen");
+            }
             PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(end - margin));
 
             return end - margin;
@@ -304,6 +270,27 @@ namespace BRS.Engine.Physics {
             return 2 * (inputNormalized - 2 * JVector.Dot(inputNormalized, normalNormalized) * normalNormalized);
         }
 
+
+        #endregion
+
+        #region Collision handling
+
+        private void HandlePlayerCollision(Collider player, JVector collisionPoint, JVector normal) {
+            // First, calculate the new position based on the orientation of the car
+            JVector newPosition1 = GetPosition(player.BoundingBoxSize, player.GameObject, normal,
+                Conversion.ToJitterVector(player.GameObject.transform.Forward), collisionPoint);
+            JVector newPosition = collisionPoint + ReflectOnNormal(Conversion.ToJitterVector(player.GameObject.transform.Forward),
+                                      normal);
+            //newPosition -= newPosition1;
+            newPosition += 0.1f * normal;
+
+            // Second, check if the new position is not projected into another obstacle
+            newPosition = DetectCollision(player, player.GameObject, player.Position, newPosition);
+
+            Debug.Log(newPosition1);
+            Debug.Log(newPosition);
+            player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
+        }
 
         #endregion
     }
