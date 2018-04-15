@@ -28,7 +28,6 @@ namespace BRS {
         }
 
         protected override void Initialize() {
-            PhysicsDrawer.Initialize(this, GraphicsDevice);
             //NOTE: this is basic initialization of core components, nothing else
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
             
@@ -44,6 +43,9 @@ namespace BRS {
             // set up the post processing manager
             PostProcessingManager.Initialize(Content);
 
+            // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+            // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+            PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             base.Initialize();
         }
