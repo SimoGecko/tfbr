@@ -1,7 +1,6 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Engine.Physics.RigidBodies {
@@ -21,17 +20,6 @@ namespace BRS.Engine.Physics.RigidBodies {
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
             Size = Conversion.ToJitterVector(size);
-        }
-
-        /// <summary>
-        /// Update of the time-step.
-        /// </summary>
-        public override void Update() {
-            // Apply position and rotation from physics-world to the game-object
-            transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
-            transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-
-            base.Update();
         }
     }
 }

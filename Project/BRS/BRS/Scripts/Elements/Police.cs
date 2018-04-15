@@ -10,8 +10,10 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// Records a player position and then follows it smoothly
+    /// </summary>
     class Police : Component {
-        ////////// records a player position and then follows it smoothly //////////
 
         // --------------------- VARIABLES ---------------------
 

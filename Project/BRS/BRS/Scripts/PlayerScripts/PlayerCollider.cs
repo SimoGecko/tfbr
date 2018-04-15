@@ -3,9 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Curve = BRS.Engine.Utilities.Curve;

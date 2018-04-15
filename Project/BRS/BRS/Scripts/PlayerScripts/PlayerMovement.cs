@@ -1,14 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -59,6 +58,14 @@ namespace BRS.Scripts.PlayerScripts {
 
             MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
             _collider = dynamicRigidBody?.RigidBody as SteerableCollider;
+
+            // Reset all variables to the start-values
+            _rotation = 0;
+            _targetRotation = 0;
+            _smoothMagnitude = 0;
+            _refMagnitude = 0;
+            _refangle = 0;
+            _refangle2 = 0;
         }
 
         public override void Update() {
@@ -80,6 +87,7 @@ namespace BRS.Scripts.PlayerScripts {
                 _inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
                 _inputAngle = Utility.WrapAngle(_inputAngle, _targetRotation);
                 _targetRotation = Utility.SmoothDampAngle(_targetRotation, _inputAngle - 90, ref _refangle, .3f, MaxTurningRate * _smoothMagnitude);
+                Debug.Log(_targetRotation);
             } else {
                 _targetRotation = Utility.SmoothDampAngle(_targetRotation, _rotation, ref _refangle2, .3f, MaxTurningRate * _smoothMagnitude);
             }
@@ -98,7 +106,9 @@ namespace BRS.Scripts.PlayerScripts {
                 linearVelocity = Vector3.Forward * CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
 
-
+            //transform.Translate(linearVelocity * Time.DeltaTime);
+            //transform.rotation = Quaternion.CreateFromAxisAngle(Vector3.Up, _rotation);
+            //transform.eulerAngles = new Vector3(0, _rotation, 0);
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
             if (_collider != null) {
@@ -115,8 +125,7 @@ namespace BRS.Scripts.PlayerScripts {
             _speedPad = b;
         }
 
-        public void ResetSmoothMatnitude()
-        {
+        public void ResetSmoothMatnitude() {
             _smoothMagnitude = 0.0f;
         }
 
