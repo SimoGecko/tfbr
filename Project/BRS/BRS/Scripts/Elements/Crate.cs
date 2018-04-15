@@ -4,7 +4,6 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
@@ -25,7 +24,7 @@ namespace BRS.Scripts.Elements {
         private const float CrackSpawnRadius = 1f;
         private const int MinNumCoins = 1;
         private const int MaxNumCoins = 8;
-        private const float ProbOfPowerup = 1.2f;
+        private const float ProbOfPowerup = .2f;
 
         private bool _explosionRigged;
         private bool _cracked;
