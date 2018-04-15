@@ -1,19 +1,30 @@
-﻿using Jitter.Collision.Shapes;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine.Physics.Colliders;
+using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics.RigidBodies {
+    /// <summary>
+    /// Represents a steerable rigid body in the physics simulation which is controlled by the physics simulation and the player.
+    /// </summary>
     class MovingRigidBody : RigidBodyComponent {
         private float _treshold = 0.01f;
 
-        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
-            PhysicsManager = physicsManager;
+        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box)
+            : this(new Vector3(size), isActive, shapeType) {
+        }
+
+        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
             IsStatic = false;
             IsActive = isActive;
             ShapeType = shapeType;
             Tag = BodyTag.DrawMe;
+            Size = Conversion.ToJitterVector(size);
         }
 
         /// <summary>
@@ -23,9 +34,11 @@ namespace BRS.Engine.Physics.RigidBodies {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
             JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
-                bbSize.Y * gameObject.transform.scale.Y,
-                bbSize.Z * gameObject.transform.scale.Z);
+            bbSize = new JVector(
+                bbSize.X * Size.X * gameObject.transform.scale.X,
+                bbSize.Y * Size.Y * gameObject.transform.scale.Y,
+                bbSize.Z * Size.Z * gameObject.transform.scale.Z
+            );
             CollisionShape = new BoxShape(bbSize);
 
             JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
@@ -37,19 +50,20 @@ namespace BRS.Engine.Physics.RigidBodies {
                 com.Z > _treshold ? com.Z : 0);
 
 
-            RigidBody = new SteerableRigidBody(CollisionShape) {
+            RigidBody = new SteerableCollider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
+                CenterOfMass = CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
-                GameObject = gameObject
+                GameObject = gameObject,
+                Material = new Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
-            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
 
-            PhysicsManager.World.AddBody(RigidBody);
+            PhysicsManager.Instance.World.AddBody(RigidBody);
         }
 
         /// <summary>
@@ -59,8 +73,8 @@ namespace BRS.Engine.Physics.RigidBodies {
             // Apply position and rotation from physics-world to the game-object
             transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
             transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-           
-            //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
+
+            Debug.Log(RigidBody.Position, "MovingRigidBody:");
 
             base.Update();
         }

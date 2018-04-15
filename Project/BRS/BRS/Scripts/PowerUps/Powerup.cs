@@ -1,14 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -27,14 +26,13 @@ namespace BRS.Scripts.PowerUps {
         private bool _rotate = true;
         protected bool _useInstantly = false;
 
-
-        //private float _rotationAngle = 0.0f;
-
         // const
         private const float RotSpeed = 1;
 
         //reference
         public Player Owner { get; protected set; }
+
+        private DynamicRigidBody _rigidBody;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -42,20 +40,21 @@ namespace BRS.Scripts.PowerUps {
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
             CreateUseCallbacks();
+
+            if (gameObject.HasComponent<DynamicRigidBody>()) {
+                _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
+            }
         }
 
         public override void Update() {
             base.Update();
 
             if (_rotate) {
-                //_rotationAngle += RotSpeed * Time.DeltaTime;
-
-                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
-                if (rbc != null) {
-                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                if (_rigidBody != null) {
+                    _rigidBody.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                } else {
+                    transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
                 }
-
-                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
             }
         }
 
@@ -82,8 +81,8 @@ namespace BRS.Scripts.PowerUps {
         }
 
         public virtual void UsePowerup() {
-                transform.position = Owner.transform.position;
-                Audio.Play(PowerupType.ToString().ToLower()+ "_use",  transform.position);
+            transform.position = Owner.transform.position;
+            Audio.Play(PowerupType.ToString().ToLower() + "_use", transform.position);
         }
 
         // queries

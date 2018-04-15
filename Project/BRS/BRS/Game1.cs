@@ -17,9 +17,6 @@ namespace BRS {
         // Render the scene to this target
         RenderTarget2D _renderTarget;
 
-        //@andy remove these
-        private Display _display;
-        private DebugDrawer _debugDrawer;
 
 
         public Game1() {
@@ -33,14 +30,7 @@ namespace BRS {
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
-
-            //@andy remove this - hide everything inside PhysicsManager.Setup();
-            _debugDrawer = new DebugDrawer(this);
-            Components.Add(_debugDrawer);
-            _display = new Display(this);
-            Components.Add(_display);
-            PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
-
+            
             // init the rendertarget with the graphics device
             _renderTarget = new RenderTarget2D(
                 GraphicsDevice,
@@ -53,6 +43,9 @@ namespace BRS {
             // set up the post processing manager
             PostProcessingManager.Initialize(Content);
 
+            // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+            // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+            PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             base.Initialize();
         }
@@ -92,6 +85,7 @@ namespace BRS {
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
+            PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update(gameTime);
         }
@@ -106,8 +100,13 @@ namespace BRS {
 
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
-                PhysicsManager.Instance.Draw(cam);
+
+                // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+                // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+                PhysicsDrawer.Instance.Draw(cam);
+
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
+
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);

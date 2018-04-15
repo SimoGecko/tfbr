@@ -2,7 +2,6 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using BRS.Engine.Physics;
 using BRS.Scripts.Scenes;
 using Microsoft.Xna.Framework.Input;
 

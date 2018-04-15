@@ -1,21 +1,19 @@
-﻿using BRS.Engine.Physics;
+﻿using System.Collections.Generic;
+using BRS.Engine;
+using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Scripts;
+using BRS.Scripts.Elements;
+using BRS.Scripts.Managers;
+using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
-using BRS.Engine;
-using BRS.Scripts.Elements;
-using BRS.Scripts.Managers;
-using BRS.Scripts.PlayerScripts;
-using BRS.Scripts.UI;
 
 namespace BRS.Scripts.Scenes {
-    // Todo: To be refactored
-
     class LevelPhysics : Scene {
         // Todo: To be refactored
         private readonly List<GameObject> Players = new List<GameObject>();
@@ -37,12 +35,12 @@ namespace BRS.Scripts.Scenes {
             UIManager.AddComponent(new GameUI());
 
             GameObject rootScene = new GameObject("manager");
-            //rootScene.AddComponent(new CameraController());
+            rootScene.AddComponent(new CameraController());
             rootScene.AddComponent(new ElementManager());
             rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new RoundManager());
-            rootScene.AddComponent(new Spawner());
-            rootScene.AddComponent(new Minimap());
+            //rootScene.AddComponent(new Spawner());
+            //rootScene.AddComponent(new Minimap());
 
 
 
@@ -67,10 +65,16 @@ namespace BRS.Scripts.Scenes {
                 forklift.AddComponent(new PlayerInventory());
                 forklift.AddComponent(new PlayerLift());
                 forklift.AddComponent(new PlayerStamina());
-                forklift.AddComponent(new MovingRigidBody(PhysicsManager.Instance));
+                forklift.AddComponent(new MovingRigidBody());
 
                 Players.Add(forklift);
             }
+
+
+            GameObject staticObject = new GameObject("staticGameObject", File.Load<Model>("Models/primitives/cube"));
+            staticObject.transform.Scale(2.0f);
+            staticObject.transform.TranslateGlobal(new Vector3(-5, 5, 5));
+            staticObject.AddComponent(new StaticRigidBody());
 
 
 
@@ -80,7 +84,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.TranslateGlobal(Vector3.Right * 30 * i);
                 playerBase.AddComponent(new Base(i));
-                playerBase.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
+                playerBase.AddComponent(new StaticRigidBody());
             }
 
 
@@ -89,7 +93,7 @@ namespace BRS.Scripts.Scenes {
                     GameObject body = new GameObject("domino_" + i, File.Load<Model>("Models/primitives/cube"));
                     body.tag = ObjectTag.Obstacle;
                     body.transform.TranslateGlobal(new Vector3(1.5f * (i + 1), 2 * (j + 1), -1.5f * (i + 1)));
-                    body.AddComponent(new DynamicRigidBody(PhysicsManager.Instance, pureCollider: true));
+                    body.AddComponent(new DynamicRigidBody(pureCollider: true));
                 }
             }
 
@@ -137,25 +141,25 @@ namespace BRS.Scripts.Scenes {
                 GameObject body = new GameObject("wall_" + (4 * x), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, -25));
-                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
+                body.AddComponent(new StaticRigidBody());
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25 + x, y, 15));
-                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
+                body.AddComponent(new StaticRigidBody());
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(-25, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
+                body.AddComponent(new StaticRigidBody());
 
 
                 body = new GameObject("wall_" + (4 * x + 1), File.Load<Model>("Models/primitives/cube"));
                 body.tag = ObjectTag.Obstacle;
                 body.transform.TranslateGlobal(new Vector3(15, y, -25 + x));
-                body.AddComponent(new StaticRigidBody(PhysicsManager.Instance));
+                body.AddComponent(new StaticRigidBody());
             }
         }
 

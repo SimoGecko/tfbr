@@ -1,25 +1,21 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // CapsulePrimitive.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
+// Managed for this project by Andreas Emch
 
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace BRS.Engine.Physics.Primitives3D {
     /// <summary>
     /// Geometric primitive class for drawing spheres.
     /// </summary>
     public class CapsulePrimitive : GeometricPrimitive {
+
         /// <summary>
         /// Constructs a new sphere primitive, using default settings.
         /// </summary>
@@ -52,11 +48,7 @@ namespace BRS.Engine.Physics.Primitives3D {
                 float dy = (float)Math.Sin(latitude);
                 float dxz = (float)Math.Cos(latitude);
 
-                bool bla = false;
-
-                if (i > (verticalSegments - 2) / 2) {
-                    bla = true;
-                }
+                bool bla = i > (verticalSegments - 2) / 2;
 
                 // Create a single ring of vertices at this latitude.
                 for (int j = 0; j < horizontalSegments; j++) {

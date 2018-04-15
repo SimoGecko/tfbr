@@ -1,25 +1,22 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // SpherePrimitive.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
+// Managed for this project by Andreas Emch
 
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-#endregion
-
 namespace BRS.Engine.Physics.Primitives3D {
+
     /// <summary>
     /// Geometric primitive class for drawing spheres.
     /// </summary>
     public class SpherePrimitive : GeometricPrimitive {
+
         /// <summary>
         /// Constructs a new sphere primitive, using default settings.
         /// </summary>

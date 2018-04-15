@@ -3,13 +3,11 @@
 
 namespace BRS.Engine.Physics {
     /// <summary>
-    /// Store the 5 primitive geometrics for drawing
+    /// The supported shape types for the bounding-hulls.
     /// </summary>
-    enum PrimitiveTypes {
+    public enum ShapeType {
         Box,
-        Sphere,
-        Cylinder,
-        Cone,
-        Capsule
+        BoxUniform,
+        Sphere
     }
 }

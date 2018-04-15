@@ -4,6 +4,7 @@
 using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Jitter.LinearMath;
@@ -46,7 +47,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //reference
         PlayerInventory playerInventory;
-        private SteerableRigidBody _rigidBody;
+        private SteerableCollider _collider;
 
 
         // --------------------- BASE METHODS ------------------
@@ -57,7 +58,7 @@ namespace BRS.Scripts.PlayerScripts {
             playerInventory = gameObject.GetComponent<PlayerInventory>();
 
             MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
-            _rigidBody = dynamicRigidBody?.RigidBody as SteerableRigidBody;
+            _collider = dynamicRigidBody?.RigidBody as SteerableCollider;
         }
 
         public override void Update() {
@@ -100,9 +101,9 @@ namespace BRS.Scripts.PlayerScripts {
 
             // Apply forces/changes to physics
             // Todo: Handle steering correctly
-            if (_rigidBody != null) {
-                _rigidBody.RotationY = MathHelper.ToRadians(_rotation);
-                _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
+            if (_collider != null) {
+                _collider.RotationY = MathHelper.ToRadians(_rotation);
+                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _collider.Orientation);
             }
         }
 
@@ -112,6 +113,11 @@ namespace BRS.Scripts.PlayerScripts {
 
         internal void SetSpeedPad(bool b) {
             _speedPad = b;
+        }
+
+        public void ResetSmoothMatnitude()
+        {
+            _smoothMagnitude = 0.0f;
         }
 
 

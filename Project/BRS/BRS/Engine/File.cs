@@ -123,18 +123,18 @@ namespace BRS.Engine {
                                 //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
                                 break;
                             case ObjectTag.Ground:
-                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
+                                go.AddComponent(new StaticRigidBody(isGround: true));
                                 break;
                             case ObjectTag.DynamicObstacle:
-                                go.AddComponent(new DynamicRigidBody(physics));
+                                go.AddComponent(new DynamicRigidBody());
                                 break;
                             default:
-                                go.AddComponent(new StaticRigidBody(physics));
+                                go.AddComponent(new StaticRigidBody());
                                 break;
                         }
 
-                        // Todo: Refactor..
-                        go.Start();
+                        //// Todo: Refactor..
+                        //go.Start();
                     }
 
                     nameContent = reader.ReadLine();

@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PowerUps;
 
 namespace BRS.Scripts.Elements {

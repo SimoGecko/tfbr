@@ -7,6 +7,7 @@ using BRS.Engine;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 
 namespace BRS.Scripts {
     class Police : Component {

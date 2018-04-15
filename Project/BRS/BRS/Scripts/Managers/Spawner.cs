@@ -91,30 +91,36 @@ namespace BRS.Scripts.Managers {
         }
         void SpawnInitialGold() {
             for (int i = 0; i < GoldAmount; i++)
-                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab");
+                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab", Vector3.Zero);
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius, string moneyType = "") { // cash, gold, diamond
             if (moneyType == "") moneyType = Utility.EvaluateDistribution(MoneyDistribution);
             moneyType = moneyType.ToLower();
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
-            SpawnMoneyAt(pos, moneyType + "Prefab");
+            SpawnMoneyAt(pos, moneyType + "Prefab", Vector3.Zero);
         }
 
         void SpawnClusterAt(Vector3 pos, string prefab, int number) {
             for (int i = 0; i < number; i++) {
-                SpawnMoneyAt(pos + MyRandom.InsideUnitCircle().To3() * clusterRadius, prefab);
+                SpawnMoneyAt(pos + MyRandom.InsideUnitCircle().To3() * clusterRadius, prefab, Vector3.Zero);
             }
         }
-
-        void SpawnMoneyAt(Vector3 pos, string prefab) {//cashPrefab, goldPrefab, diamondPrefab
-            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation());
-            ElementManager.Instance.Add(newMoney.GetComponent<Money>());
+        public void SpawnMoneyFromCenter(Vector3 p, float radius, string moneyType = "") {
+            if (moneyType == "") moneyType = Utility.EvaluateDistribution(MoneyDistribution);
+            p.Y = MathHelper.Max(p.Y, 0.5f);
+            SpawnMoneyAt(p, moneyType + "Prefab", MyRandom.UpsideLinearVelocity() * radius);
         }
+        
 
         void SpawnOneDiamondRandom() {
             Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
-            SpawnMoneyAt(position.To3(), "diamondPrefab");
+            SpawnMoneyAt(position.To3(), "diamondPrefab", Vector3.Zero);
+        }
+
+        void SpawnMoneyAt(Vector3 pos, string prefab, Vector3 linearVelocity) {//cashPrefab, goldPrefab, diamondPrefab
+            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity);
+            ElementManager.Instance.Add(newMoney.GetComponent<Money>());
         }
 
         // MONEY CASH
@@ -166,8 +172,6 @@ namespace BRS.Scripts.Managers {
 
 
 
-
-
         // CRATE
         void SpawnInitialCrates() {
             for (int i = 0; i < CrateAmount; i++)
@@ -190,16 +194,22 @@ namespace BRS.Scripts.Managers {
 
         void SpawnOnePowerupRandom() {
             Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
-            SpawnOnePowerupAt(position.To3());
-        }
-        public void SpawnPowerupAround(Vector3 p, float radius) {
-            Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
-            SpawnOnePowerupAt(pos);
+            SpawnOnePowerupAt(position.To3(), Vector3.Zero);
         }
 
-        void SpawnOnePowerupAt(Vector3 position) {
+        public void SpawnPowerupAround(Vector3 p, float radius) {
+            Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
+            SpawnOnePowerupAt(pos, Vector3.Zero);
+        }
+
+        public void SpawnPowerupFromCenter(Vector3 p, float radius) {
+            p.Y = MathHelper.Max(p.Y, 0.5f);
+            SpawnOnePowerupAt(p, MyRandom.UpsideLinearVelocity() * radius);
+        }
+
+        void SpawnOnePowerupAt(Vector3 position, Vector3 linearVelocity) {
             position += new Vector3(0, 2, 0);
-            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity);
+            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity, linearVelocity);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
@@ -224,7 +234,7 @@ namespace BRS.Scripts.Managers {
 
         async void SpawnGoldContinuous() {
             while (true) {
-                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab");
+                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab", Vector3.Zero);
                 await Time.WaitForSeconds(TimeBetweenGoldSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
             }
         }

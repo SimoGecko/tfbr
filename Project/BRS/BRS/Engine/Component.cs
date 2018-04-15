@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 
 namespace BRS.Engine {
     ////////// base class for scripting language //////////

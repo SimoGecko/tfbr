@@ -4,6 +4,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -79,14 +81,19 @@ namespace BRS.Engine {
 
         // ---------- INSTANTIATION ----------
         public static GameObject Instantiate(string name) {
-            return Instantiate(name, Vector3.Zero, Quaternion.Identity);
+            return Instantiate(name, Vector3.Zero, Quaternion.Identity, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Transform t) {
-            return Instantiate(name, t.position, t.rotation);
+            //return Instantiate(name, t.World.Translation, t.World.Rotation);
+            return Instantiate(name, t.position, t.rotation, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation) {
+            return Instantiate(name, position, rotation, Vector3.Zero);
+        }
+
+        public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation, Vector3 linearVelocity) {
             GameObject tocopy = Prefabs.GetPrefab(name);
             if (tocopy == null) {
                 Debug.LogError("Prefab not found");
@@ -100,6 +107,13 @@ namespace BRS.Engine {
 
             result.Awake();
             result.Start(); // because instantiated at runtime
+
+            if (result.HasComponent<DynamicRigidBody>()) {
+                DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
+                dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;
+                dc.RigidBody.AddTorque(Conversion.ToJitterVector(linearVelocity) * 5);
+            }
+
             return result;
         }
 
@@ -130,7 +144,7 @@ namespace BRS.Engine {
         public static void Destroy(GameObject o) {
             if (o == null)  return;
             o.active = false;
-            //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
+            //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
             foreach (Component c in o.components)  c.Destroy();

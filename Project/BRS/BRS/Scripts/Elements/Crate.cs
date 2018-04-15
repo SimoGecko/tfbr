@@ -3,7 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Utilities;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
@@ -21,7 +21,7 @@ namespace BRS.Scripts.Elements {
         private const float ExplosionDamage = 30;
 
         //private
-        private const float CrackSpawnRadius = 2f;
+        private const float CrackSpawnRadius = 1f;
         private const int MinNumCoins = 1;
         private const int MaxNumCoins = 8;
         private const float ProbOfPowerup = .2f;
@@ -69,11 +69,11 @@ namespace BRS.Scripts.Elements {
         void SpawnValuables() {
             int numCoins = MyRandom.Range(MinNumCoins, MaxNumCoins + 1);
             for (int i = 0; i < numCoins; i++) {
-                Spawner.Instance.SpawnMoneyAround(transform.position, CrackSpawnRadius);
+                Spawner.Instance.SpawnMoneyFromCenter(transform.position, CrackSpawnRadius);
             }
 
             if (MyRandom.Value <= ProbOfPowerup) {
-                Spawner.Instance.SpawnPowerupAround(transform.position, CrackSpawnRadius);
+                Spawner.Instance.SpawnPowerupFromCenter(transform.position, CrackSpawnRadius);
             }
         }
 
