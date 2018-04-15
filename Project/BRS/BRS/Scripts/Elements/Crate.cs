@@ -36,7 +36,6 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _explosionRigged = _cracked = false;
-            new Timer(2.5f, CrackCrate);
         }
 
         public override void Update() {
