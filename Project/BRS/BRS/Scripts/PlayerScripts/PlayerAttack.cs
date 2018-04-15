@@ -11,8 +11,10 @@ using Microsoft.Xna.Framework;
 using Curve = BRS.Engine.Utilities.Curve;
 
 namespace BRS.Scripts.PlayerScripts {
+    /// <summary>
+    /// Deals with the attack of the player.
+    /// </summary>
     class PlayerAttack : Component {
-        ////////// deals with the attack of the player //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -77,11 +79,11 @@ namespace BRS.Scripts.PlayerScripts {
                 _attackRefTime += Time.DeltaTime / AttackDuration;
                 float t = Curve.EvaluateSqrt(_attackRefTime);
                 Vector3 newPosition = Vector3.LerpPrecise(_attackStartPos, _attackEndPos, t);
-                Gizmos.DrawWireSphere(_attackStartPos, 1.0f);
 
-                if (newPosition.X - _attackStartPos.X > _attackEndCollision.X - _attackStartPos.X) {
-                    newPosition = _attackEndCollision;
-                }
+                // Todo: Fix attack-end
+                //if (newPosition.X - _attackStartPos.X > _attackEndCollision.X - _attackStartPos.X) {
+                //    newPosition = _attackEndCollision;
+                //}
 
                 // Apply new position to the rigid-body
                 // Todo by Andy for Andy: can be surely written better :-)

@@ -287,8 +287,8 @@ namespace BRS.Engine.Physics {
             // Second, check if the new position is not projected into another obstacle
             newPosition = DetectCollision(player, player.GameObject, player.Position, newPosition);
 
-            Debug.Log(newPosition1);
-            Debug.Log(newPosition);
+            //Debug.Log(newPosition1);
+            //Debug.Log(newPosition);
             player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
         }
 
