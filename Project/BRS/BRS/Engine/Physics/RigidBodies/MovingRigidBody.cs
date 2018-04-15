@@ -47,7 +47,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 GameObject = gameObject
             };
 
-            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
+            RigidBody.Material = new Jitter.Dynamics.Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
 
             PhysicsManager.World.AddBody(RigidBody);
         }

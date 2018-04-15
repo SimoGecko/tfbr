@@ -64,8 +64,8 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(police);
 
             //crate
-            GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/primitives/cube"));
-            cratePrefab.transform.Scale(.5f);
+            GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/elements/crate"));
+            cratePrefab.transform.Scale(.3f);
             cratePrefab.AddComponent(new Crate());
             cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             //cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
@@ -82,7 +82,7 @@ namespace BRS.Engine {
 
             //planted bomb
             GameObject plantedBombPrefab = new GameObject("plantedBombPrefab", File.Load<Model>("Models/elements/bomb"));
-            plantedBombPrefab.transform.Scale(.3f);
+            plantedBombPrefab.transform.Scale(.5f);
             plantedBombPrefab.transform.SetStatic();
             plantedBombPrefab.AddComponent(new PlantedBomb());
             plantedBombPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));

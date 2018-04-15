@@ -8,10 +8,10 @@ namespace BRS.Engine.Physics {
         public Collider(Shape shape) : base(shape) {
         }
 
-        public Collider(Shape shape, Material material) : base(shape, material) {
+        public Collider(Shape shape, Jitter.Dynamics.Material material) : base(shape, material) {
         }
 
-        public Collider(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
+        public Collider(Shape shape, Jitter.Dynamics.Material material, bool isParticle) : base(shape, material, isParticle) {
         }
     }
 }

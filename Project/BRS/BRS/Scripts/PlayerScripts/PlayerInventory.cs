@@ -108,7 +108,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool IsFull() {
-            return _carryingWeight >= _capacity-0;
+            return _carryingWeight >= _capacity-13;
         }
 
         /*

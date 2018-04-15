@@ -53,6 +53,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new Suggestions());
             UiManager.AddComponent(new MoneyUI());
             UiManager.AddComponent(new ParticleUI());
+            UiManager.AddComponent(new SpeechUI());
             //Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
@@ -85,14 +86,22 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerPowerup());
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
+                player.AddComponent(new SpeechManager(i));
 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
-                //arrow
+                //arrow for base
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player, null, i));
-                arrow.transform.Scale(.1f);
+                arrow.material = new Material(Graphics.Green);
+                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
+                arrow.transform.Scale(.2f);
+
+                //arrow for enemy
+                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
+                arrow2.material = new Material(Graphics.Red);
+                arrow2.AddComponent(new Arrow(player, true, i, ()=>true));
+                arrow2.transform.Scale(.08f);
                 //Add(arrow);
             }
         }

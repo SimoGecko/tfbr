@@ -13,11 +13,11 @@ namespace BRS.Engine.Physics.RigidBodies {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 
-        public SteerableRigidBody(Shape shape, Material material) : base(shape, material) {
+        public SteerableRigidBody(Shape shape, Jitter.Dynamics.Material material) : base(shape, material) {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 
-        public SteerableRigidBody(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
+        public SteerableRigidBody(Shape shape, Jitter.Dynamics.Material material, bool isParticle) : base(shape, material, isParticle) {
             _height = BoundingBox.Max.Y - BoundingBox.Min.Y;
         }
 

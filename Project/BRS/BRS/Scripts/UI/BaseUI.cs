@@ -64,8 +64,7 @@ namespace BRS.Scripts.UI {
 
             UserInterface.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_baseUi[index].TotalMoneyInBase / RoundManager.MoneyToWinRound;
-            Color yellowColor = new Color(255, 198, 13);
-            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight, flip: flip);
+            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), Graphics.Yellow, Align.TopRight, flip: flip);
             string baseValueString = Utility.IntToMoneyString(_baseUi[index].TotalMoneyInBase);
             UserInterface.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
             UserInterface.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);

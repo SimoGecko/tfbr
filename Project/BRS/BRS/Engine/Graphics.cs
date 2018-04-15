@@ -18,10 +18,18 @@ namespace BRS.Engine {
         public static Color yellow = new Color(255, 187, 0);
         */
         //some default colors (same as google)
+        /*
         private static readonly Color Red    = new Color(234, 67, 53);
         private static readonly Color Green  = new Color(52, 168, 83);
         private static readonly Color Blue   = new Color(66, 133, 244);
-        private static readonly Color Yellow = new Color(251, 188, 5);
+        private static readonly Color Yellow = new Color(251, 188, 5);*/
+
+            //default colors from unity
+        public static Color Green = new Color(109, 202, 35);
+        public static Color Blue = new Color(0, 158, 255);
+        public static Color Yellow = new Color(255, 198, 13);
+        public static Color Red = new Color(234, 67, 53);
+
 
         public static Color Clear = new Color(255, 255, 255, 0);
         //private
@@ -38,23 +46,17 @@ namespace BRS.Engine {
 
         // commands
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat = null) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    if (mat == null) {
-                        //default settings
-                        effect.EnableDefaultLighting();
-                    } else {
-                        effect.EnableDefaultLighting();
-                        //effect.LightingEnabled = mat.lit;
-                        //effect.DiffuseColor = mat.diffuse.ToVector3();
-                        //effect.Alpha = mat.Diffuse.A;
-                        //effect.CurrentTechnique = EffectTechnique
-                        //effect.Texture
-                    }
-                    //effect.Alpha = .5f;
-                    //effect.di
-                    //effect.EnableDefaultLighting();
+                    if (mat == null) mat = Material.Default;
+
+                    effect.EnableDefaultLighting();
+                    effect.LightingEnabled = mat.Lit;
+                    effect.DiffuseColor = mat.Color;
+                    //effect.Alpha = mat.Diffuse.A;
+                    //effect.CurrentTechnique = EffectTechnique
+                    //effect.Texture
 
                     //effects
                     effect.World = world;

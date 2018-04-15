@@ -35,7 +35,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 GameObject = gameObject
             };
 
-            RigidBody.Material = new Material { Restitution = 0.0f };
+            RigidBody.Material = new Jitter.Dynamics.Material { Restitution = 0.0f };
 
             PhysicsManager.World.AddBody(RigidBody);
 

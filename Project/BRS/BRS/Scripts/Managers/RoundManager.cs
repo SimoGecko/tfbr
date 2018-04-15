@@ -29,6 +29,9 @@ namespace BRS.Scripts.Managers {
 
         //reference
         public static RoundManager Instance;
+        public Action OnRoundStartAction;
+        public Action OnRoundAlmostEndAction;
+        public Action OnRoundEndAction;
 
 
         // --------------------- BASE METHODS ------------------
@@ -36,6 +39,7 @@ namespace BRS.Scripts.Managers {
             Instance = this;
             _rt = new Timer(0, RoundTime, OnRoundEnd);
             GameUI.Instance.StartMatch(_rt);
+            OnRoundStartAction?.Invoke();
         }
 
         public override void Update() {
@@ -56,6 +60,7 @@ namespace BRS.Scripts.Managers {
         void OnRoundEnd() {
             //Audio.Stop("police");
             //Audio.SetLoop("police", false);
+            OnRoundEndAction?.Invoke();
 
             NotifyBases();
 

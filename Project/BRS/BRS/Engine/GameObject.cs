@@ -20,7 +20,7 @@ namespace BRS.Engine {
         public bool active { get; set; } = true;
         public string name { private set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
-        public EffectMaterial mat = null;
+        public Material material = null;
 
         static int InstanceCount = 0;
 
@@ -57,7 +57,7 @@ namespace BRS.Engine {
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && active) {
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
             }
         }

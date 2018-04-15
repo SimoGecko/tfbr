@@ -55,20 +55,18 @@ namespace BRS.Scripts.UI {
             UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 80, 80), null, Align.TopLeft, flip: flip);
 
             //capacity
-            Color greenColor = new Color(109, 202, 35);
             UserInterface.DrawPicture(_barIcons, new Rectangle(100, 55, 20, 20), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);
             UserInterface.DrawString("carrying", new Rectangle(120, 35, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
-            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(120, 55, 100, 20), greenColor, Align.TopLeft, flip: flip);
+            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(120, 55, 100, 20), Graphics.Green, Align.TopLeft, flip: flip);
             string capacityString = _playerUi[index].CarryingWeight +  "/" + _playerUi[index].MaxCapacity;
             UserInterface.DrawString(capacityString, new Rectangle(225, 55, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //fuel
-            Color blueColor = new Color(0, 158, 255);
             UserInterface.DrawPicture(_barIcons, new Rectangle(100, 95, 20, 20), new Rectangle(0, 200, 200, 200), Align.TopLeft, flip: flip);
             UserInterface.DrawString("fuel", new Rectangle(120, 75, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
-            UserInterface.DrawBarStriped(staminaPercent, new Rectangle(120, 95, 100, 20), blueColor, Align.TopLeft, flip: flip);
+            UserInterface.DrawBarStriped(staminaPercent, new Rectangle(120, 95, 100, 20), Graphics.Blue, Align.TopLeft, flip: flip);
             string staminaString = (int)(_playerUi[index].Stamina / _playerUi[index].MaxStamina*100) + "%";
             UserInterface.DrawString(staminaString, new Rectangle(225, 95, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
@@ -76,9 +74,9 @@ namespace BRS.Scripts.UI {
             //TODO works only with player one
             Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
             Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-25, -60), new Point(50, 5));
-            UserInterface.DrawBarStriped(capacityPercent, smallBar, greenColor);
+            UserInterface.DrawBarStriped(capacityPercent, smallBar, Graphics.Green);
             smallBar.Y += 6;
-            UserInterface.DrawBarStriped(staminaPercent, smallBar, blueColor);
+            UserInterface.DrawBarStriped(staminaPercent, smallBar, Graphics.Blue);
 
 
             //suggestions
