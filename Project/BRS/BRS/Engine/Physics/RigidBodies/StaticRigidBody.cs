@@ -1,9 +1,15 @@
-﻿using Jitter.Collision.Shapes;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using Jitter.Collision.Shapes;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics.RigidBodies {
+    /// <summary>
+    /// Represents a static rigid body in the physics simulation.
+    /// </summary>
     class StaticRigidBody : RigidBodyComponent {
         private readonly bool _isGround;
 

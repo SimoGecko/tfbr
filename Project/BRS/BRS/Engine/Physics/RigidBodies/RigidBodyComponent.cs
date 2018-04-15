@@ -1,4 +1,7 @@
-﻿using BRS.Engine.Physics.Colliders;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine.Physics.Colliders;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
