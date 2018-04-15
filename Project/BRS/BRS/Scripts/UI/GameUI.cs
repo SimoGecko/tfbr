@@ -24,8 +24,6 @@ namespace BRS.Scripts.UI {
         private bool _showPolice;
         private string _winnerString = "";
 
-        Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
-
         //reference
         public static GameUI Instance;
 
@@ -97,7 +95,6 @@ namespace BRS.Scripts.UI {
                 if ((Time.Frame / 10) % 2 == 0) {
                     UserInterface.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeLight, Vector2.One * 64, .6f);
                 }
-                Audio.Play("police", _soundPosition);
             }
 
             if (_showWinner) {

@@ -6,7 +6,6 @@ using BRS.Engine.Physics;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     class Crate : Component, IDamageable {
@@ -64,7 +63,6 @@ namespace BRS.Scripts.Elements {
             else SpawnValuables();
 
             ElementManager.Instance.Remove(this);
-
             GameObject.Destroy(gameObject);
         }
 

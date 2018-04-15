@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Scripts.PowerUps;
 using BRS.Scripts.UI;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -47,7 +46,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _carryingPowerup[_carryingPowerup.Count - 1].UsePowerup();
                 _carryingPowerup.RemoveAt(_carryingPowerup.Count - 1);
             }
-            Audio.Play("useHealth",Vector3.Zero);
             PowerupUI.Instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
         }
 

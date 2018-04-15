@@ -1,9 +1,9 @@
-﻿using BRS.Load;
-using Jitter.LinearMath;
+﻿using Jitter.LinearMath;
 
 namespace BRS.Engine.Physics.RigidBodies {
     class DynamicRigidBody : RigidBodyComponent {
-        public DynamicRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
+        public DynamicRigidBody(PhysicsManager physicsManager = null, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
+            if (physicsManager == null) physicsManager = PhysicsManager.Instance;
             PhysicsManager = physicsManager;
             IsStatic = false;
             IsActive = isActive;

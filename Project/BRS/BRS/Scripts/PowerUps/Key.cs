@@ -35,7 +35,6 @@ namespace BRS.Scripts.Elements {
             base.UsePowerup();
             transform.position = Owner.transform.position;
             new Timer(TimeToUse, OpenVault);
-            Audio.PlaySong("useKey");
         }
 
         void OpenVault() {

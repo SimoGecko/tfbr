@@ -4,7 +4,7 @@
 
 namespace BRS.Engine {
     class Billboard : Component {
-        ////////// simple billboard that looks at the camera //////////
+        ////////// simple billboard that looks at the camera (not used sofar) //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -39,11 +39,6 @@ namespace BRS.Engine {
 
 
         // commands
-        //public void Draw() {
-        //    //Vector2 position = Camera.main.WorldToScreenPoint(transform.position);
-        //    //Debug.Log("pos=" + position);
-        //    //UserInterface.instance.DrawString(position, "OOO");
-        //}
 
 
         // queries

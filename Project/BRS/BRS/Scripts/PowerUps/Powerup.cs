@@ -9,7 +9,6 @@ using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -78,7 +77,6 @@ namespace BRS.Scripts.PowerUps {
                 ElementManager.Instance.Remove(this);
 
                 //if(!destroyOnUse) gameObject.active = false;
-
                 GameObject.Destroy(gameObject);
             }
         }

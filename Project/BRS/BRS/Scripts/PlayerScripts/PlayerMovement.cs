@@ -34,13 +34,12 @@ namespace BRS.Scripts.PlayerScripts {
 
         private const float SlowdownMalus = .3f;
         private const float SpeedPadMultiplier = 2f;
-        Vector3 _soundPosition = new Vector3(0.0f, 0.0f, 0.0f);
 
 
         //BOOST
         public bool Boosting;
         public bool PowerupBoosting;
-        
+
         //SLOWDOWN
         bool _slowdown;
         bool _speedPad;
@@ -105,7 +104,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _rigidBody.RotationY = MathHelper.ToRadians(_rotation);
                 _rigidBody.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _rigidBody.Orientation);
             }
-            Audio.Play("car1",Vector3.Zero);
         }
 
         public void SetSlowdown(bool b) {

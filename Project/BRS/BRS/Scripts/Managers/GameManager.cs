@@ -34,7 +34,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
-            state = State.Playing;
+            state = State.Menu;
             _teamWins = new int[2];
             _roundNumber = 1;
         }

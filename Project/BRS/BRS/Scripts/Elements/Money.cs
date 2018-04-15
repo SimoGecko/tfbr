@@ -6,7 +6,6 @@ using BRS.Engine;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 using BRS.Scripts.UI;
 
 namespace BRS.Scripts.Elements {
@@ -59,8 +58,6 @@ namespace BRS.Scripts.Elements {
                 MoneyUI.Instance.PickedupValuable(transform.position, value, p.PlayerIndex);
                 GameObject.Destroy(gameObject);
             }
-
-           
         }
 
 

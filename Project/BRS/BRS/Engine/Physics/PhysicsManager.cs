@@ -12,6 +12,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Physics {
+    public enum BodyTag { DrawMe, DontDrawMe }
+
     public class PhysicsManager {
         public static PhysicsManager Instance { get; private set; }
 
@@ -262,7 +264,7 @@ namespace BRS.Engine.Physics {
         }
 
         private void AddBodyToDrawList(RigidBody rb) {
-            if (rb.Tag is 12BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
+            if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
 
             Collider c = rb as Collider;
             //if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;
