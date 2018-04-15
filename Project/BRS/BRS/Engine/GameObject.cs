@@ -38,29 +38,38 @@ namespace BRS.Engine {
 
 
         // ---------- CALLBACKS ----------
-        public virtual void Awake() {
+        public void Awake() {
             foreach (IComponent c in components)  c.Awake();
         }
-        public virtual void Start() {
+        public void Start() {
             foreach (IComponent c in components)  c.Start();
         }
 
-        public virtual void Update() {
+        public void Update() {
             if (active)  foreach (IComponent c in components)  c.Update();
         }
-        public virtual void LateUpdate() {
+        public void LateUpdate() {
             if (active) foreach (IComponent c in components) c.LateUpdate();
         }
 
-        public virtual void OnCollisionEnter(Collider col) {
+        public void OnCollisionEnter(Collider col) {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
-        public virtual void Draw(Camera cam) {
-            if (Model != null && active) {
-                Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+        public void Draw3D(Camera cam) {
+            if (active) {
+                if (Model != null && active) {
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                }
             }
         }
+
+        public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
+            if (active) {
+                foreach (IComponent c in components) c.Draw(i);
+            }
+        }
+
 
 
 
@@ -96,6 +105,7 @@ namespace BRS.Engine {
             result.transform.rotation = rotation;
             //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
+            result.Awake();
             result.Start(); // because instantiated at runtime
 
             if (result.HasComponent<DynamicRigidBody>()) {
@@ -125,7 +135,9 @@ namespace BRS.Engine {
         // ---------- DELETION ----------
 
         public static void ClearAll() {
-            foreach (GameObject o in allGameObjects) Destroy(o);
+            while (allGameObjects.Count > 0) {
+                Destroy(allGameObjects[0]);
+            }
             allGameObjects.Clear();
         }
 
@@ -140,9 +152,11 @@ namespace BRS.Engine {
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
             new Timer(lifetime, () => Destroy(o));
-            //await Task.Delay((int)(lifetime * 1000));
         }
 
+        public static void ConsiderPrefab(GameObject o) {
+            allGameObjects.Remove(o);
+        }
 
 
         // ---------- SEARCH ----------

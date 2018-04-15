@@ -67,7 +67,8 @@ namespace BRS.Scripts.PowerUps {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                Audio.Play(PowerupType.ToString().ToLower() + "_pickup", transform.position);
+                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);

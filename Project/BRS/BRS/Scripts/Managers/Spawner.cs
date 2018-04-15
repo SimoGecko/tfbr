@@ -30,7 +30,7 @@ namespace BRS.Scripts.Managers {
 
 
         private static readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
-            { "bomb", .3f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
+            { "bomb", 3.3f }, { "stamina", .1f }, { "capacity", .1f }, { "key", .1f }, { "health", .1f }, { "shield", .1f },
             { "speed", .1f }, { "trap", .3f }, { "explodingbox", .2f }, { "weight", .3f }, { "magnet", .2f } };
 
 
@@ -47,7 +47,8 @@ namespace BRS.Scripts.Managers {
         private const float TimeBetweenGoldSpawn = 30f;
         private const float TimeBetweenCrateSpawn = 30f;
         private const float TimeBetweenPowerupSpawn = 30;
-        //private const float TimeBetweenDiamondSpawn = 30;
+        //private const float TimeBetweenDiamondSpawn = 100;
+        float ProbOfDiamond = .5f;
 
 
 
@@ -70,6 +71,7 @@ namespace BRS.Scripts.Managers {
             SpawnGoldContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
+            SpawnDiamondCasual();
         }
 
         public override void Update() {
@@ -92,24 +94,37 @@ namespace BRS.Scripts.Managers {
                 SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab", Vector3.Zero);
         }
 
-        public void SpawnMoneyAround(Vector3 p, float radius, string moneyType = "") {
+        public void SpawnMoneyAround(Vector3 p, float radius, string moneyType = "") { // cash, gold, diamond
             if (moneyType == "") moneyType = Utility.EvaluateDistribution(MoneyDistribution);
+            moneyType = moneyType.ToLower();
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
             SpawnMoneyAt(pos, moneyType + "Prefab", Vector3.Zero);
         }
 
+        void SpawnClusterAt(Vector3 pos, string prefab, int number) {
+            for (int i = 0; i < number; i++) {
+                SpawnMoneyAt(pos + MyRandom.InsideUnitCircle().To3() * clusterRadius, prefab, Vector3.Zero);
+            }
+        }
         public void SpawnMoneyFromCenter(Vector3 p, float radius, string moneyType = "") {
             if (moneyType == "") moneyType = Utility.EvaluateDistribution(MoneyDistribution);
             p.Y = MathHelper.Max(p.Y, 0.5f);
             SpawnMoneyAt(p, moneyType + "Prefab", MyRandom.UpsideLinearVelocity() * radius);
         }
+        
+
+        void SpawnOneDiamondRandom() {
+            Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
+            SpawnMoneyAt(position.To3(), "diamondPrefab", Vector3.Zero);
+        }
+
+        void SpawnMoneyAt(Vector3 pos, string prefab, Vector3 linearVelocity) {//cashPrefab, goldPrefab, diamondPrefab
+            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity);
+            ElementManager.Instance.Add(newMoney.GetComponent<Money>());
+        }
 
         // MONEY CASH
         /*
-        
-
-        
-
 
         void SpawnOneMoneyRandom() {
 
@@ -155,17 +170,6 @@ namespace BRS.Scripts.Managers {
             }
         }*/
 
-        void SpawnClusterAt(Vector3 pos, string prefab, int number) {
-            for(int i=0; i<number; i++) {
-                SpawnMoneyAt(pos + MyRandom.InsideUnitCircle().To3() * clusterRadius, prefab, Vector3.Zero);
-            }
-        }
-
-        void SpawnMoneyAt(Vector3 pos, string prefab, Vector3 linearVelocity) {
-            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity);
-            ElementManager.Instance.Add(newMoney.GetComponent<Money>());
-        }
-
 
 
         // CRATE
@@ -209,6 +213,10 @@ namespace BRS.Scripts.Managers {
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
+        //
+        
+        
+
 
         // queries
         int EvaluateStackSizeDistribution() {
@@ -242,6 +250,13 @@ namespace BRS.Scripts.Managers {
             while (true) {
                 SpawnOnePowerupRandom();
                 await Time.WaitForSeconds(TimeBetweenPowerupSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
+            }
+        }
+        //
+        async void SpawnDiamondCasual() {
+            if(MyRandom.Value<ProbOfDiamond) {
+                await Time.WaitForSeconds(MyRandom.Range(10, RoundManager.RoundTime));
+                SpawnOneDiamondRandom();
             }
         }
 

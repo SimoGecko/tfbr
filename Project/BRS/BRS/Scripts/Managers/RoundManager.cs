@@ -41,7 +41,7 @@ namespace BRS.Scripts.Managers {
         public override void Update() {
             if (_rt.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
                 calledPolice = true;
-                Audio.SetLoop("police", true);
+                //Audio.SetLoop("police", true);
                 Audio.Play("police", Vector3.Zero);
                 GameUI.Instance.UpdatePoliceComing();
             }
@@ -54,8 +54,8 @@ namespace BRS.Scripts.Managers {
 
         // commands
         void OnRoundEnd() {
-            Audio.Stop("police");
-            Audio.SetLoop("police", false);
+            //Audio.Stop("police");
+            //Audio.SetLoop("police", false);
 
             NotifyBases();
 

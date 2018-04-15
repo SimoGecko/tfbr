@@ -12,7 +12,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
         public enum State { Menu, Playing, Paused, Finished };
 
-        public static State state; // CONTROLS STATE OF THE GAME
+        public static State state = State.Playing; // CONTROLS STATE OF THE GAME
 
         //public
         public static int NumPlayers = 2;
@@ -81,7 +81,7 @@ namespace BRS.Scripts.Managers {
         void RestartCustom() { // it still slows down for some reason
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            //UserInterface.Instance.Start();
+            //UserInterface.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 

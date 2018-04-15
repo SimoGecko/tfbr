@@ -136,9 +136,12 @@
     <Compile Include="Engine\Physics\Primitives3D\VertexPositionNormal.cs" />
     <Compile Include="Engine\Physics\PrimitiveTypes.cs" />
     <Compile Include="Engine\Physics\ShapeType.cs" />
+    <Compile Include="Engine\PostProcessing\PostProcessingEffect.cs" />
+    <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
+    <Compile Include="Engine\SpriteSheet.cs" />
     <Compile Include="Engine\Time.cs" />
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
@@ -151,10 +154,14 @@
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="Scripts\Elements\Police.cs" />
+    <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
+    <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />
+    <Compile Include="Scripts\Scenes\Level3.cs" />
     <Compile Include="Scripts\Scenes\LevelPhysics.cs" />
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
@@ -214,6 +221,7 @@
     <Compile Include="Scripts\PowerUps\Trap.cs" />
     <Compile Include="Scripts\Elements\Vault.cs" />
     <Compile Include="Scripts\UI\MoneyUI.cs" />
+    <Compile Include="Scripts\UI\ParticleUI.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PlayerUIStruct.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />
@@ -237,6 +245,7 @@
     <Content Include="Load\Rankings\ranking5min.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
+    <Content Include="Load\UnitySceneData\export_fullBank.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />

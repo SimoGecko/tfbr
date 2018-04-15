@@ -19,20 +19,33 @@ using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
-        /*
-        public Level1(PhysicsManager physics)
-            : base(physics) {
-        }*/
+        ////////// first game level, loads all the things //////////
 
+        public override int GetNumCameras() { return GameManager.NumPlayers; } 
 
-
-
-        /// <summary>
-        /// Scene setup for level1
-        /// </summary>
         public override void Load() {
+            LoadUnityScene();
+            CreateManagers();
+            CreatePlayers();
+            CreateCameraControllers();
+            CreateBases();
+            CreateSpecialObjects();
+        }
 
-            //MANAGERS
+
+        void LoadUnityScene() {
+            //LOAD UNITY SCENE
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
+            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
+            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
+            task.Wait();
+
+            var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
+            task2.Wait();
+        }
+
+        void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
             UiManager.AddComponent(new BaseUI());
             UiManager.AddComponent(new PlayerUI());
@@ -40,7 +53,8 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new GameUI());
             UiManager.AddComponent(new Suggestions());
             UiManager.AddComponent(new MoneyUI());
-            Add(UiManager);
+            UiManager.AddComponent(new ParticleUI());
+            //Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
@@ -50,100 +64,15 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
-            Add(Manager);
+            Manager.AddComponent(new PoliceManager());
+            //Add(Manager);
 
-
-            //UiManager.Start();
-            //Manager.Start();
-
-
-
-            //TEST lighting
-            /*
-            GameObject monkeyScene = new GameObject("monkeyScene", File.Load<Model>("Models/test/plant"));
-            monkeyScene.transform.Scale(3);
-            monkeyScene.transform.position += Vector3.Up * .1f;
-
-            GameObject monkeyScene2 = new GameObject("monkeyScene2", File.Load<Model>("Models/test/plant"));
-            monkeyScene2.transform.Scale(3);
-            monkeyScene2.transform.position += Vector3.Up * .1f + Vector3.Right*2;
-            */
-
-            //GROUND
-            /*for (int x = 0; x < 2; x++) {
-                for (int y = 0; y < 3; y++) {
-                    GameObject groundPlane = new GameObject("groundplane_" + x.ToString() + "_" + y.ToString(), File.Load<Model>("gplane"));
-                    groundPlane.transform.position = new Vector3(x * 10-5, 0, -y * 10);
-                    groundPlane.transform.SetStatic();
-                }
-            }*/
-
-            //BASE // TODO have this code make the base
-            /*for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
-                playerBase.tag = "base";
-                playerBase.AddComponent(new Base());
-                playerBase.GetComponent<Base>().baseIndex = i;
-                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
-                playerBase.transform.scale = new Vector3(3, 1, 1);
-                playerBase.transform.SetStatic();
-                playerBase.AddComponent(new BoxCollider(playerBase));
-
-            }*/
-
-            //VAULT
-            GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
-            vault.AddComponent(new Vault());
-            vault.transform.position = new Vector3(5, 1.5f, -62);
-            vault.transform.scale = new Vector3(3, .5f, 3);
-            vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new StaticRigidBody());
-            //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
-            Add(vault);
-
-            // Todo: refactor
-            vault.Start();
-
-            //other elements
-            GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
-            Add(speedpad);
-
-            //LOAD UNITY SCENE
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" +  GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
-            task.Wait();
-
-            var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
-            task2.Wait();
-
-
-            //CREATE CAMERA CONTROLLERS
-            int i = 0;
-            foreach(Camera c in Screen.Cameras) {
-                GameObject camObject = c.gameObject;
-                Add(camObject);
-                camObject.AddComponent(new CameraController()); // TODO move out this creation code
-                camObject.GetComponent<CameraController>().CamIndex = i++;
-            }
-            
-
-            CreatePlayers();
-
-            // Todo: Delete after testing
-            GameObject staticObject = new GameObject("staticGameObject", File.Load<Model>("Models/primitives/cube"));
-            staticObject.transform.Scale(2.0f);
-            staticObject.transform.TranslateGlobal(new Vector3(-5, 0, -5));
-            staticObject.AddComponent(new StaticRigidBody());
-
+            //new MenuManager().LoadContent(); // TODO add as component to manager
         }
 
         void CreatePlayers() {
-            List<GameObject> objects = new List<GameObject>();
-
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift_tex")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
                 Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0);
@@ -159,31 +88,28 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
 
-                Add(player);
-
-                /*
-                if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
-                    string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
-                    Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
-
-                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
-                    if (userModel != null) player.Model = userModel;
-                }*/
-
+                //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.AddComponent(new Arrow(player, null, i));
                 arrow.transform.Scale(.1f);
-
-                Add(arrow);
-
-
-                objects.Add(player); //why???
-                objects.Add(arrow);
+                //Add(arrow);
             }
+        }
 
+        void CreateCameraControllers() {
+            int i = 0;
+            foreach (Camera c in Screen.Cameras) {
+                GameObject camObject = c.gameObject;
+                //Add(camObject);
+                camObject.AddComponent(new CameraController()); // TODO move out this creation code
+                camObject.GetComponent<CameraController>().CamIndex = i++;
+            }
+        }
+
+        void CreateBases() {
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
@@ -194,15 +120,38 @@ namespace BRS.Scripts.Scenes {
                 bases[i].transform.SetStatic();
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
-                Add(bases[i]);
-                objects.Add(bases[i]);
+                //Add(bases[i]);
             }
+            //BASE // TODO have this code make the base
+            /*for (int i = 0; i < GameManager.numPlayers; i++) {
+                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
+                playerBase.tag = "base";
+                playerBase.AddComponent(new Base());
+                playerBase.GetComponent<Base>().baseIndex = i;
+                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
+                playerBase.transform.scale = new Vector3(3, 1, 1);
+                playerBase.transform.SetStatic();
+                playerBase.AddComponent(new BoxCollider(playerBase));
 
-            // todo: (andy) is this necessary here? // SIMO surely NOT!!
-            //foreach (GameObject go in objects) {
-                //go.Start();
-            //}
+            }*/
 
+        }
+
+        void CreateSpecialObjects() {
+            //VAULT
+            GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
+            vault.AddComponent(new Vault());
+            vault.transform.position = new Vector3(5, 1.5f, -62);
+            vault.transform.scale = new Vector3(3, .5f, 3);
+            vault.transform.eulerAngles = new Vector3(90, 0, 0);
+            vault.AddComponent(new StaticRigidBody());
+            //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
+            //Add(vault);
+
+
+            //other elements
+            GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
+            //Add(speedpad);
         }
     }
 }

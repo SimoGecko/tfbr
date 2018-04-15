@@ -15,7 +15,7 @@ namespace BRS.Engine {
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
-        void Draw(); // WHY?
+        void Draw(int i);
 
         object Clone();
     }
@@ -35,7 +35,7 @@ namespace BRS.Engine {
 
         public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
-        public virtual void Draw() { }
+        public virtual void Draw(int i) { }
 
         public virtual object Clone() {
             return this.MemberwiseClone(); // MUST DO DEEP COPY!
@@ -46,6 +46,8 @@ namespace BRS.Engine {
         }
     }
 
+
+    //@nico remove this
     public class ListComponents : Component { // WHAT IS THIS
         public readonly List<Component> Components;
         public readonly string NameIdentifier;
@@ -57,10 +59,10 @@ namespace BRS.Engine {
             NameIdentifier = name;
         }
 
-        public override void Draw() {
+        public override void Draw(int i) {
             if (Active)
                 foreach (Component comp in Components)
-                    comp.Draw();
+                    comp.Draw(i);
         }
 
         public override void Start() {

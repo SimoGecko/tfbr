@@ -26,7 +26,8 @@ namespace BRS.Engine {
         public static Color Clear = new Color(255, 255, 255, 0);
         //private
 
-        public static GraphicsDevice gD;
+        public static GraphicsDeviceManager gDM;
+        public static GraphicsDevice gD { get { return gDM.GraphicsDevice; } }
 
         //reference
 
@@ -47,7 +48,7 @@ namespace BRS.Engine {
                         effect.EnableDefaultLighting();
                         //effect.LightingEnabled = mat.lit;
                         //effect.DiffuseColor = mat.diffuse.ToVector3();
-                        effect.Alpha = mat.Diffuse.A;
+                        //effect.Alpha = mat.Diffuse.A;
                         //effect.CurrentTechnique = EffectTechnique
                         //effect.Texture
                     }

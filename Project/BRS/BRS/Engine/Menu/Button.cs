@@ -84,7 +84,7 @@ namespace BRS.Menu {
         }
 
         private void UpdateSelection(Input.Stick state) {
-            Input.uniqueFrameInputUsed = true;
+            //Input.uniqueFrameInputUsed = true;
             switch (state) {
                 case Input.Stick.Up:
                     if (NeighborUp != null) {
@@ -121,7 +121,7 @@ namespace BRS.Menu {
                 //_currentMouse = Mouse.GetState();
                 //var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
 
-                if (IsCurrentSelection && !Input.uniqueFrameInputUsed) {
+                if (IsCurrentSelection /*&& !Input.uniqueFrameInputUsed*/) {
                     if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp))
                         UpdateSelection(Input.Stick.Up);
                     else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight)) UpdateSelection(Input.Stick.Right);
@@ -133,15 +133,15 @@ namespace BRS.Menu {
                 IsHovering = false;
                 if (IsCurrentSelection /*mouseRectangle.Intersects(Rectangle)*/) {
                     IsHovering = true;
-                    if (!Input.uniqueFrameInputUsed && (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
-                        Input.uniqueFrameInputUsed = true;
+                    if (/*!Input.uniqueFrameInputUsed &&*/ (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
+                        /*Input.uniqueFrameInputUsed = true;*/
                         Click?.Invoke(this, new EventArgs());
                     }
                 }
             }
         }
 
-        public override void Draw() {
+        public override void Draw(int i) {
             if (Active) {
                 var colour = ImageColor;
 
@@ -152,21 +152,21 @@ namespace BRS.Menu {
                     colour = Color.Gray;
 
                 if (Texture != null)
-                    UserInterface.Instance.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
-                //UserInterface.Instance.DrawPictureOLD(Rectangle, Texture, colour);
+                    UserInterface.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
+                //UserInterface.DrawPictureOLD(Rectangle, Texture, colour);
 
 
                 if (InsideImage != null)
-                    UserInterface.Instance.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
-                    //UserInterface.Instance.DrawPictureOLD(RectangleInsideObject, InsideImage, InsideObjectColor);
+                    UserInterface.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
+                    //UserInterface.DrawPictureOLD(RectangleInsideObject, InsideImage, InsideObjectColor);
                 
 
                 if (!string.IsNullOrEmpty(Text)) {
-                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).X / 2);
-                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.Instance.comicFont.MeasureString(Text).Y / 2);
+                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
+                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.Instance.DrawString(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
-                    //UserInterface.Instance.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
+                    UserInterface.DrawString(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
+                    //UserInterface.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
 
                 }
             }

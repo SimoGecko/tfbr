@@ -1,10 +1,9 @@
 ﻿using BRS.Engine;
-using BRS.Scripts.Managers;
 using BRS.Engine.Physics;
+using BRS.Engine.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Menu;
 using BRS.Scripts;
 
 namespace BRS {
@@ -15,6 +14,8 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        // Render the scene to this target
+        RenderTarget2D _renderTarget;
 
 
 
@@ -23,14 +24,26 @@ namespace BRS {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             File.content = Content;
-            Graphics.gD = GraphicsDevice;
+            Graphics.gDM = _graphics;
         }
 
         protected override void Initialize() {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
             //NOTE: this is basic initialization of core components, nothing else
-
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
+            
+            // init the rendertarget with the graphics device
+            _renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            // set up the post processing manager
+            PostProcessingManager.Initialize(Content);
+
 
             base.Initialize();
         }
@@ -38,32 +51,18 @@ namespace BRS {
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            new UserInterface();
-            Screen.AdditionalSetup(_graphics);
+            UserInterface.sB = _spriteBatch;
 
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            SceneManager.Load("Level1");
-            //_ui = new UserInterface();
-            //_ui.Start();
+            SceneManager.LoadScene("Level1");
 
-
-            //everything is loaded, call Start
-            Start();
-        }
-
-        public void Start() {
-            //all the objects are present in memory but still don't hold references. Initialize variables and start
-
-            UserInterface.Instance.Start();
+            //start other big components
+            UserInterface.Start();
             Input.Start();
             Audio.Start();
-
-            //foreach (Camera cam in Screen.cameras) cam.Start(); // cameras are gameobjects
-            foreach (GameObject go in GameObject.All) go.Awake();
-            foreach (GameObject go in GameObject.All) go.Start();
+            PostProcessingManager.Instance.Start(_spriteBatch);
         }
 
 
@@ -78,34 +77,19 @@ namespace BRS {
             Time.Update(gameTime);
 
             Input.Update();
-
-
             Audio.Update();
-
-            if (Input.GetKeyDown(Keys.D9)) {
-                Debug.Log("changing scene...");
-                SceneManager.Load("Level2");
-                Screen.AdditionalSetup(_graphics);
-                foreach (GameObject go in GameObject.All) go.Start();
-
-            }
-            if (Input.GetKeyDown(Keys.D0)) {
-                Debug.Log("changing scene...");
-                SceneManager.Load("Level1");
-                Screen.AdditionalSetup(_graphics);
-                foreach (GameObject go in GameObject.All) go.Start();
-
-            }
+            SceneManager.Update(); // check for scene change (can remove later)
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-
+            PostProcessingManager.Instance.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
+            GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
 
@@ -115,9 +99,11 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
-                PhysicsDrawer.Instance.Draw(cam); // why is this here??
+                // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+                // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+                PhysicsDrawer.Instance.Draw(cam);
 
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
+                foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
@@ -125,19 +111,26 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
             }
+            Gizmos.ClearOrders();
+
+            // apply post processing
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice);
+            // Drop the render target
+            GraphicsDevice.SetRenderTarget(null);
 
             //-----2D-----
-            int i = 0;
+            int i = 1;
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                UserInterface.Instance.DrawSplitscreen(_spriteBatch, i++);
+                foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
+                i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            UserInterface.Instance.DrawGlobal(_spriteBatch);
+            foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
         }
     }

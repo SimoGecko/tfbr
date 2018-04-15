@@ -21,10 +21,10 @@ namespace BRS.Menu {
             Active = true;
         }
 
-        public override void Draw() {
-            base.Draw();
-            //UserInterface.Instance.DrawPictureOLD(Rectangle, _texture);
-            UserInterface.Instance.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
+        public override void Draw(int i) {
+            base.Draw(i);
+            //UserInterface.DrawPictureOLD(Rectangle, _texture);
+            UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
         }
     }
 }

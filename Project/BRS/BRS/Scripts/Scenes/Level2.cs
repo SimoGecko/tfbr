@@ -22,7 +22,11 @@ namespace BRS.Scripts.Scenes {
 
             //simple scene to tryout change scene
             GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
-            GameObject cube = new GameObject("cube1", File.Load<Model>("models/primitives/cube"));
+            //GameObject cube = new GameObject("cube1", File.Load<Model>("models/primitives/cube"));
+            GameObject cyl = new GameObject("cube1", File.Load<Model>("models/primitives/cylinder"));
+            cyl.transform.position = new Vector3(1.5f, 2, 3);
+            cyl.transform.eulerAngles = new Vector3(-10, -20, 30);
+            cyl.transform.scale = new Vector3(1, .5f, .7f);
 
             foreach (Camera c in Screen.Cameras) {
                 c.transform.position = new Vector3(0, 10, 10);
