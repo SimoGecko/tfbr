@@ -112,7 +112,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool IsFull() {
-            return _carryingWeight >= _capacity-13;
+            return _carryingWeight >= _capacity-3;
         }
 
         /*

@@ -80,6 +80,7 @@ namespace BRS.Scripts.Elements {
         void Explode() {
             //same code as in bomb
             Audio.Play("bomb_explosion", transform.position);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {

@@ -91,8 +91,8 @@ namespace BRS.Scripts.PlayerScripts {
                 _pM.Boosting = boosting;
                 if (boosting) _pS.UseStaminaForBoost();
 
-                //Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);

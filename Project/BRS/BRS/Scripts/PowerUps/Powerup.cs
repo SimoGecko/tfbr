@@ -9,6 +9,7 @@ using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -21,17 +22,18 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public PowerupType PowerupType;
+        private const float RotSpeed = 1;
 
         //private
         //protected bool destroyOnUse = true;
         private bool _rotate = true;
         protected bool _useInstantly = false;
 
+        protected Color powerupColor = Color.White;
 
         //private float _rotationAngle = 0.0f;
 
         // const
-        private const float RotSpeed = 1;
 
         //reference
         public Player Owner { get; protected set; }
@@ -69,7 +71,7 @@ namespace BRS.Scripts.PowerUps {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
                 Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, powerupColor);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);

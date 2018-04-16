@@ -1,6 +1,7 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Scripts.PlayerScripts;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     /// <summary>
@@ -18,6 +19,9 @@ namespace BRS.Scripts.Elements {
 
         public void Plant() {
             Audio.Play("bomb_timer", transform.position);
+            for(float i=0; i<TimeBeforeExplosion; i += .5f) {
+                new Timer(i, () => ParticleUI.Instance.GiveOrder(FusePosition(), ParticleType.Sparks));
+            }
             new Timer(TimeBeforeExplosion, Explode);
         }
 
@@ -37,5 +41,10 @@ namespace BRS.Scripts.Elements {
         bool InExplosionRange(GameObject o) {
             return (o.transform.position - transform.position).LengthSquared() <= ExplosionRadius * ExplosionRadius;
         }
+
+        Vector3 FusePosition() {
+            return transform.position + Vector3.Up * .5f;
+        }
+        
     }
 }

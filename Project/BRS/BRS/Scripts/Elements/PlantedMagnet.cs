@@ -30,7 +30,7 @@ namespace BRS.Scripts.Elements {
             _pMAffected = new List<PlayerMovement>();
             Invoke(StartDelay, () => _active = true);
             Audio.Play("active_magnet", transform.position);
-
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
             GameObject.Destroy(gameObject, Duration);
         }
 
@@ -62,6 +62,7 @@ namespace BRS.Scripts.Elements {
             }
             if (playSound && canPlaySound) {
                 Audio.Play("active_magnet", transform.position);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
                 canPlaySound = false;
                 new Timer(soundDuration, () => canPlaySound = true);
             }

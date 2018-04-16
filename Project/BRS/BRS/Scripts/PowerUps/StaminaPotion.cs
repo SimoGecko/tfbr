@@ -19,6 +19,7 @@ namespace BRS.Scripts.PowerUps {
             base.Start();
             PowerupType = PowerupType.Stamina;
             _useInstantly = true;
+            powerupColor = Color.LightBlue;
         }
 
 

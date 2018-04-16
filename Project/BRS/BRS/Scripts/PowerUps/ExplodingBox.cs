@@ -18,6 +18,8 @@ namespace BRS.Scripts.PowerUps {
         public override void Start() {
             base.Start();
             PowerupType = PowerupType.Explodingbox;
+            powerupColor = Color.Orange;
+
         }
 
 
