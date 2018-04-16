@@ -15,10 +15,11 @@ namespace BRS.Scripts.Elements {
         private const float ActionRadius = 3f;
         private const float StartDelay = 2f;
         private const float Duration = 60f;
+        private const float soundDuration = 1.5f;
 
         private List<PlayerMovement> _pMAffected;
         private bool _active;
-
+        private bool canPlaySound = true;
 
         //reference
 
@@ -28,6 +29,8 @@ namespace BRS.Scripts.Elements {
             _active = false;
             _pMAffected = new List<PlayerMovement>();
             Invoke(StartDelay, () => _active = true);
+            Audio.Play("active_magnet", transform.position);
+
             GameObject.Destroy(gameObject, Duration);
         }
 
@@ -47,13 +50,22 @@ namespace BRS.Scripts.Elements {
             foreach (var pm in _pMAffected) pm.SetSlowdown(false);
             _pMAffected.Clear();
 
+            bool playSound = false;
+
             foreach (Player p in ElementManager.Instance.Players()) {
                 if (InActionRadius(p.gameObject)) {
+                    playSound = true;
                     PlayerMovement pM = p.gameObject.GetComponent<PlayerMovement>();
                     pM.SetSlowdown(true);
                     _pMAffected.Add(pM);
                 }
             }
+            if (playSound && canPlaySound) {
+                Audio.Play("active_magnet", transform.position);
+                canPlaySound = false;
+                new Timer(soundDuration, () => canPlaySound = true);
+            }
+
         }
 
 

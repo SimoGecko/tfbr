@@ -23,6 +23,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // const
         const int MaxNumberPowerups = 1;
+        public System.Action OnPowerupPickup;
 
         //reference
 
@@ -53,6 +54,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (_carryingPowerup.Count == MaxNumberPowerups) {
                 _carryingPowerup.RemoveAt(0);
             }
+            OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
         }

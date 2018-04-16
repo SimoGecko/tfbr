@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using Microsoft.Xna.Framework;
 
@@ -20,6 +21,7 @@ namespace BRS.Scripts.PlayerScripts {
         //private
         protected float Health;
         protected bool Dead;
+        public Action OnTakeDamage;
 
         public LivingEntity() {
             Health = StartingHealth;
@@ -46,6 +48,7 @@ namespace BRS.Scripts.PlayerScripts {
         // commands
         public virtual void TakeDamage(float damage) {
             Health -= damage;
+            OnTakeDamage?.Invoke();
             if (Health < 0) Health = 0;
             if (Health <= 0 && !Dead) {
                 Die();

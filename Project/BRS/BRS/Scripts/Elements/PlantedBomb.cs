@@ -22,7 +22,7 @@ namespace BRS.Scripts.Elements {
         }
 
         void Explode() {
-            Audio.Play("explosion", transform.position);
+            Audio.Play("bomb_explosion", transform.position);
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {

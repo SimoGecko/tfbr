@@ -68,7 +68,7 @@ namespace BRS.Scripts.PowerUps {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
+                Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
                 ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
@@ -82,8 +82,11 @@ namespace BRS.Scripts.PowerUps {
         }
 
         public virtual void UsePowerup() {
-                transform.position = Owner.transform.position;
-                Audio.Play(PowerupType.ToString().ToLower()+ "_use",  transform.position);
+            transform.position = Owner.transform.position;
+            string audioName = "use_" + PowerupType.ToString().ToLower();
+            if(Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
+            else Audio.Play("use_various", transform.position);
+
         }
 
         // queries

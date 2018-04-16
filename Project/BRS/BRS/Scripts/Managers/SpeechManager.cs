@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using BRS.Engine;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.Elements;
 using System;
 
 namespace BRS.Scripts {
@@ -15,14 +16,14 @@ namespace BRS.Scripts {
 
         public enum EventType {
             Begin, AlmostEnd, Win, Lose, Random,
-            Powerup, Valuable, Diamond, EnemyClose, Attack,
+            Powerup, Diamond, EnemyClose, Attack,
             OpenCrate, OpenVault, HitEnemy, Damage, Full,
             BringBase, Tutorial }
         float[] SpeechProbability = new float[] {
-            .5f, .5f, 1f, 1f, .5f,
-            .3f, .1f, 1f, .3f, .5f,
-            .2f, .8f, .5f, .5f, .8f,
-            .8f, .3f };
+            .6f, .6f, 1f, 1f, .5f,
+            .2f, .9f, .3f, .1f,
+            .2f, .8f, .6f, .5f, .6f,
+            .6f, .3f };
 
         // --------------------- VARIABLES ---------------------
 
@@ -39,6 +40,7 @@ namespace BRS.Scripts {
         float nextTalkTime;
         bool isTalking;
         int index;
+        float turnOffBubbleTime;
 
         //reference
 
@@ -49,13 +51,14 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-            nextTalkTime = Time.CurrentTime;
+            //nextTalkTime = Time.CurrentTime;
             FillSpeechStrings();
             PlugEvents();
         }
 
         public override void Update() {
-
+            if (Time.CurrentTime > turnOffBubbleTime)
+                TurnOffSpeech();
         }
 
 
@@ -69,15 +72,18 @@ namespace BRS.Scripts {
             numEvents = Enum.GetNames(typeof(EventType)).Length;
             speechString = new List<string>[numEvents];
             for (int i = 0; i < numEvents; i++) speechString[i] = new List<string>();
-            //TODO fill speech strings
             FillActualSpeech();
         }
 
         void FillActualSpeech() {
-            for(int i=0; i<numEvents; i++) {
-                for(int j=0; j<10; j++) {
-                    AddString(i, ((EventType)i).ToString() + " " + (j+1));
-                }
+            string[] allSpeechLines = System.IO.File.ReadAllLines("Load/robber_speech.txt");
+            int eventIndex = -1;
+            for(int i=0; i<allSpeechLines.Length; i++) {
+                string line = allSpeechLines[i];
+                if (line.Length < 1) continue; // empty line
+                if (line[0] == '-') { eventIndex++; continue; } // line with event type
+                string lineEscaped = line.Replace('|', '\n'); // newline
+                AddString(eventIndex, lineEscaped);
             }
         }
 
@@ -88,18 +94,36 @@ namespace BRS.Scripts {
         void PlugEvents() {
             RoundManager.Instance.OnRoundStartAction += (() => OnEvent(EventType.Begin));
             RoundManager.Instance.OnRoundAlmostEndAction += (() => OnEvent(EventType.AlmostEnd));
-            RoundManager.Instance.OnRoundEndAction += (() => OnEvent(EventType.Win));
+            RoundManager.Instance.OnRoundEndAction += (() => OnRoundEnd());
 
             Player p = ElementManager.Instance.Player(index);
             p.gameObject.GetComponent<PlayerAttack>().OnAttackBegin += (() => OnEvent(EventType.Attack));
+            p.gameObject.GetComponent<PlayerAttack>().OnEnemyHit += (() => OnEvent(EventType.HitEnemy));
+            p.gameObject.GetComponent<PlayerPowerup>().OnPowerupPickup += (() => OnEvent(EventType.Powerup));
+            p.gameObject.GetComponent<PlayerInventory>().OnInventoryFull += (() => OnEvent(EventType.Full));
+            p.OnTakeDamage += (() => OnEvent(EventType.Damage));
 
+            if (GameObject.NameExists("vault")) {
+                GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultOpen += (() => OnEvent(EventType.OpenVault));
+            }
 
+            if (GameObject.NameExists("base_"+index%2)) {
+                GameObject.FindGameObjectWithName("base_"+index%2).GetComponent<Base>().OnBringBase += (() => OnEvent(EventType.BringBase));
+            }
+            //still not plugged
+            /* Random, Diamond, EnemyClose, OpenCrate, Tutorial }*/
+
+    }
+
+        void OnRoundEnd() {
+            if (RoundManager.Instance.Winner == index) OnEvent(EventType.Win);
+            else OnEvent(EventType.Lose);
         }
 
         void OnEvent(EventType st) {
             int sti = (int)st;
-            //if(MyRandom.Value<SpeechProbability[sti])
-                TrySpeech(speechString[sti][MyRandom.Range(0, speechString[sti].Count)], true);
+            if(MyRandom.Value<SpeechProbability[sti])
+                TrySpeech(speechString[sti][MyRandom.Range(0, speechString[sti].Count)], false);
         }
 
         void TrySpeech(string speech, bool interrupt) {
@@ -109,12 +133,11 @@ namespace BRS.Scripts {
                     if (lastNThoughts.Count > numThoughtsBeforeRepeating) {
                         lastNThoughts.Dequeue();
                     }
-
+                    //turn on
                     ShowSpeech(speech);
-
                     //call to turn off
                     float duration = speech.Length / readingSpeed + readingDefaultTime;
-                    new Timer(duration, () => TurnOffSpeech());
+                    turnOffBubbleTime = Time.CurrentTime + duration;
                 }
             }
         }
@@ -129,7 +152,6 @@ namespace BRS.Scripts {
         void TurnOffSpeech() {
             isTalking = false;
             SpeechUI.Instance.EndShowBubble(index);
-
         }
 
 
@@ -145,3 +167,4 @@ namespace BRS.Scripts {
 
     }
 }
+ 

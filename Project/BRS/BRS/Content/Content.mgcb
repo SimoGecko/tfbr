@@ -5423,114 +5423,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/powerup/powerups_clear.png
 
-#begin Audio/effects/attacks/attack.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/attacks/attack.wav
-
-#begin Audio/effects/attacks/break.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/attacks/break.wav
-
-#begin Audio/effects/attacks/stun.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/attacks/stun.wav
-
-#begin Audio/effects/elements/bomb_timer.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/elements/bomb_timer.wav
-
-#begin Audio/effects/elements/explosion.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/elements/explosion.wav
-
-#begin Audio/effects/elements/speedpad.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/elements/speedpad.wav
-
-#begin Audio/effects/game/police.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/game/police.wav
-
-#begin Audio/effects/powerups/bomb_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/bomb_pickup.wav
-
-#begin Audio/effects/powerups/capacity_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/capacity_pickup.wav
-
-#begin Audio/effects/powerups/health_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/health_pickup.wav
-
-#begin Audio/effects/powerups/key_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/key_pickup.wav
-
-#begin Audio/effects/powerups/key_use.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/key_use.wav
-
-#begin Audio/effects/powerups/shield_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/shield_pickup.wav
-
-#begin Audio/effects/powerups/shield_use.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/shield_use.wav
-
-#begin Audio/effects/powerups/speed_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/powerups/speed_pickup.wav
-
-#begin Audio/effects/valuables/cash_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/valuables/cash_pickup.wav
-
-#begin Audio/effects/valuables/diamond_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/valuables/diamond_pickup.wav
-
-#begin Audio/effects/valuables/gold_pickup.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:Audio/effects/valuables/gold_pickup.wav
-
 #begin Models/vehicles/sweeper.dae
 /importer:OpenAssetImporter
 /processor:ModelProcessor
@@ -6321,4 +6213,202 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/comic/ted.png
+
+#begin Audio/effects/attack/dash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/attack/dash.wav
+
+#begin Audio/effects/attack/enemy_hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/attack/enemy_hit.wav
+
+#begin Audio/effects/attack/stun.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/attack/stun.wav
+
+#begin Audio/effects/collisions/bomb_explosion.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/collisions/bomb_explosion.wav
+
+#begin Audio/effects/collisions/bomb_timer.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/collisions/bomb_timer.wav
+
+#begin Audio/effects/collisions/wall_hit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/collisions/wall_hit.wav
+
+#begin Audio/effects/elements/active_magnet.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/elements/active_magnet.wav
+
+#begin Audio/effects/elements/catched_trap.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/elements/catched_trap.wav
+
+#begin Audio/effects/elements/falling_weight.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/elements/falling_weight.wav
+
+#begin Audio/effects/elements/speedpad.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/elements/speedpad.wav
+
+#begin Audio/effects/game/end_lose.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/game/end_lose.wav
+
+#begin Audio/effects/game/end_win.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/game/end_win.wav
+
+#begin Audio/effects/game/police.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/game/police.wav
+
+#begin Audio/effects/menu/button_press_A.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/menu/button_press_A.wav
+
+#begin Audio/effects/menu/button_press_B.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/menu/button_press_B.wav
+
+#begin Audio/effects/menu/menu_change.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/menu/menu_change.wav
+
+#begin Audio/effects/movement/braking_tires.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/movement/braking_tires.wav
+
+#begin Audio/effects/movement/damaged_car.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/movement/damaged_car.wav
+
+#begin Audio/effects/movement/full_car.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/movement/full_car.wav
+
+#begin Audio/effects/movement/vehicle_engine_normal.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/movement/vehicle_engine_normal.wav
+
+#begin Audio/effects/other/crate_cracking.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/other/crate_cracking.wav
+
+#begin Audio/effects/other/leaving_cash_base.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/other/leaving_cash_base.wav
+
+#begin Audio/effects/other/vault_opening.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/other/vault_opening.wav
+
+#begin Audio/effects/powerup/pickup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/pickup.wav
+
+#begin Audio/effects/powerup/use_bomb.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/use_bomb.wav
+
+#begin Audio/effects/powerup/use_key.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/use_key.wav
+
+#begin Audio/effects/powerup/use_stamina.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/use_stamina.wav
+
+#begin Audio/effects/powerup/use_trap.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/use_trap.wav
+
+#begin Audio/effects/powerup/use_various.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/powerup/use_various.wav
+
+#begin Audio/effects/valuables/leave.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/valuables/leave.wav
+
+#begin Audio/effects/valuables/pickup_cash.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/valuables/pickup_cash.wav
+
+#begin Audio/effects/valuables/pickup_diamond.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/valuables/pickup_diamond.wav
+
+#begin Audio/effects/valuables/pickup_gold.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/valuables/pickup_gold.wav
 

@@ -35,6 +35,8 @@ namespace BRS.Scripts.Elements {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSlowdown(true);
                 new Timer(SlowdownTime, () => pM.SetSlowdown(false));
+                Audio.Play("catched_trap", transform.position);
+
                 GameObject.Destroy(gameObject);
             }
         }

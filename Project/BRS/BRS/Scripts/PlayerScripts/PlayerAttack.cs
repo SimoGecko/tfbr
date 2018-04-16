@@ -54,7 +54,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // commands
         public void BeginAttack() {
-            Audio.Play("attack", transform.position);
+            Audio.Play("dash", transform.position);
             OnAttackBegin?.Invoke();
 
             //Debug.Log(Time.CurrentTime);
@@ -92,6 +92,8 @@ namespace BRS.Scripts.PlayerScripts {
             if (!_hasAppliedDamage && (!pa._attacking || pa._attackStartTime > _attackStartTime)) {
                 //if the other is not attacking or started attacking later
                 OnEnemyHit?.Invoke();
+                Audio.Play("enemy_hit", transform.position);
+
                 p.TakeDamage(AttackDamage);
                 _hasAppliedDamage = true;
             }
