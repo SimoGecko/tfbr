@@ -3,7 +3,7 @@ using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class Slider : Component {
         ////////// class to create and display a slider object (with the bar texture => see UserInterface) //////////
 

@@ -3,11 +3,10 @@ using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class Image : Component {
         private readonly Texture2D _texture;
         public Vector2 Position { get; set; }
-        public Vector2 StartPos;
         public string NameIdentifier { get; set; }
 
         public Rectangle Rectangle {
@@ -22,9 +21,11 @@ namespace BRS.Menu {
         }
 
         public override void Draw(int i) {
-            base.Draw(i);
-            //UserInterface.DrawPictureOLD(Rectangle, _texture);
-            UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
+            if (Active) {
+                base.Draw(i);
+                //UserInterface.DrawPictureOLD(Rectangle, _texture);
+                UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
+            }
         }
     }
 }

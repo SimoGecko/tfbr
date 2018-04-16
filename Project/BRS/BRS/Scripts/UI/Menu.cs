@@ -4,9 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using BRS.Engine;
+using BRS.Engine.Menu;
+using BRS.Scripts.Managers;
 
-namespace BRS.Menu {
-    public class Menu {
+namespace BRS.Scripts.UI {
+    public class Menu : Component{
 
         private Texture2D _textureButton;
         private Texture2D _textureButtonBackground;

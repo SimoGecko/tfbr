@@ -5,7 +5,6 @@ using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
-using BRS.Menu;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
@@ -87,6 +86,10 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+
+                // Nico: Modify player's name and model (choosen by user during menu)
+                MenuManager.Instance.ChangeModelNamePlayer(player, i);
+
 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());

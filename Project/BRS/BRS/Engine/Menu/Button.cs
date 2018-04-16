@@ -5,15 +5,13 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using BRS.Engine;
+using BRS.Scripts.Managers;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class Button : Component {
         ////////// class to create and display a button with arbitrary function when clicked //////////
 
         // --------------------- VARIABLES ---------------------
-
-        private MouseState _currentMouse;
-        private MouseState _previousMouse;
 
         public bool IsHovering;
         public bool IsCurrentSelection;
@@ -27,9 +25,8 @@ namespace BRS.Menu {
         public float ScaleWidthInside { get; set; } = 1;
         public float ScaleHeightInside { get; set; } = 1;
 
-        public Vector2 OffsetTexture = new Vector2(0, 0);
         public Vector2 InitPos;
-        private Vector2 Position { get { return InitPos + new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) /*- OffsetTexture*/; } }
+        private Vector2 Position { get { return InitPos; } }
 
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
@@ -51,13 +48,7 @@ namespace BRS.Menu {
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)(Position.X - (Texture.Width * Screen.Width / 1920f * (1-ScaleWidth) / 2)), (int)Position.Y - (int)(Texture.Height * Screen.Height / 1080f * (1 - ScaleHeight) / 2), (int)(Texture.Width * Screen.Width / 1920f * ScaleWidth), (int)(Texture.Height * Screen.Height / 1080f * ScaleHeight));
-            }
-        }
-
-        public Rectangle RectangleNotScaled {
-            get {
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)(Texture.Width * Screen.Width / 1920f), (int)(Texture.Height * Screen.Height / 1080f));
+                return new Rectangle((int)(Position.X), (int)Position.Y, (int)(Texture.Width * ScaleWidth), (int)(Texture.Height * ScaleHeight));
             }
         }
 
@@ -72,7 +63,6 @@ namespace BRS.Menu {
         public Button(Texture2D t, Vector2 pos) {
             Texture = t;
             InitPos = pos;
-            //OffsetTexture = new Vector2(t.Width / 2, t.Height / 2);
             IsClicked = false;
             Active = true;
             _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
@@ -84,7 +74,7 @@ namespace BRS.Menu {
         }
 
         private void UpdateSelection(Input.Stick state) {
-            //Input.uniqueFrameInputUsed = true;
+            MenuManager.uniqueFrameInputUsed = true;
             switch (state) {
                 case Input.Stick.Up:
                     if (NeighborUp != null) {
@@ -117,24 +107,21 @@ namespace BRS.Menu {
             if (Active) {
                 base.Update();
 
-                //_previousMouse = _currentMouse;
-                //_currentMouse = Mouse.GetState();
-                //var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
-
-                if (IsCurrentSelection /*&& !Input.uniqueFrameInputUsed*/) {
+                if (IsCurrentSelection && !MenuManager.uniqueFrameInputUsed) {
                     if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp))
                         UpdateSelection(Input.Stick.Up);
-                    else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight)) UpdateSelection(Input.Stick.Right);
+                    else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight))
+                        UpdateSelection(Input.Stick.Right);
                     else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown))
                         UpdateSelection(Input.Stick.Down);
                     else if (Input.GetKeyUp(Keys.Left) || Input.GetButtonUp(Buttons.LeftThumbstickLeft)) UpdateSelection(Input.Stick.Left);
                 }
 
                 IsHovering = false;
-                if (IsCurrentSelection /*mouseRectangle.Intersects(Rectangle)*/) {
+                if (IsCurrentSelection) {
                     IsHovering = true;
-                    if (/*!Input.uniqueFrameInputUsed &&*/ (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
-                        /*Input.uniqueFrameInputUsed = true;*/
+                    if (!MenuManager.uniqueFrameInputUsed && (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
+                        MenuManager.uniqueFrameInputUsed = true;
                         Click?.Invoke(this, new EventArgs());
                     }
                 }
@@ -153,21 +140,15 @@ namespace BRS.Menu {
 
                 if (Texture != null)
                     UserInterface.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
-                //UserInterface.DrawPictureOLD(Rectangle, Texture, colour);
-
 
                 if (InsideImage != null)
                     UserInterface.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
-                    //UserInterface.DrawPictureOLD(RectangleInsideObject, InsideImage, InsideObjectColor);
                 
-
                 if (!string.IsNullOrEmpty(Text)) {
                     var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
                     var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.DrawString(Text, RectangleNotScaled, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
-                    //UserInterface.DrawStringOLD(new Vector2(x, y), Text, Color.Black);
-
+                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
                 }
             }
         }

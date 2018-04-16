@@ -2,7 +2,7 @@
 using BRS.Scripts;
 using Microsoft.Xna.Framework;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class TextBox : Component {
         public string Text { get; set; }
         public string NameIdentifier { get; set; }

@@ -8,10 +8,12 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using System.Threading.Tasks;
 using BRS.Scripts.PlayerScripts;
+using BRS.Scripts.UI;
+using BRS.Engine.Menu;
 
-namespace BRS.Menu {
-    class MenuManager {
-
+namespace BRS.Scripts.Managers {
+    class MenuManager : Component{
+        public static bool uniqueFrameInputUsed = false;
         // --------------------- VARIABLES ---------------------
         public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
         GameObject _currentMenu;
@@ -30,6 +32,11 @@ namespace BRS.Menu {
         public string NamePlayerInfosToChange;
 
         // --------------------- BASE METHODS ------------------
+        public override void Start() {
+            base.Start();
+            LoadContent();
+        }
+
         public void LoadContent() {
             Instance = this;
             _menuGame.LoadContent();
@@ -65,26 +72,28 @@ namespace BRS.Menu {
 
             modelCharacter = new List<Model>();
             modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/sweeper"));
             modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
 
         }
 
-        public void Update() {
-            foreach (var go in GameObject.All)
-                go.Update();
+        public override void Update() {
+            uniqueFrameInputUsed = false;
+            /*foreach (var go in GameObject.All)
+                go.Update();*/
 
             /*foreach (GameObject go in CharacterToChoose)
                 go.transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);*/
 
+            //foreach(GameObject)
         }
 
         public void Draw() {
-            foreach (var go in GameObject.All)
+            /*foreach (var go in GameObject.All)
                 if (go.active)
                     foreach (Component component in go.components)
                         if (component.Active)
-                            component.Draw(0);
+                            component.Draw(0);*/
 
             /*if (_currentMenu == MenuRect["play2"]) 
                 foreach (Camera cam in Screen.Cameras) 
@@ -94,7 +103,7 @@ namespace BRS.Menu {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public async void TransitionUI(object sender, EventArgs e) {
+        /*public async void TransitionUI(object sender, EventArgs e) {
             Button button = (Button)sender;
 
             Image test = MenuRect["play1"].GetComponent<Image>();
@@ -116,9 +125,7 @@ namespace BRS.Menu {
                 _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                 _currentMenu.active = true;
             //});
-
-
-        }
+        }*/
 
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -147,6 +154,8 @@ namespace BRS.Menu {
 
         public void StartGameFunction(object sender, EventArgs e) {
             GameManager.state = GameManager.State.Playing;
+            //SceneManager.LoadScene("Level1");
+
             /*Game1.Instance.MenuDisplay = false;
             _currentMenu.active = false;
 
@@ -230,14 +239,14 @@ namespace BRS.Menu {
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "name_player") {
-                        /*if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                        if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                             PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, PlayersInfo[NamePlayerInfosToChange].Item2);
                         else
                             PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
-                        */
+                        
                         //GameObject.FindGameObjectWithName(NamePlayerInfosToChange).GetComponent<Player>().PlayerName = textBox.Text;
-                        int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
-                        ElementManager.Instance.Player(playerIndex).PlayerName = textBox.Text;
+                        //int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
+                        //ElementManager.Instance.Player(playerIndex).PlayerName = textBox.Text;
                         textBox.Text = "";
                     }
                 }
@@ -255,16 +264,21 @@ namespace BRS.Menu {
 
             toChange = CharacterToChoose[button.Index].Model;
             CharacterToChoose[button.Index+1].active = true;
-
-            if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, toChange);
-            else
-                PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, toChange));
             */
 
+            //int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
+            if (PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[button.Index]);
+            else
+                PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, modelCharacter[button.Index]));
+            
+
             //GameObject.FindGameObjectWithName(NamePlayerInfosToChange).Model = modelCharacter[button.Index];
-            int playerIndex = Int32.Parse(NamePlayerInfosToChange[NamePlayerInfosToChange.Length - 1].ToString());
-            ElementManager.Instance.Player(playerIndex).gameObject.Model = modelCharacter[button.Index];
+            
+            /*foreach (KeyValuePair<string, Scene> entry in SceneManager.scenes) {
+                entry.Value.
+                ElementManager.Instance.Player(playerIndex).gameObject.Model = modelCharacter[button.Index];
+            }*/
 
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is Image img) {
@@ -304,6 +318,17 @@ namespace BRS.Menu {
             if (button.NeighborRight != null) {
                 button.NeighborRight.IsCurrentSelection = true;
                 button.IsCurrentSelection = false;
+            }
+        }
+
+        public void ChangeModelNamePlayer(GameObject player, int i) {
+
+            if (MenuManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                string userName = MenuManager.Instance.PlayersInfo["player_" + i].Item1;
+                Model userModel = MenuManager.Instance.PlayersInfo["player_" + i].Item2;
+
+                if (userName != null) player.GetComponent<Player>().PlayerName = userName;
+                if (userModel != null) player.Model = userModel;
             }
         }
     }

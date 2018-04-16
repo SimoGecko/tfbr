@@ -56,22 +56,22 @@ namespace BRS.Scripts.UI {
             UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true, flip: flip);
             UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 80, 80), null, Align.TopRight, flip: flip);
 
-            int rank = RoundManager.GetRank(index);
+            int rank = RoundManager.GetRank(index%2);
             if(rank==1)
                 UserInterface.DrawPicture(_ribbon, new Rectangle(-120, 18, 60, 60), null, Align.TopRight, flip: flip);
             string rankString = RoundManager.RankToString(rank);
             UserInterface.DrawString(rankString, new Rectangle(-135, 28, 30, 30), Align.TopRight, Align.TopRight, Align.Center, scale: .5f, bold: true, flip: flip);
 
             UserInterface.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
-            float capacityPercent = (float)_baseUi[index].TotalMoneyInBase / RoundManager.MoneyToWinRound;
+            float capacityPercent = (float)_baseUi[index%2].TotalMoneyInBase / RoundManager.MoneyToWinRound;
             Color yellowColor = new Color(255, 198, 13);
             UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight, flip: flip);
-            string baseValueString = Utility.IntToMoneyString(_baseUi[index].TotalMoneyInBase);
+            string baseValueString = Utility.IntToMoneyString(_baseUi[index%2].TotalMoneyInBase);
             UserInterface.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
             UserInterface.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
 
             //wins
-            string winsString = "wins: " + _baseUIwins[index];
+            string winsString = "wins: " + _baseUIwins[index%2];
             UserInterface.DrawString(winsString, new Rectangle(-20, 120, 80, 20), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, flip: flip);
         }
 

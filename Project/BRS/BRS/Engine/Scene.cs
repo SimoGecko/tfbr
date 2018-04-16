@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Scripts.Managers;
 using BRS.Scripts.Scenes;
 using Microsoft.Xna.Framework.Input;
 
@@ -20,9 +21,13 @@ namespace BRS.Engine {
             Add("Level2", new Level2());
             Add("Level3", new Level3());
             Add("LevelPhysics", new LevelPhysics());
+            Add("LevelMenu", new LevelMenu());
         }
 
         public static void Update() {
+            if (currentScene == scenes["LevelMenu"] && GameManager.state == GameManager.State.Playing)
+                LoadScene("Level1");
+
             if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
             if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
             if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");

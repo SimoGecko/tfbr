@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class TickBox : Component {
         ////////// class to create and display a tickBox //////////
 
