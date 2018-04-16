@@ -50,10 +50,10 @@ namespace BRS {
 
 
             Graphics.texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
-            Graphics.lightMap = File.Load<Texture2D>("Models/scenes/LightMap");
+            Graphics.lightMap = File.Load<Texture2D>("Models/scenes/lightmap2");
             Graphics.textureCol = File.Load<Texture2D>("Models/scenes/1");
 
-            sceneModel = File.Load<Model>("Models/scenes/sceneNico2");
+            sceneModel = File.Load<Model>("Models/scenes/sceneNico3");
 
             //load prefabs and scene
             Prefabs.Start();
@@ -104,7 +104,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
 
-                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, Matrix.CreateTranslation(new Vector3(0, .1f, 0)));
+                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, Matrix.CreateTranslation(new Vector3(0, 0f, 3.0f)));
 
             }
             Gizmos.ClearOrders();

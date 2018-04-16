@@ -6412,6 +6412,12 @@
 /processorParam:Quality=Best
 /build:Audio/effects/valuables/pickup_gold.wav
 
+#begin Other/shaders/colortexlightmap.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Other/shaders/colortexlightmap.fx
+
 #begin Models/scenes/1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -6424,7 +6430,7 @@
 /processorParam:TextureFormat=Color
 /build:Models/scenes/1.png
 
-#begin Models/scenes/LightMap.png
+#begin Models/scenes/lightmap2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -6434,9 +6440,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Models/scenes/LightMap.png
+/build:Models/scenes/lightmap2.png
 
-#begin Models/scenes/sceneNico2.dae
+#begin Models/scenes/sceneNico3.dae
 /importer:OpenAssetImporter
 /processor:ModelProcessor
 /processorParam:ColorKeyColor=0,0,0,0
@@ -6453,11 +6459,5 @@
 /processorParam:Scale=1
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
-/build:Models/scenes/sceneNico2.dae
-
-#begin Other/shaders/colortexlightmap.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Other/shaders/colortexlightmap.fx
+/build:Models/scenes/sceneNico3.dae
 
