@@ -6284,3 +6284,15 @@
 /processorParam:DebugMode=Auto
 /build:Effects/Vignette.fx
 
+#begin Effects/DepthOfField.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/DepthOfField.fx
+
+#begin Effects/Depth.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Depth.fx
+
