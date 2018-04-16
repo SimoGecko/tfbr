@@ -29,6 +29,8 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+
+            //GameObject wholeScene = new GameObject("wholeScene", File.Load<Model>("Models/scenes/sceneNico2"));
         }
 
 
@@ -37,11 +39,13 @@ namespace BRS.Scripts.Scenes {
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
             //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
+
+
             var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
             task.Wait();
 
-            var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
-            task2.Wait();
+            //var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
+            //task2.Wait();
         }
 
         void CreateManagers() {
@@ -117,6 +121,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
+            /*
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
@@ -128,19 +133,23 @@ namespace BRS.Scripts.Scenes {
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
                 //Add(bases[i]);
-            }
+            }*/
+
             //BASE // TODO have this code make the base
-            /*for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
-                playerBase.tag = "base";
-                playerBase.AddComponent(new Base());
-                playerBase.GetComponent<Base>().baseIndex = i;
+            for (int i = 0; i < 2; i++) {
+                GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
+                playerBase.tag = ObjectTag.Base;
+                playerBase.AddComponent(new Base(i));
+                playerBase.transform.Scale(2);
                 playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
                 playerBase.transform.scale = new Vector3(3, 1, 1);
                 playerBase.transform.SetStatic();
-                playerBase.AddComponent(new BoxCollider(playerBase));
+                //playerBase.AddComponent(new BoxCollider(playerBase));
+                playerBase.AddComponent(new StaticRigidBody(PhysicsManager.Instance, pureCollider: true));
+                playerBase.transform.SetStatic();
+                ElementManager.Instance.Add(playerBase.GetComponent<Base>());
+            }
 
-            }*/
 
         }
 

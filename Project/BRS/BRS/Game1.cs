@@ -18,6 +18,7 @@ namespace BRS {
         //@andy remove these
         private Display _display;
         private DebugDrawer _debugDrawer;
+        Model sceneModel;
 
 
         public Game1() {
@@ -46,6 +47,13 @@ namespace BRS {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
+
+
+            Graphics.texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
+            Graphics.lightMap = File.Load<Texture2D>("Models/scenes/LightMap");
+            Graphics.textureCol = File.Load<Texture2D>("Models/scenes/1");
+
+            sceneModel = File.Load<Model>("Models/scenes/sceneNico2");
 
             //load prefabs and scene
             Prefabs.Start();
@@ -95,8 +103,12 @@ namespace BRS {
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
+
+                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, Matrix.CreateTranslation(new Vector3(0, .1f, 0)));
+
             }
             Gizmos.ClearOrders();
+
 
             //-----2D-----
             int i = 1;

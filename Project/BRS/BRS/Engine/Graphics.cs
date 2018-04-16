@@ -37,6 +37,10 @@ namespace BRS.Engine {
         public static GraphicsDeviceManager gDM;
         public static GraphicsDevice gD { get { return gDM.GraphicsDevice; } }
 
+
+        public static Effect texlightEffect;
+        public static Texture2D lightMap;
+        public static Texture2D textureCol;
         //reference
 
 
@@ -67,6 +71,19 @@ namespace BRS.Engine {
             }
         }
 
+        public static void DrawModelWithEffect(Model model, Matrix view, Matrix proj, Matrix world) {
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    part.Effect = texlightEffect;
+                    texlightEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    texlightEffect.Parameters["View"].SetValue(view);
+                    texlightEffect.Parameters["Projection"].SetValue(proj);
+                    texlightEffect.Parameters["ColorTexture"].SetValue(textureCol);
+                    texlightEffect.Parameters["LightmapTexture"].SetValue(lightMap);
+                }
+                mesh.Draw();
+            }
+        }
 
         //COLOR METHODS
         public static Color[,] TextureTo2DArray(Texture2D texture) {
