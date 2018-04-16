@@ -49,7 +49,7 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 	float blurFactor = saturate(abs(fSceneZ-Distance)/Range);
 	
 	// Based on how far the texel is from "distance" in Distance, stored in blurFactor, mix the scene
-    return lerp(NormalScene,BlurScene,blurFactor);
+    return lerp(NormalScene,BlurScene, blurFactor);
 }
 
 technique PostProcess

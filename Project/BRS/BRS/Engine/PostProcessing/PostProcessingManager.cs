@@ -48,9 +48,11 @@ namespace BRS.Engine.PostProcessing {
                         farClip = farClip / (farClip - nearClip);
 
                         ppEffect.SetParameter("Distance", 70.0f);
-                        ppEffect.SetParameter("Range", 10.0f);
+                        ppEffect.SetParameter("Range", 30.0f);
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
+                        
+                        
                         break;
                 }
 
@@ -152,6 +154,7 @@ namespace BRS.Engine.PostProcessing {
 
                             blurShader.Effect.CurrentTechnique.Passes[0].Apply();
                             spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                            curTarget = _blurTarget;
 
                             spriteBatch.End();
                         }

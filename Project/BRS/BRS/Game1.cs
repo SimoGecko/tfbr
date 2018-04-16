@@ -18,6 +18,7 @@ namespace BRS {
         RenderTarget2D _renderTarget;
         // depth info
         RenderTarget2D _ZBuffer;
+        Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
 
         public Game1() {
@@ -77,6 +78,7 @@ namespace BRS {
 
             // load the z buffer shader
             _ZBufferShader = Content.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
         }
 
 
@@ -129,20 +131,16 @@ namespace BRS {
 
             // render to z buffer
             // GraphicsDevice.Render = CompareFunction.LessEqual;
-            GraphicsDevice.SetRenderTarget(_ZBuffer);
-            GraphicsDevice.Clear(Color.Black);
+            // GraphicsDevice.SetRenderTarget(_ZBuffer);
+            // GraphicsDevice.Clear(Color.Black);
 
             // pass the matWorldViewProj matrix
+            // effect.Parameters["matWorldViewProj"].SetValue(worldMatrix * viewMatrix * projMatrix);
             // _ZBufferShader.Parameters
             // apply the depth buffer shader
             // _ZBufferShader.CurrentTechnique.Passes[0].Apply();
             // draw all 3d objects
-            Draw3D(gameTime);
-
-
-
-
-
+            // Draw3D(gameTime);
 
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
@@ -154,7 +152,8 @@ namespace BRS {
 
 
             // apply post processing
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            //PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
