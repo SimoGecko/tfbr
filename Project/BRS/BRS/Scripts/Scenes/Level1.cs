@@ -78,7 +78,7 @@ namespace BRS.Scripts.Scenes {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.transform.Scale(1.0f);
+                player.transform.Scale(2.0f);
                 Vector3 startPos = new Vector3(-5 + 10 * i, 0, 0);
 
                 player.AddComponent(new Player(i, i % 2, startPos));
