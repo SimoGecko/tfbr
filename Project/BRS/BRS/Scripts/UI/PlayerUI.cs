@@ -19,6 +19,7 @@ namespace BRS.Scripts.UI {
 
         //private
         private PlayerUIStruct[] _playerUi;
+
         private Texture2D _forkliftIcon; // 256x256
         private Texture2D _barIcons; // 256x256
 
@@ -27,8 +28,11 @@ namespace BRS.Scripts.UI {
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
+        public override void Awake() {
             Instance = this;
+        }
+
+        public override void Start() {
             _playerUi = new PlayerUIStruct[GameManager.NumPlayers];
 
             _forkliftIcon = File.Load<Texture2D>("Images/UI/forklift_icon");
@@ -49,31 +53,31 @@ namespace BRS.Scripts.UI {
             if (index == 0) return;
             index--;
 
-            bool flip = index % 2 != 0;
+            bool flip = false;// index % 2 != 0;
 
-            UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 200, 30), Align.TopLeft, scale: .5f, bold: true, flip: flip);
-            UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 80, 80), null, Align.TopLeft, flip: flip);
+            UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true, flip: flip);
+            UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
 
             //capacity
-            UserInterface.DrawPicture(_barIcons, new Rectangle(100, 55, 20, 20), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);
-            UserInterface.DrawString("carrying", new Rectangle(120, 35, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
+            UserInterface.DrawPicture(_barIcons, new Rectangle(120, 57, 25, 25), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);
+            UserInterface.DrawString("carrying", new Rectangle(145, 32, 125, 25), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
-            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(120, 55, 100, 20), Graphics.Green, Align.TopLeft, flip: flip);
+            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(145, 57, 125, 25), Graphics.Green, Align.TopLeft, flip: flip);
             string capacityString = _playerUi[index].CarryingWeight +  "/" + _playerUi[index].MaxCapacity;
-            UserInterface.DrawString(capacityString, new Rectangle(225, 55, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
+            UserInterface.DrawString(capacityString, new Rectangle(275, 57, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //fuel
-            UserInterface.DrawPicture(_barIcons, new Rectangle(100, 95, 20, 20), new Rectangle(0, 200, 200, 200), Align.TopLeft, flip: flip);
-            UserInterface.DrawString("fuel", new Rectangle(120, 75, 100, 20), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
+            UserInterface.DrawPicture(_barIcons, new Rectangle(120, 107, 25, 25), new Rectangle(0, 200, 200, 200), Align.TopLeft, flip: flip);
+            UserInterface.DrawString("fuel", new Rectangle(145, 82, 125, 25), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
-            UserInterface.DrawBarStriped(staminaPercent, new Rectangle(120, 95, 100, 20), Graphics.Blue, Align.TopLeft, flip: flip);
+            UserInterface.DrawBarStriped(staminaPercent, new Rectangle(145, 107, 125, 25), Graphics.Blue, Align.TopLeft, flip: flip);
             string staminaString = (int)(_playerUi[index].Stamina / _playerUi[index].MaxStamina*100) + "%";
-            UserInterface.DrawString(staminaString, new Rectangle(225, 95, 60, 20), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
+            UserInterface.DrawString(staminaString, new Rectangle(275, 107, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //small bars
             //TODO works only with player one
             Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
-            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-25, -60), new Point(50, 5));
+            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-25, -80), new Point(50, 5));
             UserInterface.DrawBarStriped(capacityPercent, smallBar, Graphics.Green);
             smallBar.Y += 6;
             UserInterface.DrawBarStriped(staminaPercent, smallBar, Graphics.Blue);
@@ -82,14 +86,15 @@ namespace BRS.Scripts.UI {
             //suggestions
             //stamina button suggestions
             if (_playerUi[index].CanAttack) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.A, Align.TopLeft, flip);
+                Suggestions.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.A, Align.TopLeft, flip);
             } else if (staminaPercent == 1) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(60, 135, 40, 40), XboxButtons.RT, Align.TopLeft, flip);
+                Suggestions.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.RT, Align.TopLeft, flip);
             }
 
         }
 
         public void UpdatePlayerUI(int index, float health, float maxHealth, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack) {
+            //TODO remove all unnecessary parameters
             // current
             _playerUi[index].CarryingValue = carryingValue;
 
@@ -108,75 +113,6 @@ namespace BRS.Scripts.UI {
 
 
         // queries
-        
-
-        //i know we have git, this is faster for copy-paste
-        public void DrawOldUI2(int index) {
-            /*
-            Vector2 position = new Vector2(130, 130);
-            //position += Vector2.UnitX * UserInterface.GetOffset(index);
-            Vector2 screenPosition = Camera.Main.WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
-
-            //UserInterface.DrawPicture(position, _forkliftIcon, _forkliftIcon.Bounds.GetCenter(), .5f);
-
-            //name
-            string playerName = _playerUi[index].Name;
-            UserInterface.DrawStringOLD(position + new Vector2(-70, -110), playerName);
-
-            //health
-            float healthPercent = _playerUi[index].Health / _playerUi[index].MaxHealth;
-            UserInterface.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Green);
-            UserInterface.DrawBarSmall(screenPosition + new Vector2(-35, -60), healthPercent, Color.Green);
-
-            //stamina
-            float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
-            UserInterface.DrawBar(position + new Vector2(-70, 50), staminaPercent, Color.Red);
-            UserInterface.DrawBarSmall(screenPosition + new Vector2(-35, -55), staminaPercent, Color.Red);
-
-            //stamina button suggestions
-            if (_playerUi[index].CanAttack) {
-                Suggestions.Instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.A);
-            } else if (staminaPercent == 1) {
-                Suggestions.Instance.GiveCommand(index, position + new Vector2(80, 55), XboxButtons.RT);
-            }
-
-            //capacity
-            float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
-            UserInterface.DrawBarVertical(position + new Vector2(-95, 60), capacityPercent, Color.Blue);
-            UserInterface.DrawBarSmall(screenPosition + new Vector2(-35, -50), capacityPercent, Color.Blue);
-
-            //cash
-            string playerValueString = "$" + _playerUi[index].CarryingValue.ToString("N0");//ToString("#,##0")
-            UserInterface.DrawStringOLD(position + new Vector2(50, -20), playerValueString);
-            */
-        }
-
-        public void DrawOldUI(int index) {
-            /*
-            string playerValueString = "carrying: " + _playerUi[index].CarryingValue;
-            UserInterface.DrawStringOLD(new Vector2(10 + offset, 120), playerValueString);
-
-            //health
-            float healthPercent = _playerUi[index].Health / _playerUi[index].MaxHealth;
-            UserInterface.DrawBarBig(new Vector2(10 + offset, 170), healthPercent, Color.Green);
-            string healthString = _playerUi[index].Health + "/" + _playerUi[index].MaxHealth;
-            UserInterface.DrawStringOLD(new Vector2(75 + offset, 160), healthString);
-
-            //stamina
-            float staminaPercent = _playerUi[index].Stamina / _playerUi[index].MaxStamina;
-            UserInterface.DrawBarBig(new Vector2(10 + offset, 220), staminaPercent, Color.Red);
-            string staminaString = Math.Round(_playerUi[index].Stamina * 100) + "/" + _playerUi[index].MaxStamina * 100; // TODO make stamina range 100
-            UserInterface.DrawStringOLD(new Vector2(75 + offset, 210), staminaString);
-
-            //capacity
-            float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
-            UserInterface.DrawBarBig(new Vector2(10 + offset, 270), capacityPercent, Color.Blue);
-            string capacityString = _playerUi[index].CarryingWeight + "/" + _playerUi[index].MaxCapacity;
-            UserInterface.DrawStringOLD(new Vector2(100 + offset, 260), capacityString);
-            */
-        }
-
-
         public string GetPlayerName(int index) {
             return _playerUi[index].Name;
         }
@@ -185,4 +121,23 @@ namespace BRS.Scripts.UI {
         // other
 
     }
+
+    public struct PlayerUIStruct {
+        // current
+        public string Name;
+        public int CarryingValue;
+
+        public int CarryingWeight;
+        public float Health;
+        public float Stamina;
+
+        // max
+        public float MaxHealth;
+        public float MaxStamina;
+        public int MaxCapacity;
+
+        // helper
+        public bool CanAttack;
+    }
+
 }

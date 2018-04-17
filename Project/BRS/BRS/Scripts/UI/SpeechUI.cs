@@ -61,12 +61,12 @@ namespace BRS.Scripts {
             if (index == 0) return;
             index--;
 
-            int posX = (int)System.Math.Round(MathHelper.LerpPrecise(-256, 0, showCharacterPercent[index]));
+            //int posX = (int)System.Math.Round(MathHelper.LerpPrecise(-256, 0, showCharacterPercent[index]));
             int posY = (int)System.Math.Round(MathHelper.LerpPrecise(256, 0, showCharacterPercent[index]));
             UserInterface.DrawPicture(_comicCharacter[index%2], new Rectangle(0, posY, 256, 256), null, Align.BotLeft);
             if (showBubble[index]) {
                 UserInterface.DrawPicture(_comicBubble, new Rectangle(125, -195, 190, 170), null, Align.BotLeft);
-                UserInterface.DrawString(bubbleString[index], new Rectangle(140, -245, 155, 100), Align.BotLeft, paragraph: Align.Center, col: Color.Black);
+                UserInterface.DrawString(bubbleString[index], new Rectangle(140, -245, 155, 100), Align.BotLeft, paragraph: Align.Center, col: Color.Black, scale:.85f);
             }
             
 

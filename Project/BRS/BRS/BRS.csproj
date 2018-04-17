@@ -192,7 +192,6 @@
     <Compile Include="Scripts\PowerUps\ShieldPotion.cs" />
     <Compile Include="Scripts\PowerUps\StaminaPotion.cs" />
     <Compile Include="Scripts\UI\BaseUI.cs" />
-    <Compile Include="Scripts\UI\BaseUIStruct.cs" />
     <Compile Include="Engine\Menu\CircleBar.cs" />
     <Compile Include="Scripts\Elements\Crate.cs" />
     <Compile Include="Scripts\Managers\ElementManager.cs" />
@@ -221,9 +220,7 @@
     <Compile Include="Scripts\UI\MoneyUI.cs" />
     <Compile Include="Scripts\UI\ParticleUI.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
-    <Compile Include="Scripts\UI\PlayerUIStruct.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />
-    <Compile Include="Scripts\UI\PowerupUIStruct.cs" />
     <Compile Include="Scripts\UI\SpeechUI.cs" />
     <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
