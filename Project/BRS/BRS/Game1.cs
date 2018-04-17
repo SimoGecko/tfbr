@@ -19,6 +19,7 @@ namespace BRS {
         private Display _display;
         private DebugDrawer _debugDrawer;
         Model sceneModel;
+        Transform sceneTransform = new Transform(new Vector3(-10, 3, 3f));
 
 
         public Game1() {
@@ -104,7 +105,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
 
-                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, Matrix.CreateTranslation(new Vector3(0, 0f, 3.0f)));
+                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, sceneTransform.World);
 
             }
             Gizmos.ClearOrders();
