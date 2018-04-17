@@ -27,16 +27,26 @@ namespace BRS.Engine.PostProcessing {
 
 
         public void SetParameter(string name, Vector2 arg) {
-            Effect.Parameters[name].SetValue(arg);
+            if (Effect.Parameters[name] != null)
+            {
+                Effect.Parameters[name].SetValue(arg);
+            }
         }
 
         public void SetParameter(string name, float arg)
         {
-            Effect.Parameters[name].SetValue(arg);
+            if(Effect.Parameters[name] != null)
+            {
+                Effect.Parameters[name].SetValue(arg);
+            }
+            
         }
         public void SetParameter(string name, Texture2D arg)
         {
-            Effect.Parameters[name].SetValue(arg);
+            if(Effect.Parameters[name] != null)
+            {
+                Effect.Parameters[name].SetValue(arg);
+            }
         }
 
     }

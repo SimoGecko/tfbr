@@ -16,7 +16,8 @@ namespace BRS.Engine.PostProcessing {
         Chromatic,
         Vignette,
         GaussianBlur,
-        DepthOfField
+        DepthOfField,
+        ColorGrading
     }
 
 
@@ -51,8 +52,13 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Range", 30.0f);
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
-                        
-                        
+                        break;
+                    case PostprocessingType.ColorGrading:
+                        ppEffect.SetParameter("Size", 16f);
+                        ppEffect.SetParameter("SizeRoot", 4f);
+                        ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver6"));
+                        //ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver7"));
+
                         break;
                 }
 
@@ -120,6 +126,10 @@ namespace BRS.Engine.PostProcessing {
             {
                 _effects[4].Active = !_effects[4].Active;
             }
+            if (Input.GetKeyDown(Keys.D0))
+            {
+                _effects[5].Active = !_effects[5].Active;
+            }
             if (Input.GetKeyDown(Keys.PageUp)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes + 1, 1, 4);
             }
@@ -164,6 +174,9 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("BlurScene", _blurTarget);
                         ppShader.SetParameter("D1M", depth1Texture);
                     }
+
+                    
+
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
                     graphicsDevice.SetRenderTarget(nextTarget);
