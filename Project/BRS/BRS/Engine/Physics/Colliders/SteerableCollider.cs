@@ -4,6 +4,7 @@
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Engine.Physics.Colliders {
     /// <summary>
@@ -22,7 +23,6 @@ namespace BRS.Engine.Physics.Colliders {
 
         public SteerableCollider(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
         }
-
 
         public override void PostStep(float timestep) {
             AddForce(Speed);

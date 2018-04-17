@@ -108,6 +108,7 @@ namespace BRS.Engine {
             result.Awake();
             result.Start(); // because instantiated at runtime
 
+            // If it is a dynamic rigid body it cna have some linear velocity when instantiated
             if (result.HasComponent<DynamicRigidBody>()) {
                 DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
                 dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;

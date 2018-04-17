@@ -119,36 +119,32 @@ namespace BRS.Engine.PostProcessing {
 
         public void Update(GameTime gameTime) {
             MouseState mouseState = Mouse.GetState();
-            if (mouseState.LeftButton == ButtonState.Pressed)
-            {
+            if (mouseState.LeftButton == ButtonState.Pressed) {
                 // Do whatever you want here
                 Vector2 centerCoord = new Vector2((float)mouseState.X / (float)Screen.Width, (float)mouseState.Y / (float)Screen.Height);
                 _effects[6].SetParameter("centerCoord", centerCoord);
                 _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
             }
-            
-            if (Input.GetKeyDown(Keys.D5)) {
+
+            if (Input.GetKeyDown(Keys.F1)) {
                 _effects[0].Active = !_effects[0].Active;
             }
-            if (Input.GetKeyDown(Keys.D6)) {
+            if (Input.GetKeyDown(Keys.F2)) {
                 _effects[1].Active = !_effects[1].Active;
             }
-            if (Input.GetKeyDown(Keys.D7)) {
+            if (Input.GetKeyDown(Keys.F3)) {
                 _effects[2].Active = !_effects[2].Active;
             }
-            if (Input.GetKeyDown(Keys.D8)) {
+            if (Input.GetKeyDown(Keys.F4)) {
                 _effects[3].Active = !_effects[3].Active;
             }
-            if (Input.GetKeyDown(Keys.D9))
-            {
+            if (Input.GetKeyDown(Keys.F5)) {
                 _effects[4].Active = !_effects[4].Active;
             }
-            if (Input.GetKeyDown(Keys.D0))
-            {
+            if (Input.GetKeyDown(Keys.F6)) {
                 _effects[5].Active = !_effects[5].Active;
             }
-            if (Input.GetKeyDown(Keys.F2))
-            {
+            if (Input.GetKeyDown(Keys.F7)) {
                 _effects[6].Active = !_effects[6].Active;
                 _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
             }
@@ -166,9 +162,8 @@ namespace BRS.Engine.PostProcessing {
             // if dynamic props are needed
             foreach (var ppShader in _effects) {
                 if (ppShader.Active) {
-                    if(ppShader.Type == PostprocessingType.DepthOfField)
-                    {                           
-                        
+                    if (ppShader.Type == PostprocessingType.DepthOfField) {
+
                         // set the target to the blur target
                         graphicsDevice.SetRenderTarget(_blurTarget);
 
@@ -176,8 +171,7 @@ namespace BRS.Engine.PostProcessing {
                         PostProcessingEffect blurShader = _effects[(int)PostprocessingType.GaussianBlur];
 
                         // apply 2 blur passes
-                        for (int i = 0; i < 2; i++)
-                        {
+                        for (int i = 0; i < 2; i++) {
                             spriteBatch.Begin(SpriteSortMode.Immediate,
                                 BlendState.AlphaBlend,
                                 SamplerState.LinearClamp,
@@ -197,12 +191,11 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("D1M", depth1Texture);
                     }
 
-                    if(ppShader.Type == PostprocessingType.ShockWave)
-                    {
+                    if (ppShader.Type == PostprocessingType.ShockWave) {
                         ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
                     }
 
-                    
+
 
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
@@ -216,19 +209,16 @@ namespace BRS.Engine.PostProcessing {
                             DepthStencilState.Default,
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
-                        if(PostprocessingType.ShockWave == ppShader.Type && DEBUG)
-                        {
+                        if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
                             spriteBatch.Draw(testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        } else
-                        {
+                        } else {
                             spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         }
-                        
+
                         spriteBatch.End();
                     }
 
                     graphicsDevice.SetRenderTarget(null);
-                    //curTarget.Dispose();
                     curTarget = nextTarget;
                 }
             }

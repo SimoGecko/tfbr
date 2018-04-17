@@ -1,15 +1,16 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -44,6 +45,7 @@ namespace BRS.Scripts.PlayerScripts {
         PlayerStamina _pS;
         PlayerLift _pL;
         private PlayerCollider _pC;
+        private MovingRigidBody _movingRigidBody;
 
         public CameraController CamController;
         Player _other;
@@ -56,17 +58,14 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerName = name + (playerIndex + 1).ToString();
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
-            startPosition = startPos;
+            startPosition = startPos + 3*Vector3.Forward;
             //TODO make mesh have this color
         }
         public override void Start() {
             base.Start();
-            transform.position = startPosition;
-            transform.rotation = Quaternion.Identity;
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
             if (po != null) _other = po.GetComponent<Player>();
-
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
             CamController.Start();
@@ -79,6 +78,20 @@ namespace BRS.Scripts.PlayerScripts {
             _pS = gameObject.GetComponent<PlayerStamina>();
             _pL = gameObject.GetComponent<PlayerLift>();
             _pC = gameObject.GetComponent<PlayerCollider>();
+            _movingRigidBody = gameObject.GetComponent<MovingRigidBody>();
+
+            // Reset start position
+            transform.position = startPosition;
+            transform.rotation = Quaternion.Identity;
+
+            SteerableCollider sc = _movingRigidBody.RigidBody as SteerableCollider;
+            sc.Speed = JVector.Zero;
+            sc.RotationY = 0;
+            sc.Position = Conversion.ToJitterVector(startPosition);
+            sc.Orientation = JMatrix.CreateRotationY(0);
+
+            // Restart other components
+            _pM.Start();
         }
 
         public override void Update() {
@@ -130,6 +143,9 @@ namespace BRS.Scripts.PlayerScripts {
 
                 if (!_pC.IsCollided)
                     State = PlayerState.Normal;
+            } else if (State == PlayerState.Stun) {
+                SteerableCollider sc = _movingRigidBody.RigidBody as SteerableCollider;
+                sc.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();
