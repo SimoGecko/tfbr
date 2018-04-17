@@ -196,7 +196,7 @@ namespace BRS.Scripts.Managers {
 
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
-                    if (textBox.NameIdentifier == "name_player") {
+                    if (textBox.NameIdentifier == "NamePlayer") {
                         if (button.Text == "del") {
                             if (textBox.Text.Length > 0)
                                 textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
@@ -209,7 +209,32 @@ namespace BRS.Scripts.Managers {
         }
 
         public void UpdatePlayersChangeTo(object sender, EventArgs e) {
-            foreach (var elem in MenuRect["play2"].components) {
+            if (GameManager.NumPlayers == 2) {
+                Menu.Instance.FindButtonPanelWithName("Player3", "play2").Active = false;
+                Menu.Instance.FindButtonPanelWithName("Player4", "play2").Active = false;
+
+                Button bu1 = Menu.Instance.FindButtonPanelWithName("Player1", "play2");
+                Button bu2 = Menu.Instance.FindButtonPanelWithName("Player2", "play2");
+                bu1.NeighborLeft = bu2;
+                bu2.NeighborRight = bu1;
+            }
+            else if (GameManager.NumPlayers == 4) {
+                Button bu3 = Menu.Instance.FindButtonPanelWithName("Player3", "play2");
+                bu3.Active = true;
+                Button bu4 = Menu.Instance.FindButtonPanelWithName("Player4", "play2");
+                bu4.Active = true;
+
+                Button bu1 = Menu.Instance.FindButtonPanelWithName("Player1", "play2");
+                Button bu2 = Menu.Instance.FindButtonPanelWithName("Player2", "play2");
+                bu1.NeighborLeft = bu4;
+                bu2.NeighborRight = bu3;
+            }
+
+
+
+
+
+            /*foreach (var elem in MenuRect["play2"].components) {
                 if (elem is ListComponents listComp) {
                     if (listComp.NameIdentifier == "playerInfoToChange") {
                         int count = 0;
@@ -231,7 +256,7 @@ namespace BRS.Scripts.Managers {
                         }
                     }
                 }
-            }
+            }*/
         }
 
         public void ChangeNamePlayer(object sender, EventArgs e) {

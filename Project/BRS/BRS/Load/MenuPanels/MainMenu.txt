@@ -1,0 +1,70 @@
+<Button>
+Texture: background
+Position: 960 540
+ScaleHeight: 0.87
+ScaleWidth: 0.87
+Color: 255 255 255
+</Button>
+
+<Button>
+Texture: title
+Position: 960 162
+Text: Menu
+Color: 255 255 255
+ColorInside: 148 148 148
+</Button>
+
+<Button>
+NameIdentifier: Play
+Texture: button
+Position: 960 324
+ScaleWidth: 2
+Text: Play
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: Credits Tutorial null null
+NameSwitchTo: play1
+</Button>
+
+<Button>
+NameIdentifier: Tutorial
+Texture: button
+Position: 960 432
+ScaleWidth: 2
+Text: Tutorial
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: Play Rankings null null
+NameSwitchTo: tutorial1
+</Button>
+
+<Button>
+NameIdentifier: Rankings
+Texture: button
+Position: 960 540
+ScaleWidth: 2
+Text: Rankings
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: Tutorial Options null null
+NameSwitchTo: ranking
+</Button>
+
+<Button>
+NameIdentifier: Options
+Texture: button
+position: 960 648
+ScaleWidth: 2
+Text: Options
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: Rankings Credits null null
+NameSwitchTo: options
+</Button>
+
+<Button>
+NameIdentifier: Credits
+Texture: button
+Position: 960 756
+ScaleWidth: 2
+Text: Credits
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: Options Play null null
+NameSwitchTo: credits
+</Button>

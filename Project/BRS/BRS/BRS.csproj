@@ -240,6 +240,15 @@
   <ItemGroup>
     <Content Include="Assets\Logo.scale-200.png" />
     <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Load\MenuPanels\Credits.txt" />
+    <Content Include="Load\MenuPanels\MainMenu.txt" />
+    <Content Include="Load\MenuPanels\Options.txt" />
+    <Content Include="Load\MenuPanels\Play1.txt" />
+    <Content Include="Load\MenuPanels\Play2.txt" />
+    <Content Include="Load\MenuPanels\Tutorial1.txt" />
+    <Content Include="Load\MenuPanels\Tutorial2.txt" />
+    <Content Include="Load\MenuPanels\Tutorial3.txt" />
+    <Content Include="Load\MenuPanels\Tutorial4.txt" />
     <Content Include="Load\Rankings\ranking2min.txt" />
     <Content Include="Load\Rankings\ranking3min.txt" />
     <Content Include="Load\Rankings\ranking5min.txt" />

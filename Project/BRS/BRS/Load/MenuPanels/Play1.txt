@@ -1,0 +1,106 @@
+<Button>
+Texture: background
+Position: 960 540
+ScaleHeight: 0.87
+ScaleWidth: 0.87
+Color: 255 255 255
+</Button>
+
+<Button>
+Texture: title
+Position: 960 162
+Text: Game Settings
+Color: 255 255 255
+ColorInside: 148 148 148
+</Button>
+
+<Text>
+Text: Number of players
+Position: 960 286
+</Text>
+
+<Text>
+Text: Game duration
+Position: 960 502
+</Text>
+
+<Button>
+NameIdentifier: PlayerAmount2
+Texture: button
+Position: 864 394
+ScaleWidth: 2
+Text: 2
+Functions: UpdateNoPlayers GoDown
+NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount4 PlayerAmount4
+</Button>
+
+<Button>
+NameIdentifier: PlayerAmount4
+Texture: button
+Position: 1056 394
+Text: 4
+Functions: UpdateNoPlayers GoDown
+NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount2 PlayerAmount2
+</Button>
+
+<Button>
+NameIdentifier: RoundDuration2min
+Texture: button
+Position: 806 610
+ScaleWidth: 2
+Text: 2 min
+Functions: UpdateRoundDurationGoDown
+NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration5min RoundDuration3min
+</Button>
+
+<Button>
+NameIdentifier: RoundDuration3min
+Texture: button
+Position: 960 610
+ScaleWidth: 2
+Text: 3 min
+Functions: UpdateRoundDurationGoDown
+NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration2min RoundDuration5min
+</Button>
+
+<Button>
+NameIdentifier: RoundDuration5min
+Texture: button
+Position: 1113 610
+ScaleWidth: 2
+Text: 5 min
+Functions: UpdateRoundDurationGoDown
+NeighborsUpDownLeftRight: PlayerAmount2 Back null null
+</Button>
+
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 864 793
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: NameMenuToSwitchTo
+NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Next Next
+NameSwitchTo: main
+Color: 250 139 139
+ColorInside: 255 255 255
+</Button>
+
+<Button>
+NameIdentifier: Next
+Texture: buttonCircle
+TextureInside: arrowRight
+Position: 1056 793
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: SetDefaultParametersGame NameMenuToSwitchTo UpdatePlayersChangeTo
+NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Back Back
+NameSwitchTo: play2
+Color: 110 235 150
+ColorInside: 255 255 255
+</Button>

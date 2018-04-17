@@ -8,7 +8,7 @@ using BRS.Engine;
 using BRS.Scripts.Managers;
 
 namespace BRS.Engine.Menu {
-    class Button : Component {
+    public class Button : Component {
         ////////// class to create and display a button with arbitrary function when clicked //////////
 
         // --------------------- VARIABLES ---------------------
@@ -45,6 +45,7 @@ namespace BRS.Engine.Menu {
         public Color ImageColor = new Color(247, 239, 223);
 
         public List<Button> neighbors;
+        public string nameIdentifier;
 
         public Rectangle Rectangle {
             get {
@@ -60,6 +61,13 @@ namespace BRS.Engine.Menu {
         }
 
         // --------------------- BASE METHODS ------------------
+        public Button() {
+            IsClicked = false;
+            Active = true;
+            _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
+            neighbors = new List<Button>();
+        }
+
         public Button(Texture2D t, Vector2 pos) {
             Texture = t;
             InitPos = pos;

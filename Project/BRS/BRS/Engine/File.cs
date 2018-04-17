@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using BRS.Engine.Physics;
@@ -11,6 +12,7 @@ using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using static BRS.Scripts.UI.Menu;
 
 namespace BRS.Engine {
     class File : Component {
@@ -226,6 +228,151 @@ namespace BRS.Engine {
         private static void AddText(FileStream fs, string value) {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
             fs.Write(info, 0, info.Length);
+        }
+
+        public static List<MenuStruct> ReadMenuPanel(string pathName) {
+            List<MenuStruct> panel = new List<MenuStruct>();
+
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+
+                    if (nameContent == null)
+                        break;
+
+                    string line, key;
+                    if (nameContent == "<Button>") {
+                        MenuStruct aButton = new MenuStruct();
+                        aButton.menuType = MenuType.Button;
+                        while ((line = reader.ReadLine()) != "</Button>") {
+                            key = line.Split(':')[0];
+                            string[] values = line.Split(':')[1].Substring(1).Split(' ');
+
+                            switch (key) {
+                                case "Position":
+                                    aButton.Position = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                                    break;
+                                case "Texture":
+                                    aButton.TextureName = values[0];
+                                    break;
+                                case "TextureInside":
+                                    aButton.TextureInsideName = values[0];
+                                    break;
+                                case "Text":
+                                    aButton.Text = line.Split(':')[1].Substring(1);
+                                    break;
+                                case "ScaleWidth":
+                                    aButton.ScaleWidth = float.Parse(values[0]);
+                                    break;
+                                case "ScaleHeight":
+                                    aButton.ScaleHeight = float.Parse(values[0]);
+                                    break;
+                                case "Color":
+                                    aButton.Color = new Color(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                                    break;
+                                case "ColorInside":
+                                    aButton.ColorInside = new Color(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                                    break;
+                                case "Functions":
+                                    aButton.Functions = new List<string>();
+                                    foreach (var elem in values)
+                                        aButton.Functions.Add(elem);
+                                    break;
+                                case "UniqueChoiceWith":
+                                    aButton.UniqueChoiceButtonWith = new List<string>();
+                                    foreach (var elem in values)
+                                        aButton.UniqueChoiceButtonWith.Add(elem);
+                                    break;
+                                case "NeighborsUpDownLeftRight":
+                                    aButton.NeighborsUpDownLeftRight = new string[4];
+                                    for (int i=0; i<4; ++i)                                     
+                                            aButton.NeighborsUpDownLeftRight[i] = values[i];
+                                    break;
+                                case "NameIdentifier":
+                                    aButton.Name = values[0];
+                                    break;
+                                case "NameSwitchTo":
+                                    aButton.NameToSwitchTo = values[0];
+                                    break;
+                                case "ScaleWidthInside":
+                                    aButton.ScaleWidthInside = float.Parse(values[0]);
+                                    break;
+                                case "ScaleHeightInside":
+                                    aButton.ScaleHeightInside = float.Parse(values[0]);
+                                    break;
+                                case "Index":
+                                    aButton.Index = Int32.Parse(values[0]);
+                                    break;
+                                case "CurrentSelection":
+                                    aButton.CurrentSelection = values[0] == "yes" ? true : false;
+                                    break;
+                                case "IsClicked":
+                                    aButton.IsClicked = values[0] == "yes" ? true : false;
+                                    break;
+                                default:
+                                    Debug.LogError("key: " + key + "  Menu Panel not found !");
+                                    break;
+                            }
+                            
+                        }
+                        panel.Add(aButton);
+                    }
+                    else if (nameContent == "<Text>") {
+                        MenuStruct aText = new MenuStruct();
+                        aText.menuType = MenuType.Text;
+                        while ((line = reader.ReadLine()) != "</Text>") {
+                            key = line.Split(':')[0];
+                            string[] values = line.Split(':')[1].Substring(1).Split(' ');
+
+                            switch (key) {
+                                case "Position":
+                                    aText.Position = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                                    break;
+                                case "Text":
+                                    aText.Text = line.Split(':')[1].Substring(1);
+                                    break;
+                                case "NameIdentifier":
+                                    aText.Name = values[0];
+                                    break;
+                                default:
+                                    Debug.LogError("key: " + key + " of Menu Panel not found !");
+                                    break;
+                            }
+                        }
+                        panel.Add(aText);
+                    }
+                    else if (nameContent == "<Image>") {
+                        MenuStruct anImage = new MenuStruct();
+                        anImage.menuType = MenuType.Image;
+                        while ((line = reader.ReadLine()) != "</Image>") {
+                            key = line.Split(':')[0];
+                            string[] values = line.Split(':')[1].Substring(1).Split(' ');
+
+                            switch (key) {
+                                case "Position":
+                                    anImage.Position = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                                    break;
+                                case "Texture":
+                                    anImage.TextureName = values[0];
+                                    break;
+                                case "NameIdentifier":
+                                    anImage.Name = values[0];
+                                    break;
+                                case "Active":
+                                    anImage.Active = values[0] == "yes" ? true : false;
+                                    break;
+                                default:
+                                    Debug.LogError("key: " + key + " of Menu Panel not found !");
+                                    break;
+                            }
+                        }
+                        panel.Add(anImage);
+                    }
+                }
+            }
+            return panel;
         }
     }
 
