@@ -45,7 +45,7 @@ namespace BRS.Scripts.PlayerScripts {
         PlayerStamina _pS;
         PlayerLift _pL;
         private PlayerCollider _pC;
-        private MovingRigidBody _movingRigidBody;
+        private SteerableCollider _steerableCollider;
 
         public CameraController CamController;
         Player _other;
@@ -58,7 +58,7 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerName = name + (playerIndex + 1).ToString();
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
-            startPosition = startPos + 3*Vector3.Forward;
+            startPosition = startPos;
             //TODO make mesh have this color
         }
         public override void Start() {
@@ -78,17 +78,20 @@ namespace BRS.Scripts.PlayerScripts {
             _pS = gameObject.GetComponent<PlayerStamina>();
             _pL = gameObject.GetComponent<PlayerLift>();
             _pC = gameObject.GetComponent<PlayerCollider>();
-            _movingRigidBody = gameObject.GetComponent<MovingRigidBody>();
+
+            MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
+            _steerableCollider = mrb.SteerableCollider;
 
             // Reset start position
             transform.position = startPosition;
             transform.rotation = Quaternion.Identity;
 
-            SteerableCollider sc = _movingRigidBody.RigidBody as SteerableCollider;
-            sc.Speed = JVector.Zero;
-            sc.RotationY = 0;
-            sc.Position = Conversion.ToJitterVector(startPosition);
-            sc.Orientation = JMatrix.CreateRotationY(0);
+            if (_steerableCollider != null) {
+                _steerableCollider.Speed = JVector.Zero;
+                _steerableCollider.RotationY = 0;
+                _steerableCollider.Position = Conversion.ToJitterVector(startPosition);
+                _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
+            }
 
             // Restart other components
             _pM.Start();
@@ -144,8 +147,7 @@ namespace BRS.Scripts.PlayerScripts {
                 if (!_pC.IsCollided)
                     State = PlayerState.Normal;
             } else if (State == PlayerState.Stun) {
-                SteerableCollider sc = _movingRigidBody.RigidBody as SteerableCollider;
-                sc.Speed = JVector.Zero;
+                _steerableCollider.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();
