@@ -32,6 +32,13 @@ namespace BRS.Engine.PostProcessing {
                 Effect.Parameters[name].SetValue(arg);
             }
         }
+        public void SetParameter(string name, Vector3 arg)
+        {
+            if (Effect.Parameters[name] != null)
+            {
+                Effect.Parameters[name].SetValue(arg);
+            }
+        }
 
         public void SetParameter(string name, float arg)
         {

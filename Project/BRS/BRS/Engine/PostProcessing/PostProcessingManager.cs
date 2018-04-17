@@ -17,7 +17,8 @@ namespace BRS.Engine.PostProcessing {
         Vignette,
         GaussianBlur,
         DepthOfField,
-        ColorGrading
+        ColorGrading,
+        ShockWave
     }
 
 
@@ -27,6 +28,8 @@ namespace BRS.Engine.PostProcessing {
         private List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
+        private Texture2D testGrid;
+        private bool DEBUG = false;
 
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager(content);
@@ -59,6 +62,11 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver6"));
                         //ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver7"));
 
+                        break;
+                    case PostprocessingType.ShockWave:
+                        testGrid = content.Load<Texture2D>("Images/textures/Pixel_grid");
+                        ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
+                        ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;
                 }
 
@@ -110,6 +118,15 @@ namespace BRS.Engine.PostProcessing {
 
 
         public void Update(GameTime gameTime) {
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.LeftButton == ButtonState.Pressed)
+            {
+                // Do whatever you want here
+                Vector2 centerCoord = new Vector2((float)mouseState.X / (float)Screen.Width, (float)mouseState.Y / (float)Screen.Height);
+                _effects[6].SetParameter("centerCoord", centerCoord);
+                _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
+            }
+            
             if (Input.GetKeyDown(Keys.D5)) {
                 _effects[0].Active = !_effects[0].Active;
             }
@@ -130,6 +147,11 @@ namespace BRS.Engine.PostProcessing {
             {
                 _effects[5].Active = !_effects[5].Active;
             }
+            if (Input.GetKeyDown(Keys.F2))
+            {
+                _effects[6].Active = !_effects[6].Active;
+                _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
+            }
             if (Input.GetKeyDown(Keys.PageUp)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes + 1, 1, 4);
             }
@@ -138,7 +160,7 @@ namespace BRS.Engine.PostProcessing {
             }
         }
 
-        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture) {
+        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture, GameTime gameTime) {
             RenderTarget2D curTarget = renderTarget;
 
             // if dynamic props are needed
@@ -175,6 +197,11 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("D1M", depth1Texture);
                     }
 
+                    if(ppShader.Type == PostprocessingType.ShockWave)
+                    {
+                        ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
+                    }
+
                     
 
                     // Setup next render-target to apply next filter
@@ -189,7 +216,14 @@ namespace BRS.Engine.PostProcessing {
                             DepthStencilState.Default,
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
-                        spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                        if(PostprocessingType.ShockWave == ppShader.Type && DEBUG)
+                        {
+                            spriteBatch.Draw(testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                        } else
+                        {
+                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                        }
+                        
                         spriteBatch.End();
                     }
 

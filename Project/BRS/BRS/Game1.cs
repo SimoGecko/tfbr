@@ -153,7 +153,7 @@ namespace BRS {
 
             // apply post processing
             //PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
