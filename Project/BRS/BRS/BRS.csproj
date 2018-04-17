@@ -23,7 +23,7 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>ECDBE71A39FC0C5AD0EAC421D039A9F633F7903F</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>69E9FFB77C7D8ECED3AE2510E6FDC9EA9E43CE09</PackageCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -239,7 +239,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Logo.scale-200.png" />
-    <Content Include="Assets\SmallLogo.scale-100.png" />
+    <Content Include="Assets\SmallLogo.scale-200.png" />
     <Content Include="Load\Rankings\ranking2min.txt" />
     <Content Include="Load\Rankings\ranking3min.txt" />
     <Content Include="Load\Rankings\ranking5min.txt" />

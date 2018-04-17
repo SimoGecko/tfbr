@@ -87,7 +87,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _inputAngle = MathHelper.ToDegrees((float)Math.Atan2(input.Z, input.X));
                 _inputAngle = Utility.WrapAngle(_inputAngle, _targetRotation);
                 _targetRotation = Utility.SmoothDampAngle(_targetRotation, _inputAngle - 90, ref _refangle, .3f, MaxTurningRate * _smoothMagnitude);
-                Debug.Log(_targetRotation);
             } else {
                 _targetRotation = Utility.SmoothDampAngle(_targetRotation, _rotation, ref _refangle2, .3f, MaxTurningRate * _smoothMagnitude);
             }

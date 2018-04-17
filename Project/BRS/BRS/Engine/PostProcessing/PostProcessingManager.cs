@@ -82,16 +82,16 @@ namespace BRS.Engine.PostProcessing {
 
 
         public void Update(GameTime gameTime) {
-            if (Input.GetKeyDown(Keys.D5)) {
+            if (Input.GetKeyDown(Keys.F1)) {
                 _effects[0].Active = !_effects[0].Active;
             }
-            if (Input.GetKeyDown(Keys.D6)) {
+            if (Input.GetKeyDown(Keys.F2)) {
                 _effects[1].Active = !_effects[1].Active;
             }
-            if (Input.GetKeyDown(Keys.D7)) {
+            if (Input.GetKeyDown(Keys.F3)) {
                 _effects[2].Active = !_effects[2].Active;
             }
-            if (Input.GetKeyDown(Keys.D8)) {
+            if (Input.GetKeyDown(Keys.F4)) {
                 _effects[3].Active = !_effects[3].Active;
             }
             if (Input.GetKeyDown(Keys.PageUp)) {
