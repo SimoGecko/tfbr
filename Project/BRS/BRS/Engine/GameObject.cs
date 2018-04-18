@@ -7,6 +7,7 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -61,6 +62,12 @@ namespace BRS.Engine {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
                 }
+            }
+            // TODO: quick hack
+            if (HasComponent<Smoke>())
+            {
+                Smoke smoke = GetComponent<Smoke>();
+                smoke.Draw(cam);
             }
         }
 

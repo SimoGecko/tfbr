@@ -1,6 +1,7 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.PostProcessing;
+using BRS.Engine.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -46,6 +47,10 @@ namespace BRS {
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
+
+            // add the graphics device to the 3d particle system
+            ParticleSystem3d.graphicsDevice = GraphicsDevice;
+            ParticleSystem3d.content = Content;
 
             base.Initialize();
         }

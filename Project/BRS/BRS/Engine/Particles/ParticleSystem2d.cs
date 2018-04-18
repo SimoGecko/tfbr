@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Particles {
-    public class ParticleSystem : Component {
+    public class ParticleSystem2d : Component {
         ////////// class that represents a 2D particle engine for various effects //////////
         //TODO test
         //TODO make 3d
@@ -20,7 +20,7 @@ namespace BRS.Engine.Particles {
 
         //private
         private readonly Random _random;
-        private readonly List<Particle> _particles;
+        private readonly List<Particle2d> _particles;
         private readonly List<Texture2D> _textures;
 
         //extra
@@ -55,7 +55,7 @@ namespace BRS.Engine.Particles {
 
         public void Draw(SpriteBatch spriteBatch) { // TODO make sure it's called
             spriteBatch.Begin(); // add effects here
-            foreach (Particle particle in _particles) {
+            foreach (Particle2d particle in _particles) {
                 particle.Draw(spriteBatch);
             }
             spriteBatch.End();
@@ -67,16 +67,16 @@ namespace BRS.Engine.Particles {
 
 
         // commands
-        public ParticleSystem(List<Texture2D> textures, Vector2 location) {
+        public ParticleSystem2d(List<Texture2D> textures, Vector2 location) {
             EmitterLocation = location;
             _textures = textures;
-            _particles = new List<Particle>();
+            _particles = new List<Particle2d>();
             _random = new Random();
         }
 
-        private Particle GenerateNewParticle() {
+        private Particle2d GenerateNewParticle() {
             Texture2D texture = _textures[_random.Next(_textures.Count)];
-            return new Particle(texture, EmitLocation(), EmitVelocity(), StartAngle(), StartAngularVelocity(), StartColor(), StartSize(), Lifetime());
+            return new Particle2d(texture, EmitLocation(), EmitVelocity(), StartAngle(), StartAngularVelocity(), StartColor(), StartSize(), Lifetime());
         }
 
         // queries

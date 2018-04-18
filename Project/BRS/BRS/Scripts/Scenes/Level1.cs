@@ -145,6 +145,7 @@ namespace BRS.Scripts.Scenes {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new StaticRigidBody());
+            vault.AddComponent(new Smoke());
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);
 

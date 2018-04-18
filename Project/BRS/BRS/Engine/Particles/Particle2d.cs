@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Particles {
-    public class Particle {
+    public class Particle2d {
         public Texture2D Texture { get; set; }
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
@@ -12,7 +12,7 @@ namespace BRS.Engine.Particles {
         public float Size { get; set; }
         public float Lifetime { get; set; }
 
-        public Particle(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, float lifetime) {
+        public Particle2d(Texture2D texture, Vector2 position, Vector2 velocity, float angle, float angularVelocity, Color color, float size, float lifetime) {
             Texture = texture;
             Position = position;
             Velocity = velocity;
