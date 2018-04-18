@@ -12,6 +12,8 @@ namespace BRS.Engine.Physics.RigidBodies {
     /// </summary>
     class MovingRigidBody : RigidBodyComponent {
 
+        public SteerableCollider SteerableCollider => RigidBody as SteerableCollider;
+
         public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false)
             : this(new Vector3(size), isActive, shapeType, pureCollider) {
         }
