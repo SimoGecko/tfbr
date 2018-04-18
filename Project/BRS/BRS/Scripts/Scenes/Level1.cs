@@ -75,7 +75,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0);
+                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, -3);
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -87,7 +87,8 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
-
+                player.AddComponent(new Dust());
+                
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 

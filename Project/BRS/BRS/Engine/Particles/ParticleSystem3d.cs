@@ -521,6 +521,8 @@ namespace BRS.Engine.Particles
             velocity.Y += MathHelper.Lerp(Settings.MinVerticalVelocity,
                                           Settings.MaxVerticalVelocity,
                                           (float)random.NextDouble());
+            // emit only upwards
+            velocity.Y = Math.Abs(velocity.Y);
 
             // Choose four random control values. These will be used by the vertex
             // shader to give each particle a different size, rotation, and color.
