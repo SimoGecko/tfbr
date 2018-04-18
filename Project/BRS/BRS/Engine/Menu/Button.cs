@@ -33,7 +33,6 @@ namespace BRS.Engine.Menu {
         public Texture2D InsideImage { get; set; } // instead of text
 
         public bool IsClicked;
-        Texture2D _textureClicked;
         public int Index { get; set; }
 
         public Button NeighborUp { get; set; }
@@ -64,7 +63,6 @@ namespace BRS.Engine.Menu {
         public Button() {
             IsClicked = false;
             Active = true;
-            _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
             neighbors = new List<Button>();
         }
 
@@ -73,7 +71,6 @@ namespace BRS.Engine.Menu {
             InitPos = pos;
             IsClicked = false;
             Active = true;
-            _textureClicked = File.Load<Texture2D>("Images/UI/buttonClicked");
             neighbors = new List<Button>();
         }
 

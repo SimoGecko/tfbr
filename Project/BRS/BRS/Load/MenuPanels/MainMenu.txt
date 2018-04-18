@@ -10,8 +10,8 @@ Color: 255 255 255
 Texture: title
 Position: 960 162
 Text: Menu
-Color: 255 255 255
-ColorInside: 148 148 148
+Color: 148 148 148
+ColorInside: 255 255 255
 </Button>
 
 <Button>
@@ -20,9 +20,10 @@ Texture: button
 Position: 960 324
 ScaleWidth: 2
 Text: Play
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Credits Tutorial null null
 NameSwitchTo: play1
+CurrentSelection: yes
 </Button>
 
 <Button>
@@ -31,7 +32,7 @@ Texture: button
 Position: 960 432
 ScaleWidth: 2
 Text: Tutorial
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Play Rankings null null
 NameSwitchTo: tutorial1
 </Button>
@@ -42,7 +43,7 @@ Texture: button
 Position: 960 540
 ScaleWidth: 2
 Text: Rankings
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Tutorial Options null null
 NameSwitchTo: ranking
 </Button>
@@ -50,10 +51,10 @@ NameSwitchTo: ranking
 <Button>
 NameIdentifier: Options
 Texture: button
-position: 960 648
+Position: 960 648
 ScaleWidth: 2
 Text: Options
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Rankings Credits null null
 NameSwitchTo: options
 </Button>
@@ -64,7 +65,7 @@ Texture: button
 Position: 960 756
 ScaleWidth: 2
 Text: Credits
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Options Play null null
 NameSwitchTo: credits
 </Button>

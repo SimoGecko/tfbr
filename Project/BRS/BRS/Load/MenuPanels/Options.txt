@@ -10,8 +10,8 @@ Color: 255 255 255
 Texture: title
 Position: 960 162
 Text: Game Settings
-Color: 255 255 255
-ColorInside: 148 148 148
+Color: 148 148 148
+ColorInside: 255 255 255
 </Button>
 
 
@@ -24,8 +24,9 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255
+CurrentSelection: yes
 </Button>

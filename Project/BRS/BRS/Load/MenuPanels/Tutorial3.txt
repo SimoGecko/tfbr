@@ -7,7 +7,7 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: null null Next Next
 NameSwitchTo: tutorial2
 Color: 250 139 139
@@ -23,9 +23,10 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: null null Back Back
 NameSwitchTo: tutorial4
 Color: 110 235 150
 ColorInside: 255 255 255
+CurrentSelection: yes
 </Button>

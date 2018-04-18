@@ -8,10 +8,10 @@ Color: 255 255 255
 
 <Button>
 Texture: title
-Position: 960 702
+Position: 960 162
 Text: Game Settings
-Color: 255 255 255
-ColorInside: 148 148 148
+Color: 148 148 148
+ColorInside: 255 255 255
 </Button>
 
 <Button>
@@ -22,7 +22,10 @@ ScaleWidth: 2
 Text: Player 1
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
 NeighborsUpDownLeftRight: null Back Model1 Player2
-Index: 1
+Index: 0
+CurrentSelection: yes
+UniqueChoiceWith: Player2 Player3 Player4
+IsClicked: yes
 </Button>
 
 <Button>
@@ -32,8 +35,9 @@ Position: 768 324
 ScaleWidth: 2
 Text: Player 2
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Back Player3 Player3
-Index: 2
+NeighborsUpDownLeftRight: null Back Player1 Player3
+Index: 1
+UniqueChoiceWith: Player1 Player3 Player4
 </Button>
 
 <Button>
@@ -43,8 +47,9 @@ Position: 1152 324
 ScaleWidth: 2
 Text: Player 3
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Back Player2 Player4
-Index: 3
+NeighborsUpDownLeftRight: null Alphabet Player2 Player4
+Index: 2
+UniqueChoiceWith: Player1 Player2 Player4
 </Button>
 
 <Button>
@@ -54,8 +59,9 @@ Position: 1536 324
 ScaleWidth: 2
 Text: Player 4
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Back Player3 Player1
-Index: 4
+NeighborsUpDownLeftRight: null Alphabet Player3 Player1
+Index: 3
+UniqueChoiceWith: Player1 Player2 Player3
 </Button>
 
 <Button>
@@ -65,8 +71,10 @@ Position: 192 486
 ScaleWidth: 1.5
 Text: Model 1
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Player1 Model2 null null
-Index: 1
+NeighborsUpDownLeftRight: Player1 Model2 null Alphabet
+Index: 0
+UniqueChoiceWith: Model2 Model3
+IsClicked: yes
 </Button>
 
 <Button>
@@ -76,8 +84,9 @@ Position: 192 594
 ScaleWidth: 1.5
 Text: Model 2
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Model1 Model3 null null
-Index: 2
+NeighborsUpDownLeftRight: Model1 Model3 null Alphabet
+Index: 1
+UniqueChoiceWith: Model1 Model3
 </Button>
 
 <Button>
@@ -87,8 +96,19 @@ Position: 192 702
 ScaleWidth: 1.5
 Text: Model 3
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Model2 Back null null
-Index: 3
+NeighborsUpDownLeftRight: Model2 Back null Alphabet
+Index: 2
+UniqueChoiceWith: Model1 Model2
+</Button>
+
+<Button>
+NameIdentifier: SaveAlphabet
+Texture: buttonCircle
+Position: 1450 775
+TextureInside: buttonAccept
+Color: 110 235 150
+ColorInside: 255 255 255
+NeighborsUpDownLeftRight: Alphabet null Next null
 </Button>
 
 <Button>
@@ -100,7 +120,8 @@ ScaleHeight: 0.5
 </Button>
 
 <Text>
-Text: ""
+NameIdentifier: NamePlayer
+Text: "test"
 Position: 1440 459
 </Text>
 
@@ -113,9 +134,8 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Text: 5 min
-Functions: NameMenuToSwitchTo
-NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Next Next
+Functions: SwitchToMenu
+NeighborsUpDownLeftRight: Model3 null Model3 Next
 NameSwitchTo: play1
 Color: 250 139 139
 ColorInside: 255 255 255
@@ -131,8 +151,29 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: StartGameFunction
-NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Back Back
+NeighborsUpDownLeftRight: null null Back SaveAlphabet
 NameSwitchTo: play2
 Color: 110 235 150
 ColorInside: 255 255 255
 </Button>
+
+<Image>
+NameIdentifier: pictureModel1
+Texture: forklift
+Position: 576 594
+Active: yes
+</Image>
+
+<Image>
+NameIdentifier: pictureModel2
+Texture: forklift
+Position: 5 594
+Active: no
+</Image>
+
+<Image>
+NameIdentifier: pictureModel3
+Texture: forklift
+Position: 576 694
+Active: no
+</Image>

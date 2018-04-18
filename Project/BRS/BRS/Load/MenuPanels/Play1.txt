@@ -10,8 +10,8 @@ Color: 255 255 255
 Texture: title
 Position: 960 162
 Text: Game Settings
-Color: 255 255 255
-ColorInside: 148 148 148
+Color: 148 148 148
+ColorInside: 255 255 255
 </Button>
 
 <Text>
@@ -28,10 +28,12 @@ Position: 960 502
 NameIdentifier: PlayerAmount2
 Texture: button
 Position: 864 394
-ScaleWidth: 2
 Text: 2
-Functions: UpdateNoPlayers GoDown
+Functions: UpdateNoPlayers HighlightBorders GoDown
 NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount4 PlayerAmount4
+CurrentSelection: yes
+UniqueChoiceWith: PlayerAmount4
+IsClicked: yes
 </Button>
 
 <Button>
@@ -39,38 +41,40 @@ NameIdentifier: PlayerAmount4
 Texture: button
 Position: 1056 394
 Text: 4
-Functions: UpdateNoPlayers GoDown
+Functions: UpdateNoPlayers HighlightBorders GoDown
 NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount2 PlayerAmount2
+UniqueChoiceWith: PlayerAmount2
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration2min
 Texture: button
 Position: 806 610
-ScaleWidth: 2
 Text: 2 min
-Functions: UpdateRoundDurationGoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration5min RoundDuration3min
+Functions: UpdateRoundDuration HighlightBorders GoDown
+NeighborsUpDownLeftRight: PlayerAmount2 Next RoundDuration5min RoundDuration3min
+UniqueChoiceWith: RoundDuration3min RoundDuration5min
+IsClicked: yes
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration3min
 Texture: button
 Position: 960 610
-ScaleWidth: 2
 Text: 3 min
-Functions: UpdateRoundDurationGoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration2min RoundDuration5min
+Functions: UpdateRoundDuration HighlightBorders GoDown
+NeighborsUpDownLeftRight: PlayerAmount2 Next RoundDuration2min RoundDuration5min
+UniqueChoiceWith: RoundDuration2min RoundDuration5min
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration5min
 Texture: button
 Position: 1113 610
-ScaleWidth: 2
 Text: 5 min
-Functions: UpdateRoundDurationGoDown
+Functions: UpdateRoundDuration HighlightBorders GoDown
 NeighborsUpDownLeftRight: PlayerAmount2 Back null null
+UniqueChoiceWith: RoundDuration2min RoundDuration3min
 </Button>
 
 <Button>
@@ -82,7 +86,7 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: NameMenuToSwitchTo
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Next Next
 NameSwitchTo: main
 Color: 250 139 139
@@ -98,7 +102,7 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: SetDefaultParametersGame NameMenuToSwitchTo UpdatePlayersChangeTo
+Functions: SetDefaultParametersGame SwitchToMenu UpdatePlayersChangeTo
 NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Back Back
 NameSwitchTo: play2
 Color: 110 235 150
