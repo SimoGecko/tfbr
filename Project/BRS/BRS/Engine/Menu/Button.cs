@@ -48,14 +48,14 @@ namespace BRS.Engine.Menu {
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)(Position.X), (int)Position.Y, (int)(Texture.Width * ScaleWidth), (int)(Texture.Height * ScaleHeight));
+                return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(Texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(Texture.Height * ScaleHeight / 1080f * Screen.Height));
             }
         }
 
         public Rectangle RectangleInsideObject {
             get {
                 Vector2 offsetInside = new Vector2((Texture.Width - InsideImage.Width) / 2 * (1 - ScaleWidth) * (1 - ScaleWidthInside), (Texture.Height - InsideImage.Height) / 2 * (1 - ScaleHeight) * (1 - ScaleHeightInside));
-                return new Rectangle((int)(Position.X + offsetInside.X), (int)(Position.Y + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside), (int)(InsideImage.Height * ScaleHeightInside));
+                return new Rectangle((int)(Position.X / 1920f * Screen.Width + offsetInside.X), (int)(Position.Y / 1080f * Screen.Height + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside / 1920f * Screen.Width), (int)(InsideImage.Height * ScaleHeightInside / 1080f * Screen.Height));
             }
         }
 
@@ -150,8 +150,8 @@ namespace BRS.Engine.Menu {
                     UserInterface.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
                 
                 if (!string.IsNullOrEmpty(Text)) {
-                    var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
-                    var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
+                    //var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
+                    //var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
                     UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
                 }

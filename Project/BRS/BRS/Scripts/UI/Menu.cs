@@ -101,13 +101,13 @@ namespace BRS.Scripts.UI {
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            Vector2[] startoffset = { new Vector2(0.1f, 0f), new Vector2(0.13f, 0.05f), new Vector2(0.15f, 0.1f) };
+            Vector2[] startoffset = { new Vector2(1152, 540), new Vector2(1210, 594), new Vector2(1248, 648) };
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
                 int count = 0;
                 foreach (var elem in keyboard[i]) {
-                    var letterButton = new Button(texturesButtons["button"], _middleScreen + startoffset[i] * _screenSizeVec + count * new Vector2(.5f * texturesButtons["button"].Width, 0)) {
+                    var letterButton = new Button(texturesButtons["button"], startoffset[i] + count * new Vector2(.5f * texturesButtons["button"].Width, 0)) {
                         Text = elem,
                         ScaleWidth = .5f,
                         ScaleHeight = .5f
@@ -167,7 +167,7 @@ namespace BRS.Scripts.UI {
         public void LoadRankingsText() {
             ListComponents rankings = new ListComponents("rankings_game");
             string[] pathRankings = { "ranking2min.txt", "ranking3min.txt", "ranking5min.txt" };
-            Vector2[] offsetStart = { new Vector2(-0.05f, -0.1f), new Vector2(0.05f, -0.1f) };
+            Vector2[] offsetStart = { new Vector2(864, 432), new Vector2(1056, 432) };
 
             for (int i = 0; i < pathRankings.Length; ++i) {
                 List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/" + pathRankings[i]);
@@ -176,12 +176,12 @@ namespace BRS.Scripts.UI {
                 int count = 0;
                 foreach (var aPerson in rankinglist) {
                     var namePerson = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[0] * _screenSizeVec + new Vector2(0, count * 65),
+                        InitPos = offsetStart[0] + new Vector2(0, count * 65),
                         Text = aPerson.Item1
                     };
 
                     var score = new TextBox() {
-                        InitPos = _middleScreen + offsetStart[1] * _screenSizeVec + new Vector2(0, count * 65),
+                        InitPos = offsetStart[1] + new Vector2(0, count * 65),
                         Text = aPerson.Item2
                     };
 
