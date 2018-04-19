@@ -4,7 +4,6 @@
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Engine.Physics.Colliders {
     /// <summary>
@@ -13,7 +12,6 @@ namespace BRS.Engine.Physics.Colliders {
     class SteerableCollider : Collider {
         public float RotationY { get; set; }
         public JVector Speed { get; set; }
-        //public bool PositionUpdatedByCollision { get; set; }
 
         public SteerableCollider(Shape shape) : base(shape) {
         }
@@ -28,10 +26,14 @@ namespace BRS.Engine.Physics.Colliders {
             AddForce(Speed);
             LinearVelocity = Speed;
 
-            Position = new JVector(Position.X, Height * .5f, Position.Z);
+            Position = new JVector(Position.X, HeightHalf, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
 
             base.PostStep(timestep);
+        }
+
+        public void CorrectPosition() {
+            Position = new JVector(Position.X, HeightHalf, Position.Z);
         }
     }
 }

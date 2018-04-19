@@ -59,7 +59,8 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
             startPosition = startPos;
-            //TODO make mesh have this color
+            
+            // TODO make mesh have this color
         }
         public override void Start() {
             base.Start();

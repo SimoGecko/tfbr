@@ -15,20 +15,27 @@ namespace BRS.Engine.Physics.Colliders {
         public float Length => BoundingBoxSize.X;
         public float Height => BoundingBoxSize.Y;
         public float Width => BoundingBoxSize.Z;
+        public float LengthHalf => BoundingBoxSizeHalf.X;
+        public float HeightHalf => BoundingBoxSizeHalf.Y;
+        public float WidthHalf => BoundingBoxSizeHalf.Z;
         public JVector BoundingBoxSize { get; }
+        public JVector BoundingBoxSizeHalf { get; }
 
         public bool IsAnimated { get; set; }
 
         public Collider(Shape shape) : base(shape) {
             BoundingBoxSize = BoundingBox.Max - BoundingBox.Min;
+            BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }
 
         public Collider(Shape shape, Material material) : base(shape, material) {
             BoundingBoxSize = BoundingBox.Max - BoundingBox.Min;
+            BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }
 
         public Collider(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
             BoundingBoxSize = BoundingBox.Max - BoundingBox.Min;
+            BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }
 
         public override void PreStep(float timestep) {

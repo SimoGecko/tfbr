@@ -48,5 +48,9 @@ namespace BRS.Engine.Physics.RigidBodies {
 
             PhysicsManager.Instance.World.AddBody(RigidBody);
         }
+
+        public override void Start() {
+            SteerableCollider.CorrectPosition();
+        }
     }
 }

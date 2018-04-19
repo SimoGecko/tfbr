@@ -34,7 +34,7 @@ namespace BRS.Scripts {
             numTargets = targets.Length;
 
             waypoints = new List<Vector3>[numTargets];
-            for(int i=0; i< numTargets; i++)  waypoints[i] = new List<Vector3>();
+            for (int i = 0; i < numTargets; i++) waypoints[i] = new List<Vector3>();
 
             RecordWaypoints();
             CallSpawnPolice();
@@ -51,7 +51,7 @@ namespace BRS.Scripts {
 
         // commands
         void SpawnNewPolice(int pathToFollow) {
-            Police pol = GameObject.Instantiate("policePrefab", new Vector3(pathToFollow*4, 1.0f, 0), Quaternion.Identity).GetComponent<Police>();
+            Police pol = GameObject.Instantiate("policePrefab", new Vector3(pathToFollow * 4, 1.0f, 0), Quaternion.Identity).GetComponent<Police>();
             pol.StartFollowing(waypoints[pathToFollow]);
         }
 
@@ -70,9 +70,11 @@ namespace BRS.Scripts {
         async void RecordWaypoints() {
             while (record) {
                 for (int i = 0; i < numTargets; i++) {
-                    if (targets[i] !=null) {
-                        if (waypoints[i].Count < 2 || Vector3.DistanceSquared(targets[i].position, waypoints[i][waypoints[i].Count - 1]) > distThreshold * distThreshold)
+                    if (targets[i] != null) {
+                        if (waypoints[i].Count < 2 || Vector3.DistanceSquared(targets[i].position, waypoints[i][waypoints[i].Count - 1]) > distThreshold * distThreshold) {
+                          //  Vector3 pos = new Vector3(targets[i].position.X, 0.25f, targets[i].position.Z);
                             waypoints[i].Add(targets[i].position);
+                        }
                     }
                 }
                 await Time.WaitForSeconds(recordRefreshTime);
@@ -81,7 +83,7 @@ namespace BRS.Scripts {
 
         async void CallSpawnPolice() {
             await Time.WaitForSeconds(startDelay);
-            float timeBetweenCalls = ((float)RoundManager.RoundTime - startDelay)/(totNumPolice/numTargets);
+            float timeBetweenCalls = ((float)RoundManager.RoundTime - startDelay) / (totNumPolice / numTargets);
             int totSpawned = 0;
             while (totSpawned < totNumPolice) {
                 for (int i = 0; i < numTargets; i++) {

@@ -44,6 +44,8 @@ namespace BRS.Engine.Physics {
         /// </summary>
         public World World { get; }
 
+        public bool IsActive { get; set; }
+
         #endregion
 
         #region Constructor
@@ -74,6 +76,10 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="gameTime">Current game-time</param>
         public void Update(GameTime gameTime) {
+            if (!IsActive) {
+                return;
+            }
+
             float step = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (step > 1.0f / 100.0f) {
@@ -93,6 +99,10 @@ namespace BRS.Engine.Physics {
         /// <param name="arg1">Rigidbody 1</param>
         /// <param name="arg2">Rigidbody 2</param>
         private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
+            if (!IsActive) {
+                return;
+            }
+
             Collider body1 = arg1 as Collider;
             Collider body2 = arg2 as Collider;
 
@@ -116,6 +126,10 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="obj"></param>
         private void Events_ContactCreated(Contact obj) {
+            if (IsActive) {
+                return;
+            }
+
             Collider body1 = obj.Body1 as Collider;
             Collider body2 = obj.Body2 as Collider;
 
