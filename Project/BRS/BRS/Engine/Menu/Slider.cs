@@ -19,6 +19,13 @@ namespace BRS.Engine.Menu {
         private float _offset;
 
         public Vector2 Position;
+        public string NameIdentifier;
+
+        public Rectangle Rectangle {
+            get {
+                return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(100f / 1920f * Screen.Width), (int)(100f / 1080f * Screen.Height));
+            }
+        }
 
         // --------------------- BASE METHODS ------------------
         public Slider() {
@@ -60,7 +67,7 @@ namespace BRS.Engine.Menu {
 
             float percentPosButon =  ((ButtonSlider.InitPos.X - Position.X + ButtonSlider.Texture.Width/2) / UserInterface.BigBarWidth);
             //UserInterface.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
-
+            UserInterface.DrawBarStriped(percentPosButon, Rectangle, Color.Yellow);
             ButtonSlider.Draw(i);
         }
 

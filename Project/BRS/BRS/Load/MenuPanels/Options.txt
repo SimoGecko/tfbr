@@ -14,13 +14,13 @@ Color: 148 148 148
 ColorInside: 255 255 255
 </Button>
 
-<Button>
+<Slider>
 Texture: title
 Position: 960 162
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
-</Button>
+</BSlider>
 
 <Button>
 NameIdentifier: Back

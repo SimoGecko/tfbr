@@ -251,9 +251,9 @@ namespace BRS.Engine {
                     else if (nameContent == "<Image>") 
                         menuObject.menuType = MenuType.Image;
                     else if (nameContent == "<Slider>")
-                        menuObject.menuType = MenuType.Image;
+                        menuObject.menuType = MenuType.Slider;
                     else if (nameContent == "<TickBox>")
-                        menuObject.menuType = MenuType.Image;
+                        menuObject.menuType = MenuType.TickBox;
 
                     while ((!(line = reader.ReadLine()).Contains("</"))) {
                         key = line.Split(':')[0];

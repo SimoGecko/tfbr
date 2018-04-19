@@ -236,6 +236,17 @@ namespace BRS.Scripts.UI {
                     img.Active = MS.Active; 
                     MenuManager.Instance.MenuRect[panelName].AddComponent(img);
                 }
+                else if (MS.menuType == MenuType.Slider) {
+                    Slider slider = new Slider();
+                    if (MS.Position != null) slider.Position = MS.Position;
+                    if (MS.Name != null) slider.NameIdentifier = MS.Name;
+                    MenuManager.Instance.MenuRect[panelName].AddComponent(slider);
+
+                    Button testbuttonSlider = new Button(texturesButtons["button"], MS.Position);
+                    testbuttonSlider.ScaleHeight = 0.5f;
+                    testbuttonSlider.ScaleWidth = 0.5f;
+                    slider.ButtonSlider = testbuttonSlider;
+                }
             }
 
             foreach (MenuStruct MS in panelObjects) {
