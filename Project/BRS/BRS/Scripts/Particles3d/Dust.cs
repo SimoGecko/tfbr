@@ -23,11 +23,17 @@ namespace BRS.Scripts.PlayerScripts
         ParticleSystem3d projectileTrailParticles;
         Projectile projectile;
 
+        private PlayerAttack _playerAttack;
+        private PlayerMovement _playerMovement;
+
         // --------------------- BASE METHODS ------------------
         public override void Start()
         {
+            _playerAttack = gameObject.GetComponent<PlayerAttack>();
+            _playerMovement = gameObject.GetComponent<PlayerMovement>();
+
             projectileTrailParticles = new ParticleSystem3d();
-            projectileTrailParticles.Settings.TextureName = "smoke";
+            projectileTrailParticles.Settings.TextureName = "CFX_T_Flame1_ABP";
             projectileTrailParticles.Settings.MaxParticles = 1000;
             projectileTrailParticles.Settings.Duration = TimeSpan.FromSeconds(3);
 
@@ -36,22 +42,22 @@ namespace BRS.Scripts.PlayerScripts
             projectileTrailParticles.Settings.EmitterVelocitySensitivity = 0.1f;
 
             projectileTrailParticles.Settings.MinHorizontalVelocity = 0;
-            projectileTrailParticles.Settings.MaxHorizontalVelocity = 1;
+            projectileTrailParticles.Settings.MaxHorizontalVelocity = 0.1f;
 
-            projectileTrailParticles.Settings.MinVerticalVelocity = -1;
-            projectileTrailParticles.Settings.MaxVerticalVelocity = 1;
+            projectileTrailParticles.Settings.MinVerticalVelocity = 0.01f;
+            projectileTrailParticles.Settings.MaxVerticalVelocity = 0.01f;
 
-            projectileTrailParticles.Settings.MinColor = new Color(64, 96, 128, 255);
-            projectileTrailParticles.Settings.MaxColor = new Color(255, 255, 255, 128);
+            projectileTrailParticles.Settings.MinColor = Color.White;// new Color(255, 255, 255, 255);
+            projectileTrailParticles.Settings.MaxColor = Color.White;// new Color(255, 255, 255, 128);
 
             projectileTrailParticles.Settings.MinRotateSpeed = -4;
             projectileTrailParticles.Settings.MaxRotateSpeed = 4;
 
-            projectileTrailParticles.Settings.MinStartSize = 1;
-            projectileTrailParticles.Settings.MaxStartSize = 3;
+            projectileTrailParticles.Settings.MinStartSize = 0.1f;
+            projectileTrailParticles.Settings.MaxStartSize = 0.2f;
 
-            projectileTrailParticles.Settings.MinEndSize = 4;
-            projectileTrailParticles.Settings.MaxEndSize = 11;
+            projectileTrailParticles.Settings.MinEndSize = 1.5f;
+            projectileTrailParticles.Settings.MaxEndSize = 2.0f;
 
             //smokePlumeParticles.DrawOrder = 100;
             projectileTrailParticles.Awake();
@@ -64,6 +70,15 @@ namespace BRS.Scripts.PlayerScripts
 
         public override void Update()
         {
+            Color dustColor = _playerAttack.IsAttacking ? Color.Red : Color.Red;
+                projectileTrailParticles.Settings.MinColor = dustColor;
+                projectileTrailParticles.Settings.MaxColor = dustColor;
+
+            //if (_playerMovement.Boosting)
+            //{
+            //    projectile.
+            //}
+
             projectile.Update(Time.Gt, transform.position);
             
         }

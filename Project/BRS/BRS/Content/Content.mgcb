@@ -6314,3 +6314,15 @@
 /processorParam:TextureFormat=Color
 /build:Images/particles3d/CFX4Smoke.png
 
+#begin Images/particles3d/CFX_T_Flame1_ABP.tga
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/particles3d/CFX_T_Flame1_ABP.tga
+

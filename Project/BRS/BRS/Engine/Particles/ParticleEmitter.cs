@@ -67,7 +67,7 @@ namespace BRS.Engine.Particles
         public void Update(GameTime gameTime, Vector3 newPosition)
         {
             if (gameTime == null)
-                throw new ArgumentNullException("gameTime");
+                throw new ArgumentNullException(nameof(gameTime));
 
             // Work out how much time has passed since the previous update.
             float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
