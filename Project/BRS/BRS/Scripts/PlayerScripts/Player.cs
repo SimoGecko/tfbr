@@ -204,9 +204,9 @@ namespace BRS.Scripts.PlayerScripts {
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
-        public void SetCollisionState(Vector3 endPosition) {
+        public void SetCollisionState(Vector3 endPosition, float endAngle) {
             State = PlayerState.Collided; ;
-            _pC.Begin(endPosition);
+            _pC.Begin(endPosition, endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

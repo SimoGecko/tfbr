@@ -1,4 +1,4 @@
-﻿// (c) Simone Guggiari 2018
+﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
@@ -18,12 +18,16 @@ namespace BRS.Scripts.PlayerScripts {
         public bool IsCollided { get; private set; }
 
         //private
-        private Vector3 _collidedStartPos, _collidedEndPos;
+        private Vector3 _startPos, _endPos;
         private float _collidedRefTime;
         private float _collidedStartTime;
 
+        private float _currentAngle;
+        private float _endAngle;
+        private float _refAngle;
+
         //const
-        private const float AttackDuration = .2f;
+        private const float Duration = .2f;
 
         //reference
         private MovingRigidBody _rigidBody;
@@ -39,31 +43,36 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // commands
-        public void Begin(Vector3 endPosition) {
+        public void Begin(Vector3 endPosition, float endAngle) {
             Audio.Play("attack", transform.position);
 
             //Debug.Log(Time.CurrentTime);
             IsCollided = true;
             _collidedRefTime = 0;
-            _collidedStartPos = transform.position;
-            _collidedEndPos = endPosition;
+            _startPos = transform.position;
+            _endPos = endPosition;
             _collidedStartTime = Time.CurrentTime;
+
+            _currentAngle = transform.rotation.Y;
+            _endAngle = _currentAngle + endAngle;
 
             _rigidBody.RigidBody.LinearVelocity = JVector.Zero;
 
-            PhysicsDrawer.Instance.AddPointToDraw(_collidedStartPos);
-            PhysicsDrawer.Instance.AddPointToDraw(_collidedEndPos);
+            PhysicsDrawer.Instance.AddPointToDraw(_startPos);
+            PhysicsDrawer.Instance.AddPointToDraw(_endPos);
 
-            Invoke(AttackDuration, End);
+            Invoke(Duration, End);
         }
 
         public void Coroutine() {
             if (_collidedRefTime <= 1) {
-                _collidedRefTime += Time.DeltaTime / AttackDuration;
+                _collidedRefTime += Time.DeltaTime / Duration;
                 float t = Curve.EvaluateSqrt(_collidedRefTime);
-                Vector3 newPosition = Vector3.LerpPrecise(_collidedStartPos, _collidedEndPos, t);
-                //Gizmos.DrawWireSphere(_attackStartPos, 1.0f);
-                
+                Vector3 newPosition = Vector3.LerpPrecise(_startPos, _endPos, t);
+
+                _currentAngle = Utility.SmoothDampAngle(_currentAngle, _endAngle, ref _refAngle, Duration);
+                Debug.Log(_currentAngle);
+
                 // Apply new position to the rigid-body
                 // Todo by Andy for Andy: can be surely written better :-)
                 transform.position = new Vector3(newPosition.X, transform.position.Y, newPosition.Z);

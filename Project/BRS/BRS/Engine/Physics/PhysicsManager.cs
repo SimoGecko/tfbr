@@ -126,7 +126,7 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="obj"></param>
         private void Events_ContactCreated(Contact obj) {
-            if (IsActive) {
+            if (!IsActive) {
                 return;
             }
 
@@ -134,7 +134,10 @@ namespace BRS.Engine.Physics {
             Collider body2 = obj.Body2 as Collider;
 
             bool body1IsPlayer = body1?.GameObject?.tag == ObjectTag.Player;
-            bool body2IsPLayer = body2?.GameObject?.tag == ObjectTag.Player;
+            bool body2IsPlayer = body2?.GameObject?.tag == ObjectTag.Player;
+
+            bool body1IsGround = body1?.GameObject?.tag == ObjectTag.Ground;
+            bool body2IsGround = body2?.GameObject?.tag == ObjectTag.Ground;
 
             bool body1IsPureCollider = body1?.PureCollider == true;
             bool body2IsPureCollider = body2?.PureCollider == true;
@@ -142,9 +145,9 @@ namespace BRS.Engine.Physics {
             bool body1IsStatic = body1?.IsStatic == true;
             bool body2IsStatic = body2?.IsStatic == true;
 
-            if (body1IsPlayer && !body2IsPureCollider && body2IsStatic) {
+            if (body1IsPlayer && !body2IsPureCollider && body2IsStatic && !body2IsGround) {
                 HandlePlayerCollision(body1, obj.Position2, -1 * obj.Normal);
-            } else if (body2IsPLayer && !body1IsPureCollider && body1IsStatic) {
+            } else if (body2IsPlayer && !body1IsPureCollider && body1IsStatic && !body1IsGround) {
                 HandlePlayerCollision(body2, obj.Position1, obj.Normal);
             }
         }
@@ -303,7 +306,7 @@ namespace BRS.Engine.Physics {
 
             //Debug.Log(newPosition1);
             //Debug.Log(newPosition);
-            player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
+            player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition), 40);
         }
 
         #endregion

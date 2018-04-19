@@ -133,8 +133,6 @@ namespace BRS.Scripts.PlayerScripts {
         float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }
 
 
-
-
         // other
 
     }

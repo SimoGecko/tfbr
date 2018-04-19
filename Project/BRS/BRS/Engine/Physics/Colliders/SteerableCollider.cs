@@ -26,14 +26,14 @@ namespace BRS.Engine.Physics.Colliders {
             AddForce(Speed);
             LinearVelocity = Speed;
 
-            Position = new JVector(Position.X, HeightHalf, Position.Z);
+            Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
 
             base.PostStep(timestep);
         }
 
         public void CorrectPosition() {
-            Position = new JVector(Position.X, HeightHalf, Position.Z);
+            Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
         }
     }
 }
