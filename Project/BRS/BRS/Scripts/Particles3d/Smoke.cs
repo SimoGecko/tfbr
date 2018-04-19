@@ -21,6 +21,7 @@ namespace BRS.Scripts.PlayerScripts
 
         // --------------------- VARIABLES ---------------------
         ParticleSystem3d smokePlumeParticles;
+        private static int _particlesPerLoop = 10;
 
         // --------------------- BASE METHODS ------------------
         public override void Start()
@@ -28,31 +29,31 @@ namespace BRS.Scripts.PlayerScripts
             smokePlumeParticles = new ParticleSystem3d();
             smokePlumeParticles.Settings.TextureName = "CFX4Smoke";
 
-            smokePlumeParticles.Settings.MaxParticles = 600;
-            smokePlumeParticles.Settings.Duration = TimeSpan.FromSeconds(10);
+            smokePlumeParticles.Settings.MaxParticles = 1800;
+            smokePlumeParticles.Settings.Duration = TimeSpan.FromSeconds(3);
 
             smokePlumeParticles.Settings.MinHorizontalVelocity = 0;
-            smokePlumeParticles.Settings.MaxHorizontalVelocity = 15;
+            smokePlumeParticles.Settings.MaxHorizontalVelocity = 5;
 
-            smokePlumeParticles.Settings.MinVerticalVelocity = 10;
-            smokePlumeParticles.Settings.MaxVerticalVelocity = 20;
+            smokePlumeParticles.Settings.MinVerticalVelocity = 2.5f;
+            smokePlumeParticles.Settings.MaxVerticalVelocity = 25;
 
             // Create a wind effect by tilting the gravity vector sideways.
-            smokePlumeParticles.Settings.Gravity = new Vector3(-20, -5, 0);
+            smokePlumeParticles.Settings.Gravity = new Vector3(-5, -2.5f, 0);
 
             smokePlumeParticles.Settings.EndVelocity = 0.75f;
 
-            smokePlumeParticles.Settings.MinColor = new Color(255, 140, 0, 255);
-            smokePlumeParticles.Settings.MaxColor = new Color(255, 140, 0, 255);
+            smokePlumeParticles.Settings.MinColor = new Color(0, 0, 0, 255);
+            smokePlumeParticles.Settings.MaxColor = new Color(128, 128, 128, 128);
 
             smokePlumeParticles.Settings.MinRotateSpeed = -1;
             smokePlumeParticles.Settings.MaxRotateSpeed = 1;
 
             smokePlumeParticles.Settings.MinStartSize = 1;
-            smokePlumeParticles.Settings.MaxStartSize = 3;
+            smokePlumeParticles.Settings.MaxStartSize = 2;
 
-            smokePlumeParticles.Settings.MinEndSize = 10;
-            smokePlumeParticles.Settings.MaxEndSize = 30;
+            smokePlumeParticles.Settings.MinEndSize = 2;
+            smokePlumeParticles.Settings.MaxEndSize = 5;
 
             //smokePlumeParticles.DrawOrder = 100;
             smokePlumeParticles.Awake();
@@ -62,7 +63,11 @@ namespace BRS.Scripts.PlayerScripts
 
         public override void Update()
         {
-            smokePlumeParticles.AddParticle(transform.position, Vector3.Zero);
+            // particles per update
+            for(var i = 0; i < _particlesPerLoop; i++)
+            {
+                smokePlumeParticles.AddParticle(transform.position, Vector3.Zero);
+            }
             smokePlumeParticles.Update(Time.Gt);
         }
 
