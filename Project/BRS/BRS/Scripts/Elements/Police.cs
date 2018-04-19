@@ -16,7 +16,7 @@ namespace BRS.Scripts {
 
         //public
         const float speed = 4f;
-        const float changeThreshold = .5f;
+        const float changeThreshold = .8f;
         const float turnSmoothTime = .2f;
         const float bustRadius = .5f;
 
