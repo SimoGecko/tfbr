@@ -1,4 +1,7 @@
-﻿using BRS.Engine;
+﻿// (c) Nicolas Huart 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine;
 using BRS.Scripts;
 using Microsoft.Xna.Framework;
 

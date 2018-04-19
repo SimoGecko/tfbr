@@ -1,4 +1,7 @@
-﻿using BRS.Engine;
+﻿// (c) Nicolas Huart 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine;
 using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,7 +14,7 @@ namespace BRS.Engine.Menu {
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+                return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_texture.Width / 1920f * Screen.Width), (int)(_texture.Height / 1080f * Screen.Height));
             }
         }
 

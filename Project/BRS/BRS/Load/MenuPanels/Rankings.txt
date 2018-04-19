@@ -60,7 +60,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SwitchToMenu
-NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Next Next
+NeighborsUpDownLeftRight: Ranking2min null null null
 NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255
