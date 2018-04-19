@@ -161,10 +161,12 @@
     <Compile Include="Scripts\Elements\Police.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
+    <Compile Include="Scripts\Particles3d\Cash.cs" />
     <Compile Include="Scripts\Particles3d\Dust.cs" />
     <Compile Include="Scripts\Particles3d\Smoke.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />
     <Compile Include="Scripts\Scenes\Level3.cs" />
