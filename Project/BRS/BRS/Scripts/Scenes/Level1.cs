@@ -87,7 +87,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
-                player.AddComponent(new Dust());
+                player.AddComponent(new Cash());
                 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());

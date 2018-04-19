@@ -74,6 +74,11 @@ namespace BRS.Engine {
                 Dust smoke = GetComponent<Dust>();
                 smoke.Draw(cam);
             }
+            if (HasComponent<Cash>())
+            {
+                Cash smoke = GetComponent<Cash>();
+                smoke.Draw(cam);
+            }
         }
 
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen

@@ -25,14 +25,8 @@ namespace BRS.Engine.Particles
     {
         #region Constants
 
-        const float trailParticlesPerSecond = 200;
-        const int numExplosionParticles = 30;
-        const int numExplosionSmokeParticles = 50;
-        const float projectileLifespan = 1.5f;
-        const float sidewaysVelocityRange = 60;
-        const float verticalVelocityRange = 40;
-        const float gravity = 15;
-
+        public float TrailParticlesPerSecond = 200;
+   
         #endregion
 
         #region Fields
@@ -45,10 +39,16 @@ namespace BRS.Engine.Particles
         /// <summary>
         /// Constructs a new projectile.
         /// </summary>
-        public Projectile(ParticleSystem3d projectileTrailParticles, Vector3 position)
+        public Projectile(ParticleSystem3d projectileTrailParticles, Vector3 position, float TrailParticlesPerSecond)
         {
             // Use the particle emitter helper to output our trail particles.
-            trailEmitter = new ParticleEmitter(projectileTrailParticles, trailParticlesPerSecond, position);
+            this.TrailParticlesPerSecond = TrailParticlesPerSecond;
+            trailEmitter = new ParticleEmitter(projectileTrailParticles, TrailParticlesPerSecond, position);
+        }
+        public Projectile(ParticleSystem3d projectileTrailParticles, Vector3 position )
+        {
+            // Use the particle emitter helper to output our trail particles.
+            trailEmitter = new ParticleEmitter(projectileTrailParticles, TrailParticlesPerSecond, position);
         }
 
 
