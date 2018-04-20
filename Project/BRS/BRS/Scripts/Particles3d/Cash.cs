@@ -1,84 +1,69 @@
-﻿// (c) Simone Guggiari 2018
+﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
-using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
-using Jitter.LinearMath;
-using Microsoft.Xna.Framework;
 using BRS.Engine.Particles;
+using System;
 
-namespace BRS.Scripts.PlayerScripts
-{
+namespace BRS.Scripts.Particles3D {
     /// <summary>
-    /// Deals with the movement of the player around the map
+    /// Particle-effect for the full-state of the player
     /// </summary>
-    class Cash : Component
-    {
+    class Cash : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
-        ParticleSystem3d projectileTrailParticles;
-        Projectile projectile;
-        PlayerInventory playerInventory;
+        ParticleSystem3D _projectileTrailParticles;
+        Projectile _projectile;
 
+        public override bool IsEmitting {
+            get => _projectile.IsEmitting;
+            set => _projectile.IsEmitting = value;
+        }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start()
-        {
-            projectileTrailParticles = new ParticleSystem3d();
-            playerInventory = gameObject.GetComponent<PlayerInventory>();
-            projectileTrailParticles.Settings.TextureName = "cash";
-            projectileTrailParticles.Settings.MaxParticles = 100;
-            projectileTrailParticles.Settings.Duration = TimeSpan.FromSeconds(1);
+        public override void Awake() {
+            _projectileTrailParticles = new ParticleSystem3D {
+                Settings = new Settings {
+                    TextureName = "cash",
+                    MaxParticles = 100,
+                    Duration = TimeSpan.FromSeconds(1),
+                    DurationRandomness = 3.5f,
+                    EmitterVelocitySensitivity = 0.1f,
 
-            projectileTrailParticles.Settings.DurationRandomness = 3.5f;
+                    MinHorizontalVelocity = 2,
+                    MaxHorizontalVelocity = 3,
 
-            projectileTrailParticles.Settings.EmitterVelocitySensitivity = 0.1f;
+                    MinVerticalVelocity = -1,
+                    MaxVerticalVelocity = 1,
 
-            projectileTrailParticles.Settings.MinHorizontalVelocity = 2;
-            projectileTrailParticles.Settings.MaxHorizontalVelocity = 3;
+                    MinRotateSpeed = -4,
+                    MaxRotateSpeed = 4,
 
-            projectileTrailParticles.Settings.MinVerticalVelocity = -1;
-            projectileTrailParticles.Settings.MaxVerticalVelocity = 1;
+                    MinStartSize = 0.1f,
+                    MaxStartSize = 0.3f,
 
-
-            projectileTrailParticles.Settings.MinRotateSpeed = -4;
-            projectileTrailParticles.Settings.MaxRotateSpeed = 4;
-
-            projectileTrailParticles.Settings.MinStartSize = 0.1f;
-            projectileTrailParticles.Settings.MaxStartSize = 0.3f;
-
-            projectileTrailParticles.Settings.MinEndSize = 0.4f;
-            projectileTrailParticles.Settings.MaxEndSize = 0.11f;
+                    MinEndSize = 0.4f,
+                    MaxEndSize = 0.11f
+                }
+            };
 
             //smokePlumeParticles.DrawOrder = 100;
-            projectileTrailParticles.Awake();
-            projectileTrailParticles.Start();
+            _projectileTrailParticles.Awake();
+        }
+
+        public override void Start() {
+            _projectileTrailParticles.Start();
 
             // init the projectile
-            projectile = new Projectile(projectileTrailParticles, transform.position, 5);
-            
-            
+            _projectile = new Projectile(_projectileTrailParticles, transform.position, 5);
         }
 
-        public override void Update()
-        {
-            // TODO: this is a hack
-            if(playerInventory.IsFull())
-            {
-                projectile.Update(Time.Gt, transform.position);
-            }
-            
-            
+        public override void Update() {
+            _projectile.Update(transform.position);
         }
 
-        public void Draw(Camera camera)
-        {
-            projectileTrailParticles.SetCamera(camera.View, camera.Proj);
-            projectileTrailParticles.Draw(Time.Gt);
+        public override void Draw3D(Camera camera) {
+            _projectileTrailParticles.Draw3D(camera);
         }
     }
 }

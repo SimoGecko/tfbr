@@ -46,7 +46,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public override void Draw(int index) {
+        public override void Draw2D(int index) {
             if (index == 0) return;
             index--;
             string roundString = "round " + GameManager.RoundNumber + "/" + GameManager.NumRounds;

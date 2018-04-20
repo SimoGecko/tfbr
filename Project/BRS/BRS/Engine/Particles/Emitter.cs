@@ -1,19 +1,14 @@
-#region File Description
 //-----------------------------------------------------------------------------
 // ParticleEmitter.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+// Managed for this project by Alexander Lelidis and Andreas Emch
 
-#region Using Statements
-using System;
 using Microsoft.Xna.Framework;
-#endregion
 
-namespace BRS.Engine.Particles
-{
+namespace BRS.Engine.Particles {
     /// <summary>
     /// Helper for objects that want to leave particles behind them as they
     /// move around the world. This emitter implementation solves two related
@@ -35,14 +30,16 @@ namespace BRS.Engine.Particles
     /// you specify, regardless of whether this is faster or slower than the
     /// game update rate.
     /// </summary>
-    public class ParticleEmitter
-    {
-        #region Fields
+    public class Emitter {
 
-        ParticleSystem3d particleSystem;
-        float timeBetweenParticles;
-        Vector3 previousPosition;
-        float timeLeftOver;
+        #region Properties and attributes
+
+        private readonly ParticleSystem3D _particleSystem;
+        private readonly float _timeBetweenParticles;
+        private Vector3 _previousPosition;
+        private float _timeLeftOver;
+
+        public bool IsEmitting { get; set; } = true;
 
         #endregion
 
@@ -50,13 +47,12 @@ namespace BRS.Engine.Particles
         /// <summary>
         /// Constructs a new particle emitter object.
         /// </summary>
-        public ParticleEmitter(ParticleSystem3d particleSystem, float particlesPerSecond, Vector3 initialPosition)
-        {
-            this.particleSystem = particleSystem;
+        public Emitter(ParticleSystem3D particleSystem, float particlesPerSecond, Vector3 initialPosition) {
+            _particleSystem = particleSystem;
 
-            timeBetweenParticles = 1.0f / particlesPerSecond;
-            
-            previousPosition = initialPosition;
+            _timeBetweenParticles = 1.0f / particlesPerSecond;
+
+            _previousPosition = initialPosition;
         }
 
 
@@ -64,49 +60,46 @@ namespace BRS.Engine.Particles
         /// Updates the emitter, creating the appropriate number of particles
         /// in the appropriate positions.
         /// </summary>
-        public void Update(GameTime gameTime, Vector3 newPosition)
-        {
-            if (gameTime == null)
-                throw new ArgumentNullException(nameof(gameTime));
-
+        public void Update(Vector3 newPosition) {
             // Work out how much time has passed since the previous update.
-            float elapsedTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float elapsedTime = (float)Time.Gt.ElapsedGameTime.TotalSeconds;
 
-            if (elapsedTime > 0)
-            {
+            if (elapsedTime > 0) {
                 // Work out how fast we are moving.
-                Vector3 velocity = (newPosition - previousPosition) / elapsedTime;
+                Vector3 velocity = (newPosition - _previousPosition) / elapsedTime;
 
                 // If we had any time left over that we didn't use during the
                 // previous update, add that to the current elapsed time.
-                float timeToSpend = timeLeftOver + elapsedTime;
-                
+                float timeToSpend = _timeLeftOver + elapsedTime;
+
                 // Counter for looping over the time interval.
-                float currentTime = -timeLeftOver;
+                float currentTime = -_timeLeftOver;
 
                 // Create particles as long as we have a big enough time interval.
-                while (timeToSpend > timeBetweenParticles)
-                {
-                    currentTime += timeBetweenParticles;
-                    timeToSpend -= timeBetweenParticles;
+                while (timeToSpend > _timeBetweenParticles) {
+                    currentTime += _timeBetweenParticles;
+                    timeToSpend -= _timeBetweenParticles;
 
                     // Work out the optimal position for this particle. This will produce
                     // evenly spaced particles regardless of the object speed, particle
                     // creation frequency, or game update rate.
                     float mu = currentTime / elapsedTime;
 
-                    Vector3 position = Vector3.Lerp(previousPosition, newPosition, mu);
+                    Vector3 position = Vector3.Lerp(_previousPosition, newPosition, mu);
 
                     // Create the particle.
-                    particleSystem.AddParticle(position, velocity);
-                    particleSystem.Update(gameTime);
+                    if (IsEmitting) {
+                        _particleSystem.AddParticles(position, velocity);
+                    }
+
+                    _particleSystem.Update();
                 }
 
                 // Store any time we didn't use, so it can be part of the next update.
-                timeLeftOver = timeToSpend;
+                _timeLeftOver = timeToSpend;
             }
 
-            previousPosition = newPosition;
+            _previousPosition = newPosition;
         }
     }
 }

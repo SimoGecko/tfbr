@@ -3,19 +3,15 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
-using BRS.Menu;
-using BRS.Scripts;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
+using BRS.Scripts.Particles3D;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -87,7 +83,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
-                player.AddComponent(new Dust());
+                player.AddComponent(new PlayerParticles());
                 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());

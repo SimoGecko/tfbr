@@ -1,64 +1,49 @@
-#region File Description
 //-----------------------------------------------------------------------------
 // ParticleSystem.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+// Managed for this project by Alexander Lelidis and Andreas Emch
 
-#region Using Statements
-using System;
-using BRS.Engine;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
-#endregion
+using System;
 
-namespace BRS.Engine.Particles
-{
+namespace BRS.Engine.Particles {
     /// <summary>
     /// The main component in charge of displaying particles.
     /// </summary>
-    public class ParticleSystem3d  : Component
-    {
+    public class ParticleSystem3D : Component {
         #region Fields
 
-
         // Settings class controls the appearance and animation of this particle system.
-        public ParticleSettings Settings = new ParticleSettings();
-
-        public static GraphicsDevice graphicsDevice;
-
-
-        // For loading the effect and particle texture.
-        public static ContentManager content;
+        public Settings Settings = new Settings();
 
 
         // Custom effect for drawing particles. This computes the particle
         // animation entirely in the vertex shader: no per-particle CPU work required!
-        Effect particleEffect;
+        Effect _particleEffect;
 
 
         // Shortcuts for accessing frequently changed effect parameters.
-        EffectParameter effectViewParameter;
-        EffectParameter effectProjectionParameter;
-        EffectParameter effectViewportScaleParameter;
-        EffectParameter effectTimeParameter;
+        EffectParameter _effectViewParameter;
+        EffectParameter _effectProjectionParameter;
+        EffectParameter _effectViewportScaleParameter;
+        EffectParameter _effectTimeParameter;
 
 
         // An array of particles, treated as a circular queue.
-        ParticleVertex[] particles;
+        Vertex[] _particles;
 
 
         // A vertex buffer holding our particles. This contains the same data as
         // the particles array, but copied across to where the GPU can access it.
-        DynamicVertexBuffer vertexBuffer;
+        DynamicVertexBuffer _vertexBuffer;
 
 
         // Index buffer turns sets of four vertices into particle quads (pairs of triangles).
-        IndexBuffer indexBuffer;
+        IndexBuffer _indexBuffer;
 
 
         // The particles array and vertex buffer are treated as a circular queue.
@@ -132,54 +117,37 @@ namespace BRS.Engine.Particles
         // using them. These need to be kept around for a few more frames before they
         // can be reallocated.
 
-        int firstActiveParticle;
-        int firstNewParticle;
-        int firstFreeParticle;
-        int firstRetiredParticle;
+        private int _firstActiveParticle;
+        private int _firstNewParticle;
+        private int _firstFreeParticle;
+        private int _firstRetiredParticle;
 
 
         // Store the current time, in seconds.
-        float currentTime;
+        private float _currentTime;
 
 
         // Count how many times Draw has been called. This is used to know
         // when it is safe to retire old particles back into the free list.
-        int drawCounter;
-
-
-        // Shared random number generator.
-        static Random random = new Random();
-
+        private int _drawCounter;
 
         #endregion
 
         #region Initialization
 
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        public ParticleSystem3d()
-        {
-            
-        }
-
-
         /// <summary>
         /// Initializes the component.
         /// </summary>
-        public override void Awake()
-        {
+        public override void Awake() {
 
             // Allocate the particle array, and fill in the corner fields (which never change).
-            particles = new ParticleVertex[Settings.MaxParticles * 4];
+            _particles = new Vertex[Settings.MaxParticles * 4];
 
-            for (int i = 0; i < Settings.MaxParticles; i++)
-            {
-                particles[i * 4 + 0].Corner = new Vector2(-1, -1);
-                particles[i * 4 + 1].Corner = new Vector2(1, -1);
-                particles[i * 4 + 2].Corner = new Vector2(1, 1);
-                particles[i * 4 + 3].Corner = new Vector2(-1, 1);
+            for (int i = 0; i < Settings.MaxParticles; i++) {
+                _particles[i * 4 + 0].Corner = new Vector2(-1, -1);
+                _particles[i * 4 + 1].Corner = new Vector2(1, -1);
+                _particles[i * 4 + 2].Corner = new Vector2(1, 1);
+                _particles[i * 4 + 3].Corner = new Vector2(-1, 1);
             }
 
         }
@@ -189,18 +157,16 @@ namespace BRS.Engine.Particles
         /// <summary>
         /// Loads graphics for the particle system.
         /// </summary>
-        public override void Start()
-        {
-            LoadParticleEffect();
+        public override void Start() {
+            Load();
 
             // Create a dynamic vertex buffer.
-            vertexBuffer = new DynamicVertexBuffer(graphicsDevice, ParticleVertex.VertexDeclaration, Settings.MaxParticles * 4, BufferUsage.WriteOnly);
+            _vertexBuffer = new DynamicVertexBuffer(Graphics.gD, Vertex.VertexDeclaration, Settings.MaxParticles * 4, BufferUsage.WriteOnly);
 
             // Create and populate the index buffer.
             ushort[] indices = new ushort[Settings.MaxParticles * 6];
 
-            for (int i = 0; i < Settings.MaxParticles; i++)
-            {
+            for (int i = 0; i < Settings.MaxParticles; i++) {
                 indices[i * 6 + 0] = (ushort)(i * 4 + 0);
                 indices[i * 6 + 1] = (ushort)(i * 4 + 1);
                 indices[i * 6 + 2] = (ushort)(i * 4 + 2);
@@ -210,34 +176,33 @@ namespace BRS.Engine.Particles
                 indices[i * 6 + 5] = (ushort)(i * 4 + 3);
             }
 
-            indexBuffer = new IndexBuffer(graphicsDevice, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
+            _indexBuffer = new IndexBuffer(Graphics.gD, typeof(ushort), indices.Length, BufferUsage.WriteOnly);
 
-            indexBuffer.SetData(indices);
+            _indexBuffer.SetData(indices);
         }
 
 
         /// <summary>
         /// Helper for loading and initializing the particle effect.
         /// </summary>
-        void LoadParticleEffect()
-        {
-            Effect effect = content.Load<Effect>("Effects/ParticleEffect");
+        private void Load() {
+            Effect effect = File.Load<Effect>("Effects/ParticleEffect");
 
             // If we have several particle systems, the content manager will return
             // a single shared effect instance to them all. But we want to preconfigure
             // the effect with parameters that are specific to this particular
             // particle system. By cloning the effect, we prevent one particle system
             // from stomping over the parameter settings of another.
-            
-            particleEffect = effect.Clone();
 
-            EffectParameterCollection parameters = particleEffect.Parameters;
+            _particleEffect = effect.Clone();
+
+            EffectParameterCollection parameters = _particleEffect.Parameters;
 
             // Look up shortcuts for parameters that change every frame.
-            effectViewParameter = parameters["View"];
-            effectProjectionParameter = parameters["Projection"];
-            effectViewportScaleParameter = parameters["ViewportScale"];
-            effectTimeParameter = parameters["CurrentTime"];
+            _effectViewParameter = parameters["View"];
+            _effectProjectionParameter = parameters["Projection"];
+            _effectViewportScaleParameter = parameters["ViewportScale"];
+            _effectTimeParameter = parameters["CurrentTime"];
 
             // Set the values of parameters that do not change.
             parameters["Duration"].SetValue((float)Settings.Duration.TotalSeconds);
@@ -249,15 +214,15 @@ namespace BRS.Engine.Particles
 
             parameters["RotateSpeed"].SetValue(
                 new Vector2(Settings.MinRotateSpeed, Settings.MaxRotateSpeed));
-            
+
             parameters["StartSize"].SetValue(
                 new Vector2(Settings.MinStartSize, Settings.MaxStartSize));
-            
+
             parameters["EndSize"].SetValue(
                 new Vector2(Settings.MinEndSize, Settings.MaxEndSize));
 
             // Load the particle texture, and set it onto the effect.
-            Texture2D texture = content.Load<Texture2D>("Images/particles3d/" + Settings.TextureName);
+            Texture2D texture = File.Load<Texture2D>("Images/particles3d/" + Settings.TextureName);
 
             parameters["Texture"].SetValue(texture);
         }
@@ -271,12 +236,8 @@ namespace BRS.Engine.Particles
         /// <summary>
         /// Updates the particle system.
         /// </summary>
-        public void Update(GameTime gameTime)
-        {
-            if (gameTime == null)
-                throw new ArgumentNullException("gameTime");
-
-            currentTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        public override void Update() {
+            _currentTime += (float)Time.Gt.ElapsedGameTime.TotalSeconds;
 
             RetireActiveParticles();
             FreeRetiredParticles();
@@ -287,11 +248,11 @@ namespace BRS.Engine.Particles
             // that the time value doesn't matter when no particles are being drawn,
             // so we can reset it back to zero any time the active queue is empty.
 
-            if (firstActiveParticle == firstFreeParticle)
-                currentTime = 0;
+            if (_firstActiveParticle == _firstFreeParticle)
+                _currentTime = 0;
 
-            if (firstRetiredParticle == firstActiveParticle)
-                drawCounter = 0;
+            if (_firstRetiredParticle == _firstActiveParticle)
+                _drawCounter = 0;
         }
 
 
@@ -300,28 +261,26 @@ namespace BRS.Engine.Particles
         /// their life. It moves old particles from the active area of the queue
         /// to the retired section.
         /// </summary>
-        void RetireActiveParticles()
-        {
+        void RetireActiveParticles() {
             float particleDuration = (float)Settings.Duration.TotalSeconds;
 
-            while (firstActiveParticle != firstNewParticle)
-            {
+            while (_firstActiveParticle != _firstNewParticle) {
                 // Is this particle old enough to retire?
                 // We multiply the active particle index by four, because each
                 // particle consists of a quad that is made up of four vertices.
-                float particleAge = currentTime - particles[firstActiveParticle * 4].Time;
+                float particleAge = _currentTime - _particles[_firstActiveParticle * 4].Time;
 
                 if (particleAge < particleDuration)
                     break;
 
                 // Remember the time at which we retired this particle.
-                particles[firstActiveParticle * 4].Time = drawCounter;
+                _particles[_firstActiveParticle * 4].Time = _drawCounter;
 
                 // Move the particle from the active to the retired queue.
-                firstActiveParticle++;
+                _firstActiveParticle++;
 
-                if (firstActiveParticle >= Settings.MaxParticles)
-                    firstActiveParticle = 0;
+                if (_firstActiveParticle >= Settings.MaxParticles)
+                    _firstActiveParticle = 0;
             }
         }
 
@@ -331,15 +290,13 @@ namespace BRS.Engine.Particles
         /// enough that we can be sure the GPU is no longer using them. It moves
         /// old particles from the retired area of the queue to the free section.
         /// </summary>
-        void FreeRetiredParticles()
-        {
-            while (firstRetiredParticle != firstActiveParticle)
-            {
+        void FreeRetiredParticles() {
+            while (_firstRetiredParticle != _firstActiveParticle) {
                 // Has this particle been unused long enough that
                 // the GPU is sure to be finished with it?
                 // We multiply the retired particle index by four, because each
                 // particle consists of a quad that is made up of four vertices.
-                int age = drawCounter - (int)particles[firstRetiredParticle * 4].Time;
+                int age = _drawCounter - (int)_particles[_firstRetiredParticle * 4].Time;
 
                 // The GPU is never supposed to get more than 2 frames behind the CPU.
                 // We add 1 to that, just to be safe in case of buggy drivers that
@@ -348,78 +305,71 @@ namespace BRS.Engine.Particles
                     break;
 
                 // Move the particle from the retired to the free queue.
-                firstRetiredParticle++;
+                _firstRetiredParticle++;
 
-                if (firstRetiredParticle >= Settings.MaxParticles)
-                    firstRetiredParticle = 0;
+                if (_firstRetiredParticle >= Settings.MaxParticles)
+                    _firstRetiredParticle = 0;
             }
         }
 
-        
+
         /// <summary>
         /// Draws the particle system.
         /// </summary>
-        public void Draw(GameTime gameTime)
-        {
-            GraphicsDevice device = graphicsDevice;
+        public void Draw3D(Camera camera) {
+            _effectViewParameter.SetValue(camera.View);
+            _effectProjectionParameter.SetValue(camera.Proj);
+            GraphicsDevice device = Graphics.gD;
 
             // Restore the vertex buffer contents if the graphics device was lost.
-            if (vertexBuffer.IsContentLost)
-            {
-                vertexBuffer.SetData(particles);
+            if (_vertexBuffer.IsContentLost) {
+                _vertexBuffer.SetData(_particles);
             }
 
             // If there are any particles waiting in the newly added queue,
             // we'd better upload them to the GPU ready for drawing.
-            if (firstNewParticle != firstFreeParticle)
-            {
+            if (_firstNewParticle != _firstFreeParticle) {
                 AddNewParticlesToVertexBuffer();
             }
 
             // If there are any active particles, draw them now!
-            if (firstActiveParticle != firstFreeParticle)
-            {
+            if (_firstActiveParticle != _firstFreeParticle) {
                 device.BlendState = Settings.BlendState;
                 device.DepthStencilState = DepthStencilState.DepthRead;
 
                 // Set an effect parameter describing the viewport size. This is
                 // needed to convert particle sizes into screen space point sizes.
-                effectViewportScaleParameter.SetValue(new Vector2(0.5f / device.Viewport.AspectRatio, -0.5f));
+                _effectViewportScaleParameter.SetValue(new Vector2(0.5f / device.Viewport.AspectRatio, -0.5f));
 
                 // Set an effect parameter describing the current time. All the vertex
                 // shader particle animation is keyed off this value.
-                effectTimeParameter.SetValue(currentTime);
+                _effectTimeParameter.SetValue(_currentTime);
 
                 // Set the particle vertex and index buffer.
-                device.SetVertexBuffer(vertexBuffer);
-                device.Indices = indexBuffer;
+                device.SetVertexBuffer(_vertexBuffer);
+                device.Indices = _indexBuffer;
 
                 // Activate the particle effect.
-                foreach (EffectPass pass in particleEffect.CurrentTechnique.Passes)
-                {
+                foreach (EffectPass pass in _particleEffect.CurrentTechnique.Passes) {
                     pass.Apply();
 
-                    if (firstActiveParticle < firstFreeParticle)
-                    {
+                    if (_firstActiveParticle < _firstFreeParticle) {
                         // If the active particles are all in one consecutive range,
                         // we can draw them all in a single call.
                         device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     firstActiveParticle * 4, (firstFreeParticle - firstActiveParticle) * 4,
-                                                     firstActiveParticle * 6, (firstFreeParticle - firstActiveParticle) * 2);
-                    }
-                    else
-                    {
+                                                     _firstActiveParticle * 4, (_firstFreeParticle - _firstActiveParticle) * 4,
+                                                     _firstActiveParticle * 6, (_firstFreeParticle - _firstActiveParticle) * 2);
+                    } else {
                         // If the active particle range wraps past the end of the queue
                         // back to the start, we must split them over two draw calls.
                         device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     firstActiveParticle * 4, (Settings.MaxParticles - firstActiveParticle) * 4,
-                                                     firstActiveParticle * 6, (Settings.MaxParticles - firstActiveParticle) * 2);
+                                                     _firstActiveParticle * 4, (Settings.MaxParticles - _firstActiveParticle) * 4,
+                                                     _firstActiveParticle * 6, (Settings.MaxParticles - _firstActiveParticle) * 2);
 
-                        if (firstFreeParticle > 0)
-                        {
+                        if (_firstFreeParticle > 0) {
                             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                         0, firstFreeParticle * 4,
-                                                         0, firstFreeParticle * 2);
+                                                         0, _firstFreeParticle * 4,
+                                                         0, _firstFreeParticle * 2);
                         }
                     }
                 }
@@ -429,7 +379,7 @@ namespace BRS.Engine.Particles
                 device.DepthStencilState = DepthStencilState.Default;
             }
 
-            drawCounter++;
+            _drawCounter++;
         }
 
 
@@ -437,38 +387,33 @@ namespace BRS.Engine.Particles
         /// Helper for uploading new particles from our managed
         /// array to the GPU vertex buffer.
         /// </summary>
-        void AddNewParticlesToVertexBuffer()
-        {
-            int stride = ParticleVertex.SizeInBytes;
+        void AddNewParticlesToVertexBuffer() {
+            int stride = Vertex.SizeInBytes;
 
-            if (firstNewParticle < firstFreeParticle)
-            {
+            if (_firstNewParticle < _firstFreeParticle) {
                 // If the new particles are all in one consecutive range,
                 // we can upload them all in a single call.
-                vertexBuffer.SetData(firstNewParticle * stride * 4, particles,
-                                     firstNewParticle * 4,
-                                     (firstFreeParticle - firstNewParticle) * 4,
+                _vertexBuffer.SetData(_firstNewParticle * stride * 4, _particles,
+                                     _firstNewParticle * 4,
+                                     (_firstFreeParticle - _firstNewParticle) * 4,
                                      stride, SetDataOptions.NoOverwrite);
-            }
-            else
-            {
+            } else {
                 // If the new particle range wraps past the end of the queue
                 // back to the start, we must split them over two upload calls.
-                vertexBuffer.SetData(firstNewParticle * stride * 4, particles,
-                                     firstNewParticle * 4,
-                                     (Settings.MaxParticles - firstNewParticle) * 4,
+                _vertexBuffer.SetData(_firstNewParticle * stride * 4, _particles,
+                                     _firstNewParticle * 4,
+                                     (Settings.MaxParticles - _firstNewParticle) * 4,
                                      stride, SetDataOptions.NoOverwrite);
 
-                if (firstFreeParticle > 0)
-                {
-                    vertexBuffer.SetData(0, particles,
-                                         0, firstFreeParticle * 4,
+                if (_firstFreeParticle > 0) {
+                    _vertexBuffer.SetData(0, _particles,
+                                         0, _firstFreeParticle * 4,
                                          stride, SetDataOptions.NoOverwrite);
                 }
             }
 
             // Move the particles we just uploaded from the new to the active queue.
-            firstNewParticle = firstFreeParticle;
+            _firstNewParticle = _firstFreeParticle;
         }
 
 
@@ -476,31 +421,24 @@ namespace BRS.Engine.Particles
 
         #region Public Methods
 
-
-        /// <summary>
-        /// Sets the camera view and projection matrices
-        /// that will be used to draw this particle system.
-        /// </summary>
-        public void SetCamera(Matrix view, Matrix projection)
-        {
-            effectViewParameter.SetValue(view);
-            effectProjectionParameter.SetValue(projection);
+        public void AddParticles(Vector3 position, Vector3 velocity) {
+            for (int i = 0; i < Settings.ParticlesPerRound; ++i) {
+                AddSingleParticle(position, velocity);
+            }
         }
-
 
         /// <summary>
         /// Adds a new particle to the system.
         /// </summary>
-        public void AddParticle(Vector3 position, Vector3 velocity)
-        {
+        public void AddSingleParticle(Vector3 position, Vector3 velocity) {
             // Figure out where in the circular queue to allocate the new particle.
-            int nextFreeParticle = firstFreeParticle + 1;
+            int nextFreeParticle = _firstFreeParticle + 1;
 
             if (nextFreeParticle >= Settings.MaxParticles)
                 nextFreeParticle = 0;
 
             // If there are no free particles, we just have to give up.
-            if (nextFreeParticle == firstRetiredParticle)
+            if (nextFreeParticle == _firstRetiredParticle)
                 return;
 
             // Adjust the input velocity based on how much
@@ -510,9 +448,9 @@ namespace BRS.Engine.Particles
             // Add in some random amount of horizontal velocity.
             float horizontalVelocity = MathHelper.Lerp(Settings.MinHorizontalVelocity,
                                                        Settings.MaxHorizontalVelocity,
-                                                       (float)random.NextDouble());
+                                                       MyRandom.Value);
 
-            double horizontalAngle = random.NextDouble() * MathHelper.TwoPi;
+            double horizontalAngle = MyRandom.Value * MathHelper.TwoPi;
 
             velocity.X += horizontalVelocity * (float)Math.Cos(horizontalAngle);
             velocity.Z += horizontalVelocity * (float)Math.Sin(horizontalAngle);
@@ -520,29 +458,24 @@ namespace BRS.Engine.Particles
             // Add in some random amount of vertical velocity.
             velocity.Y += MathHelper.Lerp(Settings.MinVerticalVelocity,
                                           Settings.MaxVerticalVelocity,
-                                          (float)random.NextDouble());
+                                          MyRandom.Value);
             // emit only upwards
             velocity.Y = Math.Abs(velocity.Y);
 
             // Choose four random control values. These will be used by the vertex
             // shader to give each particle a different size, rotation, and color.
-            Color randomValues = new Color((byte)random.Next(255),
-                                           (byte)random.Next(255),
-                                           (byte)random.Next(255),
-                                           (byte)random.Next(255));
+            Color randomValues = MyRandom.ColorByte();
 
             // Fill in the particle vertex structure.
-            for (int i = 0; i < 4; i++)
-            {
-                particles[firstFreeParticle * 4 + i].Position = position;
-                particles[firstFreeParticle * 4 + i].Velocity = velocity;
-                particles[firstFreeParticle * 4 + i].Random = randomValues;
-                particles[firstFreeParticle * 4 + i].Time = currentTime;
+            for (int i = 0; i < 4; i++) {
+                _particles[_firstFreeParticle * 4 + i].Position = position;
+                _particles[_firstFreeParticle * 4 + i].Velocity = velocity;
+                _particles[_firstFreeParticle * 4 + i].Random = randomValues;
+                _particles[_firstFreeParticle * 4 + i].Time = _currentTime;
             }
 
-            firstFreeParticle = nextFreeParticle;
+            _firstFreeParticle = nextFreeParticle;
         }
-
 
         #endregion
     }

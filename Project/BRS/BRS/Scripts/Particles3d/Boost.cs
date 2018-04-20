@@ -1,86 +1,73 @@
-﻿// (c) Simone Guggiari 2018
+﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
-using Microsoft.Xna.Framework;
 using BRS.Engine.Particles;
+using Microsoft.Xna.Framework;
+using System;
 
-namespace BRS.Scripts.PlayerScripts {
+namespace BRS.Scripts.Particles3D {
     /// <summary>
-    /// Deals with the movement of the player around the map
+    /// Particle-effect for the boost-state of the player
     /// </summary>
-    class Boost : Component
-    {
+    class Boost : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
-        ParticleSystem3d projectileTrailParticles;
-        Projectile projectile;
+        ParticleSystem3D _projectileTrailParticles;
+        Projectile _projectile;
 
-        private PlayerAttack _playerAttack;
-        private PlayerMovement _playerMovement;
+        public override bool IsEmitting {
+            get => _projectile.IsEmitting;
+            set => _projectile.IsEmitting = value;
+        }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start()
-        {
-            _playerAttack = gameObject.GetComponent<PlayerAttack>();
-            _playerMovement = gameObject.GetComponent<PlayerMovement>();
+        public override void Awake() {
+            _projectileTrailParticles = new ParticleSystem3D {
+                Settings = new Settings {
+                    TextureName = "CFX_T_Flame1_ABP",
+                    MaxParticles = 10000,
+                    ParticlesPerRound = 10,
+                    Duration = TimeSpan.FromSeconds(.25f),
+                    DurationRandomness = 1.5f,
+                    EmitterVelocitySensitivity = 0.0f,
 
-            projectileTrailParticles = new ParticleSystem3d();
-            projectileTrailParticles.Settings.TextureName = "CFX_T_Flame1_ABP";
-            projectileTrailParticles.Settings.MaxParticles = 1000;
-            projectileTrailParticles.Settings.Duration = TimeSpan.FromSeconds(3);
+                    MinHorizontalVelocity = 0,
+                    MaxHorizontalVelocity = 0.1f,
 
-            projectileTrailParticles.Settings.DurationRandomness = 1.5f;
+                    MinVerticalVelocity = 0.01f,
+                    MaxVerticalVelocity = 0.01f,
 
-            projectileTrailParticles.Settings.EmitterVelocitySensitivity = 0.1f;
+                    MinColor = new Color(255, 255, 255, 0),
+                    MaxColor = new Color(255, 255, 255, 128),
 
-            projectileTrailParticles.Settings.MinHorizontalVelocity = 0;
-            projectileTrailParticles.Settings.MaxHorizontalVelocity = 0.1f;
+                    MinRotateSpeed = -4,
+                    MaxRotateSpeed = 4,
 
-            projectileTrailParticles.Settings.MinVerticalVelocity = 0.01f;
-            projectileTrailParticles.Settings.MaxVerticalVelocity = 0.01f;
+                    MinStartSize = 0.1f,
+                    MaxStartSize = 0.15f,
 
-            projectileTrailParticles.Settings.MinColor = Color.White;// new Color(255, 255, 255, 255);
-            projectileTrailParticles.Settings.MaxColor = Color.White;// new Color(255, 255, 255, 128);
+                    MinEndSize = 0.5f,
+                    MaxEndSize = 0.75f
+                }
+            };
 
-            projectileTrailParticles.Settings.MinRotateSpeed = -4;
-            projectileTrailParticles.Settings.MaxRotateSpeed = 4;
+            _projectileTrailParticles.Awake();
+        }
 
-            projectileTrailParticles.Settings.MinStartSize = 0.1f;
-            projectileTrailParticles.Settings.MaxStartSize = 0.2f;
-
-            projectileTrailParticles.Settings.MinEndSize = 1.5f;
-            projectileTrailParticles.Settings.MaxEndSize = 2.0f;
-
-            //smokePlumeParticles.DrawOrder = 100;
-            projectileTrailParticles.Awake();
-            projectileTrailParticles.Start();
+        public override void Start() {
+            _projectileTrailParticles.Start();
 
             // init the projectile
-            projectile = new Projectile(projectileTrailParticles, transform.position);
-            
+            _projectile = new Projectile(_projectileTrailParticles, transform.position);
         }
 
-        public override void Update()
-        {
-            Color dustColor = _playerAttack.IsAttacking ? Color.Red : Color.Red;
-                projectileTrailParticles.Settings.MinColor = dustColor;
-                projectileTrailParticles.Settings.MaxColor = dustColor;
-
-            //if (_playerMovement.Boosting)
-            //{
-            //    projectile.
-            //}
-
-            projectile.Update(Time.Gt, transform.position);
-            
+        public override void Update() {
+            _projectile.Update(transform.position);
         }
 
-        public void Draw(Camera camera)
-        {
-            projectileTrailParticles.SetCamera(camera.View, camera.Proj);
-            projectileTrailParticles.Draw(Time.Gt);
+        public override void Draw3D(Camera camera) {
+            _projectileTrailParticles.Draw3D(camera);
         }
     }
 }

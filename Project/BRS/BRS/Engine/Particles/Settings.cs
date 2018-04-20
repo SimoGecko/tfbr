@@ -1,32 +1,31 @@
-#region File Description
 //-----------------------------------------------------------------------------
 // ParticleSettings.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+// Managed for this project by Alexander Lelidis and Andreas Emch
 
-#region Using Statements
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-#endregion
 
-namespace BRS.Engine.Particles
-{
+namespace BRS.Engine.Particles {
     /// <summary>
     /// Settings class describes all the tweakable options used
     /// to control the appearance of a particle system.
     /// </summary>
-    public class ParticleSettings
-    {
+    public class Settings {
         // Name of the texture used by this particle system.
         public string TextureName = null;
 
 
         // Maximum number of particles that can be displayed at one time.
         public int MaxParticles = 100;
+
+
+        // Number of particles generated in each round
+        public int ParticlesPerRound = 1;
 
 
         // How long these particles will last.

@@ -19,6 +19,7 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public float Speed;
 
         //private
         private float _rotation;
@@ -41,9 +42,10 @@ namespace BRS.Scripts.PlayerScripts {
         public bool Boosting;
         public bool PowerupBoosting;
 
+
         //SLOWDOWN
         bool _slowdown;
-        bool _speedPad;
+        public bool SpeedPad;
 
         //reference
         PlayerInventory playerInventory;
@@ -91,12 +93,13 @@ namespace BRS.Scripts.PlayerScripts {
             float speedboost = Boosting || PowerupBoosting ? BoostSpeedMultiplier : 1f;
             speedboost *= _slowdown ? SlowdownMalus : 1f;
 
-            Vector3 linearVelocity;
-            if (_speedPad) { // override and force to move at max speed
-                linearVelocity = Vector3.Forward * CapacityBasedSpeed * SpeedPadMultiplier;
+            if (SpeedPad) { // override and force to move at max speed
+                Speed = CapacityBasedSpeed * SpeedPadMultiplier;
             } else {
-                linearVelocity = Vector3.Forward * CapacityBasedSpeed * speedboost * _smoothMagnitude;
+                Speed = CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
+
+            Vector3 linearVelocity = Vector3.Forward * Speed;
 
 
             // Apply forces/changes to physics
@@ -112,11 +115,10 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         internal void SetSpeedPad(bool b) {
-            _speedPad = b;
+            SpeedPad = b;
         }
 
-        public void ResetSmoothMatnitude()
-        {
+        public void ResetSmoothMatnitude() {
             _smoothMagnitude = 0.0f;
         }
 

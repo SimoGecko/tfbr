@@ -48,10 +48,6 @@ namespace BRS {
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
-            // add the graphics device to the 3d particle system
-            ParticleSystem3d.graphicsDevice = GraphicsDevice;
-            ParticleSystem3d.content = Content;
-
             base.Initialize();
         }
 

@@ -48,7 +48,7 @@ namespace BRS.Scripts.UI {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public override void Draw(int index) {
+        public override void Draw2D(int index) {
             if (index == 0) return;
             index--;
             bool flip = index % 2 != 0;
