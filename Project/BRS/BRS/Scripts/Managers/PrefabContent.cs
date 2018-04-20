@@ -129,6 +129,16 @@ namespace BRS.Engine {
             speedpadPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
             Prefabs.AddPrefab(speedpadPrefab);
+
+
+            //-------------------DYNAMIC OBJECTS-------------------
+            string[] dynamicElements = new string[] { "chair", "plant", "cart" };
+            foreach(string s in dynamicElements) {
+                GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
+                dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+                dynamicElement.material = elementsMat;
+                Prefabs.AddPrefab(dynamicElement);
+            }
         }
     }
 }

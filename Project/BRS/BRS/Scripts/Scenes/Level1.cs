@@ -30,6 +30,9 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+            GameObject.Instantiate("chair", new Vector3(0, 0, -5), Quaternion.Identity);
+            GameObject.Instantiate("plant", new Vector3(2, 0, -5), Quaternion.Identity);
+            GameObject.Instantiate("cart", new Vector3(4, 0, -5), Quaternion.Identity);
         }
 
 
@@ -38,7 +41,7 @@ namespace BRS.Scripts.Scenes {
             Material outsideMat = new Material( File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
 
             GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
-            GameObject outsideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/outside"));
+            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             insideScene.material = insideMat;
             outsideScene.material = outsideMat;
         }
