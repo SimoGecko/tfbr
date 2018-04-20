@@ -13,6 +13,12 @@ namespace BRS.Engine {
         //public
         public bool Lit;
         public Color Diffuse;
+
+        public bool baked;
+        public bool textured;
+        public Texture2D colorTex;
+        public Texture2D lightTex;
+
         //Texture2D Texture;
         //EffectTechnique tt;
 
@@ -24,6 +30,21 @@ namespace BRS.Engine {
 
 
         //reference
+        public Material() {
+            Diffuse = Color.White;
+            Lit = baked = false;
+        }
+        public Material(Texture2D color, Texture2D light) {
+            baked = true;
+            colorTex = color;
+            lightTex = light;
+        }
+        public Material(Texture2D color) {
+            baked = false;
+            textured = true;
+            colorTex = color;
+        }
+
         public Material(Color color, bool lit=true) {
             Lit = lit; Diffuse = color;
         }
@@ -33,7 +54,7 @@ namespace BRS.Engine {
 
 
         // commands
-        public Vector3 Color { get { return Diffuse.ToVector3(); } }
+        public Vector3 DiffuseColor { get { return Diffuse.ToVector3(); } }
 
 
         // queries

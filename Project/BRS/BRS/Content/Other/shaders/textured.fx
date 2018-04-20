@@ -12,8 +12,6 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-
-
 texture ColorTexture;
 sampler2D textureSampler1 = sampler_state {
     Texture = (ColorTexture);
@@ -23,30 +21,18 @@ sampler2D textureSampler1 = sampler_state {
     AddressV = Clamp;
 };
 
-texture LightmapTexture;
-sampler2D textureSampler2 = sampler_state {
-    Texture = (LightmapTexture);
-    MinFilter = Linear;
-    MagFilter = Linear;
-    AddressU = Clamp;
-    AddressV = Clamp;
-};
-
-
 
 
 struct VertexShaderInput
 {
     float4 Position : POSITION0;
     float2 UV0 : TEXCOORD0;
-    float2 UV1 : TEXCOORD1;
 };
 
 struct VertexShaderOutput
 {
     float4 Position : POSITION0;
     float2 UV0 : TEXCOORD0;
-    float2 UV1 : TEXCOORD1;
 };
 
 VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
@@ -58,7 +44,6 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
     output.Position = mul(viewPosition, Projection);
 
     output.UV0 = input.UV0;
-    output.UV1 = input.UV1;
 
     return output;
 }
@@ -69,11 +54,9 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
     float4 textureColor = tex2D(textureSampler1, input.UV0);
     textureColor.a = 1;
 
-    float4 lightColor = tex2D(textureSampler2, input.UV1);
-    lightColor.a = 1;
  
  	//return textureColor;
- 	return saturate(textureColor * lightColor);
+ 	return textureColor;
 }
 
 technique TexturedLight

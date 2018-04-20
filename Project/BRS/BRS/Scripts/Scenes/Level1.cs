@@ -23,16 +23,25 @@ namespace BRS.Scripts.Scenes {
         public override int GetNumCameras() { return GameManager.NumPlayers; } 
 
         public override void Load() {
-            //LoadUnityScene();
+            LoadUnityScene();
+            LoadBlenderBakedScene();
             CreateManagers();
             CreatePlayers();
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
-
-            //GameObject wholeScene = new GameObject("wholeScene", File.Load<Model>("Models/scenes/sceneNico2"));
         }
 
+
+        void LoadBlenderBakedScene() {
+            Material insideMat = new Material( File.Load<Texture2D>("Scenes/polygonHeist"), File.Load<Texture2D>("Scenes/lightmapInside"));
+            Material outsideMat = new Material( File.Load<Texture2D>("Scenes/polygonCity"), File.Load<Texture2D>("Scenes/lightmapOutside"));
+
+            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Scenes/inside"));
+            GameObject outsideScene = new GameObject("insideScene", File.Load<Model>("Scenes/outside"));
+            insideScene.material = insideMat;
+            outsideScene.material = outsideMat;
+        }
 
         void LoadUnityScene() {
             //LOAD UNITY SCENE
@@ -76,7 +85,7 @@ namespace BRS.Scripts.Scenes {
 
         void CreatePlayers() {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(2.0f);
                 Vector3 startPos = new Vector3(-5 + 10 * i, 0, 0);

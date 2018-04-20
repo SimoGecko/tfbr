@@ -48,7 +48,7 @@ namespace BRS.Scripts.UI {
                 powerupsPng[i] = File.Load<Texture2D>("Images/powerup/" + ((PowerupType)i).ToString() + "_pic");
                 //if (!powerupStringToIndex.ContainsKey(pngNames[i])) powerupStringToIndex.Add(pngNames[i], i);
             }*/
-            _powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups_clear"); // atlas
+            _powerupsAtlas = File.Load<Texture2D>("Images/powerup/powerups_new"); // atlas
             _powerupsRectangle = new Rectangle[_numPowerups];
             for (int i = 0; i < _numPowerups; ++i) {
                 int column = i%4;
