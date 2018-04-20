@@ -17,6 +17,8 @@ namespace BRS.Engine.Particles {
     public class ParticleSystem3D : Component {
         #region Fields
 
+        public static bool Enabled = true;
+
         // Settings class controls the appearance and animation of this particle system.
         public Settings Settings = new Settings();
 
@@ -431,6 +433,10 @@ namespace BRS.Engine.Particles {
         /// Adds a new particle to the system.
         /// </summary>
         public void AddSingleParticle(Vector3 position, Vector3 velocity) {
+            if (!Enabled) {
+                return;
+            }
+
             // Figure out where in the circular queue to allocate the new particle.
             int nextFreeParticle = _firstFreeParticle + 1;
 

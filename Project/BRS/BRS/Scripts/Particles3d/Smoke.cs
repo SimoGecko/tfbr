@@ -13,11 +13,17 @@ namespace BRS.Scripts.Particles3D {
     class Smoke : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
+
         ParticleSystem3D _smokePlumeParticles;
 
-        public override bool IsEmitting { get; set; }
+        public override bool IsEmitting { get; set; } = true;
+
 
         // --------------------- BASE METHODS ------------------
+
+        /// <summary>
+        /// Initialization of the particle-system
+        /// </summary>
         public override void Awake() {
             _smokePlumeParticles = new ParticleSystem3D {
                 Settings = new Settings {
@@ -52,19 +58,28 @@ namespace BRS.Scripts.Particles3D {
             _smokePlumeParticles.Awake();
         }
 
+        /// <summary>
+        /// Initialize the particle system
+        /// </summary>
         public override void Start() {
             _smokePlumeParticles.Start();
         }
 
+        /// <summary>
+        /// Emit new particles and update the existing
+        /// </summary>
         public override void Update() {
-            // particles per update
             if (IsEmitting) {
-                _smokePlumeParticles.AddSingleParticle(transform.position, Vector3.Zero);
+                _smokePlumeParticles.AddParticles(transform.position, Vector3.Zero);
             }
 
             _smokePlumeParticles.Update();
         }
-
+        
+        /// <summary>
+        /// Draw the living particles in the 3D space on the current camera
+        /// </summary>
+        /// <param name="camera">Camera to draw</param>
         public override void Draw3D(Camera camera) {
             _smokePlumeParticles.Draw3D(camera);
         }

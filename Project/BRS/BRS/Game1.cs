@@ -31,7 +31,7 @@ namespace BRS {
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
-            
+
             // init the rendertarget with the graphics device
             _renderTarget = new RenderTarget2D(
                 GraphicsDevice,
@@ -47,6 +47,9 @@ namespace BRS {
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
+
+            // Todo: Switch for the interim
+            ParticleSystem3D.Enabled = false;
 
             base.Initialize();
         }
@@ -82,6 +85,11 @@ namespace BRS {
             Input.Update();
             Audio.Update();
             SceneManager.Update(); // check for scene change (can remove later)
+
+            // Todo: Switch for the interim
+            if (Input.GetKeyDown(Keys.Tab)) {
+                ParticleSystem3D.Enabled = !ParticleSystem3D.Enabled;
+            }
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();

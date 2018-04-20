@@ -13,6 +13,7 @@ namespace BRS.Scripts.Particles3D {
     class Dust : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
+
         private ParticleSystem3D _projectileTrailParticles;
         private Projectile _projectile;
 
@@ -21,7 +22,12 @@ namespace BRS.Scripts.Particles3D {
             set => _projectile.IsEmitting = value;
         }
 
+
         // --------------------- BASE METHODS ------------------
+
+        /// <summary>
+        /// Initialization of the particle-system
+        /// </summary>
         public override void Awake() {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
@@ -55,18 +61,25 @@ namespace BRS.Scripts.Particles3D {
             _projectileTrailParticles.Awake();
         }
 
+        /// <summary>
+        /// Initialize the projectile with the correct position
+        /// </summary>
         public override void Start() {
             _projectileTrailParticles.Start();
-
-            // init the projectile
             _projectile = new Projectile(_projectileTrailParticles, transform.position);
         }
 
+        /// <summary>
+        /// Update the projectile with emitting new particles and update the living
+        /// </summary>
         public override void Update() {
             _projectile.Update(transform.position);
-
         }
 
+        /// <summary>
+        /// Draw the living particles in the 3D space on the current camera
+        /// </summary>
+        /// <param name="camera">Camera to draw</param>
         public override void Draw3D(Camera camera) {
             _projectileTrailParticles.Draw3D(camera);
         }
