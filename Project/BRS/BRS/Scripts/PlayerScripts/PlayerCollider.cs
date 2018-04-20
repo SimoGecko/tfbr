@@ -54,7 +54,7 @@ namespace BRS.Scripts.PlayerScripts {
             _collidedStartTime = Time.CurrentTime;
 
             _currentAngle = transform.rotation.Y;
-            _endAngle = _currentAngle + endAngle;
+            _endAngle = _currentAngle + 2.0f;
 
             _rigidBody.RigidBody.LinearVelocity = JVector.Zero;
 
@@ -76,7 +76,9 @@ namespace BRS.Scripts.PlayerScripts {
                 // Apply new position to the rigid-body
                 // Todo by Andy for Andy: can be surely written better :-)
                 transform.position = new Vector3(newPosition.X, transform.position.Y, newPosition.Z);
+                transform.eulerAngles = new Vector3(0, _currentAngle, 0);
                 _rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
+                _rigidBody.RigidBody.Orientation = JMatrix.CreateRotationY(_currentAngle);
             } else {
                 IsCollided = false;
             }
