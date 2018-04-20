@@ -18,8 +18,11 @@ namespace BRS {
         //@andy remove these
         private Display _display;
         private DebugDrawer _debugDrawer;
-        Model sceneModel;
-        Transform sceneTransform = new Transform(new Vector3(-10, 3, 3f));
+        Model insideSceneModel, outsideSceneModel;
+        Texture2D insideColor, outsideColor;
+        Texture2D insideLight, outsideLight;
+
+        //Transform sceneTransform = new Transform();// new Vector3(-10, 3, 3f));
 
 
         public Game1() {
@@ -51,10 +54,14 @@ namespace BRS {
 
 
             Graphics.texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
-            Graphics.lightMap = File.Load<Texture2D>("Models/scenes/lightmap2");
-            Graphics.textureCol = File.Load<Texture2D>("Models/scenes/1");
 
-            sceneModel = File.Load<Model>("Models/scenes/sceneNico3");
+            insideColor  = File.Load<Texture2D>("Scenes/polygonHeist");
+            insideLight  = File.Load<Texture2D>("Scenes/lightmapInside");
+            outsideColor = File.Load<Texture2D>("Scenes/polygonCity");
+            outsideLight = File.Load<Texture2D>("Scenes/lightmapOutside");
+
+            insideSceneModel = File.Load<Model>("Scenes/inside");
+            outsideSceneModel = File.Load<Model>("Scenes/outside");
 
             //load prefabs and scene
             Prefabs.Start();
@@ -105,7 +112,8 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
 
-                Graphics.DrawModelWithEffect(sceneModel, cam.View, cam.Proj, sceneTransform.World);
+                Graphics.DrawModelWithEffect(insideSceneModel, insideColor, insideLight, cam.View, cam.Proj, Transform.Identity.World);
+                Graphics.DrawModelWithEffect(outsideSceneModel, outsideColor, outsideLight, cam.View, cam.Proj, Transform.Identity.World);
 
             }
             Gizmos.ClearOrders();

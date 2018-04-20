@@ -23,7 +23,7 @@ namespace BRS.Scripts.Scenes {
         public override int GetNumCameras() { return GameManager.NumPlayers; } 
 
         public override void Load() {
-            LoadUnityScene();
+            //LoadUnityScene();
             CreateManagers();
             CreatePlayers();
             CreateCameraControllers();
