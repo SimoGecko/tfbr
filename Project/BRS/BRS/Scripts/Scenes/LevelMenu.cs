@@ -16,8 +16,12 @@ namespace BRS.Scripts.Scenes {
 
         private void CreateManagers() {
 
+            // @Simone make sure this doesnt get deleted
+            // Has to be called before the next manager
+            GameObject ScenesCommManager = new GameObject("scenesComManager");
+            ScenesCommManager.AddComponent(new ScenesCommunicationManager());
+
             GameObject Manager = new GameObject("manager");
-            Manager.AddComponent(new ScenesCommunicationManager());
             Manager.AddComponent(new MenuManager());
 
         }
