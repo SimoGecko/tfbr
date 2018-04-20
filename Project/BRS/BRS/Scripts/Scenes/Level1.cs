@@ -77,10 +77,13 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreatePlayers() {
+            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
-                player.transform.Scale(2.0f);
+                player.transform.Scale(1.0f);
                 Vector3 startPos = new Vector3(-5 + 10 * i, 0, 0);
 
                 player.AddComponent(new Player(i, i % 2, startPos));
@@ -93,6 +96,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new SpeechManager(i));
+                player.material = playerMat;
 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());

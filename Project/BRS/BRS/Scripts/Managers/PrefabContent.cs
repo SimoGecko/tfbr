@@ -21,6 +21,7 @@ namespace BRS.Engine {
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
 
             //-------------------VALUABLES-------------------
@@ -33,11 +34,11 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(cashPrefab);
 
             //gold
-            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/gold"));////SM_Prop_Jewellery_Necklace_02
+            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/goldP"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
             goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
             goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            goldPrefab.material = powerupMat;
+            goldPrefab.material = elementsMat;
             Prefabs.AddPrefab(goldPrefab);
 
             //diamond
@@ -70,7 +71,8 @@ namespace BRS.Engine {
             //police car
             GameObject police = new GameObject("policePrefab", File.Load<Model>("Models/vehicles/police"));
             police.AddComponent(new Police());
-            police.transform.Scale(2f);
+            police.transform.Scale(1f);
+            police.material = policeMat;
             //police.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             Prefabs.AddPrefab(police);
 
