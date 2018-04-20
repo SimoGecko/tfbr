@@ -11,25 +11,22 @@ using BRS.Engine;
 using BRS.Scripts.Managers;
 
 namespace BRS.Engine.Menu {
-    public class Button : Component {
+    public class Button : MenuComponent {
         ////////// class to create and display a button with arbitrary function when clicked //////////
 
         // --------------------- VARIABLES ---------------------
-
         public bool IsHovering;
-        public bool IsCurrentSelection;
         public Texture2D Texture;
 
         public EventHandler Click;
 
         public float ScaleWidth { get; set; } = 1;
         public float ScaleHeight { get; set; } = 1;
-
         public float ScaleWidthInside { get; set; } = 1;
         public float ScaleHeightInside { get; set; } = 1;
 
         public Vector2 InitPos;
-        private Vector2 Position { get { return InitPos; } }
+        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f); } }
 
         public string NameMenuToSwitchTo { get; set; }
         public string Text { get; set; }
@@ -38,27 +35,24 @@ namespace BRS.Engine.Menu {
         public bool IsClicked;
         public int Index { get; set; }
 
-        public Button NeighborUp { get; set; }
-        public Button NeighborDown { get; set; }
-        public Button NeighborLeft { get; set; }
-        public Button NeighborRight { get; set; }
-
         public Color InsideObjectColor = new Color(144, 144, 144);
         public Color ImageColor = new Color(247, 239, 223);
 
         public List<Button> neighbors;
-        public string nameIdentifier;
+
+        public bool hilightsChoice1 = true;
+        public bool hilightsChoice2 = false;
 
         public Rectangle Rectangle {
             get {
-                return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(Texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(Texture.Height * ScaleHeight / 1080f * Screen.Height));
+                return new Rectangle((int)(Position.X), (int)(Position.Y), (int)(Texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(Texture.Height * ScaleHeight / 1080f * Screen.Height));
             }
         }
 
         public Rectangle RectangleInsideObject {
             get {
                 Vector2 offsetInside = new Vector2((Texture.Width - InsideImage.Width) / 2 * (1 - ScaleWidth) * (1 - ScaleWidthInside), (Texture.Height - InsideImage.Height) / 2 * (1 - ScaleHeight) * (1 - ScaleHeightInside));
-                return new Rectangle((int)(Position.X / 1920f * Screen.Width + offsetInside.X), (int)(Position.Y / 1080f * Screen.Height + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside / 1920f * Screen.Width), (int)(InsideImage.Height * ScaleHeightInside / 1080f * Screen.Height));
+                return new Rectangle((int)(Position.X + offsetInside.X), (int)(Position.Y + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside / 1920f * Screen.Width), (int)(InsideImage.Height * ScaleHeightInside / 1080f * Screen.Height));
             }
         }
 
@@ -128,6 +122,7 @@ namespace BRS.Engine.Menu {
                 IsHovering = false;
                 if (IsCurrentSelection) {
                     IsHovering = true;
+
                     if (!MenuManager.uniqueFrameInputUsed && (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A))) {
                         MenuManager.uniqueFrameInputUsed = true;
                         Click?.Invoke(this, new EventArgs());
@@ -141,22 +136,30 @@ namespace BRS.Engine.Menu {
                 var colour = ImageColor;
 
                 if (IsClicked)
-                    colour = Color.DeepSkyBlue;
+                    colour = new Color(250, 203, 104);
 
-                if (IsHovering)
-                    colour = Color.Gray;
+                float rotation = 0;
+                float scaleOnHovering = 1;
+                if (IsHovering) {
+                    if (hilightsChoice1) {
+                        rotation = 5;
+                        scaleOnHovering = 1.2f;   
+                    }
+                    else if (hilightsChoice2)
+                        colour = Color.Gray;                
+                }
 
-                if (Texture != null)
-                    UserInterface.DrawPicture(Texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
-
+                if (Texture != null) 
+                    UserInterface.DrawPicture(Texture, new Rectangle(Rectangle.X, Rectangle.Y, (int)(Rectangle.Width * scaleOnHovering), (int)(Rectangle.Height * scaleOnHovering)), null, Align.TopLeft, Align.Center, colour, false, rotation);
+            
                 if (InsideImage != null)
-                    UserInterface.DrawPicture(InsideImage, RectangleInsideObject, null, Align.TopLeft, Align.Center, InsideObjectColor, false);
+                    UserInterface.DrawPicture(InsideImage, new Rectangle(RectangleInsideObject.X, RectangleInsideObject.Y, (int)(RectangleInsideObject.Width * scaleOnHovering), (int)(RectangleInsideObject.Height * scaleOnHovering)), null, Align.TopLeft, Align.Center, InsideObjectColor, false, rotation);
                 
                 if (!string.IsNullOrEmpty(Text)) {
                     //var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
                     //var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false);
+                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false, font : IsHovering ? UserInterface.menuHoveringFont : UserInterface.menuFont, rot: rotation);
                 }
             }
         }

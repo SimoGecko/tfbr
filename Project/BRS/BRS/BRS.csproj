@@ -107,6 +107,7 @@
     <Compile Include="Engine\Audio.cs" />
     <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
+    <Compile Include="Engine\Menu\MenuComponent.cs" />
     <Compile Include="Engine\Particles\Particle.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Scripts\Elements\Police.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
+    <Compile Include="Scripts\Managers\ScenesCommunicationManager.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />

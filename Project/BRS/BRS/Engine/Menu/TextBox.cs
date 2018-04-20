@@ -11,7 +11,7 @@ namespace BRS.Engine.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) - UserInterface.comicFont.MeasureString(Text) / 2; } }
+        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) - UserInterface.menuFont.MeasureString(Text) / 2; } }
 
         public TextBox() {
             Active = true;
@@ -19,7 +19,7 @@ namespace BRS.Engine.Menu {
 
         public override void Draw(int i) {
             base.Draw(i);
-            UserInterface.DrawString(Text, Position,col: Color.Black);
+            UserInterface.DrawString(Text, Position,col: Color.Black, font : UserInterface.menuFont);
         }
     }
 }

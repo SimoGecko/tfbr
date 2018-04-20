@@ -35,7 +35,7 @@ Position: 768 324
 ScaleWidth: 2
 Text: Player 2
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Back Player1 Player3
+NeighborsUpDownLeftRight: null Alphabet1 Player1 Player3
 Index: 1
 UniqueChoiceWith: Player1 Player3 Player4
 </Button>
@@ -47,7 +47,7 @@ Position: 1152 324
 ScaleWidth: 2
 Text: Player 3
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Alphabet Player2 Player4
+NeighborsUpDownLeftRight: null Alphabet1 Player2 Player4
 Index: 2
 UniqueChoiceWith: Player1 Player2 Player4
 </Button>
@@ -59,7 +59,7 @@ Position: 1536 324
 ScaleWidth: 2
 Text: Player 4
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Alphabet Player3 Player1
+NeighborsUpDownLeftRight: null Alphabet1 Player3 Player1
 Index: 3
 UniqueChoiceWith: Player1 Player2 Player3
 </Button>
@@ -71,7 +71,7 @@ Position: 192 486
 ScaleWidth: 1.5
 Text: Model 1
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Player1 Model2 null Alphabet
+NeighborsUpDownLeftRight: Player1 Model2 null Alphabet1
 Index: 0
 UniqueChoiceWith: Model2 Model3
 IsClicked: yes
@@ -84,7 +84,7 @@ Position: 192 594
 ScaleWidth: 1.5
 Text: Model 2
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Model1 Model3 null Alphabet
+NeighborsUpDownLeftRight: Model1 Model3 null Alphabet2
 Index: 1
 UniqueChoiceWith: Model1 Model3
 </Button>
@@ -96,7 +96,7 @@ Position: 192 702
 ScaleWidth: 1.5
 Text: Model 3
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Model2 Back null Alphabet
+NeighborsUpDownLeftRight: Model2 Back null Alphabet3
 Index: 2
 UniqueChoiceWith: Model1 Model2
 </Button>
@@ -108,7 +108,7 @@ Position: 1450 775
 TextureInside: buttonAccept
 Color: 110 235 150
 ColorInside: 255 255 255
-NeighborsUpDownLeftRight: Alphabet null Next null
+NeighborsUpDownLeftRight: Alphabet3 null Next null
 </Button>
 
 <Button>
@@ -121,7 +121,6 @@ ScaleHeight: 0.5
 
 <Text>
 NameIdentifier: NamePlayer
-Text: "test"
 Position: 1440 459
 </Text>
 
@@ -135,7 +134,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SwitchToMenu
-NeighborsUpDownLeftRight: Model3 null Model3 Next
+NeighborsUpDownLeftRight: Player1 null Model3 Next
 NameSwitchTo: play1
 Color: 250 139 139
 ColorInside: 255 255 255
@@ -151,7 +150,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: StartGameFunction
-NeighborsUpDownLeftRight: null null Back SaveAlphabet
+NeighborsUpDownLeftRight: Player1 null Back SaveAlphabet
 NameSwitchTo: play2
 Color: 110 235 150
 ColorInside: 255 255 255
@@ -167,7 +166,7 @@ Active: yes
 <Image>
 NameIdentifier: pictureModel2
 Texture: forklift
-Position: 5 594
+Position: 576 594
 Active: no
 </Image>
 

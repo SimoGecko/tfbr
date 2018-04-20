@@ -73,7 +73,7 @@ Texture: button
 Position: 1113 610
 Text: 5 min
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Back null null
+NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration3min RoundDuration2min
 UniqueChoiceWith: RoundDuration2min RoundDuration3min
 </Button>
 

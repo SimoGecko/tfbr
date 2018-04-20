@@ -17,6 +17,7 @@ namespace BRS.Scripts.Scenes {
         private void CreateManagers() {
 
             GameObject Manager = new GameObject("manager");
+            Manager.AddComponent(new ScenesCommunicationManager());
             Manager.AddComponent(new MenuManager());
 
         }

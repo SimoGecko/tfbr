@@ -17,7 +17,7 @@ ColorInside: 255 255 255
 <Button>
 NameIdentifier: Play
 Texture: button
-Position: 960 324
+Position: 960 300
 ScaleWidth: 2
 Text: Play
 Functions: SwitchToMenu
@@ -29,7 +29,7 @@ CurrentSelection: yes
 <Button>
 NameIdentifier: Tutorial
 Texture: button
-Position: 960 432
+Position: 960 420
 ScaleWidth: 2
 Text: Tutorial
 Functions: SwitchToMenu
@@ -51,7 +51,7 @@ NameSwitchTo: ranking
 <Button>
 NameIdentifier: Options
 Texture: button
-Position: 960 648
+Position: 960 660
 ScaleWidth: 2
 Text: Options
 Functions: SwitchToMenu
@@ -62,7 +62,7 @@ NameSwitchTo: options
 <Button>
 NameIdentifier: Credits
 Texture: button
-Position: 960 756
+Position: 960 780
 ScaleWidth: 2
 Text: Credits
 Functions: SwitchToMenu

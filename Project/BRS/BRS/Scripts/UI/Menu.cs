@@ -29,6 +29,7 @@ namespace BRS.Scripts.UI {
             Texture2D textureButton = File.Load<Texture2D>("Images/UI/panel");
             Texture2D textureButtonBackground = File.Load<Texture2D>("Images/UI/panel_Background");
             Texture2D textureButtonBigBackground = File.Load<Texture2D>("Images/UI/panel_BigBackground");
+            Texture2D textureSlider = File.Load<Texture2D>("Images/UI/progress_bar");
             Texture2D textureButtonTitle = File.Load<Texture2D>("Images/UI/panel_Title");
             Texture2D textureButtonCircle = File.Load<Texture2D>("Images/UI/CircleSmall");
             Texture2D textureButtonSlider = File.Load<Texture2D>("Images/UI/sliderButton");
@@ -48,7 +49,8 @@ namespace BRS.Scripts.UI {
                 { "arrowLeft", textureArrowLeft },
                 { "arrowRight", textureArrowRight },
                 { "forklift", textureButtonForkLift },
-                { "buttonAccept", textureButtonAccept }
+                { "buttonAccept", textureButtonAccept },
+                { "slider", textureSlider }
             };
 
             functionsMenu = new Dictionary<string, EventHandler> {
@@ -65,7 +67,8 @@ namespace BRS.Scripts.UI {
                 { "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
-                { "GoRight", MenuManager.Instance.GoRight }
+                { "GoRight", MenuManager.Instance.GoRight },
+                { "UpdateVolume", MenuManager.Instance.UpdateVolume }
             };
         }
 
@@ -122,12 +125,16 @@ namespace BRS.Scripts.UI {
                     buttonsCurrentPanel2.Add(letterButton);
 
                     if (i == 0 && count == 0)
-                        letterButton.nameIdentifier = "Alphabet";
+                        letterButton.nameIdentifier = "Alphabet1";
+                    if (elem == secondLine[0])
+                        letterButton.nameIdentifier = "Alphabet2";
+                    if (elem == thirdLine[0])
+                        letterButton.nameIdentifier = "Alphabet3";
 
                     if (i == 0)
-                        letterButton.NeighborUp = FindButtonPanelWithName("Player3", panelName);
+                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player2", panelName);
                     if (i == keyboard.Length - 1)
-                        letterButton.NeighborUp = FindButtonPanelWithName("SaveAlphabet", panelName);
+                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
 
                     ++count;
 
@@ -139,7 +146,7 @@ namespace BRS.Scripts.UI {
                         ScaleHeight = .5f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    letterButton.NeighborDown = FindButtonPanelWithName("SaveAlphabet", panelName);
+                    letterButton.NeighborDown = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
                     MenuManager.Instance.MenuRect["play2"].AddComponent(letterButton);
                     linkedButtonLeftRight.Add(letterButton);
                 }
@@ -161,7 +168,7 @@ namespace BRS.Scripts.UI {
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - firstLine.Length];
                 }
                 else {
-                    buttonsCurrentPanel2[i].NeighborDown = FindButtonPanelWithName("SaveAlphabet", panelName);
+                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - secondLine.Length];
                 }
             }
@@ -227,6 +234,7 @@ namespace BRS.Scripts.UI {
                     if (MS.Name != null) textBox.NameIdentifier = MS.Name;
                     if (MS.Position != null) textBox.InitPos = MS.Position;
                     if (MS.Text != null) textBox.Text = MS.Text;
+                    else textBox.Text = "";
                     MenuManager.Instance.MenuRect[panelName].AddComponent(textBox);
                 }
                 else if (MS.menuType == MenuType.Image) {
@@ -237,60 +245,72 @@ namespace BRS.Scripts.UI {
                     MenuManager.Instance.MenuRect[panelName].AddComponent(img);
                 }
                 else if (MS.menuType == MenuType.Slider) {
-                    Slider slider = new Slider();
-                    if (MS.Position != null) slider.Position = MS.Position;
-                    if (MS.Name != null) slider.NameIdentifier = MS.Name;
+                    Slider slider = new Slider(MS.Position, texturesButtons["button"]);
+                    //if (MS.Position != null) slider.Position = ;
+                    if (MS.Name != null) slider.nameIdentifier = MS.Name;
+                    if (MS.TextureName != null) slider.Texture = texturesButtons[MS.TextureName];
                     MenuManager.Instance.MenuRect[panelName].AddComponent(slider);
 
-                    Button testbuttonSlider = new Button(texturesButtons["button"], MS.Position);
-                    testbuttonSlider.ScaleHeight = 0.5f;
-                    testbuttonSlider.ScaleWidth = 0.5f;
-                    slider.ButtonSlider = testbuttonSlider;
                 }
             }
 
             foreach (MenuStruct MS in panelObjects) {
-                if (MS.Name != null && MS.NeighborsUpDownLeftRight != null) {
-                    Button bu = FindButtonPanelWithName(MS.Name, panelName);
-                    if (MS.NeighborsUpDownLeftRight[0] != "null") bu.NeighborUp = FindButtonPanelWithName(MS.NeighborsUpDownLeftRight[0], panelName);
-                    if (MS.NeighborsUpDownLeftRight[1] != "null") bu.NeighborDown = FindButtonPanelWithName(MS.NeighborsUpDownLeftRight[1], panelName);
-                    if (MS.NeighborsUpDownLeftRight[2] != "null") bu.NeighborLeft = FindButtonPanelWithName(MS.NeighborsUpDownLeftRight[2], panelName);
-                    if (MS.NeighborsUpDownLeftRight[3] != "null") bu.NeighborRight = FindButtonPanelWithName(MS.NeighborsUpDownLeftRight[3], panelName);
-                }
+                //if (panelName == "options")
+                  //  panelName = panelName;
 
+                if (MS.Name != null && MS.NeighborsUpDownLeftRight != null) {
+                    MenuComponent menuComp = FindMenuComponentinPanelWithName(MS.Name, panelName);
+
+                    if (MS.NeighborsUpDownLeftRight[0] != "null") menuComp.NeighborUp = FindMenuComponentinPanelWithName(MS.NeighborsUpDownLeftRight[0], panelName);
+                    if (MS.NeighborsUpDownLeftRight[1] != "null") menuComp.NeighborDown = FindMenuComponentinPanelWithName(MS.NeighborsUpDownLeftRight[1], panelName);
+                    if (MS.NeighborsUpDownLeftRight[2] != "null") menuComp.NeighborLeft = FindMenuComponentinPanelWithName(MS.NeighborsUpDownLeftRight[2], panelName);
+                    if (MS.NeighborsUpDownLeftRight[3] != "null") menuComp.NeighborRight = FindMenuComponentinPanelWithName(MS.NeighborsUpDownLeftRight[3], panelName);
+
+                }
                 if (MS.Name != null && MS.UniqueChoiceButtonWith != null) {
-                    Button bu = FindButtonPanelWithName(MS.Name, panelName);
+                    Button bu = (Button)FindMenuComponentinPanelWithName(MS.Name, panelName);
                     foreach (string elem in MS.UniqueChoiceButtonWith)
-                        bu.neighbors.Add(FindButtonPanelWithName(elem, panelName));
+                        bu.neighbors.Add((Button)FindMenuComponentinPanelWithName(elem, panelName));
                 }
                 
-                if (MS.Name != null && MS.Functions != null) {
-                    Button bu = FindButtonPanelWithName(MS.Name, panelName);
+                if (MS.menuType == MenuType.Button && MS.Name != null && MS.Functions != null) {
+                    Button bu = (Button)FindMenuComponentinPanelWithName(MS.Name, panelName);
                     foreach (string elem in MS.Functions) {
                         bu.Click += functionsMenu[elem];
+                    }
+                }
+                else if (MS.menuType == MenuType.Button && MS.Name != null && MS.Functions != null) {
+                    Slider bu = (Slider)FindMenuComponentinPanelWithName(MS.Name, panelName);
+                    foreach (string elem in MS.Functions) {
+                        bu.OnReleaseSlider += functionsMenu[elem];
                     }
                 }
             }
 
             if (panelName == "play2") {
-                FindButtonPanelWithName("Model3", panelName).NeighborDown = FindButtonPanelWithName("Back", panelName);
-                FindButtonPanelWithName("Back", panelName).NeighborLeft = FindButtonPanelWithName("Model3", panelName); ;
-                FindButtonPanelWithName("Next", panelName).NeighborRight = FindButtonPanelWithName("SaveAlphabet", panelName);
+                FindMenuComponentinPanelWithName("Model3", panelName).NeighborDown = FindMenuComponentinPanelWithName("Back", panelName);
+                FindMenuComponentinPanelWithName("Back", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName); ;
+                FindMenuComponentinPanelWithName("Next", panelName).NeighborRight = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
+
+                FindMenuComponentinPanelWithName("Alphabet1", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model1", panelName);
+                FindMenuComponentinPanelWithName("Alphabet2", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model2", panelName);
+                FindMenuComponentinPanelWithName("Alphabet3", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName);
             }
 
             if (panelName == "ranking")
                 LoadRankingsText();
+
         }
 
-        public Button FindButtonPanelWithName(string buttonName, string panelName) {
+        public MenuComponent FindMenuComponentinPanelWithName(string buttonName, string panelName) {
             foreach (Component comp in MenuManager.Instance.MenuRect[panelName].components) {
-                if (comp is Button bu) {
+                if (comp is MenuComponent bu) {
                     if (bu.nameIdentifier == buttonName) {
                         return bu;
                     }
                 }
             }
-            return default(Button);
+            return default(MenuComponent);
         }
 
         public enum MenuType {Button, Text, Slider, Image, TickBox, none};

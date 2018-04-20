@@ -15,12 +15,20 @@ ColorInside: 255 255 255
 </Button>
 
 <Slider>
-Texture: title
-Position: 960 162
+NameIdentifier: SliderAudio
+Texture: slider
+Position: 956 432
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
-</BSlider>
+NeighborsUpDownLeftRight: null Back null null
+Functions: UpdateVolume
+</Slider>
+
+<Text>
+Text: Volume: 
+Position: 814, 432
+</Text>
 
 <Button>
 NameIdentifier: Back
@@ -36,4 +44,5 @@ NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255
 CurrentSelection: yes
+NeighborsUpDownLeftRight: SliderAudio null null null
 </Button>
