@@ -34,25 +34,18 @@ namespace BRS.Scripts.Scenes {
 
 
         void LoadBlenderBakedScene() {
-            Material insideMat = new Material( File.Load<Texture2D>("Scenes/polygonHeist"), File.Load<Texture2D>("Scenes/lightmapInside"));
-            Material outsideMat = new Material( File.Load<Texture2D>("Scenes/polygonCity"), File.Load<Texture2D>("Scenes/lightmapOutside"));
+            Material insideMat = new Material( File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
+            Material outsideMat = new Material( File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
 
-            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Scenes/inside"));
-            GameObject outsideScene = new GameObject("insideScene", File.Load<Model>("Scenes/outside"));
+            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
+            GameObject outsideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/outside"));
             insideScene.material = insideMat;
             outsideScene.material = outsideMat;
         }
 
         void LoadUnityScene() {
-            //LOAD UNITY SCENE
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
-
-
             var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
             task.Wait();
-
             //var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
             //task2.Wait();
         }
@@ -105,6 +98,7 @@ namespace BRS.Scripts.Scenes {
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow for base
+                //TODO add correct materials
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.material = new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
@@ -144,8 +138,8 @@ namespace BRS.Scripts.Scenes {
                 //Add(bases[i]);
             }*/
 
-            //BASE // TODO have this code make the base
             for (int i = 0; i < 2; i++) {
+                //TODO base object
                 GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.AddComponent(new Base(i));

@@ -20,13 +20,15 @@ namespace BRS.Engine {
 
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
+            Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
 
             //-------------------VALUABLES-------------------
             //cash
-            GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
+            GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/elements/cash"));
             cashPrefab.transform.Scale(2f);
             cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
+            cashPrefab.material = elementsMat;
             cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             Prefabs.AddPrefab(cashPrefab);
 
@@ -82,9 +84,10 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(cratePrefab);
 
             //oil
-            GameObject oilPrefab = new GameObject("oilPrefab", File.Load<Model>("Models/elements/oil_trap"));
+            GameObject oilPrefab = new GameObject("oilPrefab", File.Load<Model>("Models/elements/oil"));
             oilPrefab.transform.Scale(1f);
             oilPrefab.transform.SetStatic();
+            oilPrefab.material = elementsMat;
             oilPrefab.AddComponent(new OilTrap());
             oilPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             //oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
@@ -116,9 +119,10 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(plantedMagnet);
 
             //speed boost
-            GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/platform"));
+            GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/speedpad"));
             speedpadPrefab.transform.Scale(1f);
             speedpadPrefab.transform.SetStatic();
+            speedpadPrefab.material = elementsMat;
             speedpadPrefab.AddComponent(new SpeedPad());
             speedpadPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
