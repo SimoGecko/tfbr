@@ -10,6 +10,9 @@ namespace BRS.Engine.Physics.Colliders {
     /// Handles the rigid body which can be controlled by the player
     /// </summary>
     class SteerableCollider : Collider {
+        /// <summary>
+        /// Rotation around the Y-axis given as radians
+        /// </summary>
         public float RotationY { get; set; }
         public JVector Speed { get; set; }
 

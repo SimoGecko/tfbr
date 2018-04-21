@@ -146,9 +146,9 @@ namespace BRS.Engine.Physics {
             bool body2IsStatic = body2?.IsStatic == true;
 
             if (body1IsPlayer && !body2IsPureCollider && body2IsStatic && !body2IsGround) {
-                HandlePlayerCollision(body1, obj.Position2, -1 * obj.Normal);
+                HandlePlayerCollision(body1, body2, obj.Position2, -1 * obj.Normal);
             } else if (body2IsPlayer && !body1IsPureCollider && body1IsStatic && !body1IsGround) {
-                HandlePlayerCollision(body2, obj.Position1, obj.Normal);
+                HandlePlayerCollision(body2, body1, obj.Position1, obj.Normal);
             }
         }
 
@@ -292,10 +292,10 @@ namespace BRS.Engine.Physics {
 
         #region Collision handling
 
-        private void HandlePlayerCollision(Collider player, JVector collisionPoint, JVector normal) {
+        private void HandlePlayerCollision(Collider player, Collider other, JVector collisionPoint, JVector normal) {
             // First, calculate the new position based on the orientation of the car
-            JVector newPosition1 = GetPosition(player.BoundingBoxSize, player.GameObject, normal,
-                Conversion.ToJitterVector(player.GameObject.transform.Forward), collisionPoint);
+            //JVector newPosition1 = GetPosition(player.BoundingBoxSize, player.GameObject, normal,
+            //    Conversion.ToJitterVector(player.GameObject.transform.Forward), collisionPoint);
             JVector newPosition = collisionPoint + ReflectOnNormal(Conversion.ToJitterVector(player.GameObject.transform.Forward),
                                       normal);
             //newPosition -= newPosition1;
@@ -304,9 +304,15 @@ namespace BRS.Engine.Physics {
             // Second, check if the new position is not projected into another obstacle
             newPosition = DetectCollision(player, player.GameObject, player.Position, newPosition);
 
+            // Calculate the torque for the car
+            JVector right = Conversion.ToJitterVector(player.GameObject.transform.Right);
+            //JVector bounce = newPosition - collisionPoint;
+
+            float angle = JVector.Dot(right, normal) > 0.0f ? -45.0f : 45.0f;
+
             //Debug.Log(newPosition1);
             //Debug.Log(newPosition);
-            player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition), 40);
+            player.GameObject.GetComponent<Player>().SetCollisionState(other, Conversion.ToXnaVector(newPosition), angle);
         }
 
         #endregion

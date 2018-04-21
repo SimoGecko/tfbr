@@ -127,26 +127,16 @@ namespace BRS.Scripts.PlayerScripts {
                 if (LiftInput()) {
                     _pL.Lift();
                 }
-
-                // Todo: Can be removed, just here till this is finally tested
-                //if (Input.GetKeyDown(Keys.V)) {
-                //    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
-
-
-                //    string tmp = "Contained: ";
-                //    foreach (Collider collider in test) {
-                //        tmp += collider.GameObject.tag + ",";
-                //    }
-                //    Debug.Log(tmp);
-                //}
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
             } else if (State == PlayerState.Collided) {
                 _pC.Coroutine();
 
-                if (!_pC.IsCollided)
+                if (!_pC.IsCollided) {
                     State = PlayerState.Normal;
+                    _pM.ResetRotation(_pC.CurrentRotation);
+                }
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
@@ -204,9 +194,14 @@ namespace BRS.Scripts.PlayerScripts {
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
-        public void SetCollisionState(Vector3 endPosition, float endAngle) {
+        /// <summary>
+        /// Start the collision-handling with the bounce-script
+        /// </summary>
+        /// <param name="endPosition"></param>
+        /// <param name="endAngle"></param>
+        public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Collided; ;
-            _pC.Begin(endPosition, endAngle);
+            _pC.Begin(other, endPosition, endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

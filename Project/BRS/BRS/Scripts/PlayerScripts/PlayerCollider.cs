@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -17,20 +18,27 @@ namespace BRS.Scripts.PlayerScripts {
         //public
         public bool IsCollided { get; private set; }
 
+        /// <summary>
+        /// Current rotation given in degrees
+        /// </summary>
+        public float CurrentRotation { get; private set; }
+
         //private
         private Vector3 _startPos, _endPos;
         private float _collidedRefTime;
         private float _collidedStartTime;
 
-        private float _currentAngle;
-        private float _endAngle;
-        private float _refAngle;
+        private float _startRotation;
+        private float _endRotation;
+        private float _refRotation;
+        private float _smoothRotation;
 
         //const
-        private const float Duration = .2f;
+        private const float Duration = 0.2f;
 
         //reference
         private MovingRigidBody _rigidBody;
+        private Collider _otherCollider;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -43,18 +51,25 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // commands
-        public void Begin(Vector3 endPosition, float endAngle) {
+        public void Begin(Collider other, Vector3 endPosition, float endAngle) {
+            if (IsCollided && _otherCollider == other) {
+                return;
+            }
+
             Audio.Play("attack", transform.position);
 
             //Debug.Log(Time.CurrentTime);
             IsCollided = true;
+            _otherCollider = other;
             _collidedRefTime = 0;
             _startPos = transform.position;
             _endPos = endPosition;
             _collidedStartTime = Time.CurrentTime;
+            _smoothRotation = 0.0f;
 
-            _currentAngle = transform.rotation.Y;
-            _endAngle = _currentAngle + 2.0f;
+            _startRotation= MathHelper.ToDegrees(_rigidBody.SteerableCollider.RotationY);
+            _endRotation = _startRotation + endAngle;
+            CurrentRotation = _startRotation;
 
             _rigidBody.RigidBody.LinearVelocity = JVector.Zero;
 
@@ -70,15 +85,17 @@ namespace BRS.Scripts.PlayerScripts {
                 float t = Curve.EvaluateSqrt(_collidedRefTime);
                 Vector3 newPosition = Vector3.LerpPrecise(_startPos, _endPos, t);
 
-                _currentAngle = Utility.SmoothDampAngle(_currentAngle, _endAngle, ref _refAngle, Duration);
-                Debug.Log(_currentAngle);
+
+                _smoothRotation = Utility.SmoothDamp(_smoothRotation, 1.0f, ref _smoothRotation, Duration);
+
+                //CurrentRotation = Utility.SmoothDampAngle(CurrentRotation, _endRotation, ref _refRotation, Duration);
+                CurrentRotation = MathHelper.Lerp(_startRotation, _endRotation, t);
+                Debug.Log(CurrentRotation);
 
                 // Apply new position to the rigid-body
-                // Todo by Andy for Andy: can be surely written better :-)
-                transform.position = new Vector3(newPosition.X, transform.position.Y, newPosition.Z);
-                transform.eulerAngles = new Vector3(0, _currentAngle, 0);
                 _rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
-                _rigidBody.RigidBody.Orientation = JMatrix.CreateRotationY(_currentAngle);
+                _rigidBody.SteerableCollider.RotationY = MathHelper.ToRadians(CurrentRotation);
+                _rigidBody.RigidBody.Update();
             } else {
                 IsCollided = false;
             }
