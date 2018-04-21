@@ -59,6 +59,7 @@ namespace BRS.Engine {
         }
 
         public static void StartScene() {
+            PhysicsManager.Instance.Start();
             foreach (GameObject go in GameObject.All) go.Awake();
             foreach (GameObject go in GameObject.All) go.Start();
         }

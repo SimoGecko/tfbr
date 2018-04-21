@@ -47,7 +47,7 @@ namespace BRS.Engine.Physics.Colliders {
 
         public override void PostStep(float timestep) {
             if (!IsStatic && !IsAnimated) {
-                GameObject.transform.position = Conversion.ToXnaVector(Position - CenterOfMass);
+                GameObject.transform.position = Conversion.ToXnaVector(Position - JVector.Transform(CenterOfMass, Orientation));
                 GameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(Orientation));
             }
 

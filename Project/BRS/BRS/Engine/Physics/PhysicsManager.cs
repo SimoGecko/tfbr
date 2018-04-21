@@ -72,6 +72,13 @@ namespace BRS.Engine.Physics {
         #region Monogame-structure
 
         /// <summary>
+        /// Start the physics-simulation from scratch.
+        /// </summary>
+        public void Start() {
+            World.Clear();
+        }
+
+        /// <summary>
         /// Update the physics based on the time.
         /// </summary>
         /// <param name="gameTime">Current game-time</param>
