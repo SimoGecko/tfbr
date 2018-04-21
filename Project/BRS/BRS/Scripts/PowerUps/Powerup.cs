@@ -20,14 +20,18 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public PowerupType PowerupType;
+        private const float RotSpeed = 1;
 
         //private
         //protected bool destroyOnUse = true;
         private bool _rotate = true;
         protected bool _useInstantly = false;
 
+        protected Color powerupColor = Color.White;
+
+        //private float _rotationAngle = 0.0f;
+
         // const
-        private const float RotSpeed = 1;
 
         //reference
         public Player Owner { get; protected set; }
@@ -67,8 +71,8 @@ namespace BRS.Scripts.PowerUps {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star);
+                Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, powerupColor);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);
@@ -82,7 +86,10 @@ namespace BRS.Scripts.PowerUps {
 
         public virtual void UsePowerup() {
             transform.position = Owner.transform.position;
-            Audio.Play(PowerupType.ToString().ToLower() + "_use", transform.position);
+            string audioName = "use_" + PowerupType.ToString().ToLower();
+            if(Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
+            else Audio.Play("use_various", transform.position);
+
         }
 
         // queries

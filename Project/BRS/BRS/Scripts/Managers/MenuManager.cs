@@ -57,9 +57,9 @@ namespace BRS.Scripts.Managers {
             NamePlayerInfosToChange = "player_0";
 
             modelCharacter = new List<Model>();
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift"));
             modelCharacter.Add(File.Load<Model>("Models/vehicles/sweeper"));
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift_tex"));
+            modelCharacter.Add(File.Load<Model>("Models/vehicles/bulldozer"));
 
         }
 

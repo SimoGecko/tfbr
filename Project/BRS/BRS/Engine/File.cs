@@ -185,6 +185,7 @@ namespace BRS.Engine {
             }
         }
 
+
         public static List<Tuple<string, string>> ReadRanking(string pathName) {
             try {
                 List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();

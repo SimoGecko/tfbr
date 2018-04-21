@@ -28,12 +28,14 @@ namespace BRS.Scripts.UI {
         public static GameUI Instance;
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
+        public override void Awake() {
             Instance = this;
-            _showWinner = _showPolice = false;
+        }
 
+        public override void Start() {
             _policeCar = File.Load<Texture2D>("Images/UI/policeCar");
             _policeLight = File.Load<Texture2D>("Images/UI/policeCar_lights");
+            _showWinner = _showPolice = false;
         }
 
         public override void Update() {
@@ -49,59 +51,31 @@ namespace BRS.Scripts.UI {
         public override void Draw(int index) {
             if (index == 0) return;
             index--;
+
             string roundString = "round " + GameManager.RoundNumber + "/" + GameManager.NumRounds;
-            UserInterface.DrawString(roundString, new Rectangle(-20, -390, 200, 20), Align.BotRight, Align.BotRight, Align.Center);
+            UserInterface.DrawString(roundString, new Rectangle(-20, 140, 100, 25), Align.TopRight, Align.TopRight, Align.Center, scale:.7f);
 
             //police bar
             float policePercent = (float)(1 - _roundtime.Span.TotalSeconds / RoundManager.RoundTime);
-            UserInterface.DrawBarStriped(policePercent, new Rectangle(-220, -370, 150, 20), Color.LightGray, Align.BotRight);
+            UserInterface.DrawBarStriped(policePercent, new Rectangle(-320, 107, 175, 25), Color.LightGray, Align.TopRight);
             //police car and blinking
-            int fgRectWidth = (int)(150 * policePercent);
-            Rectangle policeRect = new Rectangle(-220 + fgRectWidth, -360, 64, 64);
-            UserInterface.DrawPicture(_policeCar, policeRect, null, Align.BotRight, Align.Center);
+            int fgRectWidth = (int)(175 * policePercent);
+            Rectangle policeRect = new Rectangle(-320 + fgRectWidth, 120, 64, 64);
+            UserInterface.DrawPicture(_policeCar, policeRect, null, Align.TopRight, Align.Center);
 
             if (_showPolice) {
                 //UserInterface.DrawString("Get back to your base!", new Vector2(0, 50), Align.Bottom, bold:true);
                 if ((Time.Frame / 10) % 2 == 0) {
-                    UserInterface.DrawPicture(_policeLight, policeRect, null, Align.BotRight, Align.Center);
+                    UserInterface.DrawPicture(_policeLight, policeRect, null, Align.TopRight, Align.Center);
                     //UserInterface.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeLight, Vector2.One * 64, .6f);
                 }
             }
 
             //time
             string roundTimeString = _roundtime.Span.ToReadableString();
-            UserInterface.DrawString(roundTimeString, new Rectangle(-20, -350, 50, 20), Align.BotRight, Align.BotRight, Align.Right);
+            UserInterface.DrawString(roundTimeString, new Rectangle(-320 + fgRectWidth, 144, 75, 25), Align.TopRight, Align.Center, Align.Center);
         }
-
-        public void DrawOldUI2() {
-            /*
-            Vector2 centerPos = new Vector2(Screen.Width / 2, Screen.Height / 2);
-
-            string roundNumber = "round: " + GameManager.Instance.RoundNumber + "/" + GameManager.NumRounds;
-            UserInterface.DrawStringOLD(centerPos + new Vector2(-100, -100), roundNumber);
-
-            string roundTimeString = "time: " + _roundtime.Span.ToReadableString();
-            UserInterface.DrawStringOLD(centerPos + new Vector2(-100, -50), roundTimeString);
-
-            //police bar
-            float barPercent = (float)(1 - _roundtime.Span.TotalSeconds / RoundManager.RoundTime);
-            UserInterface.DrawBarBig(centerPos + new Vector2(-128, 0), barPercent, Color.Gray);
-
-            int fgRectWidth = (int)(UserInterface.BigBarWidth * barPercent);
-            UserInterface.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeCar, Vector2.One * 64, .6f);
-
-            if (_showPolice) {
-                UserInterface.DrawStringOLD(centerPos + new Vector2(-160, 50), "Get back to your base!");
-                if ((Time.Frame / 10) % 2 == 0) {
-                    UserInterface.DrawPicture(centerPos + new Vector2(-128 + fgRectWidth, 7), _policeLight, Vector2.One * 64, .6f);
-                }
-            }
-
-            if (_showWinner) {
-                UserInterface.DrawStringBig(centerPos + new Vector2(-250, 150), _winnerString);
-            } 
-            */
-        }
+        
 
         public void UpdateGameWinnerUI(int winner) {
             _winnerString = "Player " + (winner + 1) + " won!";

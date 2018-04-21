@@ -31,11 +31,11 @@ namespace BRS.Engine {
             totalFrames = rows * columns;
         }
 
-        public void Draw(Vector2 location, int currentFrame) {
+        public void Draw(Vector2 location, int currentFrame, Color tint) {
             int row = currentFrame / columns;
             int column = currentFrame % columns;
             Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            UserInterface.DrawPicture(texture, location, sourceRectangle, Align.TopLeft, Align.Center);
+            UserInterface.DrawPicture(texture, location, sourceRectangle, Align.TopLeft, Align.Center, col:tint);
         }
 
         public bool FrameEnded(int frame) {
