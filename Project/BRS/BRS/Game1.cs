@@ -16,8 +16,10 @@ namespace BRS {
 
         // Render the scene to this target
         RenderTarget2D _renderTarget;
-
-
+        // depth info
+        RenderTarget2D _ZBuffer;
+        Texture2D _ZBufferTexture;
+        Effect _ZBufferShader;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -33,6 +35,14 @@ namespace BRS {
             
             // init the rendertarget with the graphics device
             _renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            _ZBuffer = new RenderTarget2D(
                 GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
                 Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
@@ -58,13 +68,17 @@ namespace BRS {
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("Level1");
 
             //start other big components
             UserInterface.Start();
             Input.Start();
             Audio.Start();
             PostProcessingManager.Instance.Start(_spriteBatch);
+
+            // load the z buffer shader
+            _ZBufferShader = Content.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
         }
 
 
@@ -89,16 +103,13 @@ namespace BRS {
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update(gameTime);
         }
-
-        protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            base.Draw(gameTime);
-
+        private void Draw3D(GameTime gameTime)
+        {
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
-            foreach (Camera cam in Screen.Cameras) {
+            foreach (Camera cam in Screen.Cameras)
+            {
                 GraphicsDevice.Viewport = cam.Viewport;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
@@ -114,9 +125,36 @@ namespace BRS {
                 Gizmos.DrawFull(cam);
             }
             Gizmos.ClearOrders();
+        }
+        protected override void Draw(GameTime gameTime) {
+            // draw everything 3 D to get the depth info 
+
+            // render to z buffer
+            // GraphicsDevice.Render = CompareFunction.LessEqual;
+            // GraphicsDevice.SetRenderTarget(_ZBuffer);
+            // GraphicsDevice.Clear(Color.Black);
+
+            // pass the matWorldViewProj matrix
+            // effect.Parameters["matWorldViewProj"].SetValue(worldMatrix * viewMatrix * projMatrix);
+            // _ZBufferShader.Parameters
+            // apply the depth buffer shader
+            // _ZBufferShader.CurrentTechnique.Passes[0].Apply();
+            // draw all 3d objects
+            // Draw3D(gameTime);
+
+            // render scene for real 
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.Clear(Color.CornflowerBlue);
+            base.Draw(gameTime);
+
+            // draw everyting 3D
+            Draw3D(gameTime);
+
 
             // apply post processing
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice);
+            //PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
+
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
 

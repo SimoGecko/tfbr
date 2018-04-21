@@ -103,7 +103,7 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="gameTime">Current game-time</param>
         public void Update(GameTime gameTime) {
-            if (Input.GetKeyDown(Keys.F1)) {
+            if (Input.GetKeyDown(Keys.F9)) {
                 DoDrawings = !DoDrawings;
             }
 
