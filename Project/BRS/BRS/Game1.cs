@@ -32,7 +32,7 @@ namespace BRS {
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
-            
+
             // init the rendertarget with the graphics device
             _renderTarget = new RenderTarget2D(
                 GraphicsDevice,
@@ -64,6 +64,7 @@ namespace BRS {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
+            Graphics.Start();
 
             //load prefabs and scene
             Prefabs.Start();
@@ -103,13 +104,17 @@ namespace BRS {
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update(gameTime);
         }
-        private void Draw3D(GameTime gameTime)
-        {
+
+        protected override void Draw(GameTime gameTime) {
+            // render scene for real 
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.Clear(Graphics.StreetGray);
+            base.Draw(gameTime);
+
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
-            foreach (Camera cam in Screen.Cameras)
-            {
+            foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
@@ -123,10 +128,10 @@ namespace BRS {
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
+
             }
             Gizmos.ClearOrders();
-        }
-        protected override void Draw(GameTime gameTime) {
+
             // draw everything 3 D to get the depth info 
 
             // render to z buffer
@@ -142,21 +147,18 @@ namespace BRS {
             // draw all 3d objects
             // Draw3D(gameTime);
 
-            // render scene for real 
-            GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            base.Draw(gameTime);
 
-            // draw everyting 3D
-            Draw3D(gameTime);
+            //// draw everyting 3D
+            //Draw3D(gameTime);
 
 
             // apply post processing
-            //PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
             PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
+
 
             //-----2D-----
             int i = 1;

@@ -46,7 +46,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = Tag,
                 PureCollider = PureCollider,
                 GameObject = gameObject,
-                Material = new Material { Restitution = 0.0f },
+                Material = new Jitter.Dynamics.Material { Restitution = 0.0f },
                 Mass = 20.0f
             };
 

@@ -25,24 +25,33 @@ namespace BRS.Scripts.Scenes {
 
         public override void Load() {
             LoadUnityScene();
+            LoadBlenderBakedScene();
             CreateManagers();
             CreatePlayers();
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+            GameObject.Instantiate("chair", new Vector3(0, 0, -5), Quaternion.Identity);
+            GameObject.Instantiate("plant", new Vector3(2, 0, -5), Quaternion.Identity);
+            GameObject.Instantiate("cart", new Vector3(4, 0, -5), Quaternion.Identity);
         }
 
 
+        void LoadBlenderBakedScene() {
+            Material insideMat = new Material( File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
+            Material outsideMat = new Material( File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
+
+            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
+            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
+            insideScene.material = insideMat;
+            outsideScene.material = outsideMat;
+        }
+
         void LoadUnityScene() {
-            //LOAD UNITY SCENE
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene.ToString() + ".txt", PhysicsManager); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/lvl" + GameManager.lvlScene.ToString() + "/ObjectSceneUnity.txt"); });
-            //var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity.txt", PhysicsManager); });
             var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
             task.Wait();
-
-            var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
-            task2.Wait();
+            //var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
+            //task2.Wait();
         }
 
         void CreateManagers() {
@@ -54,6 +63,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new Suggestions());
             UiManager.AddComponent(new MoneyUI());
             UiManager.AddComponent(new ParticleUI());
+            UiManager.AddComponent(new SpeechUI());
             //Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
@@ -71,8 +81,11 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreatePlayers() {
+            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/sweeper")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
                 Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0);
@@ -87,14 +100,24 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+                player.AddComponent(new SpeechManager(i));
+                player.material = playerMat;
 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
-                //arrow
+                //arrow for base
+                //TODO add correct materials
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.AddComponent(new Arrow(player, null, i));
-                arrow.transform.Scale(.1f);
+                arrow.material = new Material(Graphics.Green);
+                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
+                arrow.transform.Scale(.2f);
+
+                //arrow for enemy
+                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
+                arrow2.material = new Material(Graphics.Red);
+                arrow2.AddComponent(new Arrow(player, true, i, ()=>true));
+                arrow2.transform.Scale(.08f);
                 //Add(arrow);
             }
         }
@@ -110,6 +133,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
+            /*
             GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             Debug.Assert(bases.Length == 2, "there should be 2 bases");
             for (int i = 0; i < bases.Length; i++) {
@@ -121,19 +145,23 @@ namespace BRS.Scripts.Scenes {
                 ElementManager.Instance.Add(bases[i].GetComponent<Base>());
 
                 //Add(bases[i]);
-            }
-            //BASE // TODO have this code make the base
-            /*for (int i = 0; i < GameManager.numPlayers; i++) {
-                GameObject playerBase = new GameObject("playerBase_"+i.ToString(), File.Load<Model>("cube"));
-                playerBase.tag = "base";
-                playerBase.AddComponent(new Base());
-                playerBase.GetComponent<Base>().baseIndex = i;
+            }*/
+
+            for (int i = 0; i < 2; i++) {
+                //TODO base object
+                GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
+                playerBase.tag = ObjectTag.Base;
+                playerBase.AddComponent(new Base(i));
+                playerBase.transform.Scale(2);
                 playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
                 playerBase.transform.scale = new Vector3(3, 1, 1);
                 playerBase.transform.SetStatic();
-                playerBase.AddComponent(new BoxCollider(playerBase));
+                //playerBase.AddComponent(new BoxCollider(playerBase));
+                playerBase.AddComponent(new StaticRigidBody(pureCollider: true));
+                playerBase.transform.SetStatic();
+                ElementManager.Instance.Add(playerBase.GetComponent<Base>());
+            }
 
-            }*/
 
         }
 

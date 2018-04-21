@@ -52,7 +52,7 @@ namespace BRS.Scripts.Elements {
         protected override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
-                Audio.Play(type.ToString().ToLower()+ "_pickup", transform.position);
+                Audio.Play("pickup_" + type.ToString().ToLower(), transform.position);
                 pi.Collect(this);
                 ElementManager.Instance.Remove(this);
                 MoneyUI.Instance.PickedupValuable(transform.position, value, p.PlayerIndex);
