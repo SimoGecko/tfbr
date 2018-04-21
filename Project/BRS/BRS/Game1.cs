@@ -57,6 +57,9 @@ namespace BRS {
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
+            // Todo: can be removed for alpha-release
+            PoliceManager.IsActive = false;
+
             base.Initialize();
         }
 

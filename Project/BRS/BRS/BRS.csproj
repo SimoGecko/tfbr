@@ -247,6 +247,8 @@
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level1_dynamicObjects.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level1_staticObjects.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
@@ -280,9 +282,7 @@
       <Name>Jitter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Load\UnitySceneData\New folder\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

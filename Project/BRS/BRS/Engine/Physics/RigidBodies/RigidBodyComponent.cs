@@ -52,6 +52,10 @@ namespace BRS.Engine.Physics.RigidBodies {
 
             PhysicsManager.Instance.World.AddBody(RigidBody);
 
+            if (ShapeType == ShapeType.BoxInvisible) {
+                gameObject.Model = null;
+            }
+
             base.Awake();
         }
 
@@ -92,6 +96,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     break;
 
                 case ShapeType.Box:
+                case ShapeType.BoxInvisible:
                     CollisionShape = new BoxShape(bbSize);
                     break;
             }
