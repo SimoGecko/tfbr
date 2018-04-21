@@ -1,14 +1,16 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Utilities;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -17,7 +19,7 @@ namespace BRS.Scripts.PlayerScripts {
     /// </summary>
     class Player : LivingEntity {
         // --------------------- VARIABLES ---------------------
-        enum State { Normal, Attack, Stun, Dead };
+        public enum PlayerState { Normal, Attack, Stun, Dead, Collided }
 
         //public
         public int PlayerIndex { get; private set; } // player index - to select input and camera
@@ -28,9 +30,9 @@ namespace BRS.Scripts.PlayerScripts {
         //HIT and STUN
         const float StunTime = 2f;
         const float RespawnTime = 5f;
+        public PlayerState State { get; set; } = PlayerState.Normal;
 
         //private
-        State _state = State.Normal;
         Vector3 startPosition;
 
         //reference
@@ -42,6 +44,8 @@ namespace BRS.Scripts.PlayerScripts {
         PlayerPowerup _pP;
         PlayerStamina _pS;
         PlayerLift _pL;
+        private PlayerCollider _pC;
+        private SteerableCollider _steerableCollider;
 
         public CameraController CamController;
         Player _other;
@@ -59,12 +63,9 @@ namespace BRS.Scripts.PlayerScripts {
         }
         public override void Start() {
             base.Start();
-            transform.position = startPosition;
-            transform.rotation = Quaternion.Identity;
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
             if (po != null) _other = po.GetComponent<Player>();
-
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
             CamController.Start();
@@ -76,6 +77,24 @@ namespace BRS.Scripts.PlayerScripts {
             _pP = gameObject.GetComponent<PlayerPowerup>();
             _pS = gameObject.GetComponent<PlayerStamina>();
             _pL = gameObject.GetComponent<PlayerLift>();
+            _pC = gameObject.GetComponent<PlayerCollider>();
+
+            MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
+            _steerableCollider = mrb.SteerableCollider;
+
+            // Reset start position
+            transform.position = startPosition;
+            transform.rotation = Quaternion.Identity;
+
+            if (_steerableCollider != null) {
+                _steerableCollider.Speed = JVector.Zero;
+                _steerableCollider.RotationY = 0;
+                _steerableCollider.Position = Conversion.ToJitterVector(startPosition);
+                _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
+            }
+
+            // Restart other components
+            _pM.Start();
         }
 
         public override void Update() {
@@ -86,7 +105,7 @@ namespace BRS.Scripts.PlayerScripts {
             }
 
             //only if game is running
-            if (_state == State.Normal) {
+            if (State == PlayerState.Normal) {
                 bool boosting = BoostInput() && _pS.HasStaminaForBoost();
                 _pM.Boosting = boosting;
                 if (boosting) _pS.UseStaminaForBoost();
@@ -99,7 +118,7 @@ namespace BRS.Scripts.PlayerScripts {
                 if (DropCashInput()) _pI.DropMoney();
 
                 if (AttackInput() && _pS.HasStaminaForAttack()) {
-                    _state = State.Attack;
+                    State = PlayerState.Attack;
                     _pS.UseStaminaForAttack();
                     _pA.BeginAttack();
                     CamController.Shake(.5f);
@@ -120,9 +139,16 @@ namespace BRS.Scripts.PlayerScripts {
                 //    }
                 //    Debug.Log(tmp);
                 //}
-            } else if (_state == State.Attack) {
+            } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
-                if (_pA.AttackEnded) _state = State.Normal;
+                if (_pA.AttackEnded) State = PlayerState.Normal;
+            } else if (State == PlayerState.Collided) {
+                _pC.Coroutine();
+
+                if (!_pC.IsCollided)
+                    State = PlayerState.Normal;
+            } else if (State == PlayerState.Stun) {
+                _steerableCollider.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();
@@ -142,25 +168,25 @@ namespace BRS.Scripts.PlayerScripts {
             //base.TakeDamage(damage); // don't override state
 
             if (!Dead) {
-                _state = State.Stun;
+                State = PlayerState.Stun;
                 Audio.Play("stun", transform.position);
                 ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
                 _pI.LoseMoney();
-                Timer t = new Timer(StunTime, () => { if (_state == State.Stun) _state = State.Normal; });
+                Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
             }
         }
 
         /*
         protected override void Die() {
             base.Die();
-            _state = State.Dead;
+            _state = PlayerState.Dead;
             _pI.LoseAllMoney();
             Timer timer = new Timer(RespawnTime, Respawn);
         }*/
 
         protected override void Respawn() {
             base.Respawn();
-            _state = State.Normal;
+            State = PlayerState.Normal;
             transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
         }
 
@@ -176,6 +202,12 @@ namespace BRS.Scripts.PlayerScripts {
                 Health, StartingHealth,
                 _pS.Stamina, _pS.MaxStamina,
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
+        }
+
+        public void SetCollisionState(Vector3 endPosition) {
+            State = PlayerState.Collided; ;
+            _pC.Begin(endPosition);
+            _pM.ResetSmoothMatnitude();
         }
 
         //-------------------------------------------------------------------------------------------

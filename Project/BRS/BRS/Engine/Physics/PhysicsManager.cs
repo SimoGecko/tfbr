@@ -1,85 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using BRS.Engine.Physics.Primitives3D;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine.Physics.Colliders;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
-using Jitter.Dynamics.Constraints;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
+using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Engine.Physics {
-    public enum BodyTag { DrawMe, DontDrawMe }
-
+    /// <summary>
+    /// Updates the physics and takes care of the collision-events.
+    /// </summary>
     public class PhysicsManager {
-        public static PhysicsManager Instance { get; private set; }
 
-        public static void SetUpPhysics(DebugDrawer debugDrawer, Display display, GraphicsDevice graphicsDevice) {
-            Instance = new PhysicsManager(debugDrawer, display, graphicsDevice);
-        }
+        #region Singleton
+
+        // Singleton-instance
+        private static PhysicsManager _instance;
+
+        /// <summary>
+        /// Singleton-getter
+        /// </summary>
+        public static PhysicsManager Instance => _instance ?? (_instance = new PhysicsManager());
+
+        #endregion
+
+        #region Properties and attributes
 
         private enum CollisionState { Propagate, SaveInList }
 
-        private CollisionState Status { get; set; }
+        // Current state of the collision-handling
+        private CollisionState _status;
+
+        // Collection of all colliders which are collected in a manual-collision-detection
         private List<Collider> _colliders;
 
-        // Stores the physical world
-        public World World { private set; get; }
+        /// <summary>
+        /// Stores the physical world.
+        /// </summary>
+        public World World { get; }
 
-        // Reference for drawing additional information on the screen
-        private readonly DebugDrawer _debugDrawer;
+        #endregion
 
-        // Written debug information
-        private readonly Display _display;
-
-        private int _activeBodies;
-        private readonly BasicEffect _basicEffect;
-
-        private readonly GeometricPrimitive[] _primitives = new GeometricPrimitive[5];
-
-        private bool _doDrawings = false;
+        #region Constructor
 
         /// <summary>
         /// Initialize the physics with the collision-setup
         /// </summary>
-        private PhysicsManager(DebugDrawer debugDrawer, Display display, GraphicsDevice graphicsDevice) {
+        private PhysicsManager() {
             CollisionSystem collision = new CollisionSystemPersistentSAP();
 
-            World = new World(collision);
-            World.AllowDeactivation = true;
-            World.Gravity = new JVector(0, -20, 0);
-            //World.ContactSettings.BreakThreshold = 0.5f;
-            //World.ContactSettings.AllowedPenetration = -0.1f;
-            //World.ContactSettings.MinimumVelocity = 2.0f;
+            // Initialization of physic-settings
+            World = new World(collision) {
+                AllowDeactivation = true,
+                Gravity = new JVector(0, -20, 0)
+            };
 
+            // Event-handling
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
             World.Events.ContactCreated += Events_ContactCreated;
-
-            _debugDrawer = debugDrawer;
-            _display = display;
-
-            _primitives[(int)PrimitiveTypes.Box] = new BoxPrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Capsule] = new CapsulePrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Cone] = new ConePrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Cylinder] = new CylinderPrimitive(graphicsDevice);
-            _primitives[(int)PrimitiveTypes.Sphere] = new SpherePrimitive(graphicsDevice);
-            //_primitives[(int)PrimitiveTypes.Convex] = new ConvexHullPrimitive(graphicsDevice);
-
-            _basicEffect = new BasicEffect(graphicsDevice);
-            _basicEffect.EnableDefaultLighting();
-            _basicEffect.PreferPerPixelLighting = true;
         }
 
+        #endregion
+
+        #region Monogame-structure
+
+        /// <summary>
+        /// Update the physics based on the time.
+        /// </summary>
+        /// <param name="gameTime">Current game-time</param>
         public void Update(GameTime gameTime) {
-            UpdateDisplayText(gameTime);
-
-            if (Input.GetKeyDown(Keys.F1)) {
-                _doDrawings = !_doDrawings;
-            }
-
             float step = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (step > 1.0f / 100.0f) {
@@ -88,6 +82,67 @@ namespace BRS.Engine.Physics {
 
             World.Step(step, false);
         }
+
+        #endregion
+
+        #region Event-handling
+
+        /// <summary>
+        /// Event as soon as two objects started the collision.
+        /// </summary>
+        /// <param name="arg1">Rigidbody 1</param>
+        /// <param name="arg2">Rigidbody 2</param>
+        private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
+            Collider body1 = arg1 as Collider;
+            Collider body2 = arg2 as Collider;
+
+            if (Instance._status == CollisionState.SaveInList) {
+                if (body1 != null && (body1.Tag is BodyTag && (BodyTag)body1.Tag != BodyTag.TestObject)) {
+                    Instance._colliders.Add(body1);
+                }
+
+                if (body2 != null && (body2.Tag is BodyTag && (BodyTag)body2.Tag != BodyTag.TestObject)) {
+                    Instance._colliders.Add(body2);
+                }
+            } else {
+                body1?.GameObject.OnCollisionEnter(body2);
+                body2?.GameObject.OnCollisionEnter(body1);
+            }
+        }
+
+        /// <summary>
+        /// Event as soon as a contact is created for a collision.
+        /// This event contains more information about the collision.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void Events_ContactCreated(Contact obj) {
+            Collider body1 = obj.Body1 as Collider;
+            Collider body2 = obj.Body2 as Collider;
+
+            bool body1IsPlayer = body1?.GameObject?.tag == ObjectTag.Player;
+            bool body2IsPLayer = body2?.GameObject?.tag == ObjectTag.Player;
+
+            bool body1IsPureCollider = body1?.PureCollider == true;
+            bool body2IsPureCollider = body2?.PureCollider == true;
+
+            bool body1IsStatic = body1?.IsStatic == true;
+            bool body2IsStatic = body2?.IsStatic == true;
+
+            if (body1IsPlayer && !body2IsPureCollider && body2IsStatic) {
+                HandlePlayerCollision(body1, obj.Position2, -1 * obj.Normal);
+            } else if (body2IsPLayer && !body1IsPureCollider && body1IsStatic) {
+                HandlePlayerCollision(body2, obj.Position1, obj.Normal);
+            }
+        }
+
+        private bool RaycastCallback(RigidBody body, JVector normal, float fraction) {
+            return body.IsStatic && body.PureCollider == false;
+        }
+
+        #endregion
+
+        #region Manaual collision-detection
+
 
         /// <summary>
         /// Find all the colliders that intersect the given sphere.
@@ -98,13 +153,14 @@ namespace BRS.Engine.Physics {
         /// <returns>List of all colliders which are contained in the given sphere.</returns>
         public static Collider[] OverlapSphere(Vector3 position, float radius, ObjectTag collisionTag = ObjectTag.Default) {
             SphereShape sphere = new SphereShape(radius);
-            RigidBody rbSphere = new RigidBody(sphere) {
+            Collider rbSphere = new Collider(sphere) {
                 Position = Conversion.ToJitterVector(position),
-                PureCollider = true
+                PureCollider = true,
+                Tag = BodyTag.TestObject
             };
 
             // Prepare the instance to handle the detected collisions correctly
-            Instance.Status = CollisionState.SaveInList;
+            Instance._status = CollisionState.SaveInList;
             Instance._colliders = new List<Collider>();
 
             foreach (RigidBody rb in Instance.World.RigidBodies) {
@@ -113,232 +169,129 @@ namespace BRS.Engine.Physics {
                     continue;
                 }
 
-                // Todo: this yields a problem
                 Instance.World.CollisionSystem.Detect(rbSphere, rb);
             }
 
-            Instance.Status = CollisionState.Propagate;
+            Instance._status = CollisionState.Propagate;
 
-
-            //foreach (Collider c in Collider.allcolliders) { // TODO implement more efficient method (prune eg Octree)
-            //    if ((collisionTag != ObjectTag.Default && c.gameObject.tag != collisionTag) || !c.gameObject.active) continue;
-
-            //    if (c.Intersects(sphere)) result.Add(c);
-            //}
             return Instance._colliders.ToArray();
         }
 
-        public void Draw(Camera camera) {
-            if (_doDrawings == false) {
-                return;
-            }
-
-            _basicEffect.View = camera.View;
-            _basicEffect.Projection = camera.Proj;
-
-            _basicEffect.PreferPerPixelLighting = true;
-            _basicEffect.LightingEnabled = true;
-            _activeBodies = 0;
-
-            // Draw all shapes
-            foreach (RigidBody body in World.RigidBodies) {
-                if (body.IsActive) _activeBodies++;
-                if (body.Tag is int || body.IsParticle) continue;
-                AddBodyToDrawList(body);
-            }
-
-
-            foreach (GeometricPrimitive prim in _primitives) {
-                prim.Draw(_basicEffect);
-            }
-
-            _basicEffect.PreferPerPixelLighting = false;
-            _basicEffect.LightingEnabled = false;
-            _debugDrawer.SetBasicEffect(_basicEffect);
-            //DrawIslands();
-            DrawDebugInfo();
-        }
-
-        private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
-            Collider body1 = arg1 as Collider;
-            Collider body2 = arg2 as Collider;
-
-            if (Instance.Status == CollisionState.SaveInList) {
-                if (body1 != null) {
-                    Instance._colliders.Add(body1);
-                }
-
-                if (body2 != null) {
-                    Instance._colliders.Add(body2);
-                }
-            } else {
-                body1?.GameObject.OnCollisionEnter(body2);
-                body2?.GameObject.OnCollisionEnter(body1);
-            }
-        }
-
-        private void Events_ContactCreated(Contact obj) {
-            Collider body1 = obj.Body1 as Collider;
-            Collider body2 = obj.Body2 as Collider;
-
-            bool body1IsPlayer = body1?.GameObject.tag == ObjectTag.Player;
-            bool body2IsPLayer = body2?.GameObject.tag == ObjectTag.Player;
-
-            bool body1IsPureCollider = body1?.PureCollider == true;
-            bool body2IsPureCollider = body2?.PureCollider == true;
-
-            if (body1IsPlayer && !body2IsPureCollider) {
-                //body1.AddForce(obj.Normal * 100);
-                //body1.LinearVelocity -= obj.Normal * 5;
-                //Debug.Log(obj.Normal, "Force to body 1: ");
-                body1.Position -= obj.Normal * 0.1f;
-            } else if (body2IsPLayer && !body1IsPureCollider) {
-                //body2.AddForce(obj.Normal * -100);
-                //body2.LinearVelocity += obj.Normal * 5;
-                //Debug.Log(obj.Normal, "Force to body 2: ");
-                body2.Position += obj.Normal * 0.1f;
-            }
-        }
 
         /// <summary>
         /// 
         /// </summary>
-        private void DrawDebugInfo() {
-            int cc = 0;
-
-            foreach (Constraint constr in World.Constraints) {
-                constr.DebugDraw(_debugDrawer);
-            }
-
-            foreach (RigidBody body in World.RigidBodies) {
-                _debugDrawer.Color = _debugDrawer.RandomColors[cc % _debugDrawer.RandomColors.Length];
-                body.DebugDraw(_debugDrawer);
-                cc++;
-            }
+        /// <param name="rigidBody"></param>
+        /// <param name="gameObject"></param>
+        /// <param name="start"></param>
+        /// <param name="end"></param>
+        /// <returns></returns>
+        public Vector3 DetectCollision(RigidBody rigidBody, GameObject gameObject, Vector3 start, Vector3 end) {
+            JVector jStart = Conversion.ToJitterVector(start);
+            JVector jEnd = Conversion.ToJitterVector(end);
+            JVector result = DetectCollision(rigidBody, gameObject, jStart, jEnd);
+            return Conversion.ToXnaVector(result);
         }
 
-        //public void DrawIslands() {
-        //    foreach (CollisionIsland island in World.Islands) {
-        //        JBBox box = JBBox.SmallBox;
+        public JVector DetectCollision(RigidBody rigidBody, GameObject gameObject, JVector start, JVector end) {
+            JVector p = start + rigidBody.CenterOfMass;
+            JVector d = end - start;
 
-        //        foreach (RigidBody body in island.Bodies) {
-        //            box = JBBox.CreateMerged(box, body.BoundingBox);
-        //        }
+            JVector bbSize = rigidBody.BoundingBox.Max - rigidBody.BoundingBox.Min;
 
-        //        DebugDrawer.DrawAabb(box.Min, box.Max, island.IsActive() ? Color.Green : Color.Yellow);
-        //    }
-        //}
+            RigidBody resBody;
+            JVector hitNormal;
+            float fraction;
+            //ProjectOn(new JVector(2, 3, 1), new JVector(5, -2, 2));
+            bool result = World.CollisionSystem.Raycast(p,
+                d, RaycastCallback, out resBody,
+                out hitNormal, out fraction);
 
-        #region add draw matrices to the different primitives
-        private void AddShapeToDrawList(Shape shape, JMatrix ori, JVector pos) {
-            GeometricPrimitive primitive = null;
-            Matrix scaleMatrix = Matrix.Identity;
-
-            if (shape is BoxShape) {
-                primitive = _primitives[(int)PrimitiveTypes.Box];
-                scaleMatrix = Matrix.CreateScale(Conversion.ToXnaVector((shape as BoxShape).Size));
-            } else if (shape is SphereShape) {
-                primitive = _primitives[(int)PrimitiveTypes.Sphere];
-                scaleMatrix = Matrix.CreateScale((shape as SphereShape).Radius);
-            } else if (shape is CylinderShape) {
-                primitive = _primitives[(int)PrimitiveTypes.Cylinder];
-                CylinderShape cs = shape as CylinderShape;
-                scaleMatrix = Matrix.CreateScale(cs.Radius, cs.Height, cs.Radius);
-            } else if (shape is CapsuleShape) {
-                primitive = _primitives[(int)PrimitiveTypes.Capsule];
-                CapsuleShape cs = shape as CapsuleShape;
-                scaleMatrix = Matrix.CreateScale(cs.Radius * 2, cs.Length, cs.Radius * 2);
-            } else if (shape is ConeShape) {
-                ConeShape cs = shape as ConeShape;
-                scaleMatrix = Matrix.CreateScale(cs.Radius, cs.Height, cs.Radius);
-                primitive = _primitives[(int)PrimitiveTypes.Cone];
-            } else if (shape is ConvexHullShape) {
-                ConvexHullShape cs = shape as ConvexHullShape;
-                primitive = _primitives[(int)PrimitiveTypes.Box];
-                scaleMatrix = Matrix.CreateScale(Conversion.ToXnaVector(cs.BoundingBox.Max - cs.BoundingBox.Min));
+            if (result && fraction <= 1.0f) {
+                JVector collisionAt = p + fraction * d;
+                return GetPosition(bbSize, gameObject, hitNormal, p, collisionAt);
             }
 
-            if (primitive != null)
-                primitive.AddWorldMatrix(scaleMatrix * Conversion.ToXnaMatrix(ori) *
-                                         Matrix.CreateTranslation(Conversion.ToXnaVector(pos)));
+            //try {
+            //    GameObject.Destroy((resBody as Collider).GameObject);
+            //} catch {
+            //}
+
+            return end;
         }
 
-        private void AddBodyToDrawList(RigidBody rb) {
-            if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
+        private JVector ProjectOn(JVector v, JVector u) {
+            return JVector.Dot(v, u) / u.LengthSquared() * u;
+        }
 
-            Collider c = rb as Collider;
-            //if (c != null && (c.GameObject.tag == ObjectTag.Ground || c.GameObject.tag == ObjectTag.Obstacle)) return;
+        private JVector GetPosition(JVector bbSize, GameObject gameObject, JVector hitNormal, JVector d, JVector end) {
+            JVector forward = 0.5f * bbSize.X * Conversion.ToJitterVector(gameObject.transform.Forward);
+            JVector right = 0.5f * bbSize.Z * Conversion.ToJitterVector(gameObject.transform.Right);
+            d.Normalize();
 
-            bool isCompoundShape = (rb.Shape is CompoundShape);
-
-            if (!isCompoundShape) {
-                AddShapeToDrawList(rb.Shape, rb.Orientation, rb.Position);
-            } else {
-                CompoundShape cShape = rb.Shape as CompoundShape;
-                JMatrix orientation = rb.Orientation;
-                JVector position = rb.Position;
-
-                foreach (var ts in cShape.Shapes) {
-                    JVector pos = ts.Position;
-                    JMatrix ori = ts.Orientation;
-
-                    JVector.Transform(ref pos, ref orientation, out pos);
-                    JVector.Add(ref pos, ref position, out pos);
-
-                    JMatrix.Multiply(ref ori, ref orientation, out ori);
-
-                    AddShapeToDrawList(ts.Shape, ori, pos);
-                }
-
+            if (hitNormal.IsZero()) {
+                return bbSize.Z * -0.5f * Conversion.ToJitterVector(gameObject.transform.Forward);
             }
 
+            if (JVector.Dot(forward, hitNormal) < 0.0f) {
+                forward = -1 * forward;
+            }
+
+            if (JVector.Dot(right, hitNormal) < 0.0f) {
+                right = -1 * right;
+            }
+
+            JVector lengthOnNormal = ProjectOn(forward, hitNormal);
+            JVector widthOnNormal = ProjectOn(right, hitNormal);
+            JVector distanceToHit = lengthOnNormal + widthOnNormal;
+
+            if (JVector.Dot(distanceToHit, d) < 0.0f) {
+                distanceToHit = -1 * distanceToHit;
+            }
+
+            JVector margin = ProjectOn(distanceToHit, d);
+
+            Debug.Log("Collision detected! ");
+            Debug.Log("Margin: " + margin);
+            if (margin.IsNaN()) {
+                Debug.Log("Should not happen");
+            }
+            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(end - margin));
+
+            return end - margin;
         }
+
+        private JVector ReflectOnNormal(JVector input, JVector normal) {
+            JVector normalNormalized = normal;
+            normalNormalized.Normalize();
+            JVector inputNormalized = input;
+            inputNormalized.Normalize();
+
+            return 2 * (inputNormalized - 2 * JVector.Dot(inputNormalized, normalNormalized) * normalNormalized);
+        }
+
+
         #endregion
 
-        #region update the display text informations
+        #region Collision handling
 
-        private float _accUpdateTime;
+        private void HandlePlayerCollision(Collider player, JVector collisionPoint, JVector normal) {
+            // First, calculate the new position based on the orientation of the car
+            JVector newPosition1 = GetPosition(player.BoundingBoxSize, player.GameObject, normal,
+                Conversion.ToJitterVector(player.GameObject.transform.Forward), collisionPoint);
+            JVector newPosition = collisionPoint + ReflectOnNormal(Conversion.ToJitterVector(player.GameObject.transform.Forward),
+                                      normal);
+            //newPosition -= newPosition1;
+            newPosition += 0.1f * normal;
 
-        private void UpdateDisplayText(GameTime time) {
-            _accUpdateTime += (float)time.ElapsedGameTime.TotalSeconds;
-            if (_accUpdateTime < 0.1f) return;
+            // Second, check if the new position is not projected into another obstacle
+            newPosition = DetectCollision(player, player.GameObject, player.Position, newPosition);
 
-            _accUpdateTime = 0.0f;
-
-            int contactCount = 0;
-
-            foreach (Arbiter ar in World.ArbiterMap.Arbiters) {
-                contactCount += ar.ContactList.Count;
-            }
-
-            _display.DisplayText[1] = World.CollisionSystem.ToString();
-
-            //Display.DisplayText[0] = "Current Scene: " + PhysicScenes[currentScene].ToString();
-            //
-            _display.DisplayText[2] = "Arbitercount: " + World.ArbiterMap.Arbiters.Count + ";" + " Contactcount: " + contactCount;
-            _display.DisplayText[3] = "Islandcount: " + World.Islands.Count;
-            _display.DisplayText[4] = "Bodycount: " + World.RigidBodies.Count + " (" + _activeBodies + ")";
-            //Display.DisplayText[5] = (multithread) ? "Multithreaded" : "Single Threaded";
-
-            int entries = (int)World.DebugType.Num;
-            double total = 0;
-
-            for (int i = 0; i < entries; i++) {
-                World.DebugType type = (World.DebugType)i;
-
-                _display.DisplayText[8 + i] = type + ": " + World.DebugTimes[i].ToString("0.00");
-
-                total += World.DebugTimes[i];
-            }
-
-            _display.DisplayText[8 + entries] = "------------------------------";
-            _display.DisplayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
-            _display.DisplayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
-
-            _display.DisplayText[6] = "gen0: " + GC.CollectionCount(0).ToString() +
-                "  gen1: " + GC.CollectionCount(1).ToString() +
-                "  gen2: " + GC.CollectionCount(2).ToString();
+            //Debug.Log(newPosition1);
+            //Debug.Log(newPosition);
+            player.GameObject.GetComponent<Player>().SetCollisionState(Conversion.ToXnaVector(newPosition));
         }
+
         #endregion
     }
 }

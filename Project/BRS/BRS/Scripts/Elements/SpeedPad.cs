@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {

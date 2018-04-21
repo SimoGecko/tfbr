@@ -14,7 +14,7 @@ namespace BRS.Engine {
             return min + Rand.Next(max - min);
         }
         public static float Range(float min, float max) { // random float in [min, max[
-            return (float)(min + Rand.NextDouble()*(max - min));
+            return (float)(min + Rand.NextDouble() * (max - min));
         }
 
         public static Vector2 InsideRectangle(Rectangle rect) {
@@ -22,7 +22,7 @@ namespace BRS.Engine {
         }
 
         public static Vector2 InsideUnitSquare() {
-            return new Vector2(Value*2-1, Value * 2 - 1);
+            return new Vector2(Value * 2 - 1, Value * 2 - 1);
         }
 
         public static Vector3 InsideUnitCube() {
@@ -36,15 +36,18 @@ namespace BRS.Engine {
         }
 
         public static Vector3 InsideUnitSphere() {
-            Vector3 sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
-            while(sample.LengthSquared()>1)
-                sample = new Vector3(Value*2-1, Value*2-1, Value*2-1);
+            Vector3 sample = new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
+            while (sample.LengthSquared() > 1)
+                sample = new Vector3(Value * 2 - 1, Value * 2 - 1, Value * 2 - 1);
             return sample;
         }
-        
+
         public static Quaternion YRotation() {
             return Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(Value * 360));
         }
 
+        public static Vector3 UpsideLinearVelocity() {
+            return new Vector3(Range(-0.5f, 0.5f), Range(1.0f, 2.0f), Range(-0.5f, 0.5f));
+        }
     }
 }

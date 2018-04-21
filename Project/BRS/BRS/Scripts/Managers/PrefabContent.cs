@@ -6,6 +6,7 @@ using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
 using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 // Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
@@ -28,25 +29,25 @@ namespace BRS.Engine {
             //cash
             GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/elements/cash"));
             cashPrefab.transform.Scale(2f);
-            cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
             cashPrefab.material = elementsMat;
-            cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
+            cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(1.5f, 3.0f, 3.0f)));
             Prefabs.AddPrefab(cashPrefab);
 
             //gold
             GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/goldP"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
-            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
-            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             goldPrefab.material = elementsMat;
+            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
+            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(3.0f, 3.0f, 1.5f)));
             Prefabs.AddPrefab(goldPrefab);
 
             //diamond
             GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/elements/diamond"));
             diamondPrefab.transform.Scale(5f);
-            diamondPrefab.AddComponent(new Money(3000, 1, Money.Type.Diamond));
-            diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             diamondPrefab.material = powerupMat;
+            diamondPrefab.AddComponent(new Money(3000, 1, Money.Type.Diamond));
+            diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
             Prefabs.AddPrefab(diamondPrefab);
 
            
@@ -73,16 +74,15 @@ namespace BRS.Engine {
             police.AddComponent(new Police());
             police.transform.Scale(1f);
             police.material = policeMat;
-            //police.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true, isAnimated: true));
             Prefabs.AddPrefab(police);
 
             //crate
             GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/elements/crate"));
             cratePrefab.transform.Scale(1.5f);
+            cratePrefab.material = powerupMat;
             cratePrefab.AddComponent(new Crate());
             cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
-            cratePrefab.material = powerupMat;
             Prefabs.AddPrefab(cratePrefab);
 
             //oil
@@ -92,7 +92,6 @@ namespace BRS.Engine {
             oilPrefab.material = elementsMat;
             oilPrefab.AddComponent(new OilTrap());
             oilPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
             Prefabs.AddPrefab(oilPrefab);
 
             //planted bomb
@@ -127,7 +126,6 @@ namespace BRS.Engine {
             speedpadPrefab.material = elementsMat;
             speedpadPrefab.AddComponent(new SpeedPad());
             speedpadPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
             Prefabs.AddPrefab(speedpadPrefab);
 
 

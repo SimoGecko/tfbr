@@ -1,5 +1,5 @@
 ﻿using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 

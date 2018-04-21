@@ -1,10 +1,8 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
@@ -38,26 +36,29 @@ namespace BRS.Scripts.PowerUps {
         //reference
         public Player Owner { get; protected set; }
 
+        private DynamicRigidBody _rigidBody;
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
             CreateUseCallbacks();
+
+            if (gameObject.HasComponent<DynamicRigidBody>()) {
+                _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
+            }
         }
 
         public override void Update() {
             base.Update();
 
             if (_rotate) {
-                //_rotationAngle += RotSpeed * Time.DeltaTime;
-
-                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
-                if (rbc != null) {
-                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                if (_rigidBody != null) {
+                    _rigidBody.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                } else {
+                    transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
                 }
-
-                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
             }
         }
 
