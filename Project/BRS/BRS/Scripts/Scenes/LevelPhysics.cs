@@ -108,7 +108,7 @@ namespace BRS.Scripts.Scenes {
 
 
         public void AddGround(GameObject parent) {
-            Material material = new Material();
+            Jitter.Dynamics.Material material = new Jitter.Dynamics.Material();
             material.Restitution = 1.0f;
             material.StaticFriction = 0.4f;
             material.KineticFriction = 10.0f;

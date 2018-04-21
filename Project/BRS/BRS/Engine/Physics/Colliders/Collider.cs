@@ -28,12 +28,12 @@ namespace BRS.Engine.Physics.Colliders {
             BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }
 
-        public Collider(Shape shape, Material material) : base(shape, material) {
+        public Collider(Shape shape, Jitter.Dynamics.Material material) : base(shape, material) {
             BoundingBoxSize = BoundingBox.Max - BoundingBox.Min;
             BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }
 
-        public Collider(Shape shape, Material material, bool isParticle) : base(shape, material, isParticle) {
+        public Collider(Shape shape, Jitter.Dynamics.Material material, bool isParticle) : base(shape, material, isParticle) {
             BoundingBoxSize = BoundingBox.Max - BoundingBox.Min;
             BoundingBoxSizeHalf = 0.5f * BoundingBoxSize;
         }

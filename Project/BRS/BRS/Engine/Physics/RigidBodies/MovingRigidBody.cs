@@ -2,7 +2,6 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine.Physics.Colliders;
-using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 
@@ -43,7 +42,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
                 GameObject = gameObject,
-                Material = new Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
+                Material = new Jitter.Dynamics.Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
             PhysicsManager.Instance.World.AddBody(RigidBody);

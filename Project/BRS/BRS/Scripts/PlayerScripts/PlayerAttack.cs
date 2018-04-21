@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
@@ -35,6 +36,8 @@ namespace BRS.Scripts.PlayerScripts {
         private const float AttackDamage = 40;
 
         //reference
+        public Action OnAttackBegin;
+        public Action OnEnemyHit;
         private MovingRigidBody _rigidBody;
 
         // --------------------- BASE METHODS ------------------
@@ -58,7 +61,8 @@ namespace BRS.Scripts.PlayerScripts {
 
         // commands
         public void BeginAttack() {
-            Audio.Play("attack", transform.position);
+            Audio.Play("dash", transform.position);
+            OnAttackBegin?.Invoke();
 
             //Debug.Log(Time.CurrentTime);
             _attacking = true;
@@ -102,6 +106,9 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
             if (!_hasAppliedDamage && (!pa._attacking || pa._attackStartTime > _attackStartTime)) {
                 //if the other is not attacking or started attacking later
+                OnEnemyHit?.Invoke();
+                Audio.Play("enemy_hit", transform.position);
+
                 p.TakeDamage(AttackDamage);
                 _hasAppliedDamage = true;
             }

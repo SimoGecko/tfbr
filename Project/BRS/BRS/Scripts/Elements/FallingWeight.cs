@@ -24,6 +24,7 @@ namespace BRS.Scripts.Elements {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            Audio.Play("falling_weight", transform.position);
 
         }
         public override void Update() {

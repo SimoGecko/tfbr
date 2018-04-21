@@ -70,13 +70,13 @@ namespace BRS.Scripts {
 
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
-                SpriteSheetFromType(p.effect).Draw(position, p.frame);
+                SpriteSheetFromType(p.effect).Draw(position, p.frame, p.colorTint);
             }
         }
 
 
-        public void GiveOrder(Vector3 p, ParticleType t) {
-            particleOrders.Add(new ParticleOrder(p, t));
+        public void GiveOrder(Vector3 p, ParticleType t, Color? tint=null) {
+            particleOrders.Add(new ParticleOrder(p, t, tint));
         }
 
         // queries
@@ -86,13 +86,15 @@ namespace BRS.Scripts {
 
 
         // other
-        public class ParticleOrder {
+        class ParticleOrder {
             public Vector3 position;
             public int frame;
             public ParticleType effect;
-            public ParticleOrder(Vector3 p, ParticleType e) {
+            public Color colorTint;
+            public ParticleOrder(Vector3 p, ParticleType e, Color? tint = null) {
                 frame = 0;
                 position = p; effect = e;
+                colorTint = tint ?? Color.White;
             }
         }
 

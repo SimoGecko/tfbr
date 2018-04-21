@@ -1,0 +1,91 @@
+-Begin
+Let's go|pick up|some cash!
+Let's go!
+I'm coming!
+I'll|surely win|this round!
+The robbery|started!
+
+-AlmostEnd
+Hurry up!
+Time is|almost up!
+The police|is coming!
+Let's finish up!
+Let's go back!
+
+-Win
+I won!
+Yes!! I won!
+I am the|best robber!
+Yes! Sweet|victory!
+
+-Lose
+Damn. Maybe|next time...
+I didn't|collect enough|cash...
+
+-Random
+Best robbery|ever!
+Sorry Escher!
+I'm getting|all of this|cash...
+
+-Powerup
+I've got a|powerup!
+Mhh I wonder|what it does..
+Let's use|this powerup!
+I hope it|does|something|useful..
+
+-Diamond
+There is a|diamond! Let's go|get it!
+A wild|diamond|appeared!
+Let's steal|that diamond!
+
+-EnemyClose
+I see him!
+They are|close!
+
+-Attack
+Let's see if|it breaks...
+Attack!
+Attaaaack!!
+
+-OpenCrate
+Let's see|what's inside...
+I cracked|a crate!
+I expected|better...
+Let's go crack|other crates!
+
+-OpenVault
+The vault|is opened!
+I opened|the vault!
+We can go in|the vault now!
+
+-HitEnemy
+Take this!
+Haha take|that!
+You're not|laughing now!
+
+-Damage
+Ouch!
+Why would you|do that?
+Damn!
+Take it easy!
+You will|regret it!
+
+-Full
+I'm full!
+Let's go back|to the base!
+I cannot|carry any|more cash!
+Let's go|back!
+
+-BringBase
+Sweet!
+Some more|cash!
+Let's go|again!
+I stole all|this cash by|myself!
+Another bucket|of francs|for me!
+Home sweet home!
+
+-Tutorial
+Press A|to attack!
+Press X|to use the powerup!
+Press RT|to go faster!
+Stamina is|too low...
