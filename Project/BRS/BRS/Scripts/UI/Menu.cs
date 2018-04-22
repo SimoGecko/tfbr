@@ -39,6 +39,8 @@ namespace BRS.Scripts.UI {
             Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
             Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
             Texture2D textureButtonForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
+            Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
+            Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
 
             texturesButtons = new Dictionary<string, Texture2D> {
                 { "button", textureButton },
@@ -50,7 +52,9 @@ namespace BRS.Scripts.UI {
                 { "arrowRight", textureArrowRight },
                 { "forklift", textureButtonForkLift },
                 { "buttonAccept", textureButtonAccept },
-                { "slider", textureSlider }
+                { "slider", textureSlider },
+                { "menu", textureMenuIcon },
+                { "restart", textureRestartIcon }
             };
 
             functionsMenu = new Dictionary<string, EventHandler> {
@@ -90,8 +94,8 @@ namespace BRS.Scripts.UI {
         }
 
         public void BuildMenuPanels() {
-            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
-            CreatePanel("Load/MenuPanels/Play1.txt", "play1");
+           // CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            /*CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Play2.txt", "play2");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");
@@ -99,7 +103,8 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
-            CreatePanel("Load/MenuPanels/Credits.txt", "credits");
+            CreatePanel("Load/MenuPanels/Credits.txt", "credits");*/
+            CreatePanel("Load/MenuPanels/PauseMenu.txt", "pause", true);
         }
 
         public void CreateAlphabetButtons(string panelName) {

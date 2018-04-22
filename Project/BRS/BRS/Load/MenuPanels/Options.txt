@@ -27,7 +27,7 @@ Functions: UpdateVolume
 
 <Text>
 Text: Volume: 
-Position: 814, 432
+Position: 814 432
 </Text>
 
 <Button>

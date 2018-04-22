@@ -245,6 +245,7 @@
     <Content Include="Load\MenuPanels\Credits.txt" />
     <Content Include="Load\MenuPanels\MainMenu.txt" />
     <Content Include="Load\MenuPanels\Options.txt" />
+    <Content Include="Load\MenuPanels\PauseMenu.txt" />
     <Content Include="Load\MenuPanels\Play1.txt" />
     <Content Include="Load\MenuPanels\Play2.txt" />
     <Content Include="Load\MenuPanels\Rankings.txt" />
