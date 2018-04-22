@@ -106,6 +106,7 @@ NameIdentifier: SaveAlphabet
 Texture: buttonCircle
 Position: 1450 775
 TextureInside: buttonAccept
+Functions: ChangeNamePlayer
 Color: 110 235 150
 ColorInside: 255 255 255
 NeighborsUpDownLeftRight: Alphabet3 null Next null
@@ -172,7 +173,7 @@ Active: no
 
 <Image>
 NameIdentifier: pictureModel3
-Texture: forklift
-Position: 576 694
+Texture: bulldozer
+Position: 576 594
 Active: no
 </Image>

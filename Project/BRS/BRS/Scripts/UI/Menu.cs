@@ -38,7 +38,8 @@ namespace BRS.Scripts.UI {
             Texture2D textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
             Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
             Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
-            Texture2D textureButtonForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
+            Texture2D textureForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
+            Texture2D textureModel3 = File.Load<Texture2D>("Images/UI/model3_image");
             Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
             Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
 
@@ -50,7 +51,8 @@ namespace BRS.Scripts.UI {
                 { "title", textureButtonTitle },
                 { "arrowLeft", textureArrowLeft },
                 { "arrowRight", textureArrowRight },
-                { "forklift", textureButtonForkLift },
+                { "forklift", textureForkLift },
+                { "bulldozer", textureModel3 },
                 { "buttonAccept", textureButtonAccept },
                 { "slider", textureSlider },
                 { "menu", textureMenuIcon },

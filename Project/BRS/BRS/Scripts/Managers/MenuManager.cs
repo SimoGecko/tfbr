@@ -221,9 +221,10 @@ namespace BRS.Scripts.Managers {
 
         public void ChangeNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
+
             foreach (var elem in MenuRect["play2"].components) {
                 if (elem is TextBox textBox) {
-                    if (textBox.NameIdentifier == "name_player") {
+                    if (textBox.NameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                             ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2);
                         else
