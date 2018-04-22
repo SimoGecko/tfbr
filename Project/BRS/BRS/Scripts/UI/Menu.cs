@@ -94,8 +94,8 @@ namespace BRS.Scripts.UI {
         }
 
         public void BuildMenuPanels() {
-           // CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
-            /*CreatePanel("Load/MenuPanels/Play1.txt", "play1");
+            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Play2.txt", "play2");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");
@@ -103,8 +103,8 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
-            CreatePanel("Load/MenuPanels/Credits.txt", "credits");*/
-            CreatePanel("Load/MenuPanels/PauseMenu.txt", "pause", true);
+            CreatePanel("Load/MenuPanels/Credits.txt", "credits");
+            //CreatePanel("Load/MenuPanels/PauseMenu.txt", "pause", true);
         }
 
         public void CreateAlphabetButtons(string panelName) {

@@ -103,7 +103,8 @@ namespace BRS.Scripts.Scenes {
                 player.material = playerMat;
 
                 // Nico: Modify player's name and model (choosen by user during menu)
-                MenuManager.Instance.ChangeModelNamePlayer(player, i);
+                if (MenuManager.Instance != null)
+                    MenuManager.Instance.ChangeModelNamePlayer(player, i);
 
 
                 //Add(player);
