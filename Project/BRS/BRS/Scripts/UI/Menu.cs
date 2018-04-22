@@ -75,7 +75,7 @@ namespace BRS.Scripts.UI {
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
                 { "UpdateVolume", MenuManager.Instance.UpdateVolume },
-                { "LoadMenu", MenuManager.Instance.LoadMenu },
+                { "LoadMenu", MenuManager.Instance.LoadMenuFunction },
                 { "ResumeGame", MenuManager.Instance.ResumeGame }
             };
         }

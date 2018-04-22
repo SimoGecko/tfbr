@@ -26,6 +26,7 @@ namespace BRS.Engine {
             Add("LevelMenu", new LevelMenu());
 
             LoadMenu = false;
+            LoadGame = false;
         }
 
         public static void Update() {

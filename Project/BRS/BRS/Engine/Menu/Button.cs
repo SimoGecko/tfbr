@@ -132,7 +132,7 @@ namespace BRS.Engine.Menu {
         }
 
         public override void Draw(int i) {
-            if (Active) {
+            if (Active && i==0) {
                 var colour = ImageColor;
 
                 if (IsClicked)

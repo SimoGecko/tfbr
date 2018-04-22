@@ -18,8 +18,10 @@ namespace BRS.Engine.Menu {
         }
 
         public override void Draw(int i) {
-            base.Draw(i);
-            UserInterface.DrawString(Text, Position,col: Color.Black, font : UserInterface.menuFont);
+            if (Active && i == 0) {
+                base.Draw(i);
+                UserInterface.DrawString(Text, Position, col: Color.Black, font: UserInterface.menuFont);
+            }
         }
     }
 }

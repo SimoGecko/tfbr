@@ -33,9 +33,11 @@ namespace BRS.Scripts.Managers {
 
         public string NamePlayerInfosToChange;
 
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
+
 
             if (ScenesCommunicationManager.loadOnlyPauseMenu)
                 LoadPauseMenu();
@@ -84,6 +86,8 @@ namespace BRS.Scripts.Managers {
         }
 
         public override void Update() {
+
+
             uniqueFrameInputUsed = false;
 
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
@@ -92,9 +96,10 @@ namespace BRS.Scripts.Managers {
             }
         }
 
-        public void Draw() {
+        public override void Draw(int i) {
             
         }
+
 
         // --------------------- CUSTOM METHODS ----------------
 
@@ -153,11 +158,13 @@ namespace BRS.Scripts.Managers {
             ScenesCommunicationManager.loadOnlyPauseMenu = true;
             GameManager.state = GameManager.State.Playing;
             SceneManager.LoadGame = true;
+            //SceneManager.LoadScene("Level1");
         }
 
-        public void LoadMenu(object sender, EventArgs e) {
+        public void LoadMenuFunction(object sender, EventArgs e) {
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
+            //SceneManager.LoadScene("LevelMenu");
         }
 
         public void ResumeGame(object sender, EventArgs e) {

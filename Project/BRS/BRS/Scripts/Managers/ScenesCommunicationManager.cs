@@ -14,9 +14,11 @@ namespace BRS.Scripts.Managers {
 
         public static bool loadOnlyPauseMenu;
 
+
         public override void Start() {
             Instance = this;
             PlayersInfo = new Dictionary<string, Tuple<string, Model>>();
+
 
             //if (GameManager.state == GameManager.State.Menu) loadOnlyPauseMenu = false;
             //else loadOnlyPauseMenu = true;

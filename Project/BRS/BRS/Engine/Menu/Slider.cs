@@ -41,6 +41,7 @@ namespace BRS.Engine.Menu {
             ButtonSlider.ScaleWidth = 0.5f;
             ButtonSlider.hilightsChoice1 = false;
             ButtonSlider.hilightsChoice2 = true;
+            Active = true;
         }
 
         private void UpdateSelection(Input.Stick state) {
@@ -114,19 +115,22 @@ namespace BRS.Engine.Menu {
         }
 
         public override void Draw(int i) {
-            base.Draw(i);
 
-            Rectangle dest = Rectangle;
+            if (Active && i == 0) {
+                base.Draw(i);
 
-            // normal 
-            UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.LightGray);
+                Rectangle dest = Rectangle;
 
-            // percent relative to button
-            percentPosButon =  ((ButtonSlider.InitPos.X - Position.X) / (lengthSlider));
-            dest.Width = (int)Math.Round(dest.Width * percentPosButon);
-            UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.MediumBlue);
+                // normal 
+                UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.LightGray);
 
-            ButtonSlider.Draw(i);
+                // percent relative to button
+                percentPosButon = ((ButtonSlider.InitPos.X - Position.X) / (lengthSlider));
+                dest.Width = (int)Math.Round(dest.Width * percentPosButon);
+                UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.MediumBlue);
+
+                ButtonSlider.Draw(i);
+            }
         }
 
         // --------------------- CUSTOM METHODS ----------------

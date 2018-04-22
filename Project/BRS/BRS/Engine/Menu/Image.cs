@@ -24,7 +24,7 @@ namespace BRS.Engine.Menu {
         }
 
         public override void Draw(int i) {
-            if (Active) {
+            if (Active && i==0) {
                 base.Draw(i);
                 //UserInterface.DrawPictureOLD(Rectangle, _texture);
                 UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
