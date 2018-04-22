@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.Primitives3D;
 using Jitter;
 using Jitter.Collision;
@@ -230,7 +231,15 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="rb">Rigidbody</param>
         private void AddBodyToDrawList(RigidBody rb) {
-            if (rb.Tag is BodyTag && ((BodyTag)rb.Tag) == BodyTag.DontDrawMe) return;
+            if (rb.Tag is BodyTag && (BodyTag)rb.Tag == BodyTag.DontDrawMe) {
+                return;
+            }
+
+            Collider c = rb as Collider;
+
+            if (c?.GameObject.tag == ObjectTag.Ground) {
+                return;
+            }
 
             bool isCompoundShape = (rb.Shape is CompoundShape);
 

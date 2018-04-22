@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 using BRS.Scripts.Managers;
 using BRS.Scripts.Scenes;
 using Microsoft.Xna.Framework.Input;
@@ -43,15 +44,22 @@ namespace BRS.Engine {
         }
 
         public static void LoadScene(string sceneName, int sceneId = 1) {
+            // Disable the physics-manager when loading the scene to avoid inconsistency between collision-handlings and loading
+            PhysicsManager.Instance.IsActive = false;
+
             GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();
             StartScene();
+
+            // Enable the physics-manager after all is loaded and positioned
+            PhysicsManager.Instance.IsActive = true;
         }
 
         public static void StartScene() {
+            PhysicsManager.Instance.Start();
             foreach (GameObject go in GameObject.All) go.Awake();
             foreach (GameObject go in GameObject.All) go.Start();
         }

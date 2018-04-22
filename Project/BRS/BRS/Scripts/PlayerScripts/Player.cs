@@ -59,7 +59,8 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
             startPosition = startPos;
-            //TODO make mesh have this color
+            
+            // TODO make mesh have this color
         }
         public override void Start() {
             base.Start();
@@ -127,26 +128,18 @@ namespace BRS.Scripts.PlayerScripts {
                 if (LiftInput()) {
                     _pL.Lift();
                 }
-
-                // Todo: Can be removed, just here till this is finally tested
-                //if (Input.GetKeyDown(Keys.V)) {
-                //    Collider[] test = PhysicsManager.OverlapSphere(transform.position, 10);
-
-
-                //    string tmp = "Contained: ";
-                //    foreach (Collider collider in test) {
-                //        tmp += collider.GameObject.tag + ",";
-                //    }
-                //    Debug.Log(tmp);
-                //}
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
-            } else if (State == PlayerState.Collided) {
-                _pC.Coroutine();
+            // Todo: Remove if bouncing is not needed
+            //} else if (State == PlayerState.Collided) {
+            //    _pC.Coroutine();
+            //    _steerableCollider.Speed = JVector.Zero;
 
-                if (!_pC.IsCollided)
-                    State = PlayerState.Normal;
+            //    if (!_pC.IsCollided) {
+            //        State = PlayerState.Normal;
+            //        _pM.ResetRotation(_pC.CurrentRotation);
+            //    }
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
@@ -155,9 +148,9 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if (c.IsStatic) {
-                CamController.Shake(.3f);
-            }
+            //if (c.IsStatic) {
+            //    CamController.Shake(.3f);
+            //}
         }
 
 
@@ -204,9 +197,16 @@ namespace BRS.Scripts.PlayerScripts {
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }
 
-        public void SetCollisionState(Vector3 endPosition) {
-            State = PlayerState.Collided; ;
-            _pC.Begin(endPosition);
+        /// <summary>
+        /// Start the collision-handling with the bounce-script
+        /// </summary>
+        /// <param name="other"></param>
+        /// <param name="endPosition"></param>
+        /// <param name="endAngle"></param>
+        public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
+            State = PlayerState.Normal;
+            //_pC.Begin(other, endPosition, endAngle);
+            _pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

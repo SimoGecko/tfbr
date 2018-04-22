@@ -74,7 +74,7 @@ namespace BRS.Engine {
             police.AddComponent(new Police());
             police.transform.Scale(1f);
             police.material = policeMat;
-            police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true, isAnimated: true));
+            police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
             Prefabs.AddPrefab(police);
 
             //crate
@@ -133,7 +133,7 @@ namespace BRS.Engine {
             string[] dynamicElements = new string[] { "chair", "plant", "cart" };
             foreach(string s in dynamicElements) {
                 GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
-                dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+                dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box));
                 dynamicElement.material = elementsMat;
                 Prefabs.AddPrefab(dynamicElement);
             }
