@@ -28,17 +28,26 @@ namespace BRS.Engine {
             if (currentScene == scenes["LevelMenu"] && GameManager.state == GameManager.State.Playing)
                 LoadScene("Level1");
 
-            if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
-            if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
-            if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
-            if (Input.GetKeyDown(Keys.D4)) LoadScene("LevelPhysics");
+            // For Simone to test other levels
+            //if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
+            //if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
+            //if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
+            //if (Input.GetKeyDown(Keys.D4)) LoadScene("LevelPhysics");
+
+            // For chris to load the different levels
+            if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1", 1);
+            if (Input.GetKeyDown(Keys.D2)) LoadScene("Level1", 2);
+            if (Input.GetKeyDown(Keys.D3)) LoadScene("Level1", 3);
+            if (Input.GetKeyDown(Keys.D4)) LoadScene("Level1", 4);
+            if (Input.GetKeyDown(Keys.D5)) LoadScene("Level1", 5);
         }
 
         static void Add(string sceneName, Scene scene) {
             scenes.Add(sceneName, scene);
         }
 
-        public static void LoadScene(string sceneName) {
+        public static void LoadScene(string sceneName, int sceneId = 1) {
+            GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());

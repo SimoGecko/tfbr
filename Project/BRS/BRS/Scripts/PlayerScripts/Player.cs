@@ -1,15 +1,16 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
+using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -44,6 +45,7 @@ namespace BRS.Scripts.PlayerScripts {
         PlayerStamina _pS;
         PlayerLift _pL;
         private PlayerCollider _pC;
+        private SteerableCollider _steerableCollider;
 
         public CameraController CamController;
         Player _other;
@@ -61,12 +63,9 @@ namespace BRS.Scripts.PlayerScripts {
         }
         public override void Start() {
             base.Start();
-            transform.position = startPosition;
-            transform.rotation = Quaternion.Identity;
 
             GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
             if (po != null) _other = po.GetComponent<Player>();
-
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
             CamController.Start();
@@ -79,6 +78,23 @@ namespace BRS.Scripts.PlayerScripts {
             _pS = gameObject.GetComponent<PlayerStamina>();
             _pL = gameObject.GetComponent<PlayerLift>();
             _pC = gameObject.GetComponent<PlayerCollider>();
+
+            MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
+            _steerableCollider = mrb.SteerableCollider;
+
+            // Reset start position
+            transform.position = startPosition;
+            transform.rotation = Quaternion.Identity;
+
+            if (_steerableCollider != null) {
+                _steerableCollider.Speed = JVector.Zero;
+                _steerableCollider.RotationY = 0;
+                _steerableCollider.Position = Conversion.ToJitterVector(startPosition);
+                _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
+            }
+
+            // Restart other components
+            _pM.Start();
         }
 
         public override void Update() {
@@ -94,7 +110,8 @@ namespace BRS.Scripts.PlayerScripts {
                 _pM.Boosting = boosting;
                 if (boosting) _pS.UseStaminaForBoost();
 
-                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation);
+                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
@@ -130,6 +147,8 @@ namespace BRS.Scripts.PlayerScripts {
 
                 if (!_pC.IsCollided)
                     State = PlayerState.Normal;
+            } else if (State == PlayerState.Stun) {
+                _steerableCollider.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();

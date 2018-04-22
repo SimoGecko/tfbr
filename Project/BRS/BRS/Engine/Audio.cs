@@ -15,6 +15,8 @@ namespace BRS.Engine {
 
         static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, Song> songs;
+        const float pitchRange = .2f;
+        const float volumeBoost = 2f;
 
         static List<SoundEmit> currentlyPlayingEffects = new List<SoundEmit>();
 
@@ -29,6 +31,8 @@ namespace BRS.Engine {
 
             BuildAudioLibrary(AudioContent.SoundString());
             BuildSongLibrary(AudioContent.SongString());
+
+            AudioContent.Start();
         }
 
 
@@ -41,6 +45,8 @@ namespace BRS.Engine {
             listener = Listener();
             foreach (SoundEmit se in currentlyPlayingEffects) {
                 se.soundInstance.Apply3D(listener, se.emitter);
+                se.soundInstance.Pitch = se.pitch;
+                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * 2);
             }
         }
 
@@ -79,7 +85,7 @@ namespace BRS.Engine {
 
 
         //-----------------------------EFFECTS-----------------------------
-        public static void Play(string name, Vector3 position, float volume = 1, bool changePitch = false) {
+        public static void Play(string name, Vector3 position, float volume = 1, bool changePitch = true) {
             if (!sounds.ContainsKey(name)) { Debug.LogError("No sound " + name); return; }
 
             AudioEmitter em = new AudioEmitter();
@@ -89,14 +95,22 @@ namespace BRS.Engine {
 
             SoundEffectInstance soundInstance = sounds[name].CreateInstance();
             float duration = (float)sounds[name].Duration.TotalSeconds;
-            currentlyPlayingEffects.Add(new SoundEmit(soundInstance, em, duration));
+            SoundEmit newSoundEmit = new SoundEmit(soundInstance, em, duration);
+            currentlyPlayingEffects.Add(newSoundEmit);
             if (changePitch) {
-                soundInstance.Pitch = MyRandom.Range(-1f, 1f);
+                newSoundEmit.pitch = MyRandom.Range(-pitchRange, pitchRange);
             }
             //soundInstance.Volume = volume;
             //soundInstance.Pan = -sounds[name].Pan;
+            //soundInstance.Pitch = -1;
             soundInstance.Apply3D(Listener(), em);
+            soundInstance.Pitch = newSoundEmit.pitch;
+            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*2);
             soundInstance.Play();
+        }
+
+        public static bool Contains(string name) {
+            return sounds.ContainsKey(name);
         }
 
         /*
@@ -168,6 +182,7 @@ namespace BRS.Engine {
             public SoundEffectInstance soundInstance;
             public AudioEmitter emitter;
             public float endTime;
+            public float pitch;
             public SoundEmit(SoundEffectInstance _si, AudioEmitter _em, float duration) {
                 soundInstance = _si;
                 emitter = _em;

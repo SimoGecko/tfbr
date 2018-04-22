@@ -49,7 +49,7 @@ namespace BRS.Scripts.UI {
                     dvo.percent += Time.DeltaTime * duration;
                     if (dvo.percent > 1) orderList.RemoveAt(i--);
                     Vector2 screenPos = Camera.GetCamera(index).WorldToScreenPoint(dvo.position + Vector3.Up * dvo.percent * displacement);
-                    UserInterface.DrawString("+" + Utility.IntToMoneyString(dvo.value), screenPos);//, col:Color.Lerp(Color.White, Color.White, dvo.percent));
+                    UserInterface.DrawString("+" + Utility.IntToMoneyString(dvo.value), screenPos, scale:.7f);//, col:Color.Lerp(Color.White, Color.White, dvo.percent));
                 }
             }
         }

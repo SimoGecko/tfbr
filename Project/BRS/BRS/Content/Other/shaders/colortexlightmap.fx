@@ -12,18 +12,26 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float4 AmbientColor = float4(1, 1, 1, 1);
-float AmbientIntensity = 0.1;
 
 
-texture ModelTexture;
-sampler2D textureSampler = sampler_state {
-    Texture = (ModelTexture);
+texture ColorTexture;
+sampler2D textureSampler1 = sampler_state {
+    Texture = (ColorTexture);
     MinFilter = Linear;
     MagFilter = Linear;
     AddressU = Clamp;
     AddressV = Clamp;
 };
+
+texture LightmapTexture;
+sampler2D textureSampler2 = sampler_state {
+    Texture = (LightmapTexture);
+    MinFilter = Linear;
+    MagFilter = Linear;
+    AddressU = Clamp;
+    AddressV = Clamp;
+};
+
 
 
 
@@ -57,11 +65,12 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
-    float4 lightColor = tex2D(textureSampler, input.UV0);
-    lightColor.a = 1;
  
-    float4 textureColor = tex2D(textureSampler, input.UV1);
+    float4 textureColor = tex2D(textureSampler1, input.UV0);
     textureColor.a = 1;
+
+    float4 lightColor = tex2D(textureSampler2, input.UV1);
+    lightColor.a = 1;
  
  	//return textureColor;
  	return saturate(textureColor * lightColor);

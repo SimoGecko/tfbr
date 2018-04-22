@@ -19,6 +19,7 @@ namespace BRS.Engine.Physics.RigidBodies {
 
         public StaticRigidBody(Vector3 size, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             IsStatic = true;
+            IsAnimated = false;
             IsActive = isActive;
             ShapeType = shapeType;
             PureCollider = pureCollider;

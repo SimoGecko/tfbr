@@ -22,7 +22,7 @@ namespace BRS.Engine {
         public bool active { get; set; } = true;
         public string name { private set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
-        public EffectMaterial mat = null;
+        public Material material = null;
 
         static int InstanceCount = 0;
 
@@ -59,7 +59,7 @@ namespace BRS.Engine {
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && active) {
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
             }
         }
@@ -108,6 +108,7 @@ namespace BRS.Engine {
             result.Awake();
             result.Start(); // because instantiated at runtime
 
+            // If it is a dynamic rigid body it cna have some linear velocity when instantiated
             if (result.HasComponent<DynamicRigidBody>()) {
                 DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
                 dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;
@@ -127,7 +128,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            //TODO copy material
+            newObject.material = this.material;
             return newObject;
         }
 

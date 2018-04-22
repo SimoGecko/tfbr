@@ -30,7 +30,7 @@ namespace BRS.Scripts.PlayerScripts {
         private Stack<Money> _carryingMoney = new Stack<Money>();
 
         //reference
-
+        public Action OnInventoryFull;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -52,6 +52,9 @@ namespace BRS.Scripts.PlayerScripts {
                 _carryingWeight += money.Weight;
                 _carryingValue += money.Value;
                 _carryingMoney.Push(money);
+                if (IsFull()) {
+                    OnInventoryFull?.Invoke();
+                }
             }
         }
 
@@ -71,6 +74,7 @@ namespace BRS.Scripts.PlayerScripts {
         //drop = leave on ground by choice based on input
         public void DropMoney() {
             if (_canDropMoney) {
+                Audio.Play("leave", transform.position);
                 RemoveMoneyAmount(1, DropcashRadius);
                 _canDropMoney = false;
                 new Timer(TimeBetweenDrops, () => _canDropMoney = true);
@@ -108,7 +112,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool IsFull() {
-            return _carryingWeight >= _capacity-0;
+            return _carryingWeight >= _capacity-3;
         }
 
         /*
