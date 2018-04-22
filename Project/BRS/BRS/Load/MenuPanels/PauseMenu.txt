@@ -19,6 +19,7 @@ NameIdentifier: Resume
 Texture: buttonCircle
 TextureInside: arrowRight
 Position: 860 350
+Functions: ResumeGame
 NeighborsUpDownLeftRight: null SliderAudio Restart Menu
 Color: 110 235 150
 ColorInside: 255 255 255
@@ -30,9 +31,8 @@ NameIdentifier: Menu
 Texture: buttonCircle
 TextureInside: menu
 Position: 960 350
-Functions: SwitchToMenu
+Functions: LoadMenu
 NeighborsUpDownLeftRight: null SliderAudio Resume Restart
-NameSwitchTo: main
 Color: 110 235 150
 ColorInside: 255 255 255
 </Button>

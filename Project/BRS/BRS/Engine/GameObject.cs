@@ -7,6 +7,7 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -66,7 +67,9 @@ namespace BRS.Engine {
 
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
-                foreach (IComponent c in components) c.Draw(i);
+                foreach (IComponent c in components)
+                    if (c.gameObject.name != "pause" || (c.gameObject.name == "pause" && i == 0))
+                        c.Draw(i);
             }
         }
 

@@ -36,14 +36,35 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            LoadContent();
+
+            if (ScenesCommunicationManager.loadOnlyPauseMenu)
+                LoadPauseMenu();
+            else
+                LoadContent();
+        }
+
+        public void LoadPauseMenu() {
+            Instance = this;
+            _menuGame.LoadContent();
+
+            string[] namePanels = { "pause" };
+            foreach (string name in namePanels) {
+                GameObject go = new GameObject(name);
+                MenuRect.Add(go.name, go);
+            }
+
+            _currentMenu = MenuRect["pause"];
+            _currentMenuName = "pause";
+            Menu.Instance.BuildPausePanel();
+            //MenuRect["pause"].active = false;
         }
 
         public void LoadContent() {
             Instance = this;
             _menuGame.LoadContent();
+            GameManager.state = GameManager.State.Menu;
 
-            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "pause"};
+            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits"};
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
@@ -53,7 +74,6 @@ namespace BRS.Scripts.Managers {
             _currentMenuName = "main";
             Menu.Instance.BuildMenuPanels();
 
-            ScenesCommunicationManager.Instance.PlayersInfo = new Dictionary<string, Tuple<string, Model>>();
             NamePlayerInfosToChange = "player_0";
 
             modelCharacter = new List<Model>();
@@ -73,7 +93,7 @@ namespace BRS.Scripts.Managers {
         }
 
         public void Draw() {
-
+            
         }
 
         // --------------------- CUSTOM METHODS ----------------
@@ -130,6 +150,18 @@ namespace BRS.Scripts.Managers {
         }
 
         public void StartGameFunction(object sender, EventArgs e) {
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+            GameManager.state = GameManager.State.Playing;
+            SceneManager.LoadGame = true;
+        }
+
+        public void LoadMenu(object sender, EventArgs e) {
+            ScenesCommunicationManager.loadOnlyPauseMenu = false;
+            SceneManager.LoadMenu = true;
+        }
+
+        public void ResumeGame(object sender, EventArgs e) {
+            MenuRect["pause"].active = false;
             GameManager.state = GameManager.State.Playing;
         }
 
@@ -261,12 +293,14 @@ namespace BRS.Scripts.Managers {
 
         public void ChangeModelNamePlayer(GameObject player, int i) {
 
-            if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
-                string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
-                Model userModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+            if (ScenesCommunicationManager.Instance != null) {
+                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                    string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
+                    Model userModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
 
-                if (userName != null) player.GetComponent<Player>().PlayerName = userName;
-                if (userModel != null) player.Model = userModel;
+                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
+                    if (userModel != null) player.Model = userModel;
+                }
             }
         }
     }

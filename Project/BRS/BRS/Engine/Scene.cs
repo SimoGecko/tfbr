@@ -13,6 +13,8 @@ namespace BRS.Engine {
         static Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
         static Scene currentScene;
 
+        public static bool LoadMenu, LoadGame;
+
         public static void Start() {
             scenes = new Dictionary<string, Scene>();
 
@@ -22,11 +24,20 @@ namespace BRS.Engine {
             Add("Level3", new Level3());
             Add("LevelPhysics", new LevelPhysics());
             Add("LevelMenu", new LevelMenu());
+
+            LoadMenu = false;
         }
 
         public static void Update() {
-            if (currentScene == scenes["LevelMenu"] && GameManager.state == GameManager.State.Playing)
+            if (LoadGame) {
                 LoadScene("Level1");
+                LoadGame = false;
+            }
+
+            if (LoadMenu) {
+                LoadScene("LevelMenu");
+                LoadMenu = false;
+            }
 
             // For Simone to test other levels
             //if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");

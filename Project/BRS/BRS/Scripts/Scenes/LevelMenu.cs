@@ -20,6 +20,7 @@ namespace BRS.Scripts.Scenes {
             // Has to be called before the next manager
             GameObject ScenesCommManager = new GameObject("scenesComManager");
             ScenesCommManager.AddComponent(new ScenesCommunicationManager());
+            ScenesCommunicationManager.loadOnlyPauseMenu = false;
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new MenuManager());

@@ -54,6 +54,7 @@ namespace BRS.Scripts.Managers {
             if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
                 _paused = !_paused;
                 state = _paused ? State.Paused : State.Playing;
+                MenuManager.Instance.MenuRect["pause"].active = _paused ? true : false;
             }
         }
 

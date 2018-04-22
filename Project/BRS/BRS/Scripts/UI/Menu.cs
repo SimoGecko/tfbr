@@ -72,7 +72,9 @@ namespace BRS.Scripts.UI {
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
-                { "UpdateVolume", MenuManager.Instance.UpdateVolume }
+                { "UpdateVolume", MenuManager.Instance.UpdateVolume },
+                { "LoadMenu", MenuManager.Instance.LoadMenu },
+                { "ResumeGame", MenuManager.Instance.ResumeGame }
             };
         }
 
@@ -93,6 +95,10 @@ namespace BRS.Scripts.UI {
             linkedButtonLeftRight.Clear();
         }
 
+        public void BuildPausePanel() {
+            CreatePanel("Load/MenuPanels/PauseMenu.txt", "pause");
+        }
+
         public void BuildMenuPanels() {
             CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
@@ -103,8 +109,7 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
-            CreatePanel("Load/MenuPanels/Credits.txt", "credits");
-            //CreatePanel("Load/MenuPanels/PauseMenu.txt", "pause", true);
+            CreatePanel("Load/MenuPanels/Credits.txt", "credits");            
         }
 
         public void CreateAlphabetButtons(string panelName) {

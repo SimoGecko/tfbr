@@ -12,8 +12,14 @@ namespace BRS.Scripts.Managers {
         public Dictionary<string, Tuple<string, Model>> PlayersInfo; // playerName -> userName, Model 
         public static ScenesCommunicationManager Instance;
 
+        public static bool loadOnlyPauseMenu;
+
         public override void Start() {
             Instance = this;
+            PlayersInfo = new Dictionary<string, Tuple<string, Model>>();
+
+            //if (GameManager.state == GameManager.State.Menu) loadOnlyPauseMenu = false;
+            //else loadOnlyPauseMenu = true;
         }
 
         public override void Update() {

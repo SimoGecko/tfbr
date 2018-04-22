@@ -23,7 +23,7 @@ namespace BRS.Scripts.Scenes {
         public override int GetNumCameras() { return GameManager.NumPlayers; } 
 
         public override void Load() {
-            LoadUnityScene();
+            //LoadUnityScene();
             LoadBlenderBakedScene();
             CreateManagers();
             CreatePlayers();
@@ -74,7 +74,11 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager());
-            //Add(Manager);
+
+            Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+            //Add(Manager);         
+
 
             //new MenuManager().LoadContent(); // TODO add as component to manager
         }
