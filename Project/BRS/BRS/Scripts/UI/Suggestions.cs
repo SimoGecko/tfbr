@@ -20,7 +20,6 @@ namespace BRS.Scripts.UI {
 
         //private
         private Texture2D _xboxButtons;
-        private Texture2D _comicBubble;
         private List<ButtonCommand> _commands;
 
         // const
@@ -36,10 +35,9 @@ namespace BRS.Scripts.UI {
         public override void Start() {
             Instance = this;
             _xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
-            _comicBubble = File.Load<Texture2D>("Images/UI/comic_bubble");
             _commands = new List<ButtonCommand>();
 
-            Player p = ElementManager.Instance.Player(1);
+            Player p = ElementManager.Instance.Player(0);
             if (p != null) Player = p.transform;
         }
 
@@ -53,26 +51,18 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public void Draw(int index) {
+        public override void Draw(int index) {
+            if (index == 0) return;
+            index--;
+
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
                     //Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);
                     bool wiggle = (int)Time.CurrentTime % 5 == 0;
                     float angle = (wiggle) ? (float)System.Math.Sin(Time.CurrentTime * 40) : 0;
-                    UserInterface.Instance.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
+                    UserInterface.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
-            //comic bubble
-            Player p = ElementManager.Instance.Player(index);
-            if (p.gameObject.GetComponent<PlayerInventory>().IsFull()) {
-                /*
-                Point bubblePosition = Camera.Main.WorldToScreenPoint(p.transform.position).ToPoint() + new Point(0, -150);
-                Rectangle dest = new Rectangle(bubblePosition, new Point(100, 100));
-                UserInterface.Instance.DrawPictureOLD(dest, _comicBubble);
-                UserInterface.Instance.DrawStringOLD(bubblePosition.ToVector2() + new Vector2(10, 35), "I'm full!");
-                */
-            }
-
             _commands.Clear();
         }
 
@@ -85,7 +75,6 @@ namespace BRS.Scripts.UI {
         }
 
 
-
         // queries
         Rectangle SourceRectangle(XboxButtons button) {
             int column = (int)button % 4;
@@ -96,18 +85,6 @@ namespace BRS.Scripts.UI {
 
 
         // other
-        /*
-        async void Wiggle() {
-            float duration = .1f;
-            float angle = 10f;
-
-            float percent = 0;
-            while (percent < 1) {
-                percent += Time.time / duration;
-                float currentAngle = Curve.EvaluatePingPong(percent)*angle;
-                await Time.WaitForSeconds(.01f);
-            }
-        }*/
 
         struct ButtonCommand {
             public int Index;
@@ -117,5 +94,4 @@ namespace BRS.Scripts.UI {
         }
 
     }
-
 }

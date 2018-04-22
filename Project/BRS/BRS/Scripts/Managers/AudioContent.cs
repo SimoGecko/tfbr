@@ -1,0 +1,74 @@
+// (c) Simone Guggiari 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
+using BRS.Engine;
+
+namespace BRS.Scripts {
+    class AudioContent {
+        ////////// fills the Audio class with all the necessary files //////////
+
+        // --------------------- VARIABLES ---------------------
+
+        //public
+
+
+        //private
+
+
+        //reference
+
+
+        // --------------------- BASE METHODS ------------------
+        public static void Start() {
+            //Audio.PlaySong("Happy Happy Game Show");
+            Audio.SetMusicVolume(.1f);
+            Audio.SetSoundVolume(1f);
+        }
+
+
+
+        // --------------------- CUSTOM METHODS ----------------
+
+
+        // commands
+        public static string[] SongString() {
+            return new string[] { "Happy Happy Game Show" };
+        }
+
+        public static string[] SoundString() {
+            //extend this string array with all the sounds (use correct names)
+            /*
+            return new string[] {
+                "attacks/attack", "attacks/break", "attacks/stun",
+                "elements/bomb_timer", "elements/explosion", "elements/speedpad",
+                "game/police",
+                "powerups/bomb_pickup", "powerups/capacity_pickup", "powerups/health_pickup","powerups/key_pickup", "powerups/shield_pickup", "powerups/speed_pickup",
+                "powerups/key_use", "powerups/shield_use",
+                "valuables/cash_pickup", "valuables/gold_pickup", "valuables/diamond_pickup", };*/
+
+            return new string[] {//effects from mary
+                "attack/dash", "attack/enemy_hit", "attack/stun",
+                "collisions/bomb_explosion", "collisions/bomb_timer", "collisions/wall_hit",
+                "elements/active_magnet", "elements/catched_trap", "elements/falling_weight", "elements/speedpad",
+                "game/end_lose", "game/end_win", "game/police",
+                "menu/button_press_A", "menu/button_press_B", "menu/menu_change",
+                "movement/braking_tires", "movement/damaged_car", "movement/full_car", "movement/vehicle_engine_normal",//none used
+                "other/crate_cracking", "other/leaving_cash_base", "other/vault_opening",
+                "powerup/pickup", "powerup/use_bomb", "powerup/use_key", "powerup/use_stamina", "powerup/use_trap", "powerup/use_various",
+                "valuables/leave", "valuables/pickup_cash", "valuables/pickup_diamond", "valuables/pickup_gold"
+                //not called yet: wall_hit, end_lose/win, button_press_A/B, menu_change
+            };
+        }
+
+
+
+        // queries
+
+
+
+        // other
+
+    }
+}

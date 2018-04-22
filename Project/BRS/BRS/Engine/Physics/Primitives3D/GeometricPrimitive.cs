@@ -1,20 +1,15 @@
-﻿#region File Description
-//-----------------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------------
 // GeometricPrimitive.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
+// Managed for this project by Andreas Emch
 
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
-#endregion
 
 namespace BRS.Engine.Physics.Primitives3D {
     /// <summary>
@@ -25,21 +20,19 @@ namespace BRS.Engine.Physics.Primitives3D {
     /// to specify their geometry.
     /// </summary>
     public abstract class GeometricPrimitive : IDisposable {
-        #region Fields
 
+        #region Fields
 
         // During the process of constructing a primitive model, vertex
         // and index data is stored on the CPU in these managed lists.
-        List<VertexPositionNormal> _vertices = new List<VertexPositionNormal>();
-        List<ushort> _indices = new List<ushort>();
-
+        readonly List<VertexPositionNormal> _vertices = new List<VertexPositionNormal>();
+        readonly List<ushort> _indices = new List<ushort>();
 
         // Once all the geometry has been specified, the InitializePrimitive
         // method copies the vertex and index data into these buffers, which
         // store it on the GPU ready for efficient rendering.
-        VertexBuffer _vertexBuffer;
-        IndexBuffer _indexBuffer;
-
+        private VertexBuffer _vertexBuffer;
+        private IndexBuffer _indexBuffer;
 
         #endregion
 
@@ -177,5 +170,6 @@ namespace BRS.Engine.Physics.Primitives3D {
         }
 
         #endregion
+
     }
 }

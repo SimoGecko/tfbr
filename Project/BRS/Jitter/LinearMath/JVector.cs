@@ -713,5 +713,33 @@ namespace Jitter.LinearMath
         }
         #endregion
 
+        /// <summary>
+        /// By Andy: Change NaN entries into a valid float
+        /// </summary>
+        /// <param name="value">The input vector.</param>
+        /// <param name="output">The fixed output vector.</param>
+        /// <param name="newValue">Set the NaN-entries to this new value.</param>
+
+        #region public static void FixNanEntries(ref JVector value, out JVector output, float newValue)
+        public static void FixNanEntries(ref JVector value, out JVector output, float newValue) {
+            JVector tmp = new JVector {
+                X = float.IsNaN(value.X) ? newValue : value.X,
+                Y = float.IsNaN(value.Y) ? newValue : value.Y,
+                Z = float.IsNaN(value.Z) ? newValue : value.Z
+            };
+            output = tmp;
+        }
+        #endregion
+
+        /// <summary>
+        /// By Andy: Check if the vector has any NaN-entries.
+        /// </summary>
+        /// <returns>True in case there is any NaN-entry, false if not.</returns>
+        #region public bool IsNaN()
+        public bool IsNaN() {
+            return float.IsNaN(X) || float.IsNaN(Y) || float.IsNaN(Z);
+        }
+        #endregion
+
     }
 }

@@ -1,12 +1,12 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
 using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -20,10 +20,11 @@ namespace BRS.Scripts.Elements {
 
         //private
         private const float DeloadDistanceThreshold = 4f;
-        private const float TimeBetweenUnloads = .05f;
+        private const float TimeBetweenUnloads = .03f;
         private const float MoneyPenalty = .5f; // percent
         private readonly int _baseIndex = 0;
-        
+
+        public System.Action OnBringBase;
 
         //reference
 
@@ -51,6 +52,7 @@ namespace BRS.Scripts.Elements {
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == _baseIndex) {
+                    OnBringBase?.Invoke();
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
@@ -112,6 +114,8 @@ namespace BRS.Scripts.Elements {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
+            if(pi.CarryingValue>0) Audio.Play("leaving_cash_base", transform.position);
+
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();

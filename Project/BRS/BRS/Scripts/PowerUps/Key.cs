@@ -3,7 +3,9 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     class Key : Powerup {
@@ -24,6 +26,7 @@ namespace BRS.Scripts.Elements {
         public override void Start() {
             base.Start();
             PowerupType = PowerupType.Key;
+            powerupColor = Color.Blue;
         }
 
 

@@ -1,17 +1,19 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BRS.Engine.Physics;
-using BRS.Engine.Utilities;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Physics.RigidBodies;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle }
-    ////////// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop //////////
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart }
 
+    /// <summary>
+    /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
+    /// </summary>
     public class GameObject {
         public Transform transform;
         public List<IComponent> components;
@@ -20,7 +22,7 @@ namespace BRS.Engine {
         public bool active { get; set; } = true;
         public string name { private set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
-        public EffectMaterial mat = null;
+        public Material material = null;
 
         static int InstanceCount = 0;
 
@@ -36,29 +38,38 @@ namespace BRS.Engine {
 
 
         // ---------- CALLBACKS ----------
-        public virtual void Awake() {
+        public void Awake() {
             foreach (IComponent c in components)  c.Awake();
         }
-        public virtual void Start() {
+        public void Start() {
             foreach (IComponent c in components)  c.Start();
         }
 
-        public virtual void Update() {
+        public void Update() {
             if (active)  foreach (IComponent c in components)  c.Update();
         }
-        public virtual void LateUpdate() {
+        public void LateUpdate() {
             if (active) foreach (IComponent c in components) c.LateUpdate();
         }
 
-        public virtual void OnCollisionEnter(Collider col) {
+        public void OnCollisionEnter(Collider col) {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
-        public virtual void Draw(Camera cam) {
-            if (Model != null && active) {
-                Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, mat);
+        public void Draw3D(Camera cam) {
+            if (active) {
+                if (Model != null && active) {
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
+                }
             }
         }
+
+        public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
+            if (active) {
+                foreach (IComponent c in components) c.Draw(i);
+            }
+        }
+
 
 
 
@@ -70,14 +81,19 @@ namespace BRS.Engine {
 
         // ---------- INSTANTIATION ----------
         public static GameObject Instantiate(string name) {
-            return Instantiate(name, Vector3.Zero, Quaternion.Identity);
+            return Instantiate(name, Vector3.Zero, Quaternion.Identity, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Transform t) {
-            return Instantiate(name, t.position, t.rotation);
+            //return Instantiate(name, t.World.Translation, t.World.Rotation);
+            return Instantiate(name, t.position, t.rotation, Vector3.Zero);
         }
 
         public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation) {
+            return Instantiate(name, position, rotation, Vector3.Zero);
+        }
+
+        public static GameObject Instantiate(string name, Vector3 position, Quaternion rotation, Vector3 linearVelocity) {
             GameObject tocopy = Prefabs.GetPrefab(name);
             if (tocopy == null) {
                 Debug.LogError("Prefab not found");
@@ -89,7 +105,16 @@ namespace BRS.Engine {
             result.transform.rotation = rotation;
             //if (tocopy.transform.isStatic) result.transform.SetStatic();
 
+            result.Awake();
             result.Start(); // because instantiated at runtime
+
+            // If it is a dynamic rigid body it cna have some linear velocity when instantiated
+            if (result.HasComponent<DynamicRigidBody>()) {
+                DynamicRigidBody dc = result.GetComponent<DynamicRigidBody>();
+                dc.RigidBody.LinearVelocity = Conversion.ToJitterVector(linearVelocity) * 5;
+                dc.RigidBody.AddTorque(Conversion.ToJitterVector(linearVelocity) * 5);
+            }
+
             return result;
         }
 
@@ -103,7 +128,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            //TODO copy material
+            newObject.material = this.material;
             return newObject;
         }
 
@@ -111,14 +136,16 @@ namespace BRS.Engine {
         // ---------- DELETION ----------
 
         public static void ClearAll() {
-            foreach (GameObject o in allGameObjects) Destroy(o);
+            while (allGameObjects.Count > 0) {
+                Destroy(allGameObjects[0]);
+            }
             allGameObjects.Clear();
         }
 
         public static void Destroy(GameObject o) {
             if (o == null)  return;
             o.active = false;
-            //if (o.HasComponent<Collider>()) Collider.allcolliders.Remove(o.GetComponent<Collider>()); // to avoid increase in colliders
+            //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
             foreach (Component c in o.components)  c.Destroy();
@@ -126,9 +153,11 @@ namespace BRS.Engine {
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
             new Timer(lifetime, () => Destroy(o));
-            //await Task.Delay((int)(lifetime * 1000));
         }
 
+        public static void ConsiderPrefab(GameObject o) {
+            allGameObjects.Remove(o);
+        }
 
 
         // ---------- SEARCH ----------

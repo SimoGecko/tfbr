@@ -12,10 +12,10 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
         public enum State { Menu, Playing, Paused, Finished };
 
-        public static State state; // CONTROLS STATE OF THE GAME
+        public static State state = State.Playing; // CONTROLS STATE OF THE GAME
 
         //public
-        public static int NumPlayers = 2;
+        public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 4;
         public const int NumRounds = 3;
 
@@ -34,7 +34,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
-            state = State.Menu;
+            state = State.Playing;
             _teamWins = new int[2];
             _roundNumber = 1;
         }
@@ -81,7 +81,7 @@ namespace BRS.Scripts.Managers {
         void RestartCustom() { // it still slows down for some reason
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            //UserInterface.Instance.Start();
+            //UserInterface.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 

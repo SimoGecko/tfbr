@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {
@@ -35,6 +35,8 @@ namespace BRS.Scripts.Elements {
             if (isplayer) {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSpeedPad(true);
+                Audio.Play("speedpad", transform.position);
+
                 new Timer(EffectTime, () => pM.SetSpeedPad(false));
             }
         }

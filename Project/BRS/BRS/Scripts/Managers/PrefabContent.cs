@@ -6,216 +6,137 @@ using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
 using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 // Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
 // ReSharper disable once CheckNamespace
 namespace BRS.Engine {
-    static partial class Prefabs {
-        //static class that contains all GameObjects stored as prefabs
-
+    static class PrefabContent {
+        ////////// builds all the prefabs and gives them to Prefabs //////////
 
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
-        static void BuildPrefabs() {
-            //VALUABLES
+        public static void BuildPrefabs() {
+
+            //-------------------MATERIALS-------------------
+            Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
+            Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+
+            //-------------------VALUABLES-------------------
             //cash
-            //GameObject moneyPrefab = new GameObject("moneyPrefab", File.Load<Model>("Models/valuables/cash"));
-            /*
-            string[] models = new string[] { "SM_Prop_Money_Note_07", "SM_Prop_Money_Stack_02", "SM_Prop_Money_Stack_03" }; // ../polygonheist2/SM_Prop_Money_Stack_04
-            int[] values = new int[] { 1, 3, 10 };
-            for (int i=0; i<3; i++) {
-                GameObject moneyPrefab = new GameObject("money"+values[i]+"Prefab", File.Load<Model>("Models/polygonheist/" + models[i]));
-                moneyPrefab.transform.Scale(2f);
-                moneyPrefab.transform.SetStatic();
-                moneyPrefab.AddComponent(new Money(100*values[i], values[i], Money.Type.Cash));
-                moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-                //moneyPrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
-                AddPrefab(moneyPrefab);
-            }*/
-
-            //simple cash note
-            GameObject moneyPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_Money_Note_07"));
-            moneyPrefab.transform.Scale(2f);
-            moneyPrefab.AddComponent(new Money(100, 1, Money.Type.cash));
-            moneyPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(moneyPrefab);
-
-
-            //diamond
-            /*
-            GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/valuables/diamond"));
-            diamondPrefab.transform.Scale(1f);
-            diamondPrefab.AddComponent(new Money(300, 2, Money.Type.Diamond));
-            diamondPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(diamondPrefab);*/
+            GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/elements/cash"));
+            cashPrefab.transform.Scale(2f);
+            cashPrefab.material = elementsMat;
+            cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
+            cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(1.5f, 3.0f, 3.0f)));
+            Prefabs.AddPrefab(cashPrefab);
 
             //gold
-
-            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/polygonheist/SM_Prop_GoldBar_01"));
+            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/goldP"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
-            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.gold));
-            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(goldPrefab);
+            goldPrefab.material = elementsMat;
+            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
+            goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(3.0f, 3.0f, 1.5f)));
+            Prefabs.AddPrefab(goldPrefab);
 
+            //diamond
+            GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/elements/diamond"));
+            diamondPrefab.transform.Scale(5f);
+            diamondPrefab.material = powerupMat;
+            diamondPrefab.AddComponent(new Money(3000, 1, Money.Type.Diamond));
+            diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
+            Prefabs.AddPrefab(diamondPrefab);
 
-            //crate prefab
-            GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/primitives/cube"));
-            cratePrefab.transform.Scale(.5f);
-            cratePrefab.AddComponent(new Crate());
-            cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //cratePrefab.AddComponent(new BoxCollider(Vector3.Zero, Vector3.One*.5f));
-            AddPrefab(cratePrefab);
+           
 
-
-            //POWERUPS
+            //-------------------POWERUPS-------------------
             //expand these two arrays to add new powerups with a particular name and a powerup script
             string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
             Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
 
-            for(int i=0; i<powerupName.Length; i++) {
+
+            for (int i=0; i<powerupName.Length; i++) {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
-                powerupPrefab.transform.Scale(.3f);
+                powerupPrefab.transform.Scale(1.5f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
-                AddPrefab(powerupPrefab);
+                powerupPrefab.material = powerupMat;
+                Prefabs.AddPrefab(powerupPrefab);
             }
-            /*
-            //bomb
-            GameObject bombPrefab = new GameObject("bombPrefab", File.Load<Model>("Models/powerups/bomb"));
-            bombPrefab.transform.Scale(.3f);
-            bombPrefab.AddComponent(new Bomb());
-            bombPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //bombPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            //bombPrefab.transform.SetStatic();
-            AddPrefab(bombPrefab);
 
-            //capacity
-            GameObject capacityPrefab = new GameObject("capacityPrefab", File.Load<Model>("Models/powerups/capacity"));
-            capacityPrefab.transform.Scale(.3f);
-            capacityPrefab.AddComponent(new CapacityBoost());
-            capacityPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //capacityPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(capacityPrefab);
+            //-------------------ELEMENTS-------------------
 
-            //trap
-            GameObject staminaPrefab = new GameObject("staminaPrefab", File.Load<Model>("Models/powerups/stamina"));
-            staminaPrefab.transform.Scale(.3f);
-            staminaPrefab.AddComponent(new StaminaPotion());
-            staminaPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            //staminaPrefab.transform.SetStatic();
-            AddPrefab(staminaPrefab);
+            //police car
+            GameObject police = new GameObject("policePrefab", File.Load<Model>("Models/vehicles/police"));
+            police.AddComponent(new Police());
+            police.transform.Scale(1f);
+            police.material = policeMat;
+            police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
+            Prefabs.AddPrefab(police);
 
-            //key
-            GameObject keyPrefab = new GameObject("keyPrefab", File.Load<Model>("Models/powerups/key"));
-            keyPrefab.transform.Scale(.3f);
-            keyPrefab.AddComponent(new Key());
-            keyPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //keyPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(keyPrefab);
-
-            //health
-            GameObject healthPrefab = new GameObject("healthPrefab", File.Load<Model>("Models/powerups/health"));
-            healthPrefab.transform.Scale(.3f);
-            healthPrefab.AddComponent(new HealthPotion());
-            healthPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //healthPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(healthPrefab);
-
-            //shield
-            GameObject shieldPrefab = new GameObject("shieldPrefab", File.Load<Model>("Models/powerups/shield"));
-            shieldPrefab.transform.Scale(.3f);
-            shieldPrefab.AddComponent(new StaminaPotion());
-            shieldPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //shieldPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(shieldPrefab);
-
-            //speed
-            GameObject speedPrefab = new GameObject("speedPrefab", File.Load<Model>("Models/powerups/speed"));
-            speedPrefab.transform.Scale(.3f);
-            speedPrefab.AddComponent(new SpeedBoost());
-            speedPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //speedPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(speedPrefab);
-
-            //trap
-            GameObject trapPrefab = new GameObject("trapPrefab", File.Load<Model>("Models/powerups/trap"));
-            trapPrefab.transform.Scale(.3f);
-            trapPrefab.AddComponent(new Trap());
-            trapPrefab.AddComponent(new DynamicRigidBody(physics, shapeType: powerupShapeType, pureCollider: true));
-            //trapPrefab.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            AddPrefab(trapPrefab);
-
-            //explodingbox
-            GameObject explodingbox = new GameObject("explodingboxPrefab", File.Load<Model>("Models/powerups/box"));
-            explodingbox.transform.Scale(.3f);
-            explodingbox.AddComponent(new ExplodingBox());
-            explodingbox.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            //trapPrefab.transform.SetStatic();
-            AddPrefab(explodingbox);
-
-            //weight
-            GameObject weight = new GameObject("weightPrefab", File.Load<Model>("Models/powerups/weight"));
-            weight.transform.Scale(.3f);
-            weight.AddComponent(new Weight());
-            weight.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            //trapPrefab.transform.SetStatic();
-            AddPrefab(weight);
-
-            //magnet
-            GameObject magnet = new GameObject("magnetPrefab", File.Load<Model>("Models/powerups/magnet"));
-            magnet.transform.Scale(.3f);
-            magnet.AddComponent(new Magnet());
-            magnet.AddComponent(new SphereCollider(Vector3.Zero, .2f));
-            //trapPrefab.transform.SetStatic();
-            AddPrefab(magnet);
-            */
-
-            //GAME ELEMENTS
+            //crate
+            GameObject cratePrefab = new GameObject("cratePrefab", File.Load<Model>("Models/elements/crate"));
+            cratePrefab.transform.Scale(1.5f);
+            cratePrefab.material = powerupMat;
+            cratePrefab.AddComponent(new Crate());
+            cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            Prefabs.AddPrefab(cratePrefab);
 
             //oil
-            GameObject oilPrefab = new GameObject("oilPrefab", File.Load<Model>("Models/elements/oil_trap"));
-            oilPrefab.transform.Scale(.6f);
+            GameObject oilPrefab = new GameObject("oilPrefab", File.Load<Model>("Models/elements/oil"));
+            oilPrefab.transform.Scale(1f);
             oilPrefab.transform.SetStatic();
+            oilPrefab.material = elementsMat;
             oilPrefab.AddComponent(new OilTrap());
             oilPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //oilPrefab.AddComponent(new SphereCollider(Vector3.Zero, .6f));
-            AddPrefab(oilPrefab);
+            Prefabs.AddPrefab(oilPrefab);
 
             //planted bomb
-            GameObject plantedBombPrefab = new GameObject("plantedBombPrefab", File.Load<Model>("Models/elements/bomb"));
-            plantedBombPrefab.transform.Scale(.3f);
+            GameObject plantedBombPrefab = new GameObject("plantedBombPrefab", File.Load<Model>("Models/powerups/bomb"));
+            plantedBombPrefab.transform.Scale(1.5f);
             plantedBombPrefab.transform.SetStatic();
             plantedBombPrefab.AddComponent(new PlantedBomb());
             plantedBombPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(plantedBombPrefab);
+            plantedBombPrefab.material = powerupMat;
+            Prefabs.AddPrefab(plantedBombPrefab);
 
             //falling weight
-            GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/elements/weight"));
-            fallingWeight.transform.Scale(.5f);
+            GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/powerups/weight"));
+            fallingWeight.transform.Scale(1.5f);
             fallingWeight.AddComponent(new FallingWeight());
             fallingWeight.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(fallingWeight);
+            fallingWeight.material = powerupMat;
+            Prefabs.AddPrefab(fallingWeight);
 
             //planted magnet
-            GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/elements/magnet"));
-            plantedMagnet.transform.Scale(.3f);
+            GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/powerups/magnet"));
+            plantedMagnet.transform.Scale(1.5f);
             plantedMagnet.AddComponent(new PlantedMagnet());
             plantedMagnet.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            AddPrefab(plantedMagnet);
+            plantedMagnet.material = powerupMat;
+            Prefabs.AddPrefab(plantedMagnet);
 
             //speed boost
-            GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/platform"));
+            GameObject speedpadPrefab = new GameObject("speedpadPrefab", File.Load<Model>("Models/elements/speedpad"));
             speedpadPrefab.transform.Scale(1f);
             speedpadPrefab.transform.SetStatic();
+            speedpadPrefab.material = elementsMat;
             speedpadPrefab.AddComponent(new SpeedPad());
             speedpadPrefab.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
-            //speedpadPrefab.AddComponent(new BoxCollider(Vector3.Zero, new Vector3(1, .5f, 1)));
-            AddPrefab(speedpadPrefab);
+            Prefabs.AddPrefab(speedpadPrefab);
 
 
-
+            //-------------------DYNAMIC OBJECTS-------------------
+            string[] dynamicElements = new string[] { "chair", "plant", "cart" };
+            foreach(string s in dynamicElements) {
+                GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
+                dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box));
+                dynamicElement.material = elementsMat;
+                Prefabs.AddPrefab(dynamicElement);
+            }
         }
-
     }
 }

@@ -64,6 +64,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
+        //TODO use correct Draw
         public void Draw(SpriteBatch spriteBatch) {
             //MAP
             spriteBatch.Draw(_mapSprite, _mapDest, Color.White);

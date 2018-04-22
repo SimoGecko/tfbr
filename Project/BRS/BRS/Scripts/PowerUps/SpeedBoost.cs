@@ -18,6 +18,7 @@ namespace BRS.Scripts.PowerUps {
         public override void Start() {
             base.Start();
             PowerupType = PowerupType.Speed;
+            powerupColor = Color.Yellow;
         }
 
 

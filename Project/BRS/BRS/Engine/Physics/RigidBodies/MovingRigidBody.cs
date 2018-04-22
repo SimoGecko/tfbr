@@ -1,68 +1,55 @@
-﻿using Jitter.Collision.Shapes;
-using Jitter.Dynamics;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine.Physics.Colliders;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics.RigidBodies {
+    /// <summary>
+    /// Represents a steerable rigid body in the physics simulation which is controlled by the physics simulation and the player.
+    /// </summary>
     class MovingRigidBody : RigidBodyComponent {
-        private float _treshold = 0.01f;
 
-        public MovingRigidBody(PhysicsManager physicsManager, bool isActive = true, ShapeType shapeType = ShapeType.Box) {
-            PhysicsManager = physicsManager;
+        public SteerableCollider SteerableCollider => RigidBody as SteerableCollider;
+
+        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false)
+            : this(new Vector3(size), isActive, shapeType, pureCollider) {
+        }
+
+        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             IsStatic = false;
+            IsAnimated = false;
             IsActive = isActive;
             ShapeType = shapeType;
+            PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
+            Size = Conversion.ToJitterVector(size);
         }
 
         /// <summary>
         /// Initialization of the rigid-body
         /// </summary>
-        public override void Start() {
-            Model model = gameObject.Model;
-            BoundingBox bb = BoundingBoxHelper.Calculate(model);
-            JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-            bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
-                bbSize.Y * gameObject.transform.scale.Y,
-                bbSize.Z * gameObject.transform.scale.Z);
-            CollisionShape = new BoxShape(bbSize);
+        public override void Awake() {
+            CalculateShape(ShapeType.Box);
 
-            JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
-            com = new JVector(com.X * gameObject.transform.scale.X,
-                com.Y * gameObject.transform.scale.Y,
-                com.Z * gameObject.transform.scale.Z);
-            CenterOfMass = new JVector(com.X > _treshold ? com.X : 0,
-                com.Y > _treshold ? com.Y : 0,
-                com.Z > _treshold ? com.Z : 0);
-
-
-            RigidBody = new SteerableRigidBody(CollisionShape) {
+            RigidBody = new SteerableCollider(CollisionShape) {
                 Position = Conversion.ToJitterVector(transform.position),
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
+                CenterOfMass = CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
-                GameObject = gameObject
+                GameObject = gameObject,
+                Material = new Jitter.Dynamics.Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
-            RigidBody.Material = new Material { KineticFriction = 0, Restitution = 0, StaticFriction = 0 };
-
-            PhysicsManager.World.AddBody(RigidBody);
+            PhysicsManager.Instance.World.AddBody(RigidBody);
         }
 
-        /// <summary>
-        /// Update of the time-step.
-        /// </summary>
-        public override void Update() {
-            // Apply position and rotation from physics-world to the game-object
-            transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
-            transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-           
-            //Debug.Log(RigidBody.Orientation, "MovingRigidBody:\n");
-
-            base.Update();
+        public override void Start() {
+            SteerableCollider.CorrectPosition();
         }
     }
 }

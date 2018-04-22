@@ -40,17 +40,20 @@ namespace BRS.Engine {
             foreach (Transform cube in CubeOrder) {
                 Graphics.DrawModel(Prefabs.CubeModel, cam.View, cam.Proj, cube.World);
             }
-            CubeOrder.Clear();
             foreach (Transform sphere in SphereOrder) {
                 Graphics.DrawModel(Prefabs.SphereModel, cam.View, cam.Proj, sphere.World);
             }
-            SphereOrder.Clear();
         }
 
         public static void DrawFull(Camera cam) {
             foreach (Transform trans in TransformOrder) {
                 Graphics.DrawModel(Prefabs.Emptymodel, cam.View, cam.Proj, trans.World);
             }
+        }
+
+        public static void ClearOrders() {
+            CubeOrder.Clear();
+            SphereOrder.Clear();
             TransformOrder.Clear();
         }
     }

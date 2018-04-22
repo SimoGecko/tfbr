@@ -1,10 +1,9 @@
 ﻿using BRS.Engine;
-using BRS.Scripts.Managers;
 using BRS.Engine.Physics;
+using BRS.Engine.PostProcessing;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Menu;
 using BRS.Scripts;
 
 namespace BRS {
@@ -15,31 +14,51 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        //@andy including these
-        private Display _display;
-        private DebugDrawer _debugDrawer; // these should also not exist
-        private static bool _usePhysics = false;
-
+        // Render the scene to this target
+        RenderTarget2D _renderTarget;
+        // depth info
+        RenderTarget2D _ZBuffer;
+        Texture2D _ZBufferTexture;
+        Effect _ZBufferShader;
 
         public Game1() {
             //NOTE: don't add anything into constructor
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             File.content = Content;
-            Graphics.gD = GraphicsDevice;
+            Graphics.gDM = _graphics;
         }
 
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
-
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
 
-            //@andy remove this - hide everything inside PhysicsManager.Setup();
-            _debugDrawer = new DebugDrawer(this);
-            Components.Add(_debugDrawer);
-            _display = new Display(this);
-            Components.Add(_display);
-            PhysicsManager.SetUpPhysics(_debugDrawer, _display, GraphicsDevice);
+            // init the rendertarget with the graphics device
+            _renderTarget = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            _ZBuffer = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
+            // set up the post processing manager
+            PostProcessingManager.Initialize(Content);
+
+            // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+            // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+            PhysicsDrawer.Initialize(this, GraphicsDevice);
+
+            // Todo: can be removed for alpha-release
+            PoliceManager.IsActive = false;
 
             base.Initialize();
         }
@@ -47,33 +66,23 @@ namespace BRS {
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            new UserInterface();
-            Screen.AdditionalSetup(_graphics);
+            UserInterface.sB = _spriteBatch;
+            Graphics.Start();
 
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            if (_usePhysics)  SceneManager.Load("LevelPhysics"); // TODO make simple string to select level
-            else SceneManager.Load("Level1");
-            //_ui = new UserInterface();
-            //_ui.Start();
-           
+            SceneManager.LoadScene("Level1");
 
-            //everything is loaded, call Start
-            Start();
-        }
-
-        public void Start() {
-            //all the objects are present in memory but still don't hold references. Initialize variables and start
-
-            UserInterface.Instance.Start();
+            //start other big components
+            UserInterface.Start();
             Input.Start();
             Audio.Start();
+            PostProcessingManager.Instance.Start(_spriteBatch);
 
-            //foreach (Camera cam in Screen.cameras) cam.Start(); // cameras are gameobjects
-            foreach (GameObject go in GameObject.All) go.Awake();
-            foreach (GameObject go in GameObject.All) go.Start();
+            // load the z buffer shader
+            _ZBufferShader = Content.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
         }
 
 
@@ -88,35 +97,21 @@ namespace BRS {
             Time.Update(gameTime);
 
             Input.Update();
-
-
             Audio.Update();
-
-            if (Input.GetKeyDown(Keys.D9)) {
-                Debug.Log("changing scene...");
-                SceneManager.Load("Level2");
-                Screen.AdditionalSetup(_graphics);
-                foreach (GameObject go in GameObject.All) go.Start();
-
-            }
-            if (Input.GetKeyDown(Keys.D0)) {
-                Debug.Log("changing scene...");
-                SceneManager.Load("Level1");
-                Screen.AdditionalSetup(_graphics);
-                foreach (GameObject go in GameObject.All) go.Start();
-
-            }
+            SceneManager.Update(); // check for scene change (can remove later)
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
+            PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            
-
+            PostProcessingManager.Instance.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            // render scene for real 
+            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.Clear(Graphics.StreetGray);
             base.Draw(gameTime);
 
             //-----3D-----
@@ -125,29 +120,62 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
-                PhysicsManager.Instance.Draw(cam); // why is this here??
+                // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+                // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
+                PhysicsDrawer.Instance.Draw(cam);
 
-                foreach (GameObject go in GameObject.All) go.Draw(cam);
+                foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
+
             }
+            Gizmos.ClearOrders();
+
+            // draw everything 3 D to get the depth info 
+
+            // render to z buffer
+            // GraphicsDevice.Render = CompareFunction.LessEqual;
+            // GraphicsDevice.SetRenderTarget(_ZBuffer);
+            // GraphicsDevice.Clear(Color.Black);
+
+            // pass the matWorldViewProj matrix
+            // effect.Parameters["matWorldViewProj"].SetValue(worldMatrix * viewMatrix * projMatrix);
+            // _ZBufferShader.Parameters
+            // apply the depth buffer shader
+            // _ZBufferShader.CurrentTechnique.Passes[0].Apply();
+            // draw all 3d objects
+            // Draw3D(gameTime);
+
+
+            //// draw everyting 3D
+            //Draw3D(gameTime);
+
+
+            // apply post processing
+            // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
+
+            // Drop the render target
+            GraphicsDevice.SetRenderTarget(null);
+
 
             //-----2D-----
-            int i = 0;
+            int i = 1;
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                UserInterface.Instance.DrawSplitscreen(_spriteBatch, i++);
+                foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
+                i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            UserInterface.Instance.DrawGlobal(_spriteBatch);
+            foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
         }
     }

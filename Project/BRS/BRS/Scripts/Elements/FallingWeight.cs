@@ -1,5 +1,5 @@
 ﻿using BRS.Engine;
-using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
@@ -24,6 +24,7 @@ namespace BRS.Scripts.Elements {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            Audio.Play("falling_weight", transform.position);
 
         }
         public override void Update() {

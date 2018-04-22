@@ -18,17 +18,36 @@ namespace BRS.Engine {
         public static Color yellow = new Color(255, 187, 0);
         */
         //some default colors (same as google)
+        /*
         private static readonly Color Red    = new Color(234, 67, 53);
         private static readonly Color Green  = new Color(52, 168, 83);
         private static readonly Color Blue   = new Color(66, 133, 244);
-        private static readonly Color Yellow = new Color(251, 188, 5);
+        private static readonly Color Yellow = new Color(251, 188, 5);*/
+
+            //default colors from unity
+        public static Color Green = new Color(109, 202, 35);
+        public static Color Blue = new Color(0, 158, 255);
+        public static Color Yellow = new Color(255, 198, 13);
+        public static Color Red = new Color(234, 67, 53);
+
 
         public static Color Clear = new Color(255, 255, 255, 0);
+        public static Color StreetGray = new Color(64, 64, 64, 0);
         //private
 
-        public static GraphicsDevice gD;
+        public static GraphicsDeviceManager gDM;
+        public static GraphicsDevice gD { get { return gDM.GraphicsDevice; } }
 
+        public static Effect texlightEffect;
+        public static Effect textureEffect;
+        //public static Texture2D lightMap;
+        //public static Texture2D textureCol;
         //reference
+
+        public static void Start() {
+            texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
+            textureEffect = File.Load<Effect>("Other/shaders/textured");
+        }
 
 
 
@@ -37,23 +56,36 @@ namespace BRS.Engine {
 
         // commands
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, EffectMaterial mat = null) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+            //selects which effect to use based on material
+            if (mat == null) DrawModelSimple(model, view, proj, world);
+            else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
+            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world);
+            else DrawModelMaterial(model, view, proj, world, mat);
+        }
+
+        static void DrawModelSimple(Model model, Matrix view, Matrix proj, Matrix world) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
-                    if (mat == null) {
-                        //default settings
-                        effect.EnableDefaultLighting();
-                    } else {
-                        effect.EnableDefaultLighting();
-                        //effect.LightingEnabled = mat.lit;
-                        //effect.DiffuseColor = mat.diffuse.ToVector3();
-                        effect.Alpha = mat.Diffuse.A;
-                        //effect.CurrentTechnique = EffectTechnique
-                        //effect.Texture
-                    }
-                    //effect.Alpha = .5f;
-                    //effect.di
-                    //effect.EnableDefaultLighting();
+                    effect.EnableDefaultLighting();
+                    effect.World = world;
+                    effect.View = view;
+                    effect.Projection = proj;
+                }
+                mesh.Draw(); // outside, not inside
+            }
+        }
+
+        static void DrawModelMaterial(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (BasicEffect effect in mesh.Effects) {
+                    //use base effect with diffuse color and alpha (and ev texture)
+                    effect.EnableDefaultLighting();
+                    effect.LightingEnabled = mat.Lit;
+                    effect.DiffuseColor = mat.DiffuseColor;
+                    effect.Alpha = mat.Diffuse.A;
+                    //effect.CurrentTechnique = EffectTechnique
+                    //effect.Texture
 
                     //effects
                     effect.World = world;
@@ -64,6 +96,35 @@ namespace BRS.Engine {
             }
         }
 
+        static void DrawModelBaked(Model model, Texture2D colorTex, Texture2D lightTex, Matrix view, Matrix proj, Matrix world) {
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    part.Effect = texlightEffect;
+                    texlightEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    texlightEffect.Parameters["View"].SetValue(view);
+                    texlightEffect.Parameters["Projection"].SetValue(proj);
+
+                    texlightEffect.Parameters["ColorTexture"].SetValue(colorTex);
+                    texlightEffect.Parameters["LightmapTexture"].SetValue(lightTex);
+                }
+                mesh.Draw();
+            }
+        }
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world) {
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    part.Effect = textureEffect;
+                    textureEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    textureEffect.Parameters["View"].SetValue(view);
+                    textureEffect.Parameters["Projection"].SetValue(proj);
+
+                    textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
+                }
+                mesh.Draw();
+            }
+        }
+
+        //----------------------------------------------------------------------------------------------
 
         //COLOR METHODS
         public static Color[,] TextureTo2DArray(Texture2D texture) {

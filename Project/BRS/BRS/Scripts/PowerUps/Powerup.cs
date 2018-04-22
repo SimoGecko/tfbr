@@ -1,14 +1,13 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -21,20 +20,23 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public PowerupType PowerupType;
+        private const float RotSpeed = 1;
 
         //private
         //protected bool destroyOnUse = true;
         private bool _rotate = true;
         protected bool _useInstantly = false;
 
+        protected Color powerupColor = Color.White;
 
         //private float _rotationAngle = 0.0f;
 
         // const
-        private const float RotSpeed = 1;
 
         //reference
         public Player Owner { get; protected set; }
+
+        private DynamicRigidBody _rigidBody;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -42,20 +44,21 @@ namespace BRS.Scripts.PowerUps {
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
             CreateUseCallbacks();
+
+            if (gameObject.HasComponent<DynamicRigidBody>()) {
+                _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
+            }
         }
 
         public override void Update() {
             base.Update();
 
             if (_rotate) {
-                //_rotationAngle += RotSpeed * Time.DeltaTime;
-
-                RigidBodyComponent rbc = gameObject.GetComponent<DynamicRigidBody>();
-                if (rbc != null) {
-                    rbc.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                if (_rigidBody != null) {
+                    _rigidBody.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+                } else {
+                    transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
                 }
-
-                //transform.Rotate(Vector3.Up, rotSpeed * Time.deltaTime);
             }
         }
 
@@ -68,7 +71,8 @@ namespace BRS.Scripts.PowerUps {
         protected override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                Audio.Play(PowerupType.ToString().ToLower()+ "_pickup", transform.position);
+                Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, powerupColor);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);
@@ -81,8 +85,11 @@ namespace BRS.Scripts.PowerUps {
         }
 
         public virtual void UsePowerup() {
-                transform.position = Owner.transform.position;
-                Audio.Play(PowerupType.ToString().ToLower()+ "_use",  transform.position);
+            transform.position = Owner.transform.position;
+            string audioName = "use_" + PowerupType.ToString().ToLower();
+            if(Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
+            else Audio.Play("use_various", transform.position);
+
         }
 
         // queries

@@ -9,6 +9,7 @@ namespace BRS.Engine.Physics {
     /// Conversions between the XNA- and Jitter-Framework.
     /// </summary>
     public static class Conversion {
+
         /// <summary>
         /// Convert a XNA-vector to a Jitter-vector
         /// </summary>
@@ -18,6 +19,7 @@ namespace BRS.Engine.Physics {
             return new JVector(vector.X, vector.Y, vector.Z);
         }
 
+
         /// <summary>
         /// Convert a Jitter-vector to a XNA-vector
         /// </summary>
@@ -26,6 +28,7 @@ namespace BRS.Engine.Physics {
         public static Vector3 ToXnaVector(JVector vector) {
             return new Vector3(vector.X, vector.Y, vector.Z);
         }
+
 
         /// <summary>
         /// Convert a XNA-matrix to a Jitter-matrix
@@ -45,6 +48,7 @@ namespace BRS.Engine.Physics {
             result.M33 = matrix.M33;
             return result;
         }
+
 
         /// <summary>
         /// Convert a Jitter-matrix to a XNA-matrix
@@ -66,6 +70,7 @@ namespace BRS.Engine.Physics {
                 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
         }
 
+
         /// <summary>
         /// Convert a Jitter-quaternion to a XNA-quaternion
         /// </summary>
@@ -75,6 +80,7 @@ namespace BRS.Engine.Physics {
             return new Quaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
 
+
         /// <summary>
         /// Convert a XNA-quaternion to a Jitter-quaternion
         /// </summary>
@@ -83,5 +89,7 @@ namespace BRS.Engine.Physics {
         public static JQuaternion ToJitterQuaternion(Quaternion quaternion) {
             return new JQuaternion(quaternion.X, quaternion.Y, quaternion.Z, quaternion.W);
         }
+
+
     }
 }

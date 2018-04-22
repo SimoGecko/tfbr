@@ -43,10 +43,18 @@ namespace BRS.Engine {
 
 
         // commands
-        public static T Load<T>(string s) {
+        // Todo: Clean up
+        public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
+            string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
+            string fullPath = filePath + s + ".fbx";
+            bool fileExists = false;// System.IO.File.Exists(fullPath);
+            if (false && !fileExists && typeof(T) == typeof(Model)) {
+                Debug.Log("File " + s + " doesn't exist!");
+                //return content.Load<T>("Models/primitives/cube");
+            }
+
             T result = content.Load<T>(s);
-            if (result == null) Debug.LogError("incorrect path to file: " + s);
             return result;
         }
 
@@ -61,8 +69,7 @@ namespace BRS.Engine {
         /// Read the scene-file and build the game- and physic-objects for it
         /// </summary>
         /// <param name="pathName">Path to the scene-file</param>
-        /// <param name="physics">PhysicsManager for the physics-simulation</param>
-        public static void ReadFile(string pathName, PhysicsManager physics) {
+        public static void ReadStatic(string pathName) {
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
@@ -91,7 +98,7 @@ namespace BRS.Engine {
                         Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(-float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
                         Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
 
-                        GameObject go = new GameObject(tagName + "_" + i.ToString(), File.Load<Model>("Models/primitives/" + prefabName));
+                        GameObject go = new GameObject(tagName + "_" + i, Load<Model>("Models/primitives/" + prefabName));
 
                         go.transform.position = position;
                         go.transform.scale = scale;
@@ -103,31 +110,76 @@ namespace BRS.Engine {
                             go.tag = ObjectTag.Default;
                         }
 
-                        //if (tagName == "Ground") go.tag = ObjectTag.Ground;
-                        //else if (tagName == "Base") go.tag = ObjectTag.Base;
-                        //else if (tagName == "Obstacle") go.tag = ObjectTag.Obstacle;
-                        //else if (tagName == "Boundary") go.tag = ObjectTag.Boundary;
-                        //else if (tagName == "VaultDoor") go.tag = ObjectTag.Vault;
-                        //else if (tagName == "StaticObstacle") go.tag = ObjectTag.StaticObstacle;
-                        //else if (tagName == "DynamicObstacle") go.tag = ObjectTag.DynamicObstacle;
-
                         switch (go.tag) {
                             case ObjectTag.Base:
                                 //go.AddComponent(new StaticRigidBody(physics, pureCollider: true));
                                 break;
                             case ObjectTag.Ground:
-                                go.AddComponent(new StaticRigidBody(physics, isGround: true));
+                                go.AddComponent(new StaticRigidBody(isGround: true, shapeType: ShapeType.BoxInvisible));
                                 break;
                             case ObjectTag.DynamicObstacle:
-                                go.AddComponent(new DynamicRigidBody(physics));
+                                go.AddComponent(new DynamicRigidBody());
                                 break;
                             default:
-                                go.AddComponent(new StaticRigidBody(physics));
+                                go.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxInvisible));
                                 break;
                         }
+                    }
 
-                        // Todo: Refactor..
-                        go.Start();
+                    nameContent = reader.ReadLine();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Read the scene-file and build the game- and physic-objects for it
+        /// </summary>
+        /// <param name="pathName">Path to the scene-file</param>
+        public static void ReadDynamic(string pathName) {
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+
+                    if (nameContent == null)
+                        break;
+
+                    string tagName = reader.ReadLine().Split(' ')[1];
+                    string prefabName = reader.ReadLine().Split(' ')[1];
+
+                    string lineNoObj = reader.ReadLine();
+                    int n = int.Parse(lineNoObj.Split(' ')[1]);
+
+                    Debug.Log(string.Format("{0}: {1}", tagName, n));
+
+                    for (int i = 0; i < n; i++) {
+                        string p = reader.ReadLine();
+                        string r = reader.ReadLine();
+                        string s = reader.ReadLine();
+
+                        string[] pSplit = p.Split(' '); // pos: x y z in unity coord. system
+                        string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
+                        string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
+
+                        Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
+                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(-float.Parse(rSplit[2])), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
+                        Vector3 scale = new Vector3(float.Parse(sSplit[3]), float.Parse(sSplit[2]), float.Parse(sSplit[1]));
+
+                        try {
+                            var tag = (ObjectTag)Enum.Parse(typeof(ObjectTag), tagName, true);
+
+                            switch (tag) {
+                                case ObjectTag.Chair:
+                                case ObjectTag.Cart:
+                                case ObjectTag.Plant:
+                                    GameObject go = GameObject.Instantiate(tagName.ToLower(), position, rotation);
+                                    go.transform.scale = scale;
+                                    break;
+                            }
+                        } catch {
+                            // ignored
+                        }
                     }
 
                     nameContent = reader.ReadLine();
@@ -138,6 +190,7 @@ namespace BRS.Engine {
 
         //simo code
         public static void ReadHeistScene(string pathName) {
+            Vector3 offset = new Vector3(0, 0, 10); // Turn this off to avoid offset
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                 string nameContent;
                 while ((nameContent = reader.ReadLine()) != null) {
@@ -159,24 +212,22 @@ namespace BRS.Engine {
                         string[] rSplit = r.Split(' '); // rot: x y z in unity coord. system
                         string[] sSplit = s.Split(' '); // sca: x y z in unity coord. system
 
+                        Vector3 pos = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), float.Parse(pSplit[3]));
+                        Vector3 rot = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
+                        Vector3 sca = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
 
-                        Vector3 position = new Vector3(float.Parse(pSplit[1]), float.Parse(pSplit[2]), -float.Parse(pSplit[3]));
-                        Vector3 eulerAngle = new Vector3(float.Parse(rSplit[1]), float.Parse(rSplit[2]), float.Parse(rSplit[3]));
-                        Quaternion rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(float.Parse(rSplit[2] + 180)), MathHelper.ToRadians(float.Parse(rSplit[1])), MathHelper.ToRadians(float.Parse(rSplit[3])));
-
-                        Vector3 scale = new Vector3(float.Parse(sSplit[1]), float.Parse(sSplit[2]), float.Parse(sSplit[3]));
-
-                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName));
-
-                        go.transform.position = position + new Vector3(0, 0, 30);
-                        go.transform.scale = scale;
-                        go.transform.rotation = rotation; // rotation not parsed correctly? or use euler angles
+                        GameObject go = new GameObject(meshName + "_" + i.ToString(), File.Load<Model>("Models/polygonheist/" + meshName, true));
+                        //NOW DO CONVERSION
+                        go.transform.position = new Vector3(pos.X, pos.Y, -pos.Z) + offset;
+                        go.transform.eulerAngles = new Vector3(-rot.X, -rot.Y + 180, rot.Z); // +180 is probably due to not scaling with -1
+                        go.transform.scale = new Vector3(sca.X, sca.Y, sca.Z);
                     }
-
-                    nameContent = reader.ReadLine(); // <end>
+                    // <end>
+                    nameContent = reader.ReadLine();
                 }
             }
         }
+
 
         public static List<Tuple<string, string>> ReadRanking(string pathName) {
             try {
