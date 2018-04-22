@@ -7,11 +7,12 @@ using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using Curve = BRS.Engine.Utilities.Curve;
 
 namespace BRS.Scripts.PlayerScripts {
+    /// <summary>
+    /// Deals with the attack of the player.
+    /// </summary>
     class PlayerCollider : Component {
-        ////////// deals with the attack of the player //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -34,7 +35,7 @@ namespace BRS.Scripts.PlayerScripts {
         private float _smoothRotation;
 
         //const
-        private const float Duration = 0.2f;
+        private const float Duration = 2f;
 
         //reference
         private MovingRigidBody _rigidBody;
@@ -72,6 +73,7 @@ namespace BRS.Scripts.PlayerScripts {
             CurrentRotation = _startRotation;
 
             _rigidBody.RigidBody.LinearVelocity = JVector.Zero;
+            //_rigidBody.SteerableCollider.LastCollider = _otherCollider;
 
             PhysicsDrawer.Instance.AddPointToDraw(_startPos);
             PhysicsDrawer.Instance.AddPointToDraw(_endPos);
@@ -80,22 +82,23 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public void Coroutine() {
+            IsCollided = false;
             if (_collidedRefTime <= 1) {
-                _collidedRefTime += Time.DeltaTime / Duration;
-                float t = Curve.EvaluateSqrt(_collidedRefTime);
-                Vector3 newPosition = Vector3.LerpPrecise(_startPos, _endPos, t);
+                //_collidedRefTime += Time.DeltaTime / Duration;
+                //float t = Curve.EvaluateSqrt(_collidedRefTime);
+                //Vector3 newPosition = Vector3.LerpPrecise(_startPos, _endPos, t);
 
 
-                _smoothRotation = Utility.SmoothDamp(_smoothRotation, 1.0f, ref _smoothRotation, Duration);
+                //_smoothRotation = Utility.SmoothDamp(_smoothRotation, 1.0f, ref _smoothRotation, Duration);
 
-                //CurrentRotation = Utility.SmoothDampAngle(CurrentRotation, _endRotation, ref _refRotation, Duration);
-                CurrentRotation = MathHelper.Lerp(_startRotation, _endRotation, t);
-                Debug.Log(CurrentRotation);
+                ////CurrentRotation = Utility.SmoothDampAngle(CurrentRotation, _endRotation, ref _refRotation, Duration);
+                //CurrentRotation = MathHelper.Lerp(_startRotation, _endRotation, t);
+                //Debug.Log(CurrentRotation);
 
-                // Apply new position to the rigid-body
-                _rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
-                _rigidBody.SteerableCollider.RotationY = MathHelper.ToRadians(CurrentRotation);
-                _rigidBody.RigidBody.Update();
+                //// Apply new position to the rigid-body
+                //_rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
+                //_rigidBody.SteerableCollider.RotationY = MathHelper.ToRadians(CurrentRotation);
+                //_rigidBody.RigidBody.Update();
             } else {
                 IsCollided = false;
             }

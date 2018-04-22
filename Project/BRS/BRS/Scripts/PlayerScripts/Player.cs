@@ -131,13 +131,15 @@ namespace BRS.Scripts.PlayerScripts {
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
-            } else if (State == PlayerState.Collided) {
-                _pC.Coroutine();
+            // Todo: Remove if bouncing is not needed
+            //} else if (State == PlayerState.Collided) {
+            //    _pC.Coroutine();
+            //    _steerableCollider.Speed = JVector.Zero;
 
-                if (!_pC.IsCollided) {
-                    State = PlayerState.Normal;
-                    _pM.ResetRotation(_pC.CurrentRotation);
-                }
+            //    if (!_pC.IsCollided) {
+            //        State = PlayerState.Normal;
+            //        _pM.ResetRotation(_pC.CurrentRotation);
+            //    }
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
@@ -146,9 +148,9 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            if (c.IsStatic) {
-                CamController.Shake(.3f);
-            }
+            //if (c.IsStatic) {
+            //    CamController.Shake(.3f);
+            //}
         }
 
 
@@ -198,11 +200,13 @@ namespace BRS.Scripts.PlayerScripts {
         /// <summary>
         /// Start the collision-handling with the bounce-script
         /// </summary>
+        /// <param name="other"></param>
         /// <param name="endPosition"></param>
         /// <param name="endAngle"></param>
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
-            State = PlayerState.Collided; ;
-            _pC.Begin(other, endPosition, endAngle);
+            State = PlayerState.Normal;
+            //_pC.Begin(other, endPosition, endAngle);
+            _pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

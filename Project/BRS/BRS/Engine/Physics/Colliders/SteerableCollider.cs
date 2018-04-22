@@ -24,9 +24,19 @@ namespace BRS.Engine.Physics.Colliders {
         public SteerableCollider(Shape shape, Jitter.Dynamics.Material material, bool isParticle) : base(shape, material, isParticle) {
         }
 
-        public override void PostStep(float timestep) {
+        public override void PreStep(float timestep) {
             AddForce(Speed);
             LinearVelocity = Speed;
+
+            Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
+            Orientation = JMatrix.CreateRotationY(RotationY);
+
+            base.PreStep(timestep);
+        }
+
+        public override void PostStep(float timestep) {
+            //AddForce(Speed);
+            //LinearVelocity = Speed;
 
             Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);

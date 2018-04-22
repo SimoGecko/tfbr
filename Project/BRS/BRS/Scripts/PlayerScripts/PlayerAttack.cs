@@ -72,7 +72,7 @@ namespace BRS.Scripts.PlayerScripts {
             _hasAppliedDamage = false;
             _attackStartTime = Time.CurrentTime;
 
-            _attackEndCollision = PhysicsManager.Instance.DetectCollision(_rigidBody.RigidBody, gameObject, _attackStartPos, _attackEndPos);
+            _attackEndCollision = PhysicsManager.Instance.DetectCollision(_rigidBody.RigidBody, _attackStartPos, _attackEndPos);
             _attackEndPos = _attackEndCollision;
 
             Invoke(AttackDuration, () => _attacking = false);
