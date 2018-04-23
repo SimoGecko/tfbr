@@ -121,9 +121,9 @@ namespace BRS {
             PostProcessingManager.Instance.Update(gameTime);
 
             // Update skybox
-            angle += 0.002f;
-            cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
-            view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
+            //angle += 0.002f;
+            //cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
+           // view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
         }
 
         protected override void Draw(GameTime gameTime) {
