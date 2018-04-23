@@ -116,8 +116,8 @@ namespace BRS.Scripts.UI {
             //if (panelPlay2Name == "play2_")
                 CreatePanel("Load/MenuPanels/Play2.txt", "play2_0");
             //else if (panelPlay2Name == "play2Shared") {
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 0);
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 1);
+                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: -480, idAssociatePlayerScreen: 0);
+                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: 480, idAssociatePlayerScreen: 1);
             //}
             
         }
@@ -127,8 +127,15 @@ namespace BRS.Scripts.UI {
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            Vector2[] startoffset = { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
             float scaleAlphabet = 0.37f;
+
+            Vector2[] startoffset;
+            if (panelName == "play2_")
+                startoffset = new Vector2[] { new Vector2(1152, 540), new Vector2(1210, 594), new Vector2(1248, 648) };
+            else
+                startoffset = new Vector2[] { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
+            
+            
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
@@ -154,7 +161,7 @@ namespace BRS.Scripts.UI {
                         letterButton.nameIdentifier = "Alphabet3";
 
                     if (i == 0)
-                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player2", panelName);
+                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player1", panelName);
                     if (i == keyboard.Length - 1)
                         letterButton.NeighborUp = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
 
@@ -278,6 +285,12 @@ namespace BRS.Scripts.UI {
                     slider.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
                     MenuManager.Instance.MenuRect[panelName].AddComponent(slider);
                 }
+            }
+
+            if (panelName == "play2Shared0" || panelName == "play2Shared1") {
+                Button bu = ((Button)FindMenuComponentinPanelWithName("Player1", panelName));
+                bu.Text = "Player " + (idAssociatePlayerScreen + 1).ToString();
+                bu.Index = idAssociatePlayerScreen;
             }
 
             foreach (MenuStruct MS in panelObjects) {

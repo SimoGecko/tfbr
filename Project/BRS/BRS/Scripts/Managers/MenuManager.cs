@@ -19,6 +19,7 @@ namespace BRS.Scripts.Managers {
     class MenuManager : Component{
         // --------------------- VARIABLES ---------------------
         public static bool[] uniqueFrameInputUsed = { false, false, false, false };
+        private bool uniqueMenuSwitchUsed = false;
 
         public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
         GameObject _currentMenu;
@@ -34,7 +35,7 @@ namespace BRS.Scripts.Managers {
         public string NamePlayerInfosToChange;
         public string panelPlay2NameOption; // = "play2_"; // "play2Shared" or "play2_"
 
-
+        int count = 0;
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -88,6 +89,7 @@ namespace BRS.Scripts.Managers {
 
         public override void Update() {
 
+            uniqueMenuSwitchUsed = false;
             for (int i = 0; i < uniqueFrameInputUsed.Length; ++i)
                 uniqueFrameInputUsed[i] = false;
 
@@ -131,32 +133,41 @@ namespace BRS.Scripts.Managers {
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            if (_currentMenu != null) 
-                _currentMenu.active = false;
-            if (_currentMenuName == "play2Shared") {
-                MenuRect[_currentMenuName + "0"].active = false;
-                MenuRect[_currentMenuName + "1"].active = false;
-            }
+            if (!uniqueMenuSwitchUsed) {
+
+                if (_currentMenu != null)
+                    _currentMenu.active = false;
+                if (_currentMenuName == "play2Shared") {
+                    if (count == 1)
+                        ;
+                    MenuRect[_currentMenuName + "0"].active = false;
+                    MenuRect[_currentMenuName + "1"].active = false;
+                }
 
 
-            if (button.NameMenuToSwitchTo != "play2_") {
-                _currentMenu = MenuRect[button.NameMenuToSwitchTo];
-                _currentMenuName = button.NameMenuToSwitchTo;
-                _currentMenu.active = true;
-            }
-            else {
-                if (panelPlay2NameOption == "play2_") {
-                    string newMenu = button.NameMenuToSwitchTo + "0";
-                    _currentMenu = MenuRect[newMenu];
-                    _currentMenuName = newMenu;
+                if (button.NameMenuToSwitchTo != "play2_") {
+                    _currentMenu = MenuRect[button.NameMenuToSwitchTo];
+                    _currentMenuName = button.NameMenuToSwitchTo;
                     _currentMenu.active = true;
                 }
-                else if (panelPlay2NameOption == "play2Shared") {
-                    //_currentMenu = MenuRect[button.NameMenuToSwitchTo];
-                    _currentMenuName = panelPlay2NameOption;
-                    MenuRect[_currentMenuName + "0"].active = true;
-                    MenuRect[_currentMenuName + "1"].active = true;
-                } 
+                else {
+                    if (panelPlay2NameOption == "play2_") {
+                        string newMenu = button.NameMenuToSwitchTo + "0";
+                        _currentMenu = MenuRect[newMenu];
+                        _currentMenuName = newMenu;
+                        _currentMenu.active = true;
+                    }
+                    else if (panelPlay2NameOption == "play2Shared") {
+                        if (count == 1)
+                            ;
+                        ++count;
+                        _currentMenuName = panelPlay2NameOption;
+                        _currentMenu = MenuRect[_currentMenuName + "0"];
+                        MenuRect[_currentMenuName + "0"].active = true;
+                        MenuRect[_currentMenuName + "1"].active = true;
+                    }
+                }
+                uniqueMenuSwitchUsed = true;
             }
         }
 
@@ -243,13 +254,13 @@ namespace BRS.Scripts.Managers {
 
             foreach (string idSplitScreen in screenSplitIndex) {
                 if (GameManager.NumPlayers == 2) {
-                    Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen).Active = false;
+                    /*Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen).Active = false;
                     Menu.Instance.FindMenuComponentinPanelWithName("Player4", panelPlay2NameOption + idSplitScreen).Active = false;
 
                     Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", panelPlay2NameOption + idSplitScreen);
                     Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", panelPlay2NameOption + idSplitScreen);
                     bu1.NeighborLeft = bu2;
-                    bu2.NeighborRight = bu1;
+                    bu2.NeighborRight = bu1;*/
                 }
                 else if (GameManager.NumPlayers == 4) {
                     Button bu3 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen);

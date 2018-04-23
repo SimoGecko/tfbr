@@ -17,52 +17,16 @@ ColorInside: 255 255 255
 <Button>
 NameIdentifier: Player1
 Texture: button
-Position: 672 324
+Position: 960 324
 ScaleWidth: 1.3
-Text: Player 1
+Text: Player
 Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Back Model1 Player2
+NeighborsUpDownLeftRight: null Back Model1 null
 Index: 0
 CurrentSelection: yes
-UniqueChoiceWith: Player2 Player3 Player4
 IsClicked: yes
 </Button>
 
-<Button>
-NameIdentifier: Player2
-Texture: button
-Position: 864 324
-ScaleWidth: 1.3
-Text: Player 2
-Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Alphabet1 Player1 Player3
-Index: 1
-UniqueChoiceWith: Player1 Player3 Player4
-</Button>
-
-<Button>
-NameIdentifier: Player3
-Texture: button
-Position: 1056 324
-ScaleWidth: 1.3
-Text: Player 3
-Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Alphabet1 Player2 Player4
-Index: 2
-UniqueChoiceWith: Player1 Player2 Player4
-</Button>
-
-<Button>
-NameIdentifier: Player4
-Texture: button
-Position: 1248 324
-ScaleWidth: 1.3
-Text: Player 4
-Functions: UpdatePlayersNameInfosToChange HighlightBorders
-NeighborsUpDownLeftRight: null Alphabet1 Player3 Player1
-Index: 3
-UniqueChoiceWith: Player1 Player2 Player3
-</Button>
 
 <Button>
 NameIdentifier: Model1
