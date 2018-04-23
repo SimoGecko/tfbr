@@ -102,7 +102,7 @@ namespace BRS.Scripts.UI {
         }
 
         public void BuildMenuPanels() {
-            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            /*CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Play2.txt", "play2");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
@@ -111,27 +111,30 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
-            CreatePanel("Load/MenuPanels/Credits.txt", "credits");            
+            CreatePanel("Load/MenuPanels/Credits.txt", "credits");*/
+
+            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Right", true, 480);
+            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Left", true, -480);
         }
 
-        public void CreateAlphabetButtons(string panelName) {
+        public void CreateAlphabetButtons(string panelName, int offsetWidth = 0) {
             string[] firstLine = { "q", "w", "e", "r", "t", "z", "u", "i", "o", "p" };
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            Vector2[] startoffset = { new Vector2(1152, 540), new Vector2(1210, 594), new Vector2(1248, 648) };
+            Vector2[] startoffset = { new Vector2(1100, 540), new Vector2(1150, 594), new Vector2(1200, 648) };
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
                 int count = 0;
                 foreach (var elem in keyboard[i]) {
-                    var letterButton = new Button(texturesButtons["button"], startoffset[i] + count * new Vector2(.5f * texturesButtons["button"].Width, 0)) {
+                    var letterButton = new Button(texturesButtons["button"], startoffset[i] + new Vector2(offsetWidth, 0) + count * new Vector2(.25f * texturesButtons["button"].Width,0)) {
                         Text = elem,
-                        ScaleWidth = .5f,
-                        ScaleHeight = .5f
+                        ScaleWidth = .25f,
+                        ScaleHeight = .25f
                     };
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    MenuManager.Instance.MenuRect["play2"].AddComponent(letterButton);
+                    MenuManager.Instance.MenuRect[panelName].AddComponent(letterButton);
 
                     linkedButtonLeftRight.Add(letterButton);
                     buttonsCurrentPanel2.Add(letterButton);
@@ -217,14 +220,14 @@ namespace BRS.Scripts.UI {
             MenuManager.Instance.MenuRect["ranking"].AddComponent(rankings);
         }
 
-        public void CreatePanel(string pathName, string panelName, bool setPanelActive = false) {
+        public void CreatePanel(string pathName, string panelName, bool setPanelActive = false, int offsetWidth = 0) {
             MenuManager.Instance.MenuRect[panelName].active = setPanelActive;
             List<MenuStruct> panelObjects = File.ReadMenuPanel(pathName);
             foreach (MenuStruct MS in panelObjects) {
                 if (MS.menuType == MenuType.Button) {
-                    if (MS.Name == "Alphabet") CreateAlphabetButtons(panelName);
+                    if (MS.Name == "Alphabet") CreateAlphabetButtons(panelName, offsetWidth);
                     else {
-                        Button button = new Button(texturesButtons[MS.TextureName], MS.Position);
+                        Button button = new Button(texturesButtons[MS.TextureName], MS.Position + new Vector2(offsetWidth, 0));
                         if (MS.TextureInsideName != null) button.InsideImage = texturesButtons[MS.TextureInsideName];
                         if (MS.Text != null) button.Text = MS.Text;
                         if (MS.NameToSwitchTo != null) button.NameMenuToSwitchTo = MS.NameToSwitchTo;
@@ -244,20 +247,22 @@ namespace BRS.Scripts.UI {
                 else if (MS.menuType == MenuType.Text) {
                     TextBox textBox = new TextBox();
                     if (MS.Name != null) textBox.NameIdentifier = MS.Name;
-                    if (MS.Position != null) textBox.InitPos = MS.Position;
+                    if (MS.Position != null) textBox.InitPos = MS.Position + new Vector2(offsetWidth, 0);
                     if (MS.Text != null) textBox.Text = MS.Text;
                     else textBox.Text = "";
                     MenuManager.Instance.MenuRect[panelName].AddComponent(textBox);
                 }
                 else if (MS.menuType == MenuType.Image) {
                     Image img = new Image(texturesButtons[MS.TextureName]);
-                    if (MS.Position != null) img.Position = MS.Position;
+                    if (MS.Position != null) img.Position = MS.Position + new Vector2(offsetWidth, 0);
                     if (MS.Name != null) img.NameIdentifier = MS.Name;
+                    if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
+                    if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
                     img.Active = MS.Active; 
                     MenuManager.Instance.MenuRect[panelName].AddComponent(img);
                 }
                 else if (MS.menuType == MenuType.Slider) {
-                    Slider slider = new Slider(MS.Position, texturesButtons["button"]);
+                    Slider slider = new Slider(MS.Position + new Vector2(offsetWidth, 0), texturesButtons["button"]);
                     //if (MS.Position != null) slider.Position = ;
                     if (MS.Name != null) slider.nameIdentifier = MS.Name;
                     if (MS.TextureName != null) slider.Texture = texturesButtons[MS.TextureName];

@@ -248,6 +248,7 @@
     <Content Include="Load\MenuPanels\PauseMenu.txt" />
     <Content Include="Load\MenuPanels\Play1.txt" />
     <Content Include="Load\MenuPanels\Play2.txt" />
+    <Content Include="Load\MenuPanels\Play2Right.txt" />
     <Content Include="Load\MenuPanels\Rankings.txt" />
     <Content Include="Load\MenuPanels\Tutorial1.txt" />
     <Content Include="Load\MenuPanels\Tutorial2.txt" />

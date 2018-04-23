@@ -66,7 +66,7 @@ namespace BRS.Scripts.Managers {
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
-            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits"};
+            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "play2Right", "play2Left"};
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
