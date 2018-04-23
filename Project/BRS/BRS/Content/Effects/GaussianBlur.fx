@@ -4,6 +4,8 @@ sampler TextureSampler : register(s0);
 
 // Screensize: passed by monogame
 float2 screenSize;
+float4 active; 
+float players;
 
 // Classic gaussian kernel
 float3x3 kernel = float3x3(
@@ -22,6 +24,8 @@ float3x3 kernel = float3x3(
 // the colors based on the kernel weights.
 float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 textureCoordinate : TEXCOORD0) : COLOR0
 {
+	
+	
 	int kernelSize = 3;
     float4 result = float4(0.0f, 0.0f, 0.0f, 0.0f);
     
@@ -30,6 +34,21 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 			float2 dis = float2(i / screenSize.x, j / screenSize.y);
 			result += tex2D(TextureSampler, textureCoordinate.xy + dis) * kernel[i+1][j+1];
 		}
+	}
+	
+	float4 color = tex2D(TextureSampler, textureCoordinate.xy);
+	// check if the shader needs to be applied to this part of the screen
+	if(active.x == 0 && textureCoordinate.x < 0.5 && textureCoordinate.y < 0.5) {
+			return color;
+	}
+	if(active.y == 0 && textureCoordinate.x >= 0.5 && textureCoordinate.y < 0.5) {
+			return color;
+	}
+	if(active.z == 0 && textureCoordinate.x < 0.5 && textureCoordinate.y >= 0.5) {
+			return color;
+	}
+	if(active.w == 0 && textureCoordinate.x >= 0.5 && textureCoordinate.y >= 0.5) {
+			return color;
 	}
     
 	return result / 16.0;

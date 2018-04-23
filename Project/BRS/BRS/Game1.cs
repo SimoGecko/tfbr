@@ -116,7 +116,6 @@ namespace BRS {
 
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -130,8 +129,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                Gizmos.DrawFull(cam);
-
+                Gizmos.DrawFull(cam);            
             }
             Gizmos.ClearOrders();
 

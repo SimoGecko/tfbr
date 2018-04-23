@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using BRS.Scripts.Managers;
 
 namespace BRS.Engine.PostProcessing {
 
@@ -41,6 +42,7 @@ namespace BRS.Engine.PostProcessing {
                 Effect ppShader = content.Load<Effect>("Effects/" + fileName);
                 PostProcessingEffect ppEffect = new PostProcessingEffect(pType, 1, false, ppShader);
 
+                ppEffect.SetParameter("players", (float) GameManager.NumPlayers);
                 // Special parameters for some effects
                 switch (pType) {
                     case PostprocessingType.GaussianBlur:
@@ -59,7 +61,7 @@ namespace BRS.Engine.PostProcessing {
                     case PostprocessingType.ColorGrading:
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
-                        ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver6"));
+                        ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver3"));
                         //ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver7"));
 
                         break;
@@ -162,6 +164,9 @@ namespace BRS.Engine.PostProcessing {
             // if dynamic props are needed
             foreach (var ppShader in _effects) {
                 if (ppShader.Active) {
+                    // TODO: actived the shader on per player basis
+                    ppShader.SetParameter("active", new Vector4(1.0f, 0.0f, 1.0f, 0.0f));
+
                     if (ppShader.Type == PostprocessingType.DepthOfField) {
 
                         // set the target to the blur target
@@ -195,7 +200,7 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
                     }
 
-
+                    
 
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
