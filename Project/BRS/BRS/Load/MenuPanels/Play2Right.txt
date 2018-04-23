@@ -12,7 +12,6 @@ Position: 960 162
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
-ScaleWidth: 0.5
 </Button>
 
 <Button>
@@ -68,7 +67,7 @@ UniqueChoiceWith: Player1 Player2 Player3
 <Button>
 NameIdentifier: Model1
 Texture: button
-Position: 576 486
+Position: 595 486
 ScaleWidth: 0.75
 Text: M1
 Functions: ChangeModelPlayer HighlightBorders
@@ -81,7 +80,7 @@ IsClicked: yes
 <Button>
 NameIdentifier: Model2
 Texture: button
-Position: 576 594
+Position: 595 594
 ScaleWidth: 0.75
 Text: M2
 Functions: ChangeModelPlayer HighlightBorders
@@ -93,7 +92,7 @@ UniqueChoiceWith: Model1 Model3
 <Button>
 NameIdentifier: Model3
 Texture: button
-Position: 576 702
+Position: 595 702
 ScaleWidth: 0.75
 Text: M3
 Functions: ChangeModelPlayer HighlightBorders
@@ -105,14 +104,14 @@ UniqueChoiceWith: Model1 Model2
 <Button>
 NameIdentifier: SaveAlphabet
 Texture: buttonCircle
-Position: 1205 775
+Position: 1180 725
 TextureInside: buttonAccept
 Functions: ChangeNamePlayer
 Color: 110 235 150
 ColorInside: 255 255 255
 NeighborsUpDownLeftRight: Alphabet3 null Next null
-ScaleWidth: 0.5
-ScaleHeight: 0.5
+ScaleWidth: 0.85
+ScaleHeight: 0.85
 </Button>
 
 <Button>
@@ -125,7 +124,7 @@ ScaleHeight: 0.25
 
 <Text>
 NameIdentifier: NamePlayer
-Position: 1201 459
+Position: 1150 500
 </Text>
 
 <Button>
@@ -133,10 +132,10 @@ NameIdentifier: Back
 Texture: buttonCircle
 TextureInside: arrowLeft
 Position: 913 793
-ScaleWidth: 0.75
-ScaleHeight: 0.75
-ScaleWidthInside: 0.75
-ScaleHeightInside: 0.75
+ScaleWidth: 0.85
+ScaleHeight: 0.85
+ScaleWidthInside: 0.85
+ScaleHeightInside: 0.85
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Player1 null Model3 Next
 NameSwitchTo: play1
@@ -149,10 +148,10 @@ NameIdentifier: Next
 Texture: buttonCircle
 TextureInside: arrowRight
 Position: 1008 793
-ScaleWidth: 0.75
-ScaleHeight: 0.75
-ScaleWidthInside: 0.75
-ScaleHeightInside: 0.75
+ScaleWidth: 0.85
+ScaleHeight: 0.85
+ScaleWidthInside: 0.85
+ScaleHeightInside: 0.85
 Functions: StartGameFunction
 NeighborsUpDownLeftRight: Player1 null Back SaveAlphabet
 NameSwitchTo: play2
@@ -163,7 +162,7 @@ ColorInside: 255 255 255
 <Image>
 NameIdentifier: pictureModel1
 Texture: forklift
-Position: 768 594
+Position: 800 594
 Active: yes
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -172,7 +171,7 @@ ScaleHeight: 0.75
 <Image>
 NameIdentifier: pictureModel2
 Texture: forklift
-Position: 768 594
+Position: 800 594
 Active: no
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -181,7 +180,7 @@ ScaleHeight: 0.75
 <Image>
 NameIdentifier: pictureModel3
 Texture: bulldozer
-Position: 768 594
+Position: 800 594
 Active: no
 ScaleWidth: 0.75
 ScaleHeight: 0.75

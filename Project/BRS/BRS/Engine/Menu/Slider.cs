@@ -24,6 +24,8 @@ namespace BRS.Engine.Menu {
         public EventHandler OnReleaseSlider;
         private float lengthSlider = 300f;
 
+        public int indexAssociatedPlayerScreen = 0;
+
         public Rectangle Rectangle {
             get {
                 return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(lengthSlider / 1920f * Screen.Width), (int)((ButtonSlider.Texture.Height - 25) * ButtonSlider.ScaleHeight/ 1080f * Screen.Height));
@@ -45,7 +47,7 @@ namespace BRS.Engine.Menu {
         }
 
         private void UpdateSelection(Input.Stick state) {
-            MenuManager.uniqueFrameInputUsed = true;
+            MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen] = true;
             switch (state) {
                 case Input.Stick.Up:
                     if (NeighborUp != null) {
@@ -79,13 +81,13 @@ namespace BRS.Engine.Menu {
 
             if (IsCurrentSelection) {
                 ButtonSlider.IsHovering = true;
-                if (!MenuManager.uniqueFrameInputUsed && (Input.GetKey(Keys.Enter) || Input.GetButton(Buttons.A))) {
+                if (!MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen] && (Input.GetKey(Keys.Enter) || Input.GetButton(Buttons.A, indexAssociatedPlayerScreen))) {
                     ButtonSlider.IsHovering = true;
 
-                    if (Input.GetKey(Keys.Right) || Input.GetButton(Buttons.LeftThumbstickRight)) {
+                    if (Input.GetKey(Keys.Right) || Input.GetButton(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen)) {
                         ButtonSlider.InitPos = ButtonSlider.InitPos + new Vector2(2, 0);
                     }
-                    else if (Input.GetKey(Keys.Left) || Input.GetButton(Buttons.LeftThumbstickLeft)) {
+                    else if (Input.GetKey(Keys.Left) || Input.GetButton(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen)) {
                         ButtonSlider.InitPos = ButtonSlider.InitPos - new Vector2(2, 0);
                     }
 
@@ -95,18 +97,18 @@ namespace BRS.Engine.Menu {
                         ButtonSlider.InitPos = new Vector2(Position.X + lengthSlider /*/ 1920f * Screen.Width*/ - ButtonSlider.Texture.Width * ButtonSlider.ScaleWidth / 2, ButtonSlider.InitPos.Y);
                 }    
                 else {
-                    if (IsCurrentSelection && !MenuManager.uniqueFrameInputUsed) {
-                        if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp))
+                    if (IsCurrentSelection && !MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen]) {
+                        if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Up);
-                        else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight))
+                        else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Right);
-                        else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown))
+                        else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Down);
                         else if (Input.GetKeyUp(Keys.Left) || Input.GetButtonUp(Buttons.LeftThumbstickLeft)) UpdateSelection(Input.Stick.Left);
                     }
                 }
 
-                if (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A)) {
+                if (Input.GetKeyUp(Keys.Enter) || Input.GetButtonUp(Buttons.A, indexAssociatedPlayerScreen)) {
                     OnReleaseSlider?.Invoke(this, new EventArgs());
                 }
             }

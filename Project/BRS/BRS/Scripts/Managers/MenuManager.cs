@@ -18,7 +18,7 @@ using Microsoft.Xna.Framework.Input;
 namespace BRS.Scripts.Managers {
     class MenuManager : Component{
         // --------------------- VARIABLES ---------------------
-        public static bool uniqueFrameInputUsed = false;
+        public static bool[] uniqueFrameInputUsed = { false, false, false, false };
 
         public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
         GameObject _currentMenu;
@@ -32,6 +32,7 @@ namespace BRS.Scripts.Managers {
         public List<Model> modelCharacter;
 
         public string NamePlayerInfosToChange;
+        public string panelPlay2NameOption; // = "play2_"; // "play2Shared" or "play2_"
 
 
         // --------------------- BASE METHODS ------------------
@@ -66,7 +67,7 @@ namespace BRS.Scripts.Managers {
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
-            string[] namePanels = { "main", "play1", "play2", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "play2Right", "play2Left"};
+            string[] namePanels = { "main", "play1", "play2_0", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "play2Shared0", "play2Shared1" };
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
@@ -74,7 +75,7 @@ namespace BRS.Scripts.Managers {
 
             _currentMenu = MenuRect["main"];
             _currentMenuName = "main";
-            Menu.Instance.BuildMenuPanels();
+            Menu.Instance.BuildMenuPanels(panelPlay2NameOption);
 
             NamePlayerInfosToChange = "player_0";
 
@@ -87,8 +88,8 @@ namespace BRS.Scripts.Managers {
 
         public override void Update() {
 
-
-            uniqueFrameInputUsed = false;
+            for (int i = 0; i < uniqueFrameInputUsed.Length; ++i)
+                uniqueFrameInputUsed[i] = false;
 
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
                 Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
@@ -132,11 +133,31 @@ namespace BRS.Scripts.Managers {
 
             if (_currentMenu != null) 
                 _currentMenu.active = false;
-            
+            if (_currentMenuName == "play2Shared") {
+                MenuRect[_currentMenuName + "0"].active = false;
+                MenuRect[_currentMenuName + "1"].active = false;
+            }
 
-            _currentMenu = MenuRect[button.NameMenuToSwitchTo];
-            _currentMenuName = button.NameMenuToSwitchTo;
-            _currentMenu.active = true;
+
+            if (button.NameMenuToSwitchTo != "play2_") {
+                _currentMenu = MenuRect[button.NameMenuToSwitchTo];
+                _currentMenuName = button.NameMenuToSwitchTo;
+                _currentMenu.active = true;
+            }
+            else {
+                if (panelPlay2NameOption == "play2_") {
+                    string newMenu = button.NameMenuToSwitchTo + "0";
+                    _currentMenu = MenuRect[newMenu];
+                    _currentMenuName = newMenu;
+                    _currentMenu.active = true;
+                }
+                else if (panelPlay2NameOption == "play2Shared") {
+                    //_currentMenu = MenuRect[button.NameMenuToSwitchTo];
+                    _currentMenuName = panelPlay2NameOption;
+                    MenuRect[_currentMenuName + "0"].active = true;
+                    MenuRect[_currentMenuName + "1"].active = true;
+                } 
+            }
         }
 
         public void SetDefaultParametersGame(object sender, EventArgs e) {
@@ -189,7 +210,7 @@ namespace BRS.Scripts.Managers {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect["play2"].components) {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "NamePlayer") {
                         if (button.Text == "del") {
@@ -204,32 +225,51 @@ namespace BRS.Scripts.Managers {
         }
 
         public void UpdatePlayersChangeTo(object sender, EventArgs e) {
-            if (GameManager.NumPlayers == 2) {
-                Menu.Instance.FindMenuComponentinPanelWithName("Player3", "play2").Active = false;
-                Menu.Instance.FindMenuComponentinPanelWithName("Player4", "play2").Active = false;
+            Button button = (Button)sender;
 
-                Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", "play2");
-                Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", "play2");
-                bu1.NeighborLeft = bu2;
-                bu2.NeighborRight = bu1;
+            List<string> screenSplitIndex = new List<string>(); 
+            if (GameManager.NumPlayers == 2) {
+                panelPlay2NameOption = "play2Shared";
+                screenSplitIndex.Add("0");
+                screenSplitIndex.Add("1");
             }
             else if (GameManager.NumPlayers == 4) {
-                Button bu3 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player3", "play2");
-                bu3.Active = true;
-                Button bu4 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player4", "play2");
-                bu4.Active = true;
-
-                Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", "play2");
-                Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", "play2");
-                bu1.NeighborLeft = bu4;
-                bu2.NeighborRight = bu3;
+                panelPlay2NameOption = "play2_";
+                screenSplitIndex.Add("0");
             }
+            else
+                Debug.Log("Wrong number of players were set");
+
+
+            foreach (string idSplitScreen in screenSplitIndex) {
+                if (GameManager.NumPlayers == 2) {
+                    Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen).Active = false;
+                    Menu.Instance.FindMenuComponentinPanelWithName("Player4", panelPlay2NameOption + idSplitScreen).Active = false;
+
+                    Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", panelPlay2NameOption + idSplitScreen);
+                    Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", panelPlay2NameOption + idSplitScreen);
+                    bu1.NeighborLeft = bu2;
+                    bu2.NeighborRight = bu1;
+                }
+                else if (GameManager.NumPlayers == 4) {
+                    Button bu3 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen);
+                    bu3.Active = true;
+                    Button bu4 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player4", panelPlay2NameOption + idSplitScreen);
+                    bu4.Active = true;
+
+                    Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", panelPlay2NameOption + idSplitScreen);
+                    Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", panelPlay2NameOption + idSplitScreen);
+                    bu1.NeighborLeft = bu4;
+                    bu2.NeighborRight = bu3;
+                }
+            }
+            
         }
 
         public void ChangeNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect["play2"].components) {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
@@ -252,7 +292,7 @@ namespace BRS.Scripts.Managers {
             else
                 ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, modelCharacter[button.Index]));
 
-            foreach (var elem in MenuRect["play2"].components) {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
                     if (img.NameIdentifier == "pictureModel" + (button.Index+1).ToString()) 
                         img.Active = true;

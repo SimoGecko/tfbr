@@ -102,9 +102,9 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: SetDefaultParametersGame SwitchToMenu UpdatePlayersChangeTo
+Functions: SetDefaultParametersGame UpdatePlayersChangeTo SwitchToMenu
 NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Back Back
-NameSwitchTo: play2
+NameSwitchTo: play2_
 Color: 110 235 150
 ColorInside: 255 255 255
 </Button>
