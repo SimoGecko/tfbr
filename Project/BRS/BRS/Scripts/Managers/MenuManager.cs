@@ -280,6 +280,9 @@ namespace BRS.Scripts.Managers {
         public void ChangeNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
+            if (panelPlay2NameOption == "play2Shared")
+                NamePlayerInfosToChange = "player_" + button.indexAssociatedPlayerScreen.ToString();
+
             foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "NamePlayer") {
@@ -297,6 +300,9 @@ namespace BRS.Scripts.Managers {
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            if (panelPlay2NameOption == "play2Shared")
+                NamePlayerInfosToChange = "player_" + button.indexAssociatedPlayerScreen.ToString();
 
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                 ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[button.Index]);

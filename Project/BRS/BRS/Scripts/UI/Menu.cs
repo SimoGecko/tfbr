@@ -116,8 +116,8 @@ namespace BRS.Scripts.UI {
             //if (panelPlay2Name == "play2_")
                 CreatePanel("Load/MenuPanels/Play2.txt", "play2_0");
             //else if (panelPlay2Name == "play2Shared") {
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: -480, idAssociatePlayerScreen: 0);
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: 480, idAssociatePlayerScreen: 1);
+                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
+                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
             //}
             
         }
