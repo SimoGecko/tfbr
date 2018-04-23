@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
+using System;
 
 namespace BRS {
 
@@ -20,6 +21,14 @@ namespace BRS {
         RenderTarget2D _ZBuffer;
         Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
+
+        Skybox skybox;
+        Matrix world = Matrix.Identity;
+        Matrix view = Matrix.CreateLookAt(new Vector3(20, 0, 0), new Vector3(0, 0, 0), Vector3.UnitY);
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 100f);
+        Vector3 cameraPosition;
+        float angle = 0;
+        float distance = 20;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -83,6 +92,10 @@ namespace BRS {
             // load the z buffer shader
             _ZBufferShader = Content.Load<Effect>("Effects/Depth");
             _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
+
+            // add skybox
+            skybox = new Skybox("images/skyboxes/Skybox", Content);
+
         }
 
 
@@ -106,14 +119,27 @@ namespace BRS {
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update(gameTime);
+
+            // Update skybox
+            angle += 0.002f;
+            cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
+            view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
         }
 
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.StreetGray);
-            base.Draw(gameTime);
 
+            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            skybox.Draw(view, projection, cameraPosition);
+            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
+            base.Draw(gameTime);
+            
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
@@ -179,4 +205,5 @@ namespace BRS {
             _spriteBatch.End();
         }
     }
+
 }
