@@ -108,7 +108,7 @@
     <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
     <Compile Include="Engine\Menu\MenuComponent.cs" />
-    <Compile Include="Engine\Particles\Particle.cs" />
+    <Compile Include="Engine\Particles\Particle2D.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
@@ -116,7 +116,13 @@
     <Compile Include="Engine\Graphics.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
-    <Compile Include="Engine\Particles\ParticleSystem.cs" />
+    <Compile Include="Engine\Particles\Emitter.cs" />
+    <Compile Include="Engine\Particles\ParticleComponent.cs" />
+    <Compile Include="Engine\Particles\Settings.cs" />
+    <Compile Include="Engine\Particles\ParticleSystem3D.cs" />
+    <Compile Include="Engine\Particles\ParticleSystem2D.cs" />
+    <Compile Include="Engine\Particles\Vertex.cs" />
+    <Compile Include="Engine\Particles\Projectile.cs" />
     <Compile Include="Engine\Physics\BodyTag.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
@@ -139,6 +145,7 @@
     <Compile Include="Engine\Physics\ShapeType.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingEffect.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
+    <Compile Include="Engine\PostProcessing\Skybox.cs" />
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
@@ -160,8 +167,13 @@
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
     <Compile Include="Scripts\Managers\ScenesCommunicationManager.cs" />
+    <Compile Include="Scripts\Particles3D\Cash.cs" />
+    <Compile Include="Scripts\Particles3D\Boost.cs" />
+    <Compile Include="Scripts\Particles3D\Dust.cs" />
+    <Compile Include="Scripts\Particles3D\Smoke.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />
@@ -262,6 +274,8 @@
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level1_dynamicObjects.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level1_staticObjects.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
@@ -295,9 +309,7 @@
       <Name>Jitter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Load\UnitySceneData\New folder\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

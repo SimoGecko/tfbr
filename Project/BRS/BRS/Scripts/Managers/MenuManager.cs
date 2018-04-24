@@ -99,7 +99,7 @@ namespace BRS.Scripts.Managers {
             }
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             
         }
 

@@ -116,10 +116,10 @@ namespace BRS.Engine.Menu {
                 ButtonSlider.IsHovering = false;
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
 
             if (Active && i == 0) {
-                base.Draw(i);
+                base.Draw2D(i);
 
                 Rectangle dest = Rectangle;
 
@@ -131,7 +131,7 @@ namespace BRS.Engine.Menu {
                 dest.Width = (int)Math.Round(dest.Width * percentPosButon);
                 UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.MediumBlue);
 
-                ButtonSlider.Draw(i);
+                ButtonSlider.Draw2D(i);
             }
         }
 

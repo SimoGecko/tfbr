@@ -18,18 +18,19 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public float Speed;
 
         //private
-        private float _rotation;
         private float _smoothMagnitude, _refMagnitude;
         private float _refangle, _refangle2;
         private float _inputAngle;
+        private float _rotation;
         private float _targetRotation;
 
         // const
         private const float MinSpeed = 3f;
-        private const float MaxSpeed = 7f;
-        private const float MaxTurningRate = 360; // deg/sec
+        private const float MaxSpeed = 5f; // Todo: As soon as it is built in Release-mode, 7 is too fast
+        private const float MaxTurningRate = 10*360; // deg/sec
         private const float BoostSpeedMultiplier = 1.5f;
 
         private const float SlowdownMalus = .3f;
@@ -40,9 +41,10 @@ namespace BRS.Scripts.PlayerScripts {
         public bool Boosting;
         public bool PowerupBoosting;
 
+
         //SLOWDOWN
-        bool _slowdown;
-        bool _speedPad;
+        private bool _slowdown;
+        public bool SpeedPad;
 
         //reference
         PlayerInventory playerInventory;
@@ -98,21 +100,23 @@ namespace BRS.Scripts.PlayerScripts {
             float speedboost = Boosting || PowerupBoosting ? BoostSpeedMultiplier : 1f;
             speedboost *= _slowdown ? SlowdownMalus : 1f;
 
-            Vector3 linearVelocity;
-            if (_speedPad) { // override and force to move at max speed
-                linearVelocity = Vector3.Forward * CapacityBasedSpeed * SpeedPadMultiplier;
+            if (SpeedPad) { // override and force to move at max speed
+                Speed = CapacityBasedSpeed * SpeedPadMultiplier;
             } else {
-                linearVelocity = Vector3.Forward * CapacityBasedSpeed * speedboost * _smoothMagnitude;
+                Speed = CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
 
-            //transform.Translate(linearVelocity * Time.DeltaTime);
-            //transform.rotation = Quaternion.CreateFromAxisAngle(Vector3.Up, _rotation);
-            //transform.eulerAngles = new Vector3(0, _rotation, 0);
-            // Apply forces/changes to physics
-            // Todo: Handle steering correctly
+            Vector3 linearVelocity = Vector3.Forward * Speed;
+
+            // If physics is available apply the forces/changes to it, otherwise to the gameobject itself
             if (_collider != null) {
                 _collider.RotationY = MathHelper.ToRadians(_rotation);
-                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3, _collider.Orientation);
+                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3,
+                    _collider.Orientation);
+            } else {
+                transform.Translate(linearVelocity * Time.DeltaTime);
+                transform.rotation = Quaternion.CreateFromAxisAngle(Vector3.Up, _rotation);
+                transform.eulerAngles = new Vector3(0, _rotation, 0);
             }
         }
 
@@ -121,11 +125,12 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         internal void SetSpeedPad(bool b) {
-            _speedPad = b;
+            SpeedPad = b;
         }
 
         public void ResetSmoothMatnitude() {
             _smoothMagnitude = 0.0f;
+            _refMagnitude = 0.0f;
         }
 
 
@@ -133,9 +138,16 @@ namespace BRS.Scripts.PlayerScripts {
         float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }
 
 
-
-
         // other
+
+        /// <summary>
+        /// Reset the rotation of the player to the given value.
+        /// </summary>
+        /// <param name="rotation">Rotation given as degrees.</param>
+        public void ResetRotation(float rotation) {
+            _rotation = rotation;
+            _targetRotation = rotation;
+        }
 
     }
 

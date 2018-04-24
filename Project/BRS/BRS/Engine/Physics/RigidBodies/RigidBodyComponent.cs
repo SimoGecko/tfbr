@@ -37,7 +37,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             CalculateShape(ShapeType);
 
             RigidBody = new Collider(CollisionShape) {
-                Position = Conversion.ToJitterVector(transform.position) - CenterOfMass,
+                Position = Conversion.ToJitterVector(transform.position) + CenterOfMass,
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
                 CenterOfMass = CenterOfMass,
                 IsStatic = IsStatic,
@@ -46,11 +46,15 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = Tag,
                 PureCollider = PureCollider,
                 GameObject = gameObject,
-                Material = new Jitter.Dynamics.Material { Restitution = 0.0f },
+                Material = new Jitter.Dynamics.Material { KineticFriction = 10.0f, Restitution = 0.0f, StaticFriction = 10.0f },
                 Mass = 20.0f
             };
 
             PhysicsManager.Instance.World.AddBody(RigidBody);
+
+            if (ShapeType == ShapeType.BoxInvisible) {
+                gameObject.Model = null;
+            }
 
             base.Awake();
         }
@@ -73,12 +77,9 @@ namespace BRS.Engine.Physics.RigidBodies {
             );
 
             JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
-            com = new JVector(com.X * gameObject.transform.scale.X,
+            CenterOfMass = new JVector(com.X * gameObject.transform.scale.X,
                 com.Y * gameObject.transform.scale.Y,
                 com.Z * gameObject.transform.scale.Z);
-            CenterOfMass = new JVector(com.X > _threshold ? com.X : 0,
-                com.Y > _threshold ? com.Y : 0,
-                com.Z > _threshold ? com.Z : 0);
 
             float maxDimension = MathHelper.Max(bbSize.X, MathHelper.Max(bbSize.Y, bbSize.Z));
 
@@ -92,6 +93,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     break;
 
                 case ShapeType.Box:
+                case ShapeType.BoxInvisible:
                     CollisionShape = new BoxShape(bbSize);
                     break;
             }

@@ -1,8 +1,6 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
@@ -10,11 +8,15 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle }
-    ////////// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop //////////
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart }
 
+
+    /// <summary>
+    /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
+    /// </summary>
     public class GameObject {
         public Transform transform;
         public List<IComponent> components;
@@ -62,13 +64,14 @@ namespace BRS.Engine {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
+
+                foreach (IComponent c in components) c.Draw3D(cam);
             }
         }
 
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
-                foreach (IComponent c in components)
-                        c.Draw(i);
+                foreach (IComponent c in components) c.Draw2D(i);
             }
         }
 

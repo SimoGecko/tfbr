@@ -70,7 +70,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public override void Draw(int index) { // TODO clean out this code
+        public override void Draw2D(int index) { // TODO clean out this code
             if (index == 0) return;
             index--;
 

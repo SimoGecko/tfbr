@@ -17,9 +17,9 @@ namespace BRS.Engine.Menu {
             Active = true;
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             if (Active && i == 0) {
-                base.Draw(i);
+                base.Draw2D(i);
                 UserInterface.DrawString(Text, Position, col: Color.Black, font: UserInterface.menuFont);
             }
         }

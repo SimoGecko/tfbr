@@ -6,15 +6,15 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Utilities;
 using BRS.Scripts;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
+using BRS.Scripts.Particles3D;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -30,27 +30,27 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
-            GameObject.Instantiate("chair", new Vector3(0, 0, -5), Quaternion.Identity);
-            GameObject.Instantiate("plant", new Vector3(2, 0, -5), Quaternion.Identity);
-            GameObject.Instantiate("cart", new Vector3(4, 0, -5), Quaternion.Identity);
+            //GameObject.Instantiate("chair", new Vector3(0, 0, -5), Quaternion.Identity);
+            //GameObject.Instantiate("plant", new Vector3(2, 0, -5), Quaternion.Identity);
+            //GameObject.Instantiate("cart", new Vector3(4, 0, -5), Quaternion.Identity);
         }
 
 
         void LoadBlenderBakedScene() {
-            Material insideMat = new Material( File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
-            Material outsideMat = new Material( File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
-
+            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
             GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
-            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             insideScene.material = insideMat;
+
+            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
+            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             outsideScene.material = outsideMat;
         }
 
         void LoadUnityScene() {
-            var task = Task.Run(() => { File.ReadFile("Load/UnitySceneData/ObjectSceneUnity_lvl" + GameManager.LvlScene + ".txt", PhysicsManager.Instance); });
-            task.Wait();
-            //var task2 = Task.Run(() => { File.ReadHeistScene("Load/UnitySceneData/export1.txt"); });
-            //task2.Wait();
+            var task1 = Task.Run(() => { File.ReadStatic("Load/UnitySceneData/export_scene_level" + GameManager.LvlScene + "_staticObjects.txt"); });
+            task1.Wait();
+            var task2 = Task.Run(() => { File.ReadDynamic("Load/UnitySceneData/export_scene_level" + GameManager.LvlScene + "_dynamicObjects.txt"); });
+            task2.Wait();
         }
 
         void CreateManagers() {
@@ -91,7 +91,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0);
+                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0.0f);
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -103,6 +103,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+                player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
                 player.material = playerMat;
 
@@ -181,6 +182,7 @@ namespace BRS.Scripts.Scenes {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new StaticRigidBody());
+            vault.AddComponent(new Smoke());
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);
 

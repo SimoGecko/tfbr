@@ -35,7 +35,7 @@ namespace BRS.Engine.Physics.RigidBodies {
         public override void Update() {
             // Apply position and rotation from physics-world to the game-object
             //transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
-            transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
+            //transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
 
             base.Update();
         }
@@ -49,7 +49,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     10,
                     bbSize.Z * gameObject.transform.scale.Z);
 
-                CenterOfMass = new JVector(0, 5, 0);
+                CenterOfMass = new JVector(0, -5, 0);
                 CollisionShape = new BoxShape(bbSize);
             } else {
                 base.CalculateShape(type);
