@@ -11,12 +11,37 @@ namespace BRS.Engine.Physics.RigidBodies {
     /// Represents a static rigid body in the physics simulation.
     /// </summary>
     class StaticRigidBody : RigidBodyComponent {
+
+        #region Properties and attributes
+
+        // Defines if the object is a ground => used to make the ground thicker to make it more stable
         private readonly bool _isGround;
 
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Initialize a static rigid body
+        /// </summary>
+        /// <param name="size">Size of the collider-shape adjusted uniquely on all axes</param>
+        /// <param name="isActive">Active in physical simulation</param>
+        /// <param name="isGround">True  if the object is a part of the ground => used to make the physics simulation more stable.</param>
+        /// <param name="shapeType">Type of the collider-shape</param>
+        /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
         public StaticRigidBody(float size = 1.0f, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false)
             : this(new Vector3(size), isActive, isGround, shapeType, pureCollider) {
         }
 
+
+        /// <summary>
+        /// Initialize a moving static body
+        /// </summary>
+        /// <param name="size">Scaled size of the collider-shape</param>
+        /// <param name="isActive">Active in physical simulation</param>
+        /// <param name="isGround">True  if the object is a part of the ground => used to make the physics simulation more stable.</param>
+        /// <param name="shapeType">Type of the collider-shape</param>
+        /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
         public StaticRigidBody(Vector3 size, bool isActive = true, bool isGround = false, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
             IsStatic = true;
             IsAnimated = false;
@@ -29,17 +54,12 @@ namespace BRS.Engine.Physics.RigidBodies {
             _isGround = isGround;
         }
 
+        #endregion
+
         /// <summary>
-        /// Update of the time-step.
+        /// Calculate the tightest bounding-shape with the given <paramref name="type"/>
         /// </summary>
-        public override void Update() {
-            // Apply position and rotation from physics-world to the game-object
-            //transform.position = Conversion.ToXnaVector(RigidBody.Position - CenterOfMass);
-            //transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(RigidBody.Orientation));
-
-            base.Update();
-        }
-
+        /// <param name="type">Type of the bounding-shape</param>
         protected override void CalculateShape(ShapeType type) {
             if (_isGround) {
                 Model model = gameObject.Model;
