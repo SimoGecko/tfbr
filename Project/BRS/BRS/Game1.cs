@@ -72,7 +72,7 @@ namespace BRS {
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level2");
+            SceneManager.LoadScene("Level1");
 
             //start other big components
             UserInterface.Start();
@@ -112,6 +112,7 @@ namespace BRS {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.StreetGray);
+            //GraphicsDevice.Clear(Color.Green);
             base.Draw(gameTime);
 
             //-----3D-----

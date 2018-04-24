@@ -51,7 +51,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if (Input.GetKeyDown(Keys.T)) StartShowBubble("Go back to\nthe base!", 0);
+            if (Input.GetKeyDown(Keys.T)) StartShowBubble("Let's get\nthis robbery\nstarted!", 0);
             if (Input.GetKeyDown(Keys.Z)) EndShowBubble(0);
             if (Input.GetKeyDown(Keys.U)) StartShowBubble("Let's go\npick up cash!", 1);
             if (Input.GetKeyDown(Keys.I)) EndShowBubble(1);
