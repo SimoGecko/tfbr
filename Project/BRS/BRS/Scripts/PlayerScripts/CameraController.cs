@@ -38,7 +38,7 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         private const float SmoothTime = .2f;
         private const float PositionSmoothTime = .1f;
-        private const int AngleVariation = 40;
+        private const int AngleVariation = 5;
         private const float ShakeAmount = .0f;
 
         //reference
