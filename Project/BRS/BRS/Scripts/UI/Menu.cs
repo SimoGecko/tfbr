@@ -42,6 +42,9 @@ namespace BRS.Scripts.UI {
             Texture2D textureModel3 = File.Load<Texture2D>("Images/UI/model3_image");
             Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
             Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
+            Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tutorial_1");
+            Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tutorial_2");
+            Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tutorial_3");
 
             texturesButtons = new Dictionary<string, Texture2D> {
                 { "button", textureButton },
@@ -56,7 +59,10 @@ namespace BRS.Scripts.UI {
                 { "buttonAccept", textureButtonAccept },
                 { "slider", textureSlider },
                 { "menu", textureMenuIcon },
-                { "restart", textureRestartIcon }
+                { "restart", textureRestartIcon },
+                { "imageTuto1", textureTuto1 },
+                { "imageTuto2", textureTuto2 },
+                { "imageTuto3", textureTuto3 }
             };
 
             functionsMenu = new Dictionary<string, EventHandler> {
@@ -104,21 +110,15 @@ namespace BRS.Scripts.UI {
         public void BuildMenuPanels(string panelPlay2Name) {
             CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
-            
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");
             CreatePanel("Load/MenuPanels/Tutorial2.txt", "tutorial2");
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
-            CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
-
-            //if (panelPlay2Name == "play2_")
-                CreatePanel("Load/MenuPanels/Play2.txt", "play2_0");
-            //else if (panelPlay2Name == "play2Shared") {
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
-                CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
-            //}
+            CreatePanel("Load/MenuPanels/Play2.txt", "play2_0");
+            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
+            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
             
         }
 

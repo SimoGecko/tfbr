@@ -88,13 +88,24 @@ namespace BRS.Scripts.Managers {
         // queries
         public Vector3[] AllMoneyPosition() {
             List<Vector3> result = new List<Vector3>();
-
             foreach (Money m in _moneyList) {
                 result.Add(m.gameObject.transform.position);
             }
-
             return result.ToArray();
         }
+
+        Vector3[] AllMoneyTypePosition(Money.Type type) {
+            List<Vector3> result = new List<Vector3>();
+            foreach (Money m in _moneyList) {
+                if(m.type == type)
+                    result.Add(m.gameObject.transform.position);
+            }
+            return result.ToArray();
+        }
+
+        public Vector3[] AllCashPosition() { return AllMoneyTypePosition(Money.Type.Cash); }
+        public Vector3[] AllGoldPosition() { return AllMoneyTypePosition(Money.Type.Gold); }
+        public Vector3[] AllDiamondPosition() { return AllMoneyTypePosition(Money.Type.Diamond); }
 
         public Vector3[] AllCratePosition() {
             List<Vector3> result = new List<Vector3>();

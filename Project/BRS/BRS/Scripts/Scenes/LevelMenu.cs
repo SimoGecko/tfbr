@@ -14,7 +14,13 @@ namespace BRS.Scripts.Scenes {
 
         public override void Load() {
             CreateManagers();
-            //MenuScene();
+            MenuScene();
+
+            foreach (Camera c in Screen.Cameras) {
+                c.transform.position = new Vector3(0, 20, 20);
+                c.transform.eulerAngles = new Vector3(-35, 0, 0);
+            }
+
 
             // @ Simone
             //List<List<Vector3>> policePaths = File.ReadPolicePaths("Load/PolicePaths.txt");

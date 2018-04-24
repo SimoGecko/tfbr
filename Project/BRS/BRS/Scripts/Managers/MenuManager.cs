@@ -68,7 +68,7 @@ namespace BRS.Scripts.Managers {
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
-            string[] namePanels = { "main", "play1", "play2_0", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "credits", "play2Shared0", "play2Shared1" };
+            string[] namePanels = { "main", "play1", "play2_0", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1" };
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
@@ -138,8 +138,6 @@ namespace BRS.Scripts.Managers {
                 if (_currentMenu != null)
                     _currentMenu.active = false;
                 if (_currentMenuName == "play2Shared") {
-                    if (count == 1)
-                        ;
                     MenuRect[_currentMenuName + "0"].active = false;
                     MenuRect[_currentMenuName + "1"].active = false;
                 }
@@ -158,8 +156,6 @@ namespace BRS.Scripts.Managers {
                         _currentMenu.active = true;
                     }
                     else if (panelPlay2NameOption == "play2Shared") {
-                        if (count == 1)
-                            ;
                         ++count;
                         _currentMenuName = panelPlay2NameOption;
                         _currentMenu = MenuRect[_currentMenuName + "0"];
