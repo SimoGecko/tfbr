@@ -107,7 +107,7 @@
     <Compile Include="Engine\Audio.cs" />
     <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
-    <Compile Include="Engine\Particles\Particle.cs" />
+    <Compile Include="Engine\Particles\Particle2D.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
     <Compile Include="Engine\GameObject.cs" />
@@ -115,7 +115,13 @@
     <Compile Include="Engine\Graphics.cs" />
     <Compile Include="Engine\Input.cs" />
     <Compile Include="Engine\Material.cs" />
-    <Compile Include="Engine\Particles\ParticleSystem.cs" />
+    <Compile Include="Engine\Particles\Emitter.cs" />
+    <Compile Include="Engine\Particles\ParticleComponent.cs" />
+    <Compile Include="Engine\Particles\Settings.cs" />
+    <Compile Include="Engine\Particles\ParticleSystem3D.cs" />
+    <Compile Include="Engine\Particles\ParticleSystem2D.cs" />
+    <Compile Include="Engine\Particles\Vertex.cs" />
+    <Compile Include="Engine\Particles\Projectile.cs" />
     <Compile Include="Engine\Physics\BodyTag.cs" />
     <Compile Include="Engine\Physics\BoundingBoxHelper.cs" />
     <Compile Include="Engine\Physics\Conversion.cs" />
@@ -159,8 +165,13 @@
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
+    <Compile Include="Scripts\Particles3D\Cash.cs" />
+    <Compile Include="Scripts\Particles3D\Boost.cs" />
+    <Compile Include="Scripts\Particles3D\Dust.cs" />
+    <Compile Include="Scripts\Particles3D\Smoke.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
+    <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />

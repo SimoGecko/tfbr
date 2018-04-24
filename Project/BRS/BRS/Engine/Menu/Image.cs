@@ -21,8 +21,8 @@ namespace BRS.Menu {
             Active = true;
         }
 
-        public override void Draw(int i) {
-            base.Draw(i);
+        public override void Draw2D(int i) {
+            base.Draw2D(i);
             //UserInterface.DrawPictureOLD(Rectangle, _texture);
             UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
         }

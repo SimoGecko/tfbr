@@ -1,6 +1,7 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.PostProcessing;
+using BRS.Engine.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -68,6 +69,7 @@ namespace BRS {
 
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = false;
+            ParticleSystem3D.Enabled = false;
 
             base.Initialize();
         }
@@ -112,6 +114,11 @@ namespace BRS {
             Input.Update();
             Audio.Update();
             SceneManager.Update(); // check for scene change (can remove later)
+
+            // Todo: Switch for the interim
+            if (Input.GetKeyDown(Keys.Tab)) {
+                ParticleSystem3D.Enabled = !ParticleSystem3D.Enabled;
+            }
 
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();

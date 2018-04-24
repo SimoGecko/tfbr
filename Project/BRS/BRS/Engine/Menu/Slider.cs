@@ -52,13 +52,13 @@ namespace BRS.Menu {
             }
         }
 
-        public override void Draw(int i) {
-            base.Draw(i);
+        public override void Draw2D(int i) {
+            base.Draw2D(i);
 
             float percentPosButon =  ((ButtonSlider.InitPos.X - Position.X + ButtonSlider.Texture.Width/2) / UserInterface.BigBarWidth);
             //UserInterface.DrawBarBig(new Vector2(Position.X, Position.Y) - ButtonSlider.OffsetTexture, percentPosButon,  Color.Yellow);
 
-            ButtonSlider.Draw(i);
+            ButtonSlider.Draw2D(i);
         }
 
         // --------------------- CUSTOM METHODS ----------------
