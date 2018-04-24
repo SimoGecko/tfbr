@@ -19,9 +19,17 @@ namespace BRS.Scripts.Scenes {
     class Level2 : Scene {
 
         public override void Load() {
+            foreach (Camera c in Screen.Cameras) {
+                c.transform.position = new Vector3(0, 20, 20);
+                c.transform.eulerAngles = new Vector3(-35, 0, 0);
+            }
+            //SampleCylinders();
+            MenuScene();
+            //PlayerModels();
+        }
 
+        void SampleCylinders() {
             //simple scene to tryout change scene
-            /*
             GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
             GameObject cyl = new GameObject("cube1", File.Load<Model>("models/primitives/cylinder"));
             cyl.material = new Material(Color.Red, false);
@@ -33,29 +41,24 @@ namespace BRS.Scripts.Scenes {
             cyl.transform.position = new Vector3(1.5f, 2, 3);
             cyl.transform.eulerAngles = new Vector3(-10, -20, 30);
             cyl.transform.scale = new Vector3(1, .5f, .7f);
-            */
+            
+        }
 
-            foreach (Camera c in Screen.Cameras) {
-                c.transform.position = new Vector3(0, 5, 5);
-                c.transform.eulerAngles = new Vector3(-45, 0, 0);
-            }
+        void MenuScene() {
+            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/menu_inside"));
+            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
+            insideScene.material = insideMat;
 
+            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/menu_outside"));
+            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
+            outsideScene.material = outsideMat;
+        }
 
-
-            //players
+        void PlayerModels() {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
             GameObject forklift = new GameObject("forklift", File.Load<Model>("Models/vehicles/bulldozer"));
             forklift.transform.eulerAngles = new Vector3(0, 180 + 45, 0);
-            //GameObject sweeper = new GameObject("sweeper", File.Load<Model>("Models/vehicles/sweeper"));
-            //GameObject bulldozer = new GameObject("bulldozer", File.Load<Model>("Models/vehicles/bulldozer"));
             forklift.material = playerMat;
-            //sweeper.material = playerMat;
-            //bulldozer.material = playerMat;
-            forklift.transform.position = Vector3.Right * 0;
-            //sweeper.transform.position = Vector3.Right * 4;
-            //bulldozer.transform.position = Vector3.Right * 8;
-
-
         }
 
     }
