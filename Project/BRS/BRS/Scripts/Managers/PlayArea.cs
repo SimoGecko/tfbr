@@ -16,9 +16,10 @@ namespace BRS.Scripts {
 
         //private
         public static Rectangle SpawnArea = new Rectangle(-25, -75, 50, 80);
+        public static Rectangle MapArea = new Rectangle(-45, -95, 90, 115); // for the minimap, including unreachable area
 
-        static Vector3 _upperLeftPt = new Vector3(-25, 0, -75); //looked up in unity
-        static Vector3 _lowerRightPt = new Vector3(25, 0, 5); // corners of physical map
+        static Vector3 _upperLeftPt = new Vector3(-45, 0, -95); //looked up in unity
+        static Vector3 _lowerRightPt = new Vector3(45, 0, 20); // corners of physical map
 
 
         //reference
