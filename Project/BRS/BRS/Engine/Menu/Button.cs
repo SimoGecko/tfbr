@@ -112,13 +112,13 @@ namespace BRS.Engine.Menu {
                 base.Update();
 
                 if (IsCurrentSelection && !MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen]) {
-                    if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp, indexAssociatedPlayerScreen))
+                    if (Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.LeftThumbstickUp, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadUp, indexAssociatedPlayerScreen))
                         UpdateSelection(Input.Stick.Up);
-                    else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen))
+                    else if (Input.GetKeyUp(Keys.Right) || Input.GetButtonUp(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadRight, indexAssociatedPlayerScreen))
                         UpdateSelection(Input.Stick.Right);
-                    else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown, indexAssociatedPlayerScreen))
+                    else if (Input.GetKeyUp(Keys.Down) || Input.GetButtonUp(Buttons.LeftThumbstickDown, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadDown, indexAssociatedPlayerScreen))
                         UpdateSelection(Input.Stick.Down);
-                    else if (Input.GetKeyUp(Keys.Left) || Input.GetButtonUp(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen))
+                    else if (Input.GetKeyUp(Keys.Left) || Input.GetButtonUp(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadLeft, indexAssociatedPlayerScreen))
                         UpdateSelection(Input.Stick.Left);
                 }
 
