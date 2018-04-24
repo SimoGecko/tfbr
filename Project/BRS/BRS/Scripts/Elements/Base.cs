@@ -52,7 +52,6 @@ namespace BRS.Scripts.Elements {
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == _baseIndex) {
-                    OnBringBase?.Invoke();
                     //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
                     DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
                 }
@@ -89,6 +88,7 @@ namespace BRS.Scripts.Elements {
                 if (!PlayerInsideRange(gameObject)) {
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
+                    RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }
             //SHOW money penalty (BUSTED!)
@@ -114,7 +114,10 @@ namespace BRS.Scripts.Elements {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
-            if(pi.CarryingValue>0) Audio.Play("leaving_cash_base", transform.position);
+            if (pi.CarryingValue > 0) {
+                Audio.Play("leaving_cash_base", transform.position);
+                OnBringBase?.Invoke();
+            }
 
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
                 TotalMoney += pi.ValueOnTop;
