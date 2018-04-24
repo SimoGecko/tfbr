@@ -124,11 +124,16 @@ namespace BRS.Engine {
             sB.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
         }
 
-        static Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
+        public static Rectangle AlignRect(Align anchor, Align pivot, Rectangle rect) {
+            rect.Location += AnchorPos(anchor) - PivotPoint(pivot, rect);
+            return rect;
+        }
+
+        public static Point AnchorPos(Align anchor, bool splitScreen = true) { // computes the position on the screen where to align the rectangle
             return splitScreen ? PivotPoint(anchor, Screen.Split) : PivotPoint(anchor, Screen.Full);
         }
 
-        static Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
+        public static Point PivotPoint(Align align, Rectangle rect) { // computes the pivot of a given rectangle
             int pivotPosX = align.HasFlag(Align.Left) ? 0 : align.HasFlag(Align.Right) ? rect.Width : rect.Width / 2;
             int pivotPosY = align.HasFlag(Align.Top) ? 0 : align.HasFlag(Align.Bottom) ? rect.Height : rect.Height / 2;
             return new Point(pivotPosX, pivotPosY);

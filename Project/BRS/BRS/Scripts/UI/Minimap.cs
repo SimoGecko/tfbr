@@ -15,6 +15,7 @@ namespace BRS.Scripts.UI {
         enum IconType { Triangle, Square, Circle, Star, House }
 
         //public
+        const bool rotateMinimap = false;
 
         //private
         static Rectangle _mapDest, _mapAreaVirgin, _miniDest;
@@ -24,10 +25,10 @@ namespace BRS.Scripts.UI {
         Texture2D _mapIcons;
 
         // const
-        private const int MapWidth = 428, MapHeight = 694; // of screenshot
+        private const int MapWidth = 603, MapHeight = 770; // of screenshot
         private const int IconSize = 64;
         private const float MapScale = 1f;
-        private const int SmallMapWidth = 200; // squared pixel size of minimap
+        private const int SmallMapWidth = 250; // squared pixel size of minimap
 
         //to avoid passing them to the function
         private Vector2 _playerPos;
@@ -44,14 +45,13 @@ namespace BRS.Scripts.UI {
             Instance = this;
             _mapSprite = File.Load<Texture2D>("Images/minimap/level1");
             _mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
-
             
             _pivot = new Vector2(IconSize / 2, IconSize / 2);
 
             _mapDest =  new Rectangle((int)(Screen.Width / 2 - MapWidth / 2 * MapScale), 10, (int)(MapWidth * MapScale), (int)(MapHeight * MapScale));
             _mapAreaVirgin = new Rectangle(0, 0, MapWidth, MapHeight);
-            _miniDest = new Rectangle(720, 850, SmallMapWidth, SmallMapWidth);
-            
+            _miniDest = new Rectangle(-20, -20, SmallMapWidth, SmallMapWidth);
+            _miniDest = UserInterface.AlignRect(Align.BotRight, Align.BotRight, _miniDest);
         }
 
         public override void Update() {
@@ -64,8 +64,13 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        //TODO use correct Draw
-        public void Draw(SpriteBatch spriteBatch) {
+        public override void Draw(int i) {
+            if (i == 0) return;
+            DrawSmall(UserInterface.sB, i-1);
+        }
+
+
+        public void Draw(SpriteBatch spriteBatch) { // draws the whole map in the middle
             //MAP
             spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
 
@@ -95,11 +100,11 @@ namespace BRS.Scripts.UI {
 
 
         //---------------------------------------------------------------------
-        public void DrawSmall(SpriteBatch spriteBatch, int index) {
+        public void DrawSmall(SpriteBatch spriteBatch, int index) { // drawp it relative to the player
             //draw relative to player position
             _playerT = ElementManager.Instance.Player(index).transform;
             _playerPos = Pos3D2Pix(_playerT.position);
-            _cameraRot = ElementManager.Instance.Player(index).CamController.YRotation;
+            _cameraRot = rotateMinimap ? ElementManager.Instance.Player(index).CamController.YRotation : 0f;
 
             //MAP
             Vector2 playerPosVirgin = Pos3D2PixVirgin(_playerT.position);
@@ -115,9 +120,20 @@ namespace BRS.Scripts.UI {
 
             Vector2 finalPx;
             //MONEY
-            foreach (Vector3 pos in ElementManager.Instance.AllMoneyPosition()) {
-                if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
+            foreach (Vector3 pos in ElementManager.Instance.AllCashPosition()) {
+                if(IsInsideMini(pos, out finalPx)) {
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Graphics.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
+                }
+            }
+            foreach (Vector3 pos in ElementManager.Instance.AllGoldPosition()) {
+                if (IsInsideMini(pos, out finalPx)) {
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Graphics.Yellow, 0, _pivot, .08f, SpriteEffects.None, 1f);
+                }
+            }
+            foreach (Vector3 pos in ElementManager.Instance.AllDiamondPosition()) {
+                if (IsInsideMini(pos, out finalPx)) {
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Color.LightBlue, 0, _pivot, .08f, SpriteEffects.None, 1f);
+                }
             }
             //CRATES
             foreach (Vector3 pos in ElementManager.Instance.AllCratePosition()) {
@@ -127,7 +143,7 @@ namespace BRS.Scripts.UI {
             //POWERUPS
             foreach (Vector3 pos in ElementManager.Instance.AllPowerupPosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Star), Graphics.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
             }
             //BASES
             foreach (var b in ElementManager.Instance.Bases()) {
@@ -153,30 +169,13 @@ namespace BRS.Scripts.UI {
 
         bool IsInsideMini(Vector3 pos, out Vector2 result) {
             result = _miniDest.GetCenter() + (Pos3D2Pix(pos) - _playerPos).Rotate(_cameraRot); // center + delta
-            //result = _miniDest.Project(result);
             return _miniDest.Contains(result);
-            //miniDest.
         }
         bool IsInsideMiniProject(Vector3 pos, out Vector2 result) {
             result = _miniDest.GetCenter() + (Pos3D2Pix(pos) - _playerPos).Rotate(_cameraRot); // center + delta
             result = _miniDest.Project(result);
             return true;
         }
-
-
-        /*
-        bool Pos3D2PixSmall(Vector3 pos, Transform player, out Vector2 result) { // converts 3d position of object to pixel on screen inside minimap relative to player
-            //TODO consider rotation (nothing working yet)
-            float width = (float)SMALLMAPWIDTH/MAPWIDTH*(lowerRightPt.X-upperLeftPt.X)/mapScale;//todo compute somehow
-
-            Vector3 L = player.position - Vector3.One * width;
-            Vector3 R = player.position + Vector3.One * width;
-            float x0 = (pos.X - L.X) / (R.X - L.X);
-            float y0 = (pos.Z - L.Z) / (R.Z - L.Z);
-            Vector2 coeff = new Vector2(x0, y0);
-            result = mapDest.Evaluate(coeff).Round();
-            return (0 <= x0 && x0 <= 1 && 0 <= y0 && y0 <= 1);
-        }*/
 
         Vector2 Pos3D2PixVirgin(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap WITHOUT any scaling or offset
             return _mapAreaVirgin.Evaluate(PlayArea.Pos3DNormalized(pos)).Round();
@@ -187,22 +186,6 @@ namespace BRS.Scripts.UI {
             int row = (int)type / 4;
             return new Rectangle(col * IconSize, row * IconSize, IconSize, IconSize);
         }
-
-        /*
-        Transform[] Players() {
-            List<Transform> result = new List<Transform>();
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (GameObject o in players) result.Add(o.transform);
-            return result.ToArray();
-        }
-
-        Vector3[] Bases() {
-            List<Vector3> result = new List<Vector3>();
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            foreach (GameObject o in bases) result.Add(o.transform.position);
-            return result.ToArray();
-        }*/
-
 
         // other
 
