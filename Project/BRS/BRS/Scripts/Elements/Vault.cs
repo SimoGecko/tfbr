@@ -32,6 +32,8 @@ namespace BRS.Scripts.Elements {
         private bool _opening; // for animation
         private float _openRefTime;
 
+        public System.Action OnVaultOpen;
+
 
         //reference
 
@@ -53,6 +55,8 @@ namespace BRS.Scripts.Elements {
 
         // commands
         public void Open() {
+            Audio.Play("vault_opening", transform.position);
+            OnVaultOpen?.Invoke();
             _opening = true;
             _openRefTime = 0;
         }

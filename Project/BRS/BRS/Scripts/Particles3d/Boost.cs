@@ -34,7 +34,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX_T_Flame1_ABP",
                     MaxParticles = 10000,
                     ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(.25f),
+                    Duration = TimeSpan.FromSeconds(.35f),
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.0f,
 

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
+using System;
 
 namespace BRS {
 
@@ -17,8 +18,18 @@ namespace BRS {
 
         // Render the scene to this target
         RenderTarget2D _renderTarget;
+        // depth info
+        RenderTarget2D _ZBuffer;
+        Texture2D _ZBufferTexture;
+        Effect _ZBufferShader;
 
-
+        Skybox skybox;
+        Matrix world = Matrix.Identity;
+        Matrix view = Matrix.CreateLookAt(new Vector3(20, 0, 0), new Vector3(0, 0, 0), Vector3.UnitY);
+        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 100f);
+        Vector3 cameraPosition;
+        float angle = 0;
+        float distance = 20;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -41,6 +52,14 @@ namespace BRS {
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
 
+            _ZBuffer = new RenderTarget2D(
+                GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+
             // set up the post processing manager
             PostProcessingManager.Initialize(Content);
 
@@ -48,7 +67,8 @@ namespace BRS {
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
-            // Todo: Switch for the interim
+            // Todo: can be removed for alpha-release
+            PoliceManager.IsActive = false;
             ParticleSystem3D.Enabled = false;
 
             base.Initialize();
@@ -58,6 +78,7 @@ namespace BRS {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
+            Graphics.Start();
 
             //load prefabs and scene
             Prefabs.Start();
@@ -69,6 +90,14 @@ namespace BRS {
             Input.Start();
             Audio.Start();
             PostProcessingManager.Instance.Start(_spriteBatch);
+
+            // load the z buffer shader
+            _ZBufferShader = Content.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
+
+            // add skybox
+            skybox = new Skybox("images/skyboxes/Skybox", Content);
+
         }
 
 
@@ -97,13 +126,27 @@ namespace BRS {
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update(gameTime);
+
+            // Update skybox
+            //angle += 0.002f;
+            //cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
+           // view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
         }
 
         protected override void Draw(GameTime gameTime) {
+            // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            base.Draw(gameTime);
+            GraphicsDevice.Clear(Graphics.StreetGray);
 
+            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            skybox.Draw(view, projection, cameraPosition);
+            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
+            base.Draw(gameTime);
+            
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
@@ -121,13 +164,37 @@ namespace BRS {
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
+
             }
             Gizmos.ClearOrders();
 
+            // draw everything 3 D to get the depth info 
+
+            // render to z buffer
+            // GraphicsDevice.Render = CompareFunction.LessEqual;
+            // GraphicsDevice.SetRenderTarget(_ZBuffer);
+            // GraphicsDevice.Clear(Color.Black);
+
+            // pass the matWorldViewProj matrix
+            // effect.Parameters["matWorldViewProj"].SetValue(worldMatrix * viewMatrix * projMatrix);
+            // _ZBufferShader.Parameters
+            // apply the depth buffer shader
+            // _ZBufferShader.CurrentTechnique.Passes[0].Apply();
+            // draw all 3d objects
+            // Draw3D(gameTime);
+
+
+            //// draw everyting 3D
+            //Draw3D(gameTime);
+
+
             // apply post processing
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice);
+            // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
+
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
+
 
             //-----2D-----
             int i = 1;
@@ -145,4 +212,5 @@ namespace BRS {
             _spriteBatch.End();
         }
     }
+
 }

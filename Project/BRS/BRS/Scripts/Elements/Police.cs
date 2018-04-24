@@ -10,14 +10,16 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 
 namespace BRS.Scripts {
+    /// <summary>
+    /// Records a player position and then follows it smoothly
+    /// </summary>
     class Police : Component {
-        ////////// records a player position and then follows it smoothly //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
         const float speed = 4f;
-        const float changeThreshold = .5f;
+        const float changeThreshold = .8f;
         const float turnSmoothTime = .2f;
         const float bustRadius = .5f;
 

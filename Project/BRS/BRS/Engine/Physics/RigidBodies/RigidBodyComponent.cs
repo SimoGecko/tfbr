@@ -22,33 +22,41 @@ namespace BRS.Engine.Physics.RigidBodies {
 
         protected bool IsStatic;
         protected bool IsActive;
+        protected bool IsAnimated;
         protected bool PureCollider;
         protected JVector Size = JVector.One;
 
         protected JVector CenterOfMass;
 
+        private float _threshold = 0.0001f;
+
         /// <summary>
         /// Initialization of the rigid-body
         /// </summary>
-        public override void Start() {
+        public override void Awake() {
             CalculateShape(ShapeType);
 
             RigidBody = new Collider(CollisionShape) {
-                Position = Conversion.ToJitterVector(transform.position) - CenterOfMass,
+                Position = Conversion.ToJitterVector(transform.position) + CenterOfMass,
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(transform.rotation)),
-                CenterOfMass =  CenterOfMass,
+                CenterOfMass = CenterOfMass,
                 IsStatic = IsStatic,
                 IsActive = IsActive,
+                IsAnimated = IsAnimated,
                 Tag = Tag,
                 PureCollider = PureCollider,
                 GameObject = gameObject,
-                Material = new Material { Restitution = 0.0f },
+                Material = new Jitter.Dynamics.Material { KineticFriction = 10.0f, Restitution = 0.0f, StaticFriction = 10.0f },
                 Mass = 20.0f
             };
 
             PhysicsManager.Instance.World.AddBody(RigidBody);
 
-            base.Start();
+            if (ShapeType == ShapeType.BoxInvisible) {
+                gameObject.Model = null;
+            }
+
+            base.Awake();
         }
 
         public override void Destroy() {
@@ -66,7 +74,12 @@ namespace BRS.Engine.Physics.RigidBodies {
                 bbSize.X * Size.X * gameObject.transform.scale.X,
                 bbSize.Y * Size.Y * gameObject.transform.scale.Y,
                 bbSize.Z * Size.Z * gameObject.transform.scale.Z
-                );
+            );
+
+            JVector com = 0.5f * Conversion.ToJitterVector(bb.Max + bb.Min);
+            CenterOfMass = new JVector(com.X * gameObject.transform.scale.X,
+                com.Y * gameObject.transform.scale.Y,
+                com.Z * gameObject.transform.scale.Z);
 
             float maxDimension = MathHelper.Max(bbSize.X, MathHelper.Max(bbSize.Y, bbSize.Z));
 
@@ -80,6 +93,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                     break;
 
                 case ShapeType.Box:
+                case ShapeType.BoxInvisible:
                     CollisionShape = new BoxShape(bbSize);
                     break;
             }

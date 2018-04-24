@@ -18,9 +18,10 @@ namespace BRS.Scripts.UI {
 
         //private
         private BaseUIStruct[] _baseUi;
+        private readonly int[] _baseUIwins = new int[2]; // persists between plays
+
         private Texture2D _baseIcon;
         private Texture2D _ribbon;
-        private readonly int[] _baseUIwins = new int[2];
         private Texture2D _barIcons; // 256x256
 
 
@@ -51,28 +52,27 @@ namespace BRS.Scripts.UI {
         public override void Draw2D(int index) {
             if (index == 0) return;
             index--;
-            bool flip = index % 2 != 0;
+            bool flip = false;// index % 2 != 0;
 
-            UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 200, 30), Align.TopRight, scale: .5f, bold: true, flip: flip);
-            UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 80, 80), null, Align.TopRight, flip: flip);
+            UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, scale: .5f, bold: true, flip: flip);
+            UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 100, 100), null, Align.TopRight, flip: flip);
 
             int rank = RoundManager.GetRank(index);
-            if(rank==1)
-                UserInterface.DrawPicture(_ribbon, new Rectangle(-120, 18, 60, 60), null, Align.TopRight, flip: flip);
+            //if(rank==1)
+                UserInterface.DrawPicture(_ribbon, new Rectangle(-3, 32, 80, 80), null, Align.TopRight, flip: flip);
             string rankString = RoundManager.RankToString(rank);
-            UserInterface.DrawString(rankString, new Rectangle(-135, 28, 30, 30), Align.TopRight, Align.TopRight, Align.Center, scale: .5f, bold: true, flip: flip);
+            UserInterface.DrawString(rankString, new Rectangle(-23, 45, 40, 40), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, bold: true, flip: flip);
 
-            UserInterface.DrawString("base", new Rectangle(-120, 75, 150, 20), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
+            UserInterface.DrawString("base", new Rectangle(-145, 32, 175, 25), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_baseUi[index].TotalMoneyInBase / RoundManager.MoneyToWinRound;
-            Color yellowColor = new Color(255, 198, 13);
-            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-270, 95, 150, 20), yellowColor, Align.TopRight, flip: flip);
+            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-320, 57, 175, 25), Graphics.Yellow, Align.TopRight, flip: flip);
             string baseValueString = Utility.IntToMoneyString(_baseUi[index].TotalMoneyInBase);
-            UserInterface.DrawString(baseValueString, new Rectangle(-120, 115, 150, 20), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
-            UserInterface.DrawPicture(_barIcons, new Rectangle(-100, 95, 20, 20), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
+            UserInterface.DrawString(baseValueString, new Rectangle(-145, 82, 175, 25), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
+            UserInterface.DrawPicture(_barIcons, new Rectangle(-120, 57, 25, 25), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
 
             //wins
             string winsString = "wins: " + _baseUIwins[index];
-            UserInterface.DrawString(winsString, new Rectangle(-20, 120, 80, 20), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, flip: flip);
+            UserInterface.DrawString(winsString, new Rectangle(-20, 165, 100, 25), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, flip: flip);
         }
 
 
@@ -89,50 +89,17 @@ namespace BRS.Scripts.UI {
             _baseUIwins[index]++;
         }
 
-        // Todo: Used?
-        void DrawOld(int index) {
-            /*
-            int offset = UserInterface.instance.GetOffset(index);
-
-            string baseValueString = "cash: " + baseUI[index].totalMoneyInBase;
-            UserInterface.instance.DrawString(new Vector2(10 + offset, 80), baseValueString);
-
-            float baseHealthPercent = baseUI[index].baseHealth / baseUI[index].baseMaxHealth;
-            UserInterface.instance.DrawBar(new Vector2(10 + offset, 320), baseHealthPercent, Color.Orange);
-
-            string baseHealthstring = baseUI[index].baseHealth + "/" + baseUI[index].baseMaxHealth;
-            UserInterface.instance.DrawString(new Vector2(75 + offset, 310), baseHealthstring);
-            */
-        }
-        void DrawOld2(int index) {
-            /*
-            Vector2 position = new Vector2(100, 970);
-            //position += Vector2.UnitX* UserInterface.GetOffset(index);
-
-            //UserInterface.DrawPicture(position, _baseIcon, _baseIcon.Bounds.GetCenter(), .4f);
-
-            //name
-            string baseName = "Team " + (index + 1).ToString();
-            UserInterface.DrawStringOLD(position + new Vector2(-70, -110), baseName);
-
-            //health
-            float healthPercent = _baseUi[index].BaseHealth / _baseUi[index].BaseMaxHealth;
-            UserInterface.DrawBar(position + new Vector2(-70, -70), healthPercent, Color.Orange);
-
-            //cash
-            string baseValueString = "$" + _baseUi[index].TotalMoneyInBase.ToString("N0");//ToString("#,##0")
-            UserInterface.DrawStringOLD(position + new Vector2(50, -20), baseValueString);
-            //wins
-            string winsString = "wins: " + _baseUIwins[index];
-            UserInterface.DrawStringOLD(position + new Vector2(-70, 50), winsString);
-            */
-        }
-
         // queries
 
 
 
         // other
 
-        }
     }
+
+    public struct BaseUIStruct {
+        public int TotalMoneyInBase;
+        public float BaseHealth;
+        public float BaseMaxHealth;
+    }
+}

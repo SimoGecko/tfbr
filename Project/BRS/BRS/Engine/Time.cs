@@ -11,7 +11,7 @@ namespace BRS.Engine {
     static class Time {
         ////////// static class that provides time functions //////////
 
-        public static GameTime Gt;
+        public static GameTime Gt = new GameTime();
         public static int Frame = 0;
 
         public static List<Timer> timers = new List<Timer>();

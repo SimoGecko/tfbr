@@ -26,9 +26,12 @@ namespace BRS.Scripts.Managers {
         private Timer _rt;
         private Base[] _bases;
         bool calledPolice = false;
-
+        public int Winner {get; private set;}
         //reference
         public static RoundManager Instance;
+        public Action OnRoundStartAction;
+        public Action OnRoundAlmostEndAction;
+        public Action OnRoundEndAction;
 
 
         // --------------------- BASE METHODS ------------------
@@ -36,6 +39,8 @@ namespace BRS.Scripts.Managers {
             Instance = this;
             _rt = new Timer(0, RoundTime, OnRoundEnd);
             GameUI.Instance.StartMatch(_rt);
+            OnRoundStartAction?.Invoke();
+            new Timer(RoundTime * .8f, () => OnRoundAlmostEndAction?.Invoke());
         }
 
         public override void Update() {
@@ -60,6 +65,9 @@ namespace BRS.Scripts.Managers {
             NotifyBases();
 
             Tuple<int, int> winner = FindWinner();
+            OnRoundEndAction?.Invoke();
+            Winner = winner.Item1;
+
             GameUI.Instance.UpdateGameWinnerUI(winner.Item1);
             //UpdateRanking();
             GameManager.Instance.OnRoundEnd(winner.Item1);
