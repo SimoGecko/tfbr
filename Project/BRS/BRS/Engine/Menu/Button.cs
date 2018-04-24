@@ -141,7 +141,7 @@ namespace BRS.Menu {
             }
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             if (Active) {
                 var colour = ImageColor;
 

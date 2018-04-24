@@ -49,5 +49,13 @@ namespace BRS.Engine {
         public static Vector3 UpsideLinearVelocity() {
             return new Vector3(Range(-0.5f, 0.5f), Range(1.0f, 2.0f), Range(-0.5f, 0.5f));
         }
+
+        public static Color ColorByte() {
+            return new Color(
+                (byte)Rand.Next(255),
+                (byte)Rand.Next(255),
+                (byte)Rand.Next(255),
+                (byte)Rand.Next(255));
+        }
     }
 }

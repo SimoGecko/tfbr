@@ -3,19 +3,15 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
-using BRS.Menu;
-using BRS.Scripts;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
+using BRS.Scripts.Particles3D;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -88,7 +84,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 0.25f, 0);
+                Vector3 startPos =  new Vector3(-5 + 10 * i, 1.0f, 0.0f);
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -100,6 +96,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+                player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
                 player.material = playerMat;
 
@@ -173,6 +170,7 @@ namespace BRS.Scripts.Scenes {
             vault.transform.scale = new Vector3(3, .5f, 3);
             vault.transform.eulerAngles = new Vector3(90, 0, 0);
             vault.AddComponent(new StaticRigidBody());
+            vault.AddComponent(new Smoke());
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);
 
