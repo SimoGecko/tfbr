@@ -20,13 +20,13 @@ namespace BRS.Scripts.Elements {
 
         //public
 
-        public static Rectangle VaultArea = new Rectangle(-9, -72, 19, 8);
+        //public static Rectangle VaultArea = new Rectangle(-9, -72, 19, 8);
 
 
         //private
         private const float OpeningDuration = 2f;
         private const float OpeningAnge = -90f;
-        private const float PivotOffset = -1.5f;
+        private const float PivotOffset = 0f;//-1.5f;
 
         private bool _open; // at end of animation
         private bool _opening; // for animation
