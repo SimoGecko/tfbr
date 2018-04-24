@@ -149,7 +149,7 @@ namespace BRS.Scripts.Scenes {
             //vault.transform.eulerAngles = new Vector3(90, 0, 0);
 
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
-            vault.AddComponent(new StaticRigidBody());
+            vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));

@@ -9,21 +9,39 @@ namespace BRS.Engine.Physics.Colliders {
     /// Handles the rigid body which can be controlled by the player
     /// </summary>
     class SteerableCollider : Collider {
+
+        #region Properties and attributes
+
         /// <summary>
         /// Rotation around the Y-axis given as radians
         /// </summary>
         public float RotationY { get; set; }
+
+        /// <summary>
+        /// Current speed for the simulation
+        /// </summary>
         public JVector Speed { get; set; }
 
-        public SteerableCollider(Shape shape) : base(shape) {
+        #endregion
+
+        #region Constructor
+
+        public SteerableCollider(Shape shape)
+            : this(shape, new Jitter.Dynamics.Material()) {
         }
 
-        public SteerableCollider(Shape shape, Jitter.Dynamics.Material material) : base(shape, material) {
+        public SteerableCollider(Shape shape, Jitter.Dynamics.Material material, bool isParticle = false)
+            : base(shape, material, isParticle) {
         }
 
-        public SteerableCollider(Shape shape, Jitter.Dynamics.Material material, bool isParticle) : base(shape, material, isParticle) {
-        }
+        #endregion
 
+        #region Jitter-loop
+
+        /// <summary>
+        /// Functionality which is applied before the physics is updated
+        /// </summary>
+        /// <param name="timestep"></param>
         public override void PreStep(float timestep) {
             AddForce(Speed);
             LinearVelocity = Speed;
@@ -34,6 +52,11 @@ namespace BRS.Engine.Physics.Colliders {
             base.PreStep(timestep);
         }
 
+
+        /// <summary>
+        /// Functionality which is applied after the physics is updated
+        /// </summary>
+        /// <param name="timestep"></param>
         public override void PostStep(float timestep) {
             //AddForce(Speed);
             //LinearVelocity = Speed;
@@ -44,6 +67,11 @@ namespace BRS.Engine.Physics.Colliders {
             base.PostStep(timestep);
         }
 
+        #endregion
+
+        /// <summary>
+        /// Correct the position of the rigid-body => adjust the y-axis
+        /// </summary>
         public void CorrectPosition() {
             Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
         }
