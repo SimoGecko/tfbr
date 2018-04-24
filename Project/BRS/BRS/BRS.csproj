@@ -267,6 +267,7 @@
     <Content Include="Load\MenuPanels\Tutorial3.txt" />
     <Content Include="Load\MenuPanels\Tutorial4.txt" />
     <Content Include="Assets\SmallLogo.scale-200.png" />
+    <Content Include="Load\PolicePaths.txt" />
     <Content Include="Load\Rankings\ranking2min.txt" />
     <Content Include="Load\Rankings\ranking3min.txt" />
     <Content Include="Load\Rankings\ranking5min.txt" />
