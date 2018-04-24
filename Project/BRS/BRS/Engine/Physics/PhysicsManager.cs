@@ -1,8 +1,8 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine.Physics.Colliders;
+using BRS.Scripts.PlayerScripts;
 using Jitter;
 using Jitter.Collision;
 using Jitter.Collision.Shapes;
@@ -10,7 +10,6 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Engine.Physics {
     /// <summary>
@@ -164,6 +163,15 @@ namespace BRS.Engine.Physics {
             }
         }
 
+
+        /// <summary>
+        /// Raycast callback to define if a rigid body counts as collision for the ray.
+        /// (Only static and non-pure-collider are counted as collisions)
+        /// </summary>
+        /// <param name="body">Body which is hit by the ray</param>
+        /// <param name="normal">Normal of the collision</param>
+        /// <param name="fraction">Fraction of the collision on the ray. (start + fraction * direction)</param>
+        /// <returns>True if the body is considered as a hit.</returns>
         private bool RaycastCallback(RigidBody body, JVector normal, float fraction) {
             return body.IsStatic && body.PureCollider == false;
         }
@@ -208,12 +216,12 @@ namespace BRS.Engine.Physics {
 
 
         /// <summary>
-        /// 
+        /// Detect a possible collision between the object and a planned end-position.
         /// </summary>
-        /// <param name="rigidBody"></param>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        /// <returns></returns>
+        /// <param name="rigidBody">Rigid-body to test for</param>
+        /// <param name="start">Start of the test-ray</param>
+        /// <param name="end">End of the test-ray</param>
+        /// <returns>Position on the ray which is still possible to place the rigid-body without collision</returns>
         public Vector3 DetectCollision(RigidBody rigidBody, Vector3 start, Vector3 end) {
             JVector jStart = Conversion.ToJitterVector(start);
             JVector jEnd = Conversion.ToJitterVector(end);
@@ -221,33 +229,51 @@ namespace BRS.Engine.Physics {
             return Conversion.ToXnaVector(result);
         }
 
+
+        /// <summary>
+        /// Detect a possible collision between the object and a planned end-position.
+        /// </summary>
+        /// <param name="rigidBody">Rigid-body to test for</param>
+        /// <param name="start">Start of the test-ray</param>
+        /// <param name="end">End of the test-ray</param>
+        /// <returns>Position on the ray which is still possible to place the rigid-body without collision</returns>
         public JVector DetectCollision(RigidBody rigidBody, JVector start, JVector end) {
             JVector p = rigidBody.Position;
             JVector d = end - start;
+            JVector d5 = 5 * d;
 
             Collider collider = rigidBody as Collider;
 
             RigidBody resBody;
             JVector hitNormal;
             float fraction;
-            //ProjectOn(new JVector(2, 3, 1), new JVector(5, -2, 2));
+
             bool result = World.CollisionSystem.Raycast(p,
-                d, RaycastCallback, out resBody,
+                p + d5, RaycastCallback, out resBody,
                 out hitNormal, out fraction);
 
-            if (result && fraction <= 1.0f) {
-                JVector collisionAt = p + fraction * d;
-                return GetPosition(collider, collisionAt, hitNormal);
-            }
+            if (result) {
+                float maxLength = d.LengthSquared();
+                JVector collisionAt = p + fraction * d5;
+                JVector position = GetPosition(collider, collisionAt, hitNormal);
 
-            //try {
-            //    GameObject.Destroy((resBody as Collider).GameObject);
-            //} catch {
-            //}
+                float ncLength = (position - p).LengthSquared();
+
+                return maxLength < ncLength ? end : position;
+            }
 
             return end;
         }
 
+
+        /// <summary>
+        /// Get the position so that the object does not collide with the object anymore.
+        /// Important: this is used raycasting checks, as this needs some more corner-cases.
+        /// </summary>
+        /// <param name="collider">The collider which is the player</param>
+        /// <param name="collisionPoint">Point of the collision in the scene</param>
+        /// <param name="hitNormal">Collision-normal of the object with which the player collided</param>
+        /// <returns>Position which is possible for the collider so there is no collision.</returns>
         private JVector GetPosition(Collider collider, JVector collisionPoint, JVector hitNormal) {
             JVector bbSize = collider.BoundingBoxSize;
             GameObject gameObject = collider.GameObject;
@@ -261,56 +287,59 @@ namespace BRS.Engine.Physics {
                 return bbSize.Z * -0.5f * Conversion.ToJitterVector(gameObject.transform.Forward);
             }
 
-            // Direction of the forward-vector into the same as the hit-normal.
-            if (JVector.Dot(forward, hitNormal) < 0.0f) {
-                forward = -1 * forward;
-            }
-
-            // Direction of the right-vector into the same as the hit-normal.
-            if (JVector.Dot(right, hitNormal) < 0.0f) {
-                right = -1 * right;
-            }
-
-            // Direction of the d-vector into the same as the hit-normal.
-            if (JVector.Dot(d, hitNormal) < 0.0f) {
-                d = -1 * d;
-            }
+            // Correct directions
+            TurnIntoDirectionOf(ref forward, hitNormal);
+            TurnIntoDirectionOf(ref right, hitNormal);
+            TurnIntoDirectionOf(ref d, hitNormal);
 
             // Calculate the projected length (half-length) of the player on the hit-normal.
             JVector lengthOnNormal = ProjectOn(forward, hitNormal);
             JVector widthOnNormal = ProjectOn(right, hitNormal);
             JVector projectedSize = lengthOnNormal + widthOnNormal;
 
-            //// Get vector which gives the non-collided-part of the car projected on the hit-normal.
-            //JVector distColToPos = collisionPoint - collider.Position;
-
-            //if (JVector.Dot(distColToPos, hitNormal) < 0.0f) {
-            //    distColToPos = -1 * distColToPos;
-            //}
-
-            //// Calculate the penetration-depth of the collision
-            //JVector nonCollidedSize = ProjectOn(distColToPos, hitNormal);
-            //JVector penetration = nonCollidedSize - projectedSize;
-
             JVector margin = ProjectOn(projectedSize, d);
+            JVector endPosition = collisionPoint + margin;
 
-            //Debug.Log("Collision detected! ");
-            //Debug.Log("Margin: " + margin);
-            //if (margin.IsNaN()) {
-            //    Debug.Log("Should not happen");
-            //}
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint + margin));
+            // Check if it hit a corner and it could actually go closer
+            JVector plane = new JVector(-hitNormal.Z, 0, hitNormal.X);
+            TurnIntoDirectionOf(ref plane, -1 * forward);
+            plane.Normalize();
 
-            return collisionPoint + margin;
+            // Check if there is an intersection between the front-"plane" of the player and the collided object
+            JVector intersection;
+
+            JVector frontMiddle = endPosition + forward;
+            JVector frontRight = endPosition + forward - right;
+            JVector planeEnd = collisionPoint + MathHelper.Max(bbSize.X, bbSize.Z) * plane;
+
+            if (DoIntersect(frontMiddle, frontRight, collisionPoint, planeEnd, out intersection)) {
+                intersection.Y = collider.Position.Y;
+                JVector colToIntersection = intersection - collisionPoint;
+
+                JVector margin2 = ProjectOn(colToIntersection, d);
+
+                margin = margin.LengthSquared() > margin2.LengthSquared() ? margin2 : margin;
+                endPosition = collisionPoint + margin;
+            }
+
+            // Todo: Visual debuggin might be removed in the end
+            PhysicsDrawer.Instance.ClearPointsToDraw();
+            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint));
+            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(endPosition));
+
+            //return collider.Position;
+            return endPosition;
         }
+
 
         /// <summary>
         /// Get the position so that the object does not collide with the object anymore.
+        /// Important: this is used for the normal collision-handling.
         /// </summary>
         /// <param name="collider">The collider which is the player</param>
         /// <param name="collisionPoint">Point of the collision in the scene</param>
         /// <param name="hitNormal">Collision-normal of the object with which the player collided</param>
-        /// <returns></returns>
+        /// <returns>Position which is possible for the collider so there is no collision.</returns>
         private JVector ProjectToNonCollision(Collider collider, JVector collisionPoint, JVector hitNormal) {
             JVector bbSize = collider.BoundingBoxSize;
             GameObject gameObject = collider.GameObject;
@@ -324,32 +353,21 @@ namespace BRS.Engine.Physics {
             JVector forward = 0.5f * bbSize.Z * Conversion.ToJitterVector(gameObject.transform.Forward);
             JVector right = 0.5f * bbSize.X * Conversion.ToJitterVector(gameObject.transform.Right);
 
-            // Direction of the forward-vector into the same as the hit-normal.
-            if (JVector.Dot(forward, hitNormal) < 0.0f) {
-                forward = -1 * forward;
-            }
-
-            // Direction of the right-vector into the same as the hit-normal.
-            if (JVector.Dot(right, hitNormal) < 0.0f) {
-                right = -1 * right;
-            }
+            // Correct directions for calculations.
+            TurnIntoDirectionOf(ref forward, hitNormal);
+            TurnIntoDirectionOf(ref right, hitNormal);
 
             // Calculate the projected length (half-length) of the player on the hit-normal.
             JVector lengthOnNormal = ProjectOn(forward, hitNormal);
             JVector widthOnNormal = ProjectOn(right, hitNormal);
             JVector projectedSize = lengthOnNormal + widthOnNormal;
 
-            // Direction of the projected-vector into the same as the hit-normal.
-            if (JVector.Dot(projectedSize, hitNormal) < 0.0f) {
-                projectedSize = -1 * projectedSize;
-            }
-
             // Get vector which gives the non-collided-part of the car projected on the hit-normal.
             JVector distColToPos = collisionPoint - collider.Position;
 
-            if (JVector.Dot(distColToPos, hitNormal) < 0.0f) {
-                distColToPos = -1 * distColToPos;
-            }
+            // Correct directions for calculations.
+            TurnIntoDirectionOf(ref projectedSize, hitNormal);
+            TurnIntoDirectionOf(ref distColToPos, hitNormal);
 
             // Calculate the penetration-depth of the collision
             JVector nonCollidedSize = ProjectOn(distColToPos, hitNormal);
@@ -367,37 +385,19 @@ namespace BRS.Engine.Physics {
         #region Collision handling
 
         private void HandlePlayerCollision(SteerableCollider player, Collider other, JVector collisionPoint, JVector normal) {
-            // First, calculate the new position based on the orientation of the car
-            //// First try
-            //JVector newPosition1 = GetPosition(player.BoundingBoxSize, player.GameObject, normal,
-            //    Conversion.ToJitterVector(player.GameObject.transform.Forward), collisionPoint);
-
-            //// Second try
-            //JVector newPosition = collisionPoint + ReflectOnNormal(Conversion.ToJitterVector(player.GameObject.transform.Forward),
-            //                          normal);
-            ////newPosition -= newPosition1;
-            //newPosition += 0.1f * normal;
-
-            //// Second, check if the new position is not projected into another obstacle
-            //newPosition = DetectCollision(player, player.GameObject, player.Position, newPosition);
-
-            //// Calculate the torque for the car
-            //JVector right = Conversion.ToJitterVector(player.GameObject.transform.Right);
-            ////JVector bounce = newPosition - collisionPoint;
-
             //float angle = JVector.Dot(right, normal) > 0.0f ? -15.0f : 15.0f;
             float angle = 0.0f;
             angle += MathHelper.ToDegrees(player.RotationY);
 
             JVector forward = Conversion.ToJitterVector(player.GameObject.transform.Forward);
 
+            // If the player is driving away of the wall there should be no collision-handling
             if (JVector.Dot(forward, normal) > 0.0f) {
                 return;
             }
+
             JVector newPosition = ProjectToNonCollision(player, collisionPoint, normal);
 
-            //Debug.Log(newPosition1);
-            //Debug.Log(newPosition);
             player.GameObject.GetComponent<Player>().SetCollisionState(other, Conversion.ToXnaVector(newPosition), angle);
             player.Position = newPosition;
             //player.RotationY = MathHelper.ToRadians(angle);
@@ -418,6 +418,7 @@ namespace BRS.Engine.Physics {
             return JVector.Dot(v, u) / u.LengthSquared() * u;
         }
 
+
         /// <summary>
         /// Reflect the <paramref name="input"/>-vector on the <paramref name="normal"/>-vector.
         /// </summary>
@@ -431,6 +432,54 @@ namespace BRS.Engine.Physics {
             inputNormalized.Normalize();
 
             return inputNormalized - 2 * JVector.Dot(inputNormalized, normalNormalized) * normalNormalized;
+        }
+
+
+        /// <summary>
+        /// Turn the <paramref name="input"/>-vector in the same direction as the <paramref name="direction"/>.
+        /// </summary>
+        /// <param name="input">Input vector to adjust</param>
+        /// <param name="direction">Given direction</param>
+        private void TurnIntoDirectionOf(ref JVector input, JVector direction) {
+            if (JVector.Dot(input, direction) < 0.0f) {
+                input = -1 * input;
+            }
+        }
+
+
+        /// <summary>
+        /// Helper to calculate an intersection of two lines. Both lines are defined with two points on the line.
+        /// </summary>
+        /// <param name="startA">Point 1 on line A</param>
+        /// <param name="endA">Point 2 on line A</param>
+        /// <param name="startB">Point 1 on line B</param>
+        /// <param name="endB">Point 2 on line B</param>
+        /// <param name="intersection">Calculated intersection between the two lines</param>
+        /// <returns>True if there is an intersection, false otherwise</returns>
+        private bool DoIntersect(JVector startA, JVector endA, JVector startB, JVector endB, out JVector intersection) {
+            // Parameter-form
+            float a1 = endA.Z - startA.Z;
+            float b1 = startA.X - endA.X;
+            float c1 = a1 * startA.X + b1 * startA.Z;
+
+            float a2 = endB.Z - startB.Z;
+            float b2 = startB.X - endB.X;
+            float c2 = a2 * startB.X + b2 * startB.Z;
+
+            // Determinant of the vectors
+            float det = a1 * b2 - a2 * b1;
+
+            // If 0 => parallel => no intersection
+            if (det == 0.0f) {
+                intersection = JVector.Zero;
+                return false;
+            }
+
+            // Otherwise calculate intersection
+            float x = (b2 * c1 - b1 * c2) / det;
+            float z = (a1 * c2 - a2 * c1) / det;
+            intersection = new JVector(x, 0.0f, z);
+            return true;
         }
 
         #endregion

@@ -3,19 +3,15 @@
 
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
-using BRS.Menu;
-using BRS.Scripts;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
+using BRS.Scripts.Particles3D;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -24,16 +20,13 @@ namespace BRS.Scripts.Scenes {
         public override int GetNumCameras() { return GameManager.NumPlayers; } 
 
         public override void Load() {
-            LoadUnityScene();
             LoadBlenderBakedScene();
+            LoadUnityScene();
             CreateManagers();
             CreatePlayers();
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
-            //GameObject.Instantiate("chair", new Vector3(0, 0, -5), Quaternion.Identity);
-            //GameObject.Instantiate("plant", new Vector3(2, 0, -5), Quaternion.Identity);
-            //GameObject.Instantiate("cart", new Vector3(4, 0, -5), Quaternion.Identity);
         }
 
 
@@ -64,7 +57,6 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new MoneyUI());
             UiManager.AddComponent(new ParticleUI());
             UiManager.AddComponent(new SpeechUI());
-            //Add(UiManager);
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
@@ -75,7 +67,6 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager());
-            //Add(Manager);
 
             //new MenuManager().LoadContent(); // TODO add as component to manager
         }
@@ -83,13 +74,13 @@ namespace BRS.Scripts.Scenes {
         void CreatePlayers() {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
-
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift")); // for some reason the tex is much less shiny
+                GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 0.25f, 0);
+                player.material = playerMat;
 
+                Vector3 startPos =  new Vector3(-5 + 10 * i, 0.25f, 0);
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
                 //subcomponents
@@ -100,10 +91,9 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+                player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
-                player.material = playerMat;
 
-                //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow for base
@@ -118,7 +108,6 @@ namespace BRS.Scripts.Scenes {
                 arrow2.material = new Material(Graphics.Red);
                 arrow2.AddComponent(new Arrow(player, true, i, ()=>true));
                 arrow2.transform.Scale(.08f);
-                //Add(arrow);
             }
         }
 
@@ -126,27 +115,12 @@ namespace BRS.Scripts.Scenes {
             int i = 0;
             foreach (Camera c in Screen.Cameras) {
                 GameObject camObject = c.gameObject;
-                //Add(camObject);
                 camObject.AddComponent(new CameraController()); // TODO move out this creation code
                 camObject.GetComponent<CameraController>().CamIndex = i++;
             }
         }
 
         void CreateBases() {
-            /*
-            GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            Debug.Assert(bases.Length == 2, "there should be 2 bases");
-            for (int i = 0; i < bases.Length; i++) {
-                bases[i].AddComponent(new Base(i));
-                bases[i].transform.Scale(2);
-                bases[i].AddComponent(new StaticRigidBody(pureCollider: true));
-                //bases[i].AddComponent(new BoxCollider(Vector3.Zero, Vector3.One * 3));
-                bases[i].transform.SetStatic();
-                ElementManager.Instance.Add(bases[i].GetComponent<Base>());
-
-                //Add(bases[i]);
-            }*/
-
             for (int i = 0; i < 2; i++) {
                 //TODO base object
                 GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
@@ -166,13 +140,18 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateSpecialObjects() {
+            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
-            GameObject vault = new GameObject("vault", File.Load<Model>("Models/primitives/cylinder"));
+            GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
             vault.AddComponent(new Vault());
-            vault.transform.position = new Vector3(5, 1.5f, -62);
-            vault.transform.scale = new Vector3(3, .5f, 3);
-            vault.transform.eulerAngles = new Vector3(90, 0, 0);
-            vault.AddComponent(new StaticRigidBody());
+            //vault.transform.position = new Vector3(5, 1.5f, -62);
+            //vault.transform.scale = new Vector3(3, .5f, 3);
+            //vault.transform.eulerAngles = new Vector3(90, 0, 0);
+
+            vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
+            vault.AddComponent(new AnimatedRigidBody());
+            vault.AddComponent(new Smoke());
+            vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);
 

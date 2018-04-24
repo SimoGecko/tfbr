@@ -14,21 +14,62 @@ namespace BRS.Engine.Physics.RigidBodies {
     /// </summary>
     public abstract class RigidBodyComponent : Component {
 
+        #region Properties and attributes
+
+        /// <summary>
+        /// Rigid body for the game-object which is used in the physics simulation
+        /// </summary>
         public RigidBody RigidBody;
 
+        /// <summary>
+        /// Type of the bounding-shape
+        /// </summary>
         protected ShapeType ShapeType;
+
+        /// <summary>
+        /// Bounding shape with type given in ShapeType
+        /// </summary>
         protected Shape CollisionShape;
+
+        /// <summary>
+        /// Body-tag is used to mark someobjects for the physical-drawing
+        /// </summary>
         protected BodyTag Tag;
 
+        /// <summary>
+        /// Defines if the rigid-body is static in the phycisc simulation
+        /// </summary>
         protected bool IsStatic;
+
+        /// <summary>
+        /// Defines if the rigid-body is active in the phycisc simulation
+        /// </summary>
         protected bool IsActive;
+
+        /// <summary>
+        /// Defines if the rigid-body is animated in the phycisc simulation.
+        /// Effect: Animation in our code => only put position/rotation into physics simulation, not update the otherway
+        /// </summary>
         protected bool IsAnimated;
+
+        /// <summary>
+        /// Defines if the rigid-body is a pure collider in the phycisc simulation
+        /// </summary>
         protected bool PureCollider;
+
+        /// <summary>
+        /// Defines the scale of the bounding-shape
+        /// </summary>
         protected JVector Size = JVector.One;
 
+        /// <summary>
+        /// Center of mass of the rigid body with respect to the bounding-shape
+        /// </summary>
         protected JVector CenterOfMass;
 
-        private float _threshold = 0.0001f;
+        #endregion
+
+        #region Monogame-structure
 
         /// <summary>
         /// Initialization of the rigid-body
@@ -59,6 +100,10 @@ namespace BRS.Engine.Physics.RigidBodies {
             base.Awake();
         }
 
+
+        /// <summary>
+        /// Destroing the game-boject/component means to remove the rigid-body from the physics simulation
+        /// </summary>
         public override void Destroy() {
             Debug.Log("Remove world object for " + gameObject.name);
             PhysicsManager.Instance.World.RemoveBody(RigidBody);
@@ -66,6 +111,12 @@ namespace BRS.Engine.Physics.RigidBodies {
             base.Destroy();
         }
 
+        #endregion
+
+        /// <summary>
+        /// Calculate the tightest bounding-shape with the given <paramref name="type"/>
+        /// </summary>
+        /// <param name="type">Type of the bounding-shape</param>
         protected virtual void CalculateShape(ShapeType type) {
             Model model = gameObject.Model;
             BoundingBox bb = BoundingBoxHelper.Calculate(model);
