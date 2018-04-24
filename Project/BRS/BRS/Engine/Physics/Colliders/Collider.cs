@@ -40,8 +40,8 @@ namespace BRS.Engine.Physics.Colliders {
 
         public override void PreStep(float timestep) {
             if (IsAnimated) {
-                Position = Conversion.ToJitterVector(GameObject.transform.position) + CenterOfMass;
                 Orientation = JMatrix.CreateFromQuaternion(Conversion.ToJitterQuaternion(GameObject.transform.rotation));
+                Position = Conversion.ToJitterVector(GameObject.transform.position) + JVector.Transform(CenterOfMass, Orientation);
             }
         }
 
