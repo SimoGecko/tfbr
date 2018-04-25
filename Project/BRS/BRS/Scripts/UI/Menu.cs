@@ -38,15 +38,29 @@ namespace BRS.Scripts.UI {
             Texture2D textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
             Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
             Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
-            Texture2D textureForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
-            Texture2D textureModel3 = File.Load<Texture2D>("Images/UI/model3_image");
+            //Texture2D textureForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
+            //Texture2D textureModel3 = File.Load<Texture2D>("Images/UI/model3_image");
             Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
             Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
             Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tutorial_1");
             Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tutorial_2");
             Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tutorial_3");
 
+            Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
+            Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
+            Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
+            Texture2D textureModel1Color = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
+            Texture2D textureModel2Color = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color");
+            Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
+
+
             texturesButtons = new Dictionary<string, Texture2D> {
+                { "model1Back", textureModel1Back },
+                { "model2Back", textureModel2Back },
+                { "model3Back", textureModel3Back },
+                { "model1Color", textureModel1Color },
+                { "model2Color", textureModel2Color },
+                { "model3Color", textureModel3Color },
                 { "button", textureButton },
                 { "background", textureButtonBackground },
                 { "bigBackground", textureButtonBigBackground },
@@ -54,8 +68,8 @@ namespace BRS.Scripts.UI {
                 { "title", textureButtonTitle },
                 { "arrowLeft", textureArrowLeft },
                 { "arrowRight", textureArrowRight },
-                { "forklift", textureForkLift },
-                { "bulldozer", textureModel3 },
+                //{ "forklift", textureForkLift },
+                //{ "bulldozer", textureModel3 },
                 { "buttonAccept", textureButtonAccept },
                 { "slider", textureSlider },
                 { "menu", textureMenuIcon },
@@ -82,7 +96,8 @@ namespace BRS.Scripts.UI {
                 { "GoRight", MenuManager.Instance.GoRight },
                 { "UpdateVolume", MenuManager.Instance.UpdateVolume },
                 { "LoadMenu", MenuManager.Instance.LoadMenuFunction },
-                { "ResumeGame", MenuManager.Instance.ResumeGame }
+                { "ResumeGame", MenuManager.Instance.ResumeGame },
+                { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor }               
             };
         }
 
@@ -127,14 +142,18 @@ namespace BRS.Scripts.UI {
             string[] secondLine = { "a", "s", "d", "f", "g", "h", "j", "k", "l" };
             string[] thirdLine = { "y", "x", "c", "v", "b", "n", "m" };
             string[][] keyboard = { firstLine, secondLine, thirdLine };
-            float scaleAlphabet = 0.37f;
+            float scaleAlphabet;
 
             Vector2[] startoffset;
-            if (panelName == "play2_")
-                startoffset = new Vector2[] { new Vector2(1152, 540), new Vector2(1210, 594), new Vector2(1248, 648) };
-            else
+            if (panelName == "play2_0") {
+                startoffset = new Vector2[] { new Vector2(1152, 540), new Vector2(1210, 540), new Vector2(1248, 540) };
+                scaleAlphabet = 0.5f;
+            }    
+            else{
                 startoffset = new Vector2[] { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
-            
+                scaleAlphabet = 0.37f;
+            }
+                
             
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
@@ -274,6 +293,7 @@ namespace BRS.Scripts.UI {
                     if (MS.Name != null) img.NameIdentifier = MS.Name;
                     if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
                     if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
+                    if (MS.Color != default(Color)) img.colour = MS.Color;
                     img.Active = MS.Active; 
                     MenuManager.Instance.MenuRect[panelName].AddComponent(img);
                 }

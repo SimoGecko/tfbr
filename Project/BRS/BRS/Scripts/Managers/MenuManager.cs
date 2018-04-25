@@ -36,6 +36,10 @@ namespace BRS.Scripts.Managers {
         public string panelPlay2NameOption; // = "play2_"; // "play2Shared" or "play2_"
 
         int count = 0;
+
+        Color[] colorModel = { Color.Red, Color.Green, Color.Blue, Color.Yellow };
+        int idColor = 0;
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -295,6 +299,7 @@ namespace BRS.Scripts.Managers {
         }
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
+
             Button button = (Button)sender;
 
             if (panelPlay2NameOption == "play2Shared")
@@ -307,13 +312,49 @@ namespace BRS.Scripts.Managers {
 
             foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
-                    if (img.NameIdentifier == "pictureModel" + (button.Index+1).ToString()) 
+                    if (img.NameIdentifier == "pictureModel" + (button.Index + 1).ToString())
+                        img.Active = true;
+                    else if (img.NameIdentifier == "pictureModel" + (button.Index + 1).ToString() + "Color")
                         img.Active = true;
                     else
                         img.Active = false;
                 }
             }
         }
+
+        public void UpdateChosenColor(object sender, EventArgs e) {
+            if (!uniqueMenuSwitchUsed) {
+                Button button = (Button)sender;
+                
+                // Change color used
+                if (button.nameIdentifier == "ColorChangeRight") {
+                    ++idColor;
+                    if (idColor >= colorModel.Length) idColor = 0;
+                }
+                else if (button.nameIdentifier == "ColorChangeLeft") {
+                    --idColor;
+                    if (idColor < 0) idColor = colorModel.Length - 1;
+                }
+                else
+                    Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+                // update color for model pictures
+                foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+                    if (elem is Image img) {
+                        for (int i = 0; i < modelCharacter.Count; ++i) {
+                            if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
+                                img.colour = colorModel[idColor];
+                        }
+                    }
+                    if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
+                        bu.ImageColor = colorModel[idColor];
+                }
+                uniqueMenuSwitchUsed = true;
+
+                // updaze color for 3d model
+            }
+        }
+
 
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
             Button button = (Button)sender;

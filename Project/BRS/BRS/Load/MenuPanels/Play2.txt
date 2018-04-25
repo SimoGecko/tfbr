@@ -71,7 +71,7 @@ Position: 192 486
 ScaleWidth: 1.5
 Text: Model 1
 Functions: ChangeModelPlayer HighlightBorders
-NeighborsUpDownLeftRight: Player1 Model2 null Alphabet1
+NeighborsUpDownLeftRight: Player1 Model2 null ColorChangeLeft
 Index: 0
 UniqueChoiceWith: Model2 Model3
 IsClicked: yes
@@ -159,21 +159,79 @@ ColorInside: 255 255 255
 
 <Image>
 NameIdentifier: pictureModel1
-Texture: forklift
-Position: 576 594
+Texture: model1Back
+Position: 550 650
 Active: yes
 </Image>
 
 <Image>
+NameIdentifier: pictureModel1Color
+Texture: model1Color
+Position: 550 650
+Active: yes
+Color: 255 0 0
+</Image>
+
+<Image>
 NameIdentifier: pictureModel2
-Texture: forklift
-Position: 576 594
+Texture: model2Back
+Position: 550 650
 Active: no
 </Image>
 
 <Image>
+NameIdentifier: pictureModel2Color
+Texture: model2Color
+Position: 550 650
+Active: no
+Color: 255 0 0
+</Image>
+
+<Image>
 NameIdentifier: pictureModel3
-Texture: bulldozer
-Position: 576 594
+Texture: model3Back
+Position: 550 650
 Active: no
 </Image>
+
+<Image>
+NameIdentifier: pictureModel3Color
+Texture: model3Color
+Position: 550 650
+Active: no
+Color: 255 0 0
+</Image>
+
+<Button>
+NameIdentifier: ColorChosen
+Texture: buttonCircle
+Position: 535 465
+Active: yes
+ScaleWidth: 0.6
+ScaleHeight: 0.6
+Color: 255 0 0
+</Button>
+
+<Button>
+NameIdentifier: ColorChangeRight
+Texture: arrowRight
+Position: 585 465
+Active: yes
+ScaleWidth: 1
+ScaleHeight: 1
+Color: 148 148 148
+NeighborsUpDownLeftRight: null null ColorChangeLeft null
+Functions: UpdateChosenColor
+</Button>
+
+<Button>
+NameIdentifier: ColorChangeLeft
+Texture: arrowLeft
+Position: 485 465
+Active: yes
+ScaleWidth: 1
+ScaleHeight: 1
+Color: 148 148 148
+NeighborsUpDownLeftRight: null null Model1 ColorChangeRight
+Functions: UpdateChosenColor
+</Button>

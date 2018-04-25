@@ -17,7 +17,7 @@ namespace BRS.Scripts.Scenes {
             MenuScene();
 
             foreach (Camera c in Screen.Cameras) {
-                c.transform.position = new Vector3(0, 20, 20);
+                c.transform.position = new Vector3(0, 10, 12);
                 c.transform.eulerAngles = new Vector3(-35, 0, 0);
             }
 

@@ -15,6 +15,8 @@ namespace BRS.Engine.Menu {
         public float ScaleWidth { get; set; } = 1;
         public float ScaleHeight { get; set; } = 1;
 
+        public Color colour = Color.White;
+
         public Rectangle Rectangle {
             get {
                 return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(_texture.Height * ScaleHeight / 1080f * Screen.Height));
@@ -30,7 +32,7 @@ namespace BRS.Engine.Menu {
             if (Active && i==0) {
                 base.Draw2D(i);
                 //UserInterface.DrawPictureOLD(Rectangle, _texture);
-                UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, Color.White, false);
+                UserInterface.DrawPicture(_texture, Rectangle, null, Align.TopLeft, Align.Center, colour, false);
             }
         }
     }
