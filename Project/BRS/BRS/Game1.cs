@@ -69,7 +69,7 @@ namespace BRS {
 
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = false;
-            ParticleSystem3D.Enabled = false;
+            ParticleSystem3D.Enabled = true;
 
             base.Initialize();
         }
