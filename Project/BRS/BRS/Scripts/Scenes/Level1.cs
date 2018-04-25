@@ -100,10 +100,6 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new SpeechManager(i));
                 player.material = playerMat;
 
-                // power up test
-                PowerUpEffect p = new PowerUpEffect();
-                p.IsEmitting = true;
-                player.AddComponent(p);
 
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());

@@ -6,8 +6,10 @@ using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
 using BRS.Scripts.PowerUps;
+using BRS.Scripts.Particles3D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+
 
 // Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
 // ReSharper disable once CheckNamespace
@@ -63,6 +65,7 @@ namespace BRS.Engine {
                 powerupPrefab.transform.Scale(1.5f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
+                powerupPrefab.AddComponent(new PowerUpEffect());
                 powerupPrefab.material = powerupMat;
                 Prefabs.AddPrefab(powerupPrefab);
             }

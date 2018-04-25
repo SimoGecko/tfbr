@@ -41,10 +41,10 @@ namespace BRS.Scripts.Particles3D {
                     MaxHorizontalVelocity = 0,
 
                     MinVerticalVelocity = 0.5f,
-                    MaxVerticalVelocity = 1.5f,
+                    MaxVerticalVelocity = 1.0f,
 
                     MinColor = new Color(255, 255, 200, 0),
-                    MaxColor = new Color(255, 255, 200, 128),
+                    MaxColor = new Color(255, 255, 200, 64),
 
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
@@ -62,7 +62,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX3_T_GlowStar",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(7),
+                    Duration = TimeSpan.FromSeconds(3),
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
@@ -73,8 +73,8 @@ namespace BRS.Scripts.Particles3D {
                     MinVerticalVelocity = 0.1f,
                     MaxVerticalVelocity = 0.5f,
 
-                    MinColor = new Color(255, 255, 200, 255),
-                    MaxColor = new Color(255, 255, 200, 255),
+                    MinColor = new Color(255, 255, 200, 0),
+                    MaxColor = new Color(255, 255, 200, 128),
 
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
@@ -117,11 +117,11 @@ namespace BRS.Scripts.Particles3D {
         public override void Update() {
             if (IsEmitting) {
                 _rayParticles.AddParticles(
-                    transform.position + RandomPointOnCircle(1.25f, 0.0f), 
+                    transform.position + RandomPointOnCircle(0.5f, -0.5f), 
                     Vector3.Zero);
-                float height =  (float)_random.NextDouble();
+                float height =  (float)_random.NextDouble() - 0.5f;
                 _starParticles.AddParticles(
-                    transform.position + RandomPointOnCircle(1.25f, height),
+                    transform.position + RandomPointOnCircle(0.5f, height),
                     Vector3.Zero);
             }
 
