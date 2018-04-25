@@ -42,7 +42,7 @@ namespace BRS.Engine.PostProcessing {
                 Effect ppShader = content.Load<Effect>("Effects/" + fileName);
                 PostProcessingEffect ppEffect = new PostProcessingEffect(pType, 1, false, ppShader);
 
-                ppEffect.SetParameter("players", (float) GameManager.NumPlayers);
+                ppEffect.SetParameter("players", (float)GameManager.NumPlayers);
                 // Special parameters for some effects
                 switch (pType) {
                     case PostprocessingType.GaussianBlur:
@@ -109,46 +109,65 @@ namespace BRS.Engine.PostProcessing {
             return false;
         }
 
-        public bool SetShaderStatus(string shader, bool active) {
-            int index = _effects.FindIndex(x => x.Name == shader);
-            if (index > 0) {
-                _effects[index].Active = active;
-                return true;
+        public void ActivateBlackAndWhite(int playerId, bool deactivate = true, float deactivateAfter = 2.0f) {
+            _effects[(int)PostprocessingType.BlackAndWhite].Activate(playerId, true);
+            _effects[(int)PostprocessingType.BlackAndWhite].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+
+            if (deactivate) {
+                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.BlackAndWhite, playerId));
             }
-            return false;
+        }
+
+        public void ActivateShockWave(int playerId, Vector3 position, bool deactivate = true, float deactivateAfter = 5.0f) {;
+            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
+
+            _effects[(int)PostprocessingType.ShockWave].Activate(playerId, true);
+            _effects[(int)PostprocessingType.ShockWave].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+            _effects[(int)PostprocessingType.ShockWave].SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+
+            if (deactivate) {
+                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.BlackAndWhite, playerId));
+            }
+        }
+
+        public void SetShaderStatus(PostprocessingType shader, int playerId, bool active) {
+            _effects[(int)shader].Activate(playerId, active);
+        }
+
+        public void DectivateShader(PostprocessingType shader, int playerId) {
+            _effects[(int)shader].Activate(playerId, false);
         }
 
 
-        public void Update(GameTime gameTime) {
+        public void Update() {
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed) {
                 // Do whatever you want here
                 Vector2 centerCoord = new Vector2((float)mouseState.X / (float)Screen.Width, (float)mouseState.Y / (float)Screen.Height);
                 _effects[6].SetParameter("centerCoord", centerCoord);
-                _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
+                _effects[6].SetParameterForPlayer(0, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
             }
 
             if (Input.GetKeyDown(Keys.F1)) {
-                _effects[0].Active = !_effects[0].Active;
+                ActivateBlackAndWhite(0, true, 2.0f);
             }
             if (Input.GetKeyDown(Keys.F2)) {
-                _effects[1].Active = !_effects[1].Active;
+                _effects[1].Activate(1, !_effects[1].Active[1]);
             }
             if (Input.GetKeyDown(Keys.F3)) {
-                _effects[2].Active = !_effects[2].Active;
+                _effects[2].Activate(1, !_effects[2].Active[1]);
             }
             if (Input.GetKeyDown(Keys.F4)) {
-                _effects[3].Active = !_effects[3].Active;
+                _effects[3].Activate(1, !_effects[3].Active[1]);
             }
             if (Input.GetKeyDown(Keys.F5)) {
-                _effects[4].Active = !_effects[4].Active;
+                _effects[4].Activate(1, !_effects[4].Active[1]);
             }
             if (Input.GetKeyDown(Keys.F6)) {
-                _effects[5].Active = !_effects[5].Active;
+                _effects[5].Activate(1, !_effects[5].Active[1]);
             }
             if (Input.GetKeyDown(Keys.F7)) {
-                _effects[6].Active = !_effects[6].Active;
-                _effects[6].SetParameter("startTime", (float)gameTime.TotalGameTime.TotalSeconds);
+                ActivateShockWave(0, Vector3.Zero, true, 5.0f);
             }
             if (Input.GetKeyDown(Keys.PageUp)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes + 1, 1, 4);
@@ -163,9 +182,9 @@ namespace BRS.Engine.PostProcessing {
 
             // if dynamic props are needed
             foreach (var ppShader in _effects) {
-                if (ppShader.Active) {
+                if (ppShader.IsActive()) {
                     // TODO: actived the shader on per player basis
-                    ppShader.SetParameter("active", new Vector4(1.0f, 0.0f, 1.0f, 0.0f));
+                    ppShader.SetParameter("active", ppShader.ActiveParameter);
 
                     if (ppShader.Type == PostprocessingType.DepthOfField) {
 
@@ -200,7 +219,13 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
                     }
 
-                    
+
+
+                    if (ppShader.Type == PostprocessingType.BlackAndWhite) {
+                        ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
+                    }
+
+
 
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];

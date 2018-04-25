@@ -59,6 +59,18 @@ namespace BRS.Engine {
             return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
         }
 
+        /// <summary>
+        /// Returns the pixel-location of an object in the range of [0,1]x[0,1] for the shader-processing
+        /// </summary>
+        /// <param name="world">Coordinate of the position in 3D-space</param>
+        /// <returns>Location on the screen (full screen) within the range of [0,1]x[0,1]</returns>
+        public Vector2 WorldToScreenPoint01(Vector3 world) {
+            Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
+            Vector2 resolution = new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y));
+            return new Vector2(resolution.X / Screen.Width, resolution.Y / Screen.Height);
+        }
+
+
         //static METHODS
         public static Camera Main { get { return Screen.Cameras[0]; } }
         public static Camera GetCamera(int i) {  return Screen.Cameras[i]; }

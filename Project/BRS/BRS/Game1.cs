@@ -125,7 +125,7 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update(gameTime);
+            PostProcessingManager.Instance.Update();
 
             // Update skybox
             //angle += 0.002f;
