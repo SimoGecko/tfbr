@@ -39,6 +39,7 @@ namespace BRS.Scripts.Managers {
 
         Color[] colorModel = { Color.Red, Color.Green, Color.Blue, Color.Yellow };
         int idColor = 0;
+        Color defaultColorModel = Color.Yellow;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -287,9 +288,9 @@ namespace BRS.Scripts.Managers {
                 if (elem is TextBox textBox) {
                     if (textBox.NameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(textBox.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2);
+                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(textBox.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, defaultColorModel);
                         else
-                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(textBox.Text, null));
+                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(textBox.Text, null, defaultColorModel));
 
                         textBox.Text = "";
                     }
@@ -306,9 +307,9 @@ namespace BRS.Scripts.Managers {
                 NamePlayerInfosToChange = "player_" + button.indexAssociatedPlayerScreen.ToString();
 
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[button.Index]);
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[button.Index], defaultColorModel);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model>(NamePlayerInfosToChange, modelCharacter[button.Index]));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, modelCharacter[button.Index], defaultColorModel));
 
             foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
@@ -351,7 +352,13 @@ namespace BRS.Scripts.Managers {
                 }
                 uniqueMenuSwitchUsed = true;
 
-                // updaze color for 3d model
+                // update color for 3d model
+                Color test = colorModel[idColor];
+                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                    ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, colorModel[idColor]);
+                else
+                    ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, null, colorModel[idColor]));
+
             }
         }
 
@@ -393,17 +400,37 @@ namespace BRS.Scripts.Managers {
             Audio.SetSoundVolume(slider.percentPosButon);
         }
 
-        public void ChangeModelNamePlayer(GameObject player, int i) {
+        public void ChangeModelNameColorPlayer(GameObject player, int i) {
 
             if (ScenesCommunicationManager.Instance != null) {
                 if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
                     Model userModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    Color colorPlayer = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
 
                     if (userName != null) player.GetComponent<Player>().PlayerName = userName;
                     if (userModel != null) player.Model = userModel;
+                    if (colorPlayer != null) {
+                        Rectangle areaChange = new Rectangle(4, 8, 4, 4);
+                        SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
+                        //player.material.colorTex = colorPlayer;
+                    }
+                    
                 }
             }
+        }
+
+        public void SetPixelColor(int x, int y, Color color, Texture2D texture) {
+            Color[] colorData = new Color[texture.Width * texture.Height];
+            texture.GetData<Color>(colorData);
+            colorData[x + y * texture.Width] = color;
+            texture.SetData<Color>(colorData);
+        }
+
+        public void SetRectanglePixelColor(Rectangle rec, Color color, Texture2D texture) {
+            for (int x = rec.X; x < rec.X + rec.Width; ++x)
+                for (int y = rec.Y; y < rec.Y + rec.Height; ++y)
+                    SetPixelColor(x, y, color, texture);
         }
     }
 }

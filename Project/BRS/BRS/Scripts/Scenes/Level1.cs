@@ -80,13 +80,15 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreatePlayers() {
-            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+            //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
                 player.transform.Scale(1.0f);
-                player.material = playerMat;
+
+                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i+1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 Vector3 startPos =  new Vector3(-5 + 10 * i, 0.25f, 0);
                 player.AddComponent(new Player(i, i % 2, startPos));
@@ -102,9 +104,9 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
 
-                // Nico: Modify player's name and model (choosen by user during menu)
+                // Nico: Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)
-                    MenuManager.Instance.ChangeModelNamePlayer(player, i);
+                    MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 
 
                 //Add(player);
