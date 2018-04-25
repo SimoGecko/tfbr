@@ -139,7 +139,7 @@ Position: 800 594
 Active: yes
 ScaleWidth: 0.75
 ScaleHeight: 0.75
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Image>
@@ -158,7 +158,7 @@ Position: 800 594
 Active: no
 ScaleWidth: 0.75
 ScaleHeight: 0.75
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Image>
@@ -177,7 +177,7 @@ Position: 800 594
 Active: no
 ScaleWidth: 0.75
 ScaleHeight: 0.75
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Button>
@@ -187,7 +187,7 @@ Position: 785 450
 Active: yes
 ScaleWidth: 0.55
 ScaleHeight: 0.55
-Color: 255 0 0
+Color: 215 173 35
 </Button>
 
 <Button>

@@ -33,10 +33,7 @@ namespace BRS.Scripts.Managers {
             textureColorPlayers.Add("player_2", player2Color);
             textureColorPlayers.Add("player_3", player3Color);
 
-            /*Color test1 = GetPixelColor(5, 10, redPlayerColor);
-            Color test2 = GetPixelColor(5, 10, greenPlayerColor);
-            Color test3 = GetPixelColor(5, 10, bluePlayerColor);
-            Color test4 = GetPixelColor(5, 10, yellowPlayerColor);*/
+            Color test = GetPixelColor(5, 10, player0Color);
         }
 
         public override void Update() {

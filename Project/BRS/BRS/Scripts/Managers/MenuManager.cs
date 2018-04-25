@@ -37,9 +37,9 @@ namespace BRS.Scripts.Managers {
 
         int count = 0;
 
-        Color[] colorModel = { Color.Red, Color.Green, Color.Blue, Color.Yellow };
+        Color[] colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
         int idColor = 0;
-        Color defaultColorModel = Color.Yellow;
+        Color defaultColorModel = new Color(215, 173, 35);
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {

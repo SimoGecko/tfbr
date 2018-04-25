@@ -169,7 +169,7 @@ NameIdentifier: pictureModel1Color
 Texture: model1Color
 Position: 550 650
 Active: yes
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Image>
@@ -184,7 +184,7 @@ NameIdentifier: pictureModel2Color
 Texture: model2Color
 Position: 550 650
 Active: no
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Image>
@@ -199,7 +199,7 @@ NameIdentifier: pictureModel3Color
 Texture: model3Color
 Position: 550 650
 Active: no
-Color: 255 0 0
+Color: 215 173 35
 </Image>
 
 <Button>
@@ -209,7 +209,7 @@ Position: 535 465
 Active: yes
 ScaleWidth: 0.6
 ScaleHeight: 0.6
-Color: 255 0 0
+Color: 215 173 35
 </Button>
 
 <Button>
