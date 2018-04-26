@@ -81,13 +81,10 @@ namespace BRS.Scripts.Managers {
         void RestartCustom() { // it still slows down for some reason
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            //UserInterface.Start();
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 
-            //GameObject[] bases = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
             foreach (var b in ElementManager.Instance.Bases()) b.Start();
-            //GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
             foreach (var p in ElementManager.Instance.Players()) p.Start();
 
             GameObject vault = GameObject.FindGameObjectWithName("vault");

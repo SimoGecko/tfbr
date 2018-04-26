@@ -27,6 +27,7 @@ namespace BRS.Scripts.Managers {
         private Base[] _bases;
         bool calledPolice = false;
         public int Winner {get; private set;}
+        bool started = false;
         //reference
         public static RoundManager Instance;
         public Action OnRoundStartAction;
@@ -34,22 +35,27 @@ namespace BRS.Scripts.Managers {
         public Action OnRoundEndAction;
 
 
+
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
             _rt = new Timer(0, RoundTime, OnRoundEnd);
             GameUI.Instance.StartMatch(_rt);
-            OnRoundStartAction?.Invoke();
-            new Timer(RoundTime * .8f, () => OnRoundAlmostEndAction?.Invoke());
+            GameManager.state = GameManager.State.Finished;
+            CountDown();
         }
 
         public override void Update() {
-            if (_rt.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
-                calledPolice = true;
-                //Audio.SetLoop("police", true);
-                Audio.Play("police", Vector3.Zero);
-                GameUI.Instance.UpdatePoliceComing();
+            if (started) {
+                if (_rt.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
+                    calledPolice = true;
+                    //Audio.SetLoop("police", true);
+                    Audio.Play("police", Vector3.Zero);
+                    GameUI.Instance.UpdatePoliceComing();
+                }
             }
+            
         }
 
 
@@ -58,9 +64,22 @@ namespace BRS.Scripts.Managers {
 
 
         // commands
+
+        void OnRoundStart() {
+            GameManager.state = GameManager.State.Playing;
+            OnRoundStartAction?.Invoke();
+            new Timer(RoundTime * .8f, () => OnRoundAlmostEndAction?.Invoke());
+            started = true;
+        }
+
         void OnRoundEnd() {
             //Audio.Stop("police");
             //Audio.SetLoop("police", false);
+
+            //reset
+            for(int i=0; i<GameManager.NumPlayers; i++)
+                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Success);
+
 
             NotifyBases();
 
@@ -133,6 +152,15 @@ namespace BRS.Scripts.Managers {
 
 
         // other
+        async void CountDown() {
+            for(int i=3; i>=0; i--) {
+                RoundUI.instance.ShowCountDown(i);
+                if(i==0)
+                    OnRoundStart();
+                await Time.WaitForSeconds(1f);
+            }
+            RoundUI.instance.ShowCountDown(-1);//disables it
+        }
 
     }
 }

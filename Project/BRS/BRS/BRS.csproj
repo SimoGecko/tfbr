@@ -238,6 +238,7 @@
     <Compile Include="Scripts\UI\ParticleUI.cs" />
     <Compile Include="Scripts\UI\PlayerUI.cs" />
     <Compile Include="Scripts\UI\PowerupUI.cs" />
+    <Compile Include="Scripts\UI\RoundUI.cs" />
     <Compile Include="Scripts\UI\SpeechUI.cs" />
     <Compile Include="Scripts\UI\Suggestions.cs" />
   </ItemGroup>
