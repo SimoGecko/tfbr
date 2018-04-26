@@ -33,7 +33,7 @@ namespace BRS.Engine.PostProcessing {
         private bool DEBUG = false;
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
-        private int _maxLuT = 5;
+        private int _maxLuT = 20;
 
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager(content);
@@ -65,7 +65,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
                         for (var i = 0; i < _maxLuT; i++) {
-                            _lut.Add(content.Load<Texture2D>("Images/textures/lut_" + i.ToString()));
+                            _lut.Add(content.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
                         }
                         ppEffect.SetParameter("LUT", _lut[0]);
                         
