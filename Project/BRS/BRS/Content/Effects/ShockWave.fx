@@ -5,12 +5,13 @@ texture ScreenTexture;
 // ------------------------------- VARS
 float time;
 float4 startTime;
-float2 centerCoord0;        	// 0.5, 0.5 is the screen center
-float2 centerCoord1;        	// 0.5, 0.5 is the screen center
-float2 centerCoord2;        	// 0.5, 0.5 is the screen center
-float2 centerCoord3;        	// 0.5, 0.5 is the screen center
-float3 shockParams;			// 10.0, 0.8, 0.1
-float ANIMATION_LENGTH = 1;
+float2 centerCoord0;			// 0.5, 0.5 is the screen center
+float2 centerCoord1;			// 0.5, 0.5 is the screen center
+float2 centerCoord2;			// 0.5, 0.5 is the screen center
+float2 centerCoord3;			// 0.5, 0.5 is the screen center
+float3 shockParams;				// 10.0, 0.8, 0.1
+
+float4 animationLength = float4(1.0, 1.0, 1.0, 1.0);
 float4 active;
 float players;
 
@@ -21,7 +22,7 @@ sampler TextureSampler = sampler_state {
 
 
 // Calculate the shockwave based on the player
-float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor, int playerId) {
+float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor, int playerId, float animationLength) {
 	// First get the correct center of the shockwave
 	float2 centerCoord;
 
@@ -34,7 +35,7 @@ float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor,
 
 	float2 distVec = textureCoordinate.xy - centerCoord;
 	float distance = length(distVec);
-	float duration = (time - startTime[playerId]) / ANIMATION_LENGTH;
+	float duration = (time - startTime[playerId]) / animationLength;
 
 	if ((distance <= (duration + shockParams.z)) && (distance >= (duration - shockParams.z))) {
 		float diff = (distance - duration);
@@ -61,28 +62,28 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 		if (active.x == 0) {
 			return defColor;
 		} else {
-			return CalculateShockWave(textureCoordinate, defColor, 0);
+			return CalculateShockWave(textureCoordinate, defColor, 0, animationLength.x);
 		}
 	}
 	if (textureCoordinate.x >= 0.5 && textureCoordinate.y < 0.5) {
 		if (active.y == 0) {
 			return defColor;
 		} else {
-			return CalculateShockWave(textureCoordinate, defColor, 1);
+			return CalculateShockWave(textureCoordinate, defColor, 1, animationLength.y);
 		}
 	}
 	if (textureCoordinate.x < 0.5 && textureCoordinate.y >= 0.5) {
 		if (active.z == 0) {
 			return defColor;
 		} else {
-			return CalculateShockWave(textureCoordinate, defColor, 2);
+			return CalculateShockWave(textureCoordinate, defColor, 2, animationLength.z);
 		}
 	}
 	if (textureCoordinate.x >= 0.5 && textureCoordinate.y >= 0.5) {
 		if (active.w == 0) {
 			return defColor;
 		} else {
-			return CalculateShockWave(textureCoordinate, defColor, 3);
+			return CalculateShockWave(textureCoordinate, defColor, 3, animationLength.w);
 		}
 	}
 

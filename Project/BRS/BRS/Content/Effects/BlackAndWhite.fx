@@ -11,10 +11,10 @@ float4 active;
 float players;
 
 // Shader-settings
-float durationFadeIn = 0.1;
-float durationFadeOut = 1.9;
-float max = 1.0;
-float min = 0.1;
+float durationFadeIn;
+float durationFadeOut;
+float max;
+float min;
 
 // Our sampler for the texture, which is just going to be pretty simple
 sampler TextureSampler = sampler_state {

@@ -29,7 +29,7 @@ namespace BRS.Engine.PostProcessing {
         private List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
-        private Texture2D testGrid;
+        private Texture2D _testGrid;
         private bool DEBUG = false;
 
         public static void Initialize(ContentManager content) {
@@ -45,9 +45,17 @@ namespace BRS.Engine.PostProcessing {
                 ppEffect.SetParameter("players", (float)GameManager.NumPlayers);
                 // Special parameters for some effects
                 switch (pType) {
+                    case PostprocessingType.BlackAndWhite:
+                        ppEffect.SetParameter("durationFadeIn", 0.1f);
+                        ppEffect.SetParameter("durationFadeOut", 1.9f);
+                        ppEffect.SetParameter("max", 1.0f);
+                        ppEffect.SetParameter("min", 0.1f);
+                        break;
+
                     case PostprocessingType.GaussianBlur:
                         ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
                         break;
+
                     case PostprocessingType.DepthOfField:
                         float nearClip = 0.3f;
                         float farClip = 1000.0f;
@@ -58,15 +66,16 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
                         break;
+
                     case PostprocessingType.ColorGrading:
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
                         ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver3"));
                         //ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver7"));
-
                         break;
+
                     case PostprocessingType.ShockWave:
-                        testGrid = content.Load<Texture2D>("Images/textures/Pixel_grid");
+                        _testGrid = content.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;
@@ -90,6 +99,7 @@ namespace BRS.Engine.PostProcessing {
 
                 _renderTargets[i] = effectTarget2D;
             }
+
             _blurTarget = new RenderTarget2D(
                 spriteBatch.GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
@@ -97,7 +107,6 @@ namespace BRS.Engine.PostProcessing {
                 false,
                 spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
-
         }
 
         public bool SetShaderParameter(PostprocessingType shader, string parameterName, Vector2 arg) {
@@ -108,7 +117,19 @@ namespace BRS.Engine.PostProcessing {
             }
             return false;
         }
+        
+        public void SetShaderStatus(PostprocessingType shader, int playerId, bool active) {
+            _effects[(int)shader].Activate(playerId, active);
+        }
 
+
+        /// <summary>
+        /// Activate the black and white filter for a given player.
+        /// Important: parameters about duration are set in the shader-initialization.
+        /// </summary>
+        /// <param name="playerId">Id of the player to apply the shader</param>
+        /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
+        /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
         public void ActivateBlackAndWhite(int playerId, bool deactivate = true, float deactivateAfter = 2.0f) {
             _effects[(int)PostprocessingType.BlackAndWhite].Activate(playerId, true);
             _effects[(int)PostprocessingType.BlackAndWhite].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
@@ -118,20 +139,27 @@ namespace BRS.Engine.PostProcessing {
             }
         }
 
-        public void ActivateShockWave(int playerId, Vector3 position, bool deactivate = true, float deactivateAfter = 5.0f) {;
+
+        /// <summary>
+        /// Activate the shockwave filter for a given player.
+        /// Important: parameters about duration are set in the shader-initialization.
+        /// </summary>
+        /// <param name="playerId">Id of the player to apply the shader</param>
+        /// <param name="position">3D-space coordinate of the position for the shockwave</param>
+        /// <param name="animationLength">Length  of the animation for the shockwave to go over the whole screen</param>
+        /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
+        /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
+        public void ActivateShockWave(int playerId, Vector3 position, float animationLength = 0.6f, bool deactivate = true, float deactivateAfter = 5.0f) {
             Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
 
             _effects[(int)PostprocessingType.ShockWave].Activate(playerId, true);
             _effects[(int)PostprocessingType.ShockWave].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
             _effects[(int)PostprocessingType.ShockWave].SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+            _effects[(int)PostprocessingType.ShockWave].SetParameterForPlayer(playerId, "animationLength", animationLength);
 
             if (deactivate) {
-                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.BlackAndWhite, playerId));
+                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.ShockWave, playerId));
             }
-        }
-
-        public void SetShaderStatus(PostprocessingType shader, int playerId, bool active) {
-            _effects[(int)shader].Activate(playerId, active);
         }
 
         public void DectivateShader(PostprocessingType shader, int playerId) {
@@ -139,6 +167,7 @@ namespace BRS.Engine.PostProcessing {
         }
 
 
+        // Todo: Probably this is not needed anymore in the end
         public void Update() {
             MouseState mouseState = Mouse.GetState();
             if (mouseState.LeftButton == ButtonState.Pressed) {
@@ -149,25 +178,25 @@ namespace BRS.Engine.PostProcessing {
             }
 
             if (Input.GetKeyDown(Keys.F1)) {
-                ActivateBlackAndWhite(0, true, 2.0f);
+                ActivateBlackAndWhite(0);
             }
             if (Input.GetKeyDown(Keys.F2)) {
-                _effects[1].Activate(1, !_effects[1].Active[1]);
+                _effects[1].Activate(1, !_effects[1].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F3)) {
-                _effects[2].Activate(1, !_effects[2].Active[1]);
+                _effects[2].Activate(1, !_effects[2].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F4)) {
-                _effects[3].Activate(1, !_effects[3].Active[1]);
+                _effects[3].Activate(1, !_effects[3].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F5)) {
-                _effects[4].Activate(1, !_effects[4].Active[1]);
+                _effects[4].Activate(1, !_effects[4].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F6)) {
-                _effects[5].Activate(1, !_effects[5].Active[1]);
+                _effects[5].Activate(1, !_effects[5].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F7)) {
-                ActivateShockWave(0, Vector3.Zero, true, 5.0f);
+                ActivateShockWave(0, Vector3.Zero);
             }
             if (Input.GetKeyDown(Keys.PageUp)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes + 1, 1, 4);
@@ -183,8 +212,8 @@ namespace BRS.Engine.PostProcessing {
             // if dynamic props are needed
             foreach (var ppShader in _effects) {
                 if (ppShader.IsActive()) {
-                    // TODO: actived the shader on per player basis
                     ppShader.SetParameter("active", ppShader.ActiveParameter);
+                    ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
 
                     if (ppShader.Type == PostprocessingType.DepthOfField) {
 
@@ -215,18 +244,6 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("D1M", depth1Texture);
                     }
 
-                    if (ppShader.Type == PostprocessingType.ShockWave) {
-                        ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
-                    }
-
-
-
-                    if (ppShader.Type == PostprocessingType.BlackAndWhite) {
-                        ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
-                    }
-
-
-
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
                     graphicsDevice.SetRenderTarget(nextTarget);
@@ -240,7 +257,7 @@ namespace BRS.Engine.PostProcessing {
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
                         if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
-                            spriteBatch.Draw(testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                            spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         } else {
                             spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         }
