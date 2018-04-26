@@ -52,7 +52,7 @@ namespace BRS.Scripts {
                 UserInterface.DrawPicture(countdownTex, Vector2.Zero, source, Align.Center);
             }
             if (showEndRound) {
-                Rectangle source = TextFromNumber(endRoundPlayerText[i]);
+                Rectangle source = TextFromNumber(endRoundPlayerText[i-1]);
                 UserInterface.DrawPicture(endroundTex, Vector2.Zero, source, Align.Center);
             }
         }
