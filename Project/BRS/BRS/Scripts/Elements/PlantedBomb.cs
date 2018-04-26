@@ -1,6 +1,8 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
+using BRS.Engine.PostProcessing;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
@@ -15,12 +17,12 @@ namespace BRS.Scripts.Elements {
         private const float ExplosionDamage = 60;
 
         public override void Start() {
-            
+
         }
 
         public void Plant() {
             Audio.Play("bomb_timer", transform.position);
-            for(float i=0; i<TimeBeforeExplosion; i += .5f) {
+            for (float i = 0; i < TimeBeforeExplosion; i += .5f) {
                 new Timer(i, () => ParticleUI.Instance.GiveOrder(FusePosition(), ParticleType.Sparks));
             }
             new Timer(TimeBeforeExplosion, Explode);
@@ -28,13 +30,19 @@ namespace BRS.Scripts.Elements {
 
         void Explode() {
             Audio.Play("bomb_explosion", transform.position);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
+
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
             }
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
+
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
+            }
+
             GameObject.Destroy(gameObject);
         }
 
@@ -46,6 +54,6 @@ namespace BRS.Scripts.Elements {
         Vector3 FusePosition() {
             return transform.position + Vector3.Up * .5f;
         }
-        
+
     }
 }

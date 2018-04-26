@@ -1,7 +1,6 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     /// <summary>
@@ -13,11 +12,8 @@ namespace BRS.Scripts.Elements {
         //public
 
         //private
-        private const float FallSpeed = 15f;
         private const int FallDamage = 30;
         private const float Lifetime = 3f;
-
-        private bool _invokedDelete;
 
         //reference
 
@@ -28,17 +24,16 @@ namespace BRS.Scripts.Elements {
 
         }
         public override void Update() {
-            if (transform.position.Y > 0) {
-                transform.position += Vector3.Down * FallSpeed * Time.DeltaTime;
-            } else if (!_invokedDelete) {
-                _invokedDelete = true;
-                GameObject.Destroy(gameObject, Lifetime);
-            }
         }
 
         // --------------------- CUSTOM METHODS ----------------
         public override void OnCollisionEnter(Collider c) {
-            if (_invokedDelete) return;
+            // As soon as the weight collided with any static-element (most likely the ground) it's going to be destroyed.
+            if (c.IsStatic) {
+                GameObject.Destroy(gameObject, Lifetime);
+            }
+
+            // If the weight collided with something which can be damaged => damage it
             if (c.GameObject.HasComponent<IDamageable>()) {
                 c.GameObject.GetComponent<IDamageable>().TakeDamage(FallDamage);
             }

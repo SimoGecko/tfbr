@@ -5,6 +5,7 @@ using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.PostProcessing;
 using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
 using Jitter.LinearMath;
@@ -164,6 +165,7 @@ namespace BRS.Scripts.PlayerScripts {
                 State = PlayerState.Stun;
                 Audio.Play("stun", transform.position);
                 ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
                 _pI.LoseMoney();
                 Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
             }
@@ -206,7 +208,7 @@ namespace BRS.Scripts.PlayerScripts {
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Normal;
             //_pC.Begin(other, endPosition, endAngle);
-            _pM.ResetRotation(endAngle);
+            //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

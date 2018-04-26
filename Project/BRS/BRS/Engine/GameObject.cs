@@ -11,6 +11,7 @@ using System.Collections.Generic;
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart }
 
+
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
@@ -61,12 +62,14 @@ namespace BRS.Engine {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
+
+                foreach (IComponent c in components) c.Draw3D(cam);
             }
         }
 
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
-                foreach (IComponent c in components) c.Draw(i);
+                foreach (IComponent c in components) c.Draw2D(i);
             }
         }
 

@@ -268,6 +268,10 @@ namespace BRS.Engine.Physics {
 
         #region Other methods
 
+        public void ClearPointsToDraw() {
+            _pointsToDraw.Clear();
+        }
+
         public void AddPointToDraw(Vector3 point) {
             _pointsToDraw.Add(point);
 

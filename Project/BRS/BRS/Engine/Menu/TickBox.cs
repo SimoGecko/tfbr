@@ -55,7 +55,7 @@ namespace BRS.Menu {
         }
 
         // --------------------- CUSTOM METHODS ----------------
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             var colour = Color.White;
 
             if (_isHovering)
