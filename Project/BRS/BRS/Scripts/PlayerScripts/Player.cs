@@ -206,7 +206,7 @@ namespace BRS.Scripts.PlayerScripts {
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Normal;
             //_pC.Begin(other, endPosition, endAngle);
-            _pM.ResetRotation(endAngle);
+            //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
 

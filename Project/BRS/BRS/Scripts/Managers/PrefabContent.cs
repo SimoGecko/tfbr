@@ -40,7 +40,7 @@ namespace BRS.Engine {
             GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/goldP"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
             goldPrefab.material = elementsMat;
-            goldPrefab.AddComponent(new Money(1000, 1, Money.Type.Gold));
+            goldPrefab.AddComponent(new Money(500, 1, Money.Type.Gold));
             goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(3.0f, 3.0f, 1.5f)));
             Prefabs.AddPrefab(goldPrefab);
 
@@ -48,7 +48,7 @@ namespace BRS.Engine {
             GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/elements/diamond"));
             diamondPrefab.transform.Scale(5f);
             diamondPrefab.material = powerupMat;
-            diamondPrefab.AddComponent(new Money(3000, 1, Money.Type.Diamond));
+            diamondPrefab.AddComponent(new Money(2000, 1, Money.Type.Diamond));
             diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
             Prefabs.AddPrefab(diamondPrefab);
 
