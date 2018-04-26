@@ -40,6 +40,12 @@ namespace BRS.Engine.PostProcessing {
             }
         }
 
+        public void SetParameter(string name, Vector4 arg) {
+            if (Effect.Parameters[name] != null) {
+                Effect.Parameters[name].SetValue(arg);
+            }
+        }
+
         public void SetParameter(string name, float arg)
         {
             if(Effect.Parameters[name] != null)
