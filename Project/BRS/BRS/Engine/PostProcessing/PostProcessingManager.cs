@@ -31,6 +31,9 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D _blurTarget;
         private Texture2D _testGrid;
         private bool DEBUG = false;
+        private List<Texture2D> _lut = new List<Texture2D>();
+        private int _currentLuT = 0;
+        private int _maxLuT = 20;
 
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager(content);
@@ -70,8 +73,12 @@ namespace BRS.Engine.PostProcessing {
                     case PostprocessingType.ColorGrading:
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
-                        ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver3"));
-                        //ppEffect.SetParameter("LUT", content.Load<Texture2D>("Images/textures/lut_ver7"));
+                        for (var i = 0; i < _maxLuT; i++) {
+                            _lut.Add(content.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
+                        }
+                        ppEffect.SetParameter("LUT", _lut[0]);
+                        
+
                         break;
 
                     case PostprocessingType.ShockWave:
@@ -203,6 +210,10 @@ namespace BRS.Engine.PostProcessing {
             }
             if (Input.GetKeyDown(Keys.PageDown)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes - 1, 1, 4);
+            }
+            if (Input.GetKeyDown(Keys.OemPlus)) {
+                _currentLuT = (_currentLuT + 1) % _maxLuT;
+                _effects[5].SetParameter("LUT", _lut[_currentLuT]); ;
             }
         }
 
