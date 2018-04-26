@@ -4,6 +4,7 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
+using BRS.Engine.PostProcessing;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
@@ -81,11 +82,16 @@ namespace BRS.Scripts.Elements {
             //same code as in bomb
             Audio.Play("bomb_explosion", transform.position);
             ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion);
+
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IDamageable>()) {
                     c.GameObject.GetComponent<IDamageable>().TakeDamage(ExplosionDamage);
                 }
+            }
+
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
             }
         }
 
