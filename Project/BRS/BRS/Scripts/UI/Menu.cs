@@ -132,10 +132,10 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: -480, idAssociatePlayerScreen: 2);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: 480, idAssociatePlayerScreen: 3);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared0", offsetWidth: 480, idAssociatePlayerScreen: 0);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: -480, idAssociatePlayerScreen: 1);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: 480, idAssociatePlayerScreen: 2);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: -480, idAssociatePlayerScreen: 3);
 
         }
 

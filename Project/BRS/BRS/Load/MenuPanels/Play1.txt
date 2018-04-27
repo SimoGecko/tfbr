@@ -25,25 +25,35 @@ Position: 960 502
 </Text>
 
 <Button>
+NameIdentifier: PlayerAmount1
+Texture: button
+Position: 806 394
+Text: 1
+Functions: UpdateNoPlayers HighlightBorders GoDown
+NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount4 PlayerAmount2
+CurrentSelection: yes
+UniqueChoiceWith: PlayerAmount2 PlayerAmount4
+</Button>
+
+<Button>
 NameIdentifier: PlayerAmount2
 Texture: button
-Position: 864 394
+Position: 960 394
 Text: 2
 Functions: UpdateNoPlayers HighlightBorders GoDown
-NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount4 PlayerAmount4
-CurrentSelection: yes
-UniqueChoiceWith: PlayerAmount4
+NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount1 PlayerAmount4
+UniqueChoiceWith: PlayerAmount1 PlayerAmount4
 IsClicked: yes
 </Button>
 
 <Button>
 NameIdentifier: PlayerAmount4
 Texture: button
-Position: 1056 394
+Position: 1113 394
 Text: 4
 Functions: UpdateNoPlayers HighlightBorders GoDown
-NeighborsUpDownLeftRight: Back RoundDuration2min PlayerAmount2 PlayerAmount2
-UniqueChoiceWith: PlayerAmount2
+NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount2 PlayerAmount1
+UniqueChoiceWith: PlayerAmount1 PlayerAmount2
 </Button>
 
 <Button>
@@ -52,7 +62,7 @@ Texture: button
 Position: 806 610
 Text: 2 min
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Next RoundDuration5min RoundDuration3min
+NeighborsUpDownLeftRight: PlayerAmount1 Next RoundDuration5min RoundDuration3min
 UniqueChoiceWith: RoundDuration3min RoundDuration5min
 IsClicked: yes
 </Button>
@@ -63,7 +73,7 @@ Texture: button
 Position: 960 610
 Text: 3 min
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Next RoundDuration2min RoundDuration5min
+NeighborsUpDownLeftRight: PlayerAmount1 Next RoundDuration2min RoundDuration5min
 UniqueChoiceWith: RoundDuration2min RoundDuration5min
 </Button>
 
@@ -73,7 +83,7 @@ Texture: button
 Position: 1113 610
 Text: 5 min
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount2 Back RoundDuration3min RoundDuration2min
+NeighborsUpDownLeftRight: PlayerAmount1 Back RoundDuration3min RoundDuration2min
 UniqueChoiceWith: RoundDuration2min RoundDuration3min
 </Button>
 
@@ -87,7 +97,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SwitchToMenu
-NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Next Next
+NeighborsUpDownLeftRight: RoundDuration2min null Next Next
 NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255
@@ -102,9 +112,9 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: SetDefaultParametersGame UpdatePlayersChangeTo SwitchToMenu
-NeighborsUpDownLeftRight: RoundDuration2min PlayerAmount2 Back Back
-NameSwitchTo: play2_
+Functions: SetDefaultParametersGame SwitchToMenu
+NeighborsUpDownLeftRight: RoundDuration2min null Back Back
+NameSwitchTo: play2Shared
 Color: 110 235 150
 ColorInside: 255 255 255
 </Button>

@@ -143,13 +143,15 @@ namespace BRS.Scripts.Managers {
 
                 if (_currentMenu != null)
                     _currentMenu.active = false;
-                if (_currentMenuName == "play2Shared") {
-                    MenuRect[_currentMenuName + "0"].active = false;
-                    MenuRect[_currentMenuName + "1"].active = false;
+                if (_currentMenuName == "play2Shared0") {
+                    MenuRect["play2Shared0"].active = false;
+                    MenuRect["play2Shared1"].active = false;
+                    MenuRect["play2Shared2"].active = false;
+                    MenuRect["play2Shared3"].active = false;
                 }
 
 
-                if (button.NameMenuToSwitchTo != "play2_") {
+                if (button.NameMenuToSwitchTo != "play2Shared") {
                     _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                     _currentMenuName = button.NameMenuToSwitchTo;
                     _currentMenu.active = true;
@@ -161,20 +163,20 @@ namespace BRS.Scripts.Managers {
                         _currentMenuName = newMenu;
                         _currentMenu.active = true;
                     }
-                    else*/ if (panelPlay2NameOption == "play2Shared") {
+                    else*/ //if (panelPlay2NameOption == "play2Shared") {
                         ++count;
-                        _currentMenuName = panelPlay2NameOption;
-                        _currentMenu = MenuRect[_currentMenuName + "0"];
-                        MenuRect[_currentMenuName + "0"].active = true;
-                        MenuRect[_currentMenuName + "1"].active = true;
-                    }
+                        _currentMenuName = button.NameMenuToSwitchTo + "0";
+                        _currentMenu = MenuRect[_currentMenuName];
+                        MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
+                        if (GameManager.NumPlayers == 2) MenuRect[button.NameMenuToSwitchTo + "1"].active = true;
+                    //}
                 }
                 uniqueMenuSwitchUsed = true;
             }
         }
 
         public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
+            if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
                 GameManager.NumPlayers = 2;
         }
 
@@ -199,19 +201,21 @@ namespace BRS.Scripts.Managers {
             Button button = (Button)sender;
             bool allPlayersReady = false;
 
-            if (GameManager.NumPlayers == 2 && Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
+            if (GameManager.NumPlayers == 1)
+                allPlayersReady = true;
+            else if (GameManager.NumPlayers == 2 && Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
                 allPlayersReady = true;
             }
             else if (GameManager.NumPlayers == 4) {
                 if (button.indexAssociatedPlayerScreen == 0 || button.indexAssociatedPlayerScreen == 1) {
                     // TODO: Desactivate panel shared0 and 1 and activate panel shared2 and 3
                     //if (!uniqueMenuSwitchUsed) {
-                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) { 
+                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
                         MenuRect[panelPlay2NameOption + "0"].active = false;
                         MenuRect[panelPlay2NameOption + "1"].active = false;
                         MenuRect[panelPlay2NameOption + "2"].active = true;
                         MenuRect[panelPlay2NameOption + "3"].active = true;
-                        //uniqueMenuSwitchUsed = true;
+                        uniqueMenuSwitchUsed = true;
                     }
                 }
                 else if (button.indexAssociatedPlayerScreen == 2 || button.indexAssociatedPlayerScreen == 3) {
@@ -257,15 +261,17 @@ namespace BRS.Scripts.Managers {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                if (elem is Button textBox) {
-                    if (textBox.nameIdentifier == "NamePlayer") {
-                        if (button.Text == "del") {
-                            if (textBox.Text.Length > 0)
-                                textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
+            if (!uniqueMenuSwitchUsed) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+                    if (elem is Button textBox) {
+                        if (textBox.nameIdentifier == "NamePlayer") {
+                            if (button.Text == "del") {
+                                if (textBox.Text.Length > 0)
+                                    textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
+                            }
+                            else
+                                textBox.Text += button.Text;
                         }
-                        else
-                            textBox.Text += button.Text;
                     }
                 }
             }
@@ -274,8 +280,12 @@ namespace BRS.Scripts.Managers {
         public void UpdatePlayersChangeTo(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            List<string> screenSplitIndex = new List<string>(); 
-            if (GameManager.NumPlayers == 2) {
+            List<string> screenSplitIndex = new List<string>();
+            if (GameManager.NumPlayers == 1) {
+                panelPlay2NameOption = "play2Shared";
+                screenSplitIndex.Add("0");
+            }
+            else if (GameManager.NumPlayers == 2) {
                 panelPlay2NameOption = "play2Shared";
                 screenSplitIndex.Add("0");
                 screenSplitIndex.Add("1");
