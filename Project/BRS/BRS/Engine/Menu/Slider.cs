@@ -81,13 +81,19 @@ namespace BRS.Engine.Menu {
 
             if (IsCurrentSelection) {
                 ButtonSlider.IsHovering = true;
-                if (!MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen] && (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Enter) : Input.GetKey(Keys.Space) || Input.GetButton(Buttons.A, indexAssociatedPlayerScreen))) {
+                if (!MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen])
+                    if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Enter) : Input.GetKey(Keys.Space)) 
+                        || Input.GetButton(Buttons.A, indexAssociatedPlayerScreen)) {
                     ButtonSlider.IsHovering = true;
 
-                    if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Right) : Input.GetKey(Keys.D) || Input.GetButton(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadRight, indexAssociatedPlayerScreen)) {
+                    if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Right) : Input.GetKey(Keys.D))
+                        || Input.GetButton(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen) 
+                        || Input.GetButtonUp(Buttons.DPadRight, indexAssociatedPlayerScreen)) {
                         ButtonSlider.InitPos = ButtonSlider.InitPos + new Vector2(2, 0);
                     }
-                    else if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Left) : Input.GetKey(Keys.A) || Input.GetButton(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadLeft, indexAssociatedPlayerScreen)) {
+                    else if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKey(Keys.Left) : Input.GetKey(Keys.A)) 
+                        || Input.GetButton(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen) 
+                        || Input.GetButtonUp(Buttons.DPadLeft, indexAssociatedPlayerScreen)) {
                         ButtonSlider.InitPos = ButtonSlider.InitPos - new Vector2(2, 0);
                     }
 
@@ -98,18 +104,27 @@ namespace BRS.Engine.Menu {
                 }    
                 else {
                     if (IsCurrentSelection && !MenuManager.uniqueFrameInputUsed[indexAssociatedPlayerScreen]) {
-                        if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Up) : Input.GetKeyUp(Keys.W) || Input.GetButtonUp(Buttons.LeftThumbstickUp, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadUp, indexAssociatedPlayerScreen))
+                        if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Up) : Input.GetKeyUp(Keys.W)) 
+                            || Input.GetButtonUp(Buttons.LeftThumbstickUp, indexAssociatedPlayerScreen) 
+                            || Input.GetButtonUp(Buttons.DPadUp, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Up);
-                        else if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Right) : Input.GetKeyUp(Keys.D) || Input.GetButtonUp(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadRight, indexAssociatedPlayerScreen))
+                        else if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Right) : Input.GetKeyUp(Keys.D)) 
+                            || Input.GetButtonUp(Buttons.LeftThumbstickRight, indexAssociatedPlayerScreen) 
+                            || Input.GetButtonUp(Buttons.DPadRight, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Right);
-                        else if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Down) : Input.GetKeyUp(Keys.S) || Input.GetButtonUp(Buttons.LeftThumbstickDown, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadDown, indexAssociatedPlayerScreen))
+                        else if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Down) : Input.GetKeyUp(Keys.S))
+                            || Input.GetButtonUp(Buttons.LeftThumbstickDown, indexAssociatedPlayerScreen) 
+                            || Input.GetButtonUp(Buttons.DPadDown, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Down);
-                        else if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Left) : Input.GetKeyUp(Keys.A) || Input.GetButtonUp(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen) || Input.GetButtonUp(Buttons.DPadLeft, indexAssociatedPlayerScreen))
+                        else if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Left) : Input.GetKeyUp(Keys.A))
+                            || Input.GetButtonUp(Buttons.LeftThumbstickLeft, indexAssociatedPlayerScreen) 
+                            || Input.GetButtonUp(Buttons.DPadLeft, indexAssociatedPlayerScreen))
                             UpdateSelection(Input.Stick.Left);
                     }
                 }
 
-                if (indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Enter) : Input.GetKeyUp(Keys.Space) || Input.GetButtonUp(Buttons.A, indexAssociatedPlayerScreen)) {
+                if ((indexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Enter) : Input.GetKeyUp(Keys.Space)) 
+                    || Input.GetButtonUp(Buttons.A, indexAssociatedPlayerScreen)) {
                     OnReleaseSlider?.Invoke(this, new EventArgs());
                 }
             }

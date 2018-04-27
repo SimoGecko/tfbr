@@ -14,6 +14,7 @@ using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using BRS.Engine.Menu;
 using Microsoft.Xna.Framework.Input;
+using BRS.Engine.PostProcessing;
 
 namespace BRS.Scripts.Managers {
     class MenuManager : Component{
@@ -34,7 +35,7 @@ namespace BRS.Scripts.Managers {
         int idModel = 0;
 
         public string NamePlayerInfosToChange;
-        public string panelPlay2NameOption; // = "play2_"; // "play2Shared" or "play2_"
+        public string panelPlay2NameOption = "play2Shared"; // = "play2_"; // "play2Shared" or "play2_"
 
         int count = 0;
 
@@ -226,6 +227,7 @@ namespace BRS.Scripts.Managers {
             }
 
             if (allPlayersReady) {
+                PostProcessingManager.Instance._effects[3].Active = false;
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
                 GameManager.state = GameManager.State.Playing;
                 SceneManager.LoadGame = true;
@@ -237,6 +239,14 @@ namespace BRS.Scripts.Managers {
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
             //SceneManager.LoadScene("LevelMenu");
+        }
+
+        public void SetMode(object sender, EventArgs e) {
+            Button button = (Button)sender;
+        }
+
+        public void SetMap(object sender, EventArgs e) {
+            Button button = (Button)sender;
         }
 
         public void ResumeGame(object sender, EventArgs e) {
