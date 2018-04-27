@@ -60,7 +60,7 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
             startPosition = startPos;
-            
+
             // TODO make mesh have this color
         }
         public override void Start() {
@@ -132,20 +132,15 @@ namespace BRS.Scripts.PlayerScripts {
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
-            // Todo: Remove if bouncing is not needed
-            //} else if (State == PlayerState.Collided) {
-            //    _pC.Coroutine();
-            //    _steerableCollider.Speed = JVector.Zero;
-
-            //    if (!_pC.IsCollided) {
-            //        State = PlayerState.Normal;
-            //        _pM.ResetRotation(_pC.CurrentRotation);
-            //    }
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();
+        }
+
+        public override void Reset() {
+            Start();
         }
 
         public override void OnCollisionEnter(Collider c) {

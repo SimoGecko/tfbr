@@ -84,13 +84,11 @@ namespace BRS.Scripts.Managers {
             RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
 
-            foreach (var b in ElementManager.Instance.Bases()) b.Start();
-            foreach (var p in ElementManager.Instance.Players()) p.Start();
+            Time.ClearTimers();
 
-            GameObject vault = GameObject.FindGameObjectWithName("vault");
-            if (vault != null) vault.Start();
+            // Reset the comopnents: positions, state of vault, player, etc..
+            foreach (var g in GameObject.All) g.Reset();
 
-            state = State.Playing;
             _roundNumber++;
         }
 

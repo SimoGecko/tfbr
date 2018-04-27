@@ -1,11 +1,10 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using BRS.Engine;
 using BRS.Scripts.Managers;
-using BRS.Scripts.PlayerScripts;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace BRS.Scripts {
     class PoliceManager : Component {
@@ -16,34 +15,62 @@ namespace BRS.Scripts {
         //public
         const float distThreshold = .2f; // if player hasn't moved this much don't record
         const float recordRefreshTime = .3f;
-        const int totNumPolice = 6;
+        const int totalNumPolicePerPlayer = 3;
         const int startDelay = 5; // how much time to wait before first police spawn
 
         public static bool IsActive = true;
 
         //private
-        bool record = true;
+        //bool record = true;
         int numTargets;
+        private List<Police> _polices;
+        private int _totalSpawnedPerPlayer;
+        private float _spawningTime;
 
         //reference
         Transform[] targets;
         List<Vector3>[] waypoints;
 
+        private bool _isRecording;
+        private bool _isSpawning;
+
+        public static PoliceManager Instance;
+
 
         // --------------------- BASE METHODS ------------------
+        public PoliceManager() {
+            Instance = this;
+        }
+
         public override void Start() {
+        }
+
+        public override void Update() {
+            //DrawPoints();
+        }
+
+        public override void Reset() {
+            foreach (Police police in _polices) {
+                GameObject.Destroy(police.gameObject);
+            }
+        }
+
+        public void StartRound() {
             targets = ElementManager.Instance.PlayerTransforms();
             numTargets = targets.Length;
 
             waypoints = new List<Vector3>[numTargets];
             for (int i = 0; i < numTargets; i++) waypoints[i] = new List<Vector3>();
 
-            RecordWaypoints();
-            CallSpawnPolice();
-        }
+            _totalSpawnedPerPlayer = 0;
+            _polices = new List<Police>();
 
-        public override void Update() {
-            //DrawPoints();
+            if (!_isRecording) {
+                RecordWaypoints();
+            }
+
+            _spawningTime = ((float)RoundManager.RoundTime - startDelay) / totalNumPolicePerPlayer;
+            new Timer(startDelay, CallSpawnPolice);
         }
 
 
@@ -58,6 +85,7 @@ namespace BRS.Scripts {
 
             Police pol = GameObject.Instantiate("policePrefab", new Vector3(pathToFollow * 4, 1.0f, 0), Quaternion.Identity).GetComponent<Police>();
             pol.StartFollowing(waypoints[pathToFollow]);
+            _polices.Add(pol);
         }
 
 
@@ -73,7 +101,9 @@ namespace BRS.Scripts {
 
         // other
         async void RecordWaypoints() {
-            while (record) {
+            _isRecording = true;
+
+            while (IsActive) {
                 for (int i = 0; i < numTargets; i++) {
                     if (targets[i] != null) {
                         if (waypoints[i].Count < 2 || Vector3.DistanceSquared(targets[i].position, waypoints[i][waypoints[i].Count - 1]) > distThreshold * distThreshold) {
@@ -82,20 +112,22 @@ namespace BRS.Scripts {
                         }
                     }
                 }
+
                 await Time.WaitForSeconds(recordRefreshTime);
             }
+
+            _isRecording = false;
         }
 
-        async void CallSpawnPolice() {
-            await Time.WaitForSeconds(startDelay);
-            float timeBetweenCalls = ((float)RoundManager.RoundTime - startDelay) / (totNumPolice / numTargets);
-            int totSpawned = 0;
-            while (totSpawned < totNumPolice) {
-                for (int i = 0; i < numTargets; i++) {
-                    SpawnNewPolice(i);
-                    totSpawned++;
-                }
-                await Time.WaitForSeconds(timeBetweenCalls);
+        void CallSpawnPolice() {
+            for (int i = 0; i < numTargets; i++) {
+                SpawnNewPolice(i);
+            }
+
+            ++_totalSpawnedPerPlayer;
+
+            if (_totalSpawnedPerPlayer < totalNumPolicePerPlayer) {
+                new Timer(_spawningTime, CallSpawnPolice);
             }
         }
     }

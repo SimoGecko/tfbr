@@ -12,6 +12,7 @@ namespace BRS.Engine {
 
         void Awake();
         void Start();
+        void Reset();
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
@@ -31,6 +32,7 @@ namespace BRS.Engine {
 
         public virtual void Awake() { }
         public virtual void Start() { }
+        public virtual void Reset() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
 

@@ -43,6 +43,7 @@ namespace BRS.Scripts.Managers {
             _rt = new Timer(0, RoundTime, OnRoundEnd);
             GameUI.Instance.StartMatch(_rt);
             GameManager.state = GameManager.State.Finished;
+
             CountDown();
         }
 
@@ -55,7 +56,6 @@ namespace BRS.Scripts.Managers {
                     GameUI.Instance.UpdatePoliceComing();
                 }
             }
-            
         }
 
 
@@ -68,6 +68,9 @@ namespace BRS.Scripts.Managers {
         void OnRoundStart() {
             GameManager.state = GameManager.State.Playing;
             OnRoundStartAction?.Invoke();
+
+            PoliceManager.Instance.StartRound();
+
             new Timer(RoundTime * .8f, () => OnRoundAlmostEndAction?.Invoke());
             started = true;
         }

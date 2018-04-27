@@ -68,8 +68,8 @@ namespace BRS {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = false;
-            ParticleSystem3D.Enabled = false;
+            PoliceManager.IsActive = true;
+            ParticleSystem3D.Enabled = true;
 
             base.Initialize();
         }
@@ -130,7 +130,7 @@ namespace BRS {
             // Update skybox
             //angle += 0.002f;
             //cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
-           // view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
+            // view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -146,7 +146,7 @@ namespace BRS {
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             base.Draw(gameTime);
-            
+
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
             foreach (Camera cam in Screen.Cameras) {
@@ -162,7 +162,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                Gizmos.DrawFull(cam);            
+                Gizmos.DrawFull(cam);
             }
             Gizmos.ClearOrders();
 

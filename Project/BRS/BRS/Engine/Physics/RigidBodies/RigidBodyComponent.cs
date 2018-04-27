@@ -67,6 +67,9 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// </summary>
         protected JVector CenterOfMass;
 
+        protected JVector StartPosition;
+        protected JMatrix StartOrientation;
+
         #endregion
 
         #region Monogame-structure
@@ -91,6 +94,9 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Mass = 20.0f
             };
 
+            StartPosition = RigidBody.Position;
+            StartOrientation = RigidBody.Orientation;
+
             PhysicsManager.Instance.World.AddBody(RigidBody);
 
             if (ShapeType == ShapeType.BoxInvisible) {
@@ -98,6 +104,15 @@ namespace BRS.Engine.Physics.RigidBodies {
             }
 
             base.Awake();
+        }
+
+        public override void Reset() {
+            RigidBody.Position = StartPosition;
+            RigidBody.Orientation = StartOrientation;
+            gameObject.transform.position = Conversion.ToXnaVector(StartPosition - JVector.Transform(CenterOfMass, StartOrientation));
+            gameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(StartOrientation));
+
+            base.Reset();
         }
 
 

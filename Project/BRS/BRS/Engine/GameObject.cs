@@ -40,14 +40,17 @@ namespace BRS.Engine {
 
         // ---------- CALLBACKS ----------
         public void Awake() {
-            foreach (IComponent c in components)  c.Awake();
+            foreach (IComponent c in components) c.Awake();
         }
         public void Start() {
-            foreach (IComponent c in components)  c.Start();
+            foreach (IComponent c in components) c.Start();
+        }
+        public void Reset() {
+            foreach (IComponent c in components) c.Reset();
         }
 
         public void Update() {
-            if (active)  foreach (IComponent c in components)  c.Update();
+            if (active) foreach (IComponent c in components) c.Update();
         }
         public void LateUpdate() {
             if (active) foreach (IComponent c in components) c.LateUpdate();
@@ -146,12 +149,12 @@ namespace BRS.Engine {
         }
 
         public static void Destroy(GameObject o) {
-            if (o == null)  return;
+            if (o == null) return;
             o.active = false;
             //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
-            foreach (Component c in o.components)  c.Destroy();
+            foreach (Component c in o.components) c.Destroy();
         }
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
@@ -183,7 +186,7 @@ namespace BRS.Engine {
         public static GameObject[] FindGameObjectsWithTag(ObjectTag _tag) {
             List<GameObject> result = new List<GameObject>();
             foreach (GameObject o in allGameObjects) {
-                if (o.tag == _tag)  result.Add(o);
+                if (o.tag == _tag) result.Add(o);
             }
             if (result.Count == 0) {
                 Debug.LogError("could not find any gameobject with tag " + _tag.ToString());
