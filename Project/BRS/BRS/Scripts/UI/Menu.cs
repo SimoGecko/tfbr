@@ -97,7 +97,8 @@ namespace BRS.Scripts.UI {
                 { "UpdateVolume", MenuManager.Instance.UpdateVolume },
                 { "LoadMenu", MenuManager.Instance.LoadMenuFunction },
                 { "ResumeGame", MenuManager.Instance.ResumeGame },
-                { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor }               
+                { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor },
+                { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady }
             };
         }
 
@@ -131,10 +132,11 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
-            CreatePanel("Load/MenuPanels/Play2.txt", "play2_0");
-            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
-            CreatePanel("Load/MenuPanels/Play2Right.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
-            
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: -480, idAssociatePlayerScreen: 2);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: 480, idAssociatePlayerScreen: 3);
+
         }
 
         public void CreateAlphabetButtons(string panelName, int offsetWidth = 0, int idAssociatePlayerScreen = 0) {
@@ -150,11 +152,10 @@ namespace BRS.Scripts.UI {
                 scaleAlphabet = 0.5f;
             }    
             else{
-                startoffset = new Vector2[] { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
+                //startoffset = new Vector2[] { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
+                startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(885, 230), new Vector2(910, 230) };
                 scaleAlphabet = 0.37f;
             }
-                
-            
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
@@ -172,17 +173,19 @@ namespace BRS.Scripts.UI {
                     linkedButtonLeftRight.Add(letterButton);
                     buttonsCurrentPanel2.Add(letterButton);
 
-                    if (i == 0 && count == 0)
+                    if (i == 0 && count == 0) {
                         letterButton.nameIdentifier = "Alphabet1";
+                        letterButton.IsCurrentSelection = true;
+                    }
                     if (elem == secondLine[0])
                         letterButton.nameIdentifier = "Alphabet2";
                     if (elem == thirdLine[0])
                         letterButton.nameIdentifier = "Alphabet3";
 
-                    if (i == 0)
-                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player1", panelName);
-                    if (i == keyboard.Length - 1)
-                        letterButton.NeighborUp = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
+                    //if (i == 0)
+                        //letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player1", panelName);
+                    //if (i == keyboard.Length - 1)
+                        //letterButton.NeighborUp = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
 
                     ++count;
 
@@ -195,7 +198,8 @@ namespace BRS.Scripts.UI {
                     };
                     letterButton.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
-                    letterButton.NeighborDown = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
+                    letterButton.NeighborUp = buttonsCurrentPanel2[firstLine.Length + secondLine.Length - 2];
+                    //letterButton.NeighborDown = FindMenuComponentinPanelWithName("ModelChangeLeft", panelName);
                     MenuManager.Instance.MenuRect[panelName].AddComponent(letterButton);
                     linkedButtonLeftRight.Add(letterButton);
                 }
@@ -217,7 +221,7 @@ namespace BRS.Scripts.UI {
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - firstLine.Length];
                 }
                 else {
-                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
+                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("ModelChangeLeft", panelName);
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - secondLine.Length];
                 }
             }
@@ -276,6 +280,7 @@ namespace BRS.Scripts.UI {
                         button.IsCurrentSelection = MS.CurrentSelection;
                         button.IsClicked = MS.IsClicked;
                         button.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
+                        button.deSelectOnMove = MS.deSelectOnMove;
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }
                 }
@@ -307,8 +312,8 @@ namespace BRS.Scripts.UI {
                 }
             }
 
-            if (panelName == "play2Shared0" || panelName == "play2Shared1") {
-                Button bu = ((Button)FindMenuComponentinPanelWithName("Player1", panelName));
+            if (panelName == "play2Shared0" || panelName == "play2Shared1" || panelName == "play2Shared2" || panelName == "play2Shared3") {
+                Button bu = ((Button)FindMenuComponentinPanelWithName("NamePlayer", panelName));
                 bu.Text = "Player " + (idAssociatePlayerScreen + 1).ToString();
                 bu.Index = idAssociatePlayerScreen;
             }
@@ -346,7 +351,7 @@ namespace BRS.Scripts.UI {
                 }
             }
 
-            if (panelName == "play2" || panelName == "play2Shared0" || panelName == "play2Shared1") {
+            /*if (panelName == "play2" || panelName == "play2Shared0" || panelName == "play2Shared1") {
                 FindMenuComponentinPanelWithName("Model3", panelName).NeighborDown = FindMenuComponentinPanelWithName("Back", panelName);
                 FindMenuComponentinPanelWithName("Back", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName); ;
                 FindMenuComponentinPanelWithName("Next", panelName).NeighborRight = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
@@ -354,7 +359,7 @@ namespace BRS.Scripts.UI {
                 FindMenuComponentinPanelWithName("Alphabet1", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model1", panelName);
                 FindMenuComponentinPanelWithName("Alphabet2", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model2", panelName);
                 FindMenuComponentinPanelWithName("Alphabet3", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName);
-            }
+            }*/
 
             if (panelName == "ranking")
                 LoadRankingsText();
@@ -386,7 +391,7 @@ namespace BRS.Scripts.UI {
             public int Index;
             public Color Color, ColorInside;
             public List<string> Functions;
-            public bool Active, CurrentSelection, IsClicked;
+            public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
             public List<string> UniqueChoiceButtonWith;
         }
     }

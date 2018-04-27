@@ -399,6 +399,9 @@ namespace BRS.Engine {
                             case "IsClicked":
                                 menuObject.IsClicked = values[0] == "yes" ? true : false;
                                 break;
+                            case "DeSelectOnMove":
+                                menuObject.deSelectOnMove = values[0] == "yes" ? true : false;
+                                break;
                             case "Active":
                                 menuObject.Active = values[0] == "yes" ? true : false;
                                 break;
