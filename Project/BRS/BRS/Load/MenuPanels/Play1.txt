@@ -2,7 +2,7 @@
 Texture: background
 Position: 960 540
 ScaleHeight: 0.87
-ScaleWidth: 0.87
+ScaleWidth: 1
 Color: 255 255 255
 </Button>
 
@@ -15,76 +15,184 @@ ColorInside: 255 255 255
 </Button>
 
 <Text>
-Text: Number of players
-Position: 960 286
+Text: Players
+Position: 725 320
 </Text>
 
 <Text>
-Text: Game duration
-Position: 960 502
+Text: Duration
+Position: 725 430
+</Text>
+
+<Text>
+Text: Mode
+Position: 725 540
+</Text>
+
+<Text>
+Text: Map
+Position: 725 650
 </Text>
 
 <Button>
 NameIdentifier: PlayerAmount1
 Texture: button
-Position: 806 394
+Position: 930 320
 Text: 1
 Functions: UpdateNoPlayers HighlightBorders GoDown
 NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount4 PlayerAmount2
 CurrentSelection: yes
 UniqueChoiceWith: PlayerAmount2 PlayerAmount4
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
 NameIdentifier: PlayerAmount2
 Texture: button
-Position: 960 394
+Position: 1070 320
 Text: 2
 Functions: UpdateNoPlayers HighlightBorders GoDown
 NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount1 PlayerAmount4
 UniqueChoiceWith: PlayerAmount1 PlayerAmount4
 IsClicked: yes
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
 NameIdentifier: PlayerAmount4
 Texture: button
-Position: 1113 394
+Position: 1210 320
 Text: 4
 Functions: UpdateNoPlayers HighlightBorders GoDown
 NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount2 PlayerAmount1
 UniqueChoiceWith: PlayerAmount1 PlayerAmount2
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration2min
 Texture: button
-Position: 806 610
-Text: 2 min
+Position: 900 430
+Text: 2
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 Next RoundDuration5min RoundDuration3min
-UniqueChoiceWith: RoundDuration3min RoundDuration5min
+NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration5min RoundDuration3min
+UniqueChoiceWith: RoundDuration3min RoundDuration5min RoundDuration10min
 IsClicked: yes
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration3min
 Texture: button
-Position: 960 610
-Text: 3 min
+Position: 1020 430
+Text: 3
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 Next RoundDuration2min RoundDuration5min
-UniqueChoiceWith: RoundDuration2min RoundDuration5min
+NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration2min RoundDuration5min
+UniqueChoiceWith: RoundDuration2min RoundDuration5min RoundDuration10min
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
 NameIdentifier: RoundDuration5min
 Texture: button
-Position: 1113 610
-Text: 5 min
+Position: 1140 430
+Text: 5
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 Back RoundDuration3min RoundDuration2min
-UniqueChoiceWith: RoundDuration2min RoundDuration3min
+NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration3min RoundDuration10min
+UniqueChoiceWith: RoundDuration2min RoundDuration3min RoundDuration10min
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: RoundDuration10min
+Texture: button
+Position: 1260 430
+Text: 10
+Functions: UpdateRoundDuration HighlightBorders GoDown
+NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration5min RoundDuration2min
+UniqueChoiceWith: RoundDuration2min RoundDuration3min RoundDuration5min
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: ModeNormal
+Texture: button
+Position: 900 540
+Text: N
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeDynamic ModeBombs
+UniqueChoiceWith: ModeBombs ModeCrates ModeDynamic
+IsClicked: yes
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: ModeBombs
+Texture: button
+Position: 1020 540
+Text: B
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeNormal ModeCrates
+UniqueChoiceWith: ModeNormal ModeCrates ModeDynamic
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: ModeCrates
+Texture: button
+Position: 1140 540
+Text: C
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeBombs ModeDynamic
+UniqueChoiceWith: ModeNormal ModeBombs ModeDynamic
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: ModeDynamic
+Texture: button
+Position: 1260 540
+Text: D
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeCrates ModeNormal
+UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: MapA
+Texture: button
+Position: 1020 650
+Text: A
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: ModeNormal Next MapB MapB
+UniqueChoiceWith: MapB
+IsClicked: yes
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+</Button>
+
+<Button>
+NameIdentifier: MapB
+Texture: button
+Position: 1140 650
+Text: B
+Functions: HighlightBorders GoDown
+NeighborsUpDownLeftRight: ModeNormal Next MapA MapA
+UniqueChoiceWith: MapA
+ScaleWidth: 0.75
+ScaleHeight: 0.75
 </Button>
 
 <Button>
