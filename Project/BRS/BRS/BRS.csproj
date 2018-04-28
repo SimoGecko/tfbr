@@ -251,13 +251,13 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\BadgeLogo.scale-400.png" />
+    <Content Include="Assets\BadgeLogo.png" />
     <Content Include="Assets\Logo.scale-200.png" />
     <Content Include="Assets\SmallLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Assets\Square310x310Logo.scale-200.png" />
-    <Content Include="Assets\StoreLogo.scale-400.png" />
+    <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
     <Content Include="Load\Rankings\ranking2min.txt" />
