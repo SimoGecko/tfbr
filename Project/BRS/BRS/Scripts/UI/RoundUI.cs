@@ -47,12 +47,13 @@ namespace BRS.Scripts {
 
         public override void Draw2D(int i) {
             if (i == 0) return;
+            i--;
             if (showCountdown) {
                 Rectangle source = SpriteFromNumber(countdownNumber);
                 UserInterface.DrawPicture(countdownTex, Vector2.Zero, source, Align.Center);
             }
             if (showEndRound) {
-                Rectangle source = TextFromNumber(endRoundPlayerText[i-1]);
+                Rectangle source = TextFromNumber(endRoundPlayerText[i]);
                 UserInterface.DrawPicture(endroundTex, Vector2.Zero, source, Align.Center);
             }
         }

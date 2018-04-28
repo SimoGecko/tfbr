@@ -76,7 +76,7 @@ namespace BRS.Scripts.Scenes {
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
-            Manager.AddComponent(new GameManager());
+            //Manager.AddComponent(new GameManager());
             Manager.AddComponent(new RoundManager());
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
