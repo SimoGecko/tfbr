@@ -56,11 +56,7 @@ namespace BRS.Scripts.Managers {
             //PowerupUI.instance.Start();
             PoliceManager.Instance.Reset();
 
-            foreach (var b in ElementManager.Instance.Bases()) b.Start();
-            foreach (var p in ElementManager.Instance.Players()) p.Start();
-
-            GameObject vault = GameObject.FindGameObjectWithName("vault");
-            if (vault != null) vault.Start();
+            foreach (var g in GameObject.All) g.Reset();
 
             state = State.Playing;
         }
