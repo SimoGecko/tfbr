@@ -30,8 +30,11 @@ namespace BRS.Scripts.PlayerScripts {
 
         //HIT and STUN
         const float StunTime = 2f;
+        const float StunDisabledTime = 1f;
         const float RespawnTime = 5f;
         public PlayerState State { get; set; } = PlayerState.Normal;
+
+        float nextStunTime;
 
         //private
         Vector3 startPosition;
@@ -157,12 +160,17 @@ namespace BRS.Scripts.PlayerScripts {
             //base.TakeDamage(damage); // don't override state
 
             if (!Dead) {
-                State = PlayerState.Stun;
-                Audio.Play("stun", transform.position);
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
-                PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
-                _pI.LoseMoney();
-                Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
+                if (Time.CurrentTime > nextStunTime) {
+                    nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
+                    State = PlayerState.Stun;
+                    Audio.Play("stun", transform.position);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
+                    _pI.LoseMoney();
+                    Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
+                }
+
+                
             }
         }
 
@@ -206,6 +214,9 @@ namespace BRS.Scripts.PlayerScripts {
             //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
+
+
+        public bool IsAttacking() { return State == PlayerState.Attack; }
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries

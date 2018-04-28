@@ -72,7 +72,7 @@ namespace BRS.Engine {
 
         public virtual int GetNumCameras() { return 1; } // override this for more than 1 player
 
-        public List<Vector3> StartPositions;
+        //public List<Vector3> StartPositions; // WHY THE FUCK IS THIS HERE!!!!
 
         /*
         List<GameObject> objectsInScene = new List<GameObject>();//can create scene graph

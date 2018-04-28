@@ -27,7 +27,7 @@ namespace BRS.Engine {
             Gt = gt;
             Frame++;
 
-            Debug.Log("Start with " + timers.Count + " timers");
+            //Debug.Log("Start with " + timers.Count + " timers");
             //process timers
             for (int i = 0; i < timers.Count; i++) {
                 if (!GameManager.GameActive && !timers[i].AlwaysRun) continue; // knows about gamemanager
@@ -37,7 +37,7 @@ namespace BRS.Engine {
                     timers.RemoveAt(i--);
                 }
             }
-            Debug.Log("End with " + timers.Count + " timers");
+            //Debug.Log("End with " + timers.Count + " timers");
         }
 
         public static Task WaitForSeconds(float s) { // used in coroutines

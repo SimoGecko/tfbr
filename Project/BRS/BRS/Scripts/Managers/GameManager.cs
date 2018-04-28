@@ -52,13 +52,15 @@ namespace BRS.Scripts.Managers {
         public static void RestartCustom() { // TODO refactor
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            RoundManager.Instance.Start();
+            //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
+            PoliceManager.Instance.Reset();
 
-            Time.ClearTimers();
+            foreach (var b in ElementManager.Instance.Bases()) b.Start();
+            foreach (var p in ElementManager.Instance.Players()) p.Start();
 
-            // Reset the comopnents: positions, state of vault, player, etc..
-            foreach (var g in GameObject.All) g.Reset();
+            GameObject vault = GameObject.FindGameObjectWithName("vault");
+            if (vault != null) vault.Start();
 
             state = State.Playing;
         }
@@ -72,7 +74,7 @@ namespace BRS.Scripts.Managers {
         // queries
         public static bool GameActive { get { return state == State.Playing; } }
         public static bool GamePaused { get { return state == State.Paused; } }
-
+        public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
 
 
         // other

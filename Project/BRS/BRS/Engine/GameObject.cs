@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
 
 
     /// <summary>

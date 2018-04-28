@@ -18,6 +18,9 @@ namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
         ////////// first game level, loads all the things //////////
 
+        public List<Vector3> StartPositions;
+
+
         public override int GetNumCameras() { return GameManager.NumPlayers; }
 
         public override void Load() {
@@ -51,6 +54,11 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                int offset = i > 1 ? 3 : 0;
+                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+            }
+            /*
             if (GameManager.NumPlayers == 2) {
                 StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
                 StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
@@ -59,7 +67,7 @@ namespace BRS.Scripts.Scenes {
                 StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
                 StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
                 StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
-            }
+            }*/
         }
 
         void CreateManagers() {

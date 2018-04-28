@@ -19,6 +19,8 @@ namespace BRS.Scripts.PlayerScripts {
         //public
         public int CamIndex;
 
+        bool autoFollow = true;
+
         static readonly Vector3 Offset = new Vector3(0, 10, 10);
         static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
         static Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation); // -40, 40
@@ -29,14 +31,16 @@ namespace BRS.Scripts.PlayerScripts {
         float _xAngle, _xAngleSmooth;
         float _yAngle, _yAngleSmooth;
         float _refVelocityX, _refVelocityY;
-        Vector3 _targetPosRef;
+        //Vector3 _targetPosRef;
 
+        float _yAnglePlayerSmooth, _refPlayer;
 
         float _shakeDuration = 0;
         Vector3 _shake;
 
         // const
         private const float SmoothTime = .2f;
+        private const float AutoFollowSmoothTime = .4f;
         private const float PositionSmoothTime = .1f;
         private const int AngleVariation = 40;
         private const float ShakeAmount = .0f;
@@ -65,9 +69,14 @@ namespace BRS.Scripts.PlayerScripts {
 
         public override void LateUpdate() { // after player has moved
             if (GameManager.GameActive) ProcessInput();
-           
-            FollowSmoothAndRotate();
+
+            if (!autoFollow) {
+                FollowSmoothAndRotate();
+            } else {
+                SetBehindPlayer();
+            }
             ProcessShake();
+
         }
 
 
@@ -88,12 +97,11 @@ namespace BRS.Scripts.PlayerScripts {
 
             _yAngle += inputX;
             _yAngleSmooth = Utility.SmoothDamp(_yAngleSmooth, _yAngle, ref _refVelocityY, SmoothTime);
-
         }
 
         void FollowSmoothAndRotate() {
             // Todo: used? yes
-            Vector3 currentPosition = transform.position;
+            //Vector3 currentPosition = transform.position;
 
             transform.position = _player.position + Offset;
             transform.eulerAngles = StartAngle;
@@ -102,9 +110,17 @@ namespace BRS.Scripts.PlayerScripts {
             transform.RotateAround(_player.position, transform.Right, _xAngleSmooth);
 
             // Todo: used? yes
-            Vector3 targetPos = transform.position;
+            //Vector3 targetPos = transform.position;
             //transform.position = Utility.SmoothDamp(currentPosition, targetPos, ref targetPosRef, positionSmoothTime);
 
+        }
+
+        void SetBehindPlayer() {
+            transform.position = _player.position + Offset;
+            transform.eulerAngles = StartAngle;
+
+            _yAnglePlayerSmooth = Utility.SmoothDampAngle(_yAnglePlayerSmooth, _player.eulerAngles.Y, ref _refPlayer, AutoFollowSmoothTime);
+            transform.RotateAround(_player.position, Vector3.Up, _yAnglePlayerSmooth);
         }
 
         void ProcessShake() {
@@ -125,7 +141,7 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // queries
-        public float YRotation { get { return _yAngleSmooth; } }
+        public float YRotation { get { return transform.eulerAngles.Y; } }//_yAngleSmooth
 
 
 
