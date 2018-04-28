@@ -150,6 +150,9 @@ namespace BRS.Engine {
         }*/
 
         //VIBRATION
+        public static void Vibrate(float amount, float time, int i = 0) {
+            Vibrate(amount, amount, time, i);
+        }
         public static void Vibrate(float left, float right, float time, int i=0) {
             GamePad.SetVibration(i, left, right);
             new Timer(time, () => StopVibration(i));

@@ -161,6 +161,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             if (!Dead) {
                 if (Time.CurrentTime > nextStunTime) {
+                    Input.Vibrate(1f, .3f, PlayerIndex);
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);

@@ -19,8 +19,8 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 150;
-        public const int TimeBeforePolice = 15;
+        public static int RoundTime = 10;
+        public const int TimeBeforePolice = 5;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
