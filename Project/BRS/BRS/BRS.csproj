@@ -167,6 +167,7 @@
     <Compile Include="Scripts\Managers\PlayArea.cs" />
     <Compile Include="Scripts\Particles3D\Cash.cs" />
     <Compile Include="Scripts\Particles3D\Boost.cs" />
+    <Compile Include="Scripts\Particles3D\CashDrop.cs" />
     <Compile Include="Scripts\Particles3D\Tracks.cs" />
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />

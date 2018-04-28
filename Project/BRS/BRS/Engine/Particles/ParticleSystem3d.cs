@@ -322,6 +322,7 @@ namespace BRS.Engine.Particles {
             _effectViewParameter.SetValue(camera.View);
             _effectProjectionParameter.SetValue(camera.Proj);
             GraphicsDevice device = Graphics.gD;
+            
 
             // Restore the vertex buffer contents if the graphics device was lost.
             if (_vertexBuffer.IsContentLost) {

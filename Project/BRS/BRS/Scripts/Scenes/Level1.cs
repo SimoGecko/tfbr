@@ -152,6 +152,7 @@ namespace BRS.Scripts.Scenes {
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
             vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
+            //vault.AddComponent(new CashDrop());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);
