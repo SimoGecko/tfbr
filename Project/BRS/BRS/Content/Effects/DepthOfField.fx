@@ -5,7 +5,9 @@ float Distance;
 float Range;
 float Near;
 float Far;
-						
+float4 active; 
+float players;
+	
 texture D1M;
 sampler D1MSampler = sampler_state
 {

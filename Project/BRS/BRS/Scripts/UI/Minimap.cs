@@ -64,7 +64,7 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             if (i == 0) return;
             DrawSmall(UserInterface.sB, i-1);
         }

@@ -12,10 +12,12 @@ namespace BRS.Engine {
 
         void Awake();
         void Start();
+        void Reset();
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
-        void Draw(int i);
+        void Draw3D(Camera camera);
+        void Draw2D(int i);
 
         object Clone();
     }
@@ -30,12 +32,14 @@ namespace BRS.Engine {
 
         public virtual void Awake() { }
         public virtual void Start() { }
+        public virtual void Reset() { }
         public virtual void Update() { }
         public virtual void LateUpdate() { }
 
         public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
-        public virtual void Draw(int i) { }
+        public virtual void Draw3D(Camera camera) { }
+        public virtual void Draw2D(int i) { }
 
         public virtual object Clone() {
             return this.MemberwiseClone(); // MUST DO DEEP COPY!
@@ -59,10 +63,10 @@ namespace BRS.Engine {
             NameIdentifier = name;
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             if (Active)
                 foreach (Component comp in Components)
-                    comp.Draw(i);
+                    comp.Draw2D(i);
         }
 
         public override void Start() {

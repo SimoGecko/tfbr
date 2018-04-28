@@ -64,7 +64,7 @@ namespace BRS.Scripts {
             }
         }
 
-        public override void Draw(int index) {
+        public override void Draw2D(int index) {
             if (index == 0) return;
             index--;
 

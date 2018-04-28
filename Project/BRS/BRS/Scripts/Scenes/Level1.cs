@@ -1,31 +1,32 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
-using BRS.Menu;
-using BRS.Scripts;
+using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
+using BRS.Scripts.Particles3D;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using BRS.Engine.Physics.RigidBodies;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
         ////////// first game level, loads all the things //////////
 
-        public override int GetNumCameras() { return GameManager.NumPlayers; } 
+        public List<Vector3> StartPositions;
+
+
+        public override int GetNumCameras() { return GameManager.NumPlayers; }
 
         public override void Load() {
             LoadBlenderBakedScene();
             LoadUnityScene();
+            SetStartPositions();
             CreateManagers();
             CreatePlayers();
             CreateCameraControllers();
@@ -51,6 +52,24 @@ namespace BRS.Scripts.Scenes {
             task2.Wait();
         }
 
+        void SetStartPositions() {
+            StartPositions = new List<Vector3>();
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                int offset = i > 1 ? 3 : 0;
+                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+            }
+            /*
+            if (GameManager.NumPlayers == 2) {
+                StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
+                StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
+            } else if (GameManager.NumPlayers == 4) {
+                StartPositions.Add(new Vector3(-5 + 10 * 0,0, 0));
+                StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
+                StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
+                StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
+            }*/
+        }
+
         void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
             UiManager.AddComponent(new BaseUI());
@@ -65,7 +84,7 @@ namespace BRS.Scripts.Scenes {
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
-            Manager.AddComponent(new GameManager());
+            //Manager.AddComponent(new GameManager());
             Manager.AddComponent(new RoundManager());
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
@@ -80,12 +99,13 @@ namespace BRS.Scripts.Scenes {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
+                Vector3 startPos = StartPositions[i];
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
+                player.transform.position = startPos;
                 player.transform.Scale(1.0f);
                 player.material = playerMat;
 
-                Vector3 startPos =  new Vector3(-5 + 10 * i, 0.25f, 0);
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
                 //subcomponents
@@ -96,6 +116,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerStamina());
                 player.AddComponent(new PlayerLift());
                 player.AddComponent(new PlayerCollider());
+                player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
 
                 ElementManager.Instance.Add(player.GetComponent<Player>());
@@ -110,7 +131,7 @@ namespace BRS.Scripts.Scenes {
                 //arrow for enemy
                 GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow2.material = new Material(Graphics.Red);
-                arrow2.AddComponent(new Arrow(player, true, i, ()=>true));
+                arrow2.AddComponent(new Arrow(player, true, i, () => true));
                 arrow2.transform.Scale(.08f);
             }
         }
@@ -127,11 +148,11 @@ namespace BRS.Scripts.Scenes {
         void CreateBases() {
             for (int i = 0; i < 2; i++) {
                 //TODO base object
-                GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
+                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.AddComponent(new Base(i));
                 playerBase.transform.Scale(2);
-                playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
+                playerBase.transform.position = StartPositions[i];
                 playerBase.transform.scale = new Vector3(3, 1, 1);
                 playerBase.transform.SetStatic();
                 //playerBase.AddComponent(new BoxCollider(playerBase));
@@ -153,7 +174,8 @@ namespace BRS.Scripts.Scenes {
             //vault.transform.eulerAngles = new Vector3(90, 0, 0);
 
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
-            vault.AddComponent(new StaticRigidBody());
+            vault.AddComponent(new AnimatedRigidBody());
+            vault.AddComponent(new Smoke());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);

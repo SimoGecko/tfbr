@@ -1,15 +1,16 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.PostProcessing;
+using BRS.Engine.Particles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
+using System;
 
 namespace BRS {
 
     public class Game1 : Game {
-
         //default - don't touch
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -58,7 +59,8 @@ namespace BRS {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = false;
+            PoliceManager.IsActive = true;
+            ParticleSystem3D.Enabled = true;
 
             base.Initialize();
         }
@@ -83,6 +85,10 @@ namespace BRS {
             // load the z buffer shader
             _ZBufferShader = Content.Load<Effect>("Effects/Depth");
             _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
+
+            // add skybox
+            Skybox.Start();
+
         }
 
 
@@ -100,24 +106,35 @@ namespace BRS {
             Audio.Update();
             SceneManager.Update(); // check for scene change (can remove later)
 
+            // Todo: Switch for the interim
+            if (Input.GetKeyDown(Keys.Tab)) {
+                ParticleSystem3D.Enabled = !ParticleSystem3D.Enabled;
+            }
+
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update(gameTime);
+            PostProcessingManager.Instance.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.StreetGray);
-            //GraphicsDevice.Clear(Color.Green);
+
+            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.None;
+            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            Skybox.Draw(Camera.Main); // TODO move it for every camera
+            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+
             base.Draw(gameTime);
 
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -127,12 +144,12 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
+
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
-
             }
             Gizmos.ClearOrders();
 
@@ -180,4 +197,5 @@ namespace BRS {
             _spriteBatch.End();
         }
     }
+
 }

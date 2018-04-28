@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
+
 
     /// <summary>
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
@@ -39,14 +40,17 @@ namespace BRS.Engine {
 
         // ---------- CALLBACKS ----------
         public void Awake() {
-            foreach (IComponent c in components)  c.Awake();
+            foreach (IComponent c in components) c.Awake();
         }
         public void Start() {
-            foreach (IComponent c in components)  c.Start();
+            foreach (IComponent c in components) c.Start();
+        }
+        public void Reset() {
+            foreach (IComponent c in components) c.Reset();
         }
 
         public void Update() {
-            if (active)  foreach (IComponent c in components)  c.Update();
+            if (active) foreach (IComponent c in components) c.Update();
         }
         public void LateUpdate() {
             if (active) foreach (IComponent c in components) c.LateUpdate();
@@ -61,12 +65,14 @@ namespace BRS.Engine {
                 if (Model != null && active) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
+
+                foreach (IComponent c in components) c.Draw3D(cam);
             }
         }
 
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
-                foreach (IComponent c in components) c.Draw(i);
+                foreach (IComponent c in components) c.Draw2D(i);
             }
         }
 
@@ -143,12 +149,12 @@ namespace BRS.Engine {
         }
 
         public static void Destroy(GameObject o) {
-            if (o == null)  return;
+            if (o == null) return;
             o.active = false;
             //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
             allGameObjects.Remove(o);
             //TODO free up memory
-            foreach (Component c in o.components)  c.Destroy();
+            foreach (Component c in o.components) c.Destroy();
         }
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
@@ -180,7 +186,7 @@ namespace BRS.Engine {
         public static GameObject[] FindGameObjectsWithTag(ObjectTag _tag) {
             List<GameObject> result = new List<GameObject>();
             foreach (GameObject o in allGameObjects) {
-                if (o.tag == _tag)  result.Add(o);
+                if (o.tag == _tag) result.Add(o);
             }
             if (result.Count == 0) {
                 Debug.LogError("could not find any gameobject with tag " + _tag.ToString());

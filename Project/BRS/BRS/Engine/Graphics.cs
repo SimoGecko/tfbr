@@ -40,6 +40,7 @@ namespace BRS.Engine {
 
         public static Effect texlightEffect;
         public static Effect textureEffect;
+        public static Effect skyboxEffect;
         //public static Texture2D lightMap;
         //public static Texture2D textureCol;
         //reference
@@ -47,6 +48,7 @@ namespace BRS.Engine {
         public static void Start() {
             texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
             textureEffect = File.Load<Effect>("Other/shaders/textured");
+            skyboxEffect = File.Load<Effect>("Effects/Skybox");
         }
 
 
@@ -58,7 +60,8 @@ namespace BRS.Engine {
         //GRAPHICS METHODS
         public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
             //selects which effect to use based on material
-            if (mat == null) DrawModelSimple(model, view, proj, world);
+            //if (mat == null) DrawModelSimple(model, view, proj, world);
+            if (mat == null) DrawModelWithEffect(model, view, proj, world, skyboxEffect);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
             else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world);
             else DrawModelMaterial(model, view, proj, world, mat);
@@ -119,6 +122,21 @@ namespace BRS.Engine {
                     textureEffect.Parameters["Projection"].SetValue(proj);
 
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
+                }
+                mesh.Draw();
+            }
+        }
+
+        static void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection, Effect effect)
+        {
+            foreach (ModelMesh mesh in model.Meshes)
+            {
+                foreach (ModelMeshPart part in mesh.MeshParts)
+                {
+                    part.Effect = effect;
+                    effect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    effect.Parameters["View"].SetValue(view);
+                    effect.Parameters["Projection"].SetValue(projection);
                 }
                 mesh.Draw();
             }

@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         //public
         const int countdownSize = 256;
         const int roundEndWidth = 500;
-        const int roundEndHeight = 300;
+        const int roundEndHeight = 200;
 
         //private
         Texture2D countdownTex, endroundTex;
@@ -38,15 +38,16 @@ namespace BRS.Scripts {
         public override void Start() {
             endRoundPlayerText = new int[GameManager.NumPlayers];
             countdownTex = File.Load<Texture2D>("Images/UI/countdown");
-            endroundTex = File.Load<Texture2D>("Images/UI/round_end");
+            endroundTex = File.Load<Texture2D>("Images/UI/end_round");
         }
 
         public override void Update() {
 
         }
 
-        public override void Draw(int i) {
+        public override void Draw2D(int i) {
             if (i == 0) return;
+            i--;
             if (showCountdown) {
                 Rectangle source = SpriteFromNumber(countdownNumber);
                 UserInterface.DrawPicture(countdownTex, Vector2.Zero, source, Align.Center);
@@ -62,7 +63,6 @@ namespace BRS.Scripts {
 
         // commands
         public void ShowCountDown(int i) {
-            showEndRound = false;
             if (i >= 0 && i <= 3) {
                 countdownNumber = i;
                 showCountdown = true;
@@ -76,6 +76,10 @@ namespace BRS.Scripts {
             showEndRound = true;
         }
 
+        public void ShowEndRound(bool b) {
+            showEndRound = b;
+        }
+
 
         // queries
         Rectangle SpriteFromNumber(int num) {
@@ -86,7 +90,7 @@ namespace BRS.Scripts {
         }
 
         Rectangle TextFromNumber(int num) {
-            return new Rectangle(roundEndWidth, num * roundEndHeight, roundEndWidth, roundEndHeight);
+            return new Rectangle(0, num * roundEndHeight, roundEndWidth, roundEndHeight);
         }
 
 
