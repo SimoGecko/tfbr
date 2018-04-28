@@ -363,6 +363,9 @@ namespace BRS.Engine {
                             case "ColorInside":
                                 menuObject.ColorInside = new Color(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
                                 break;
+                            case "Transparency":
+                                menuObject.transparency = int.Parse(values[0]);
+                                break;
                             case "Functions":
                                 menuObject.Functions = new List<string>();
                                 foreach (var elem in values)

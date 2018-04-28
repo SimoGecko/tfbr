@@ -132,10 +132,10 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared0", offsetWidth: 480, idAssociatePlayerScreen: 0);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: -480, idAssociatePlayerScreen: 1);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: 480, idAssociatePlayerScreen: 2);
-            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: -480, idAssociatePlayerScreen: 3);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: -480, idAssociatePlayerScreen: 2);
+            CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: 480, idAssociatePlayerScreen: 3);
 
         }
 
@@ -277,6 +277,8 @@ namespace BRS.Scripts.UI {
                         if (MS.Index != default(int)) button.Index = MS.Index;
                         if (MS.Color != default(Color)) button.ImageColor = MS.Color;
                         if (MS.ColorInside != default(Color)) button.InsideObjectColor = MS.ColorInside;
+                        if (MS.transparency != default(int))
+                            button.ImageColor.A = (byte)MS.transparency; 
                         button.IsCurrentSelection = MS.CurrentSelection;
                         button.IsClicked = MS.IsClicked;
                         button.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
@@ -393,6 +395,7 @@ namespace BRS.Scripts.UI {
             public List<string> Functions;
             public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
             public List<string> UniqueChoiceButtonWith;
+            public int transparency;
         }
     }
 }

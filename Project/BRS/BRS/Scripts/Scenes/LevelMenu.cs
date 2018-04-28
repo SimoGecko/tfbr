@@ -22,6 +22,7 @@ namespace BRS.Scripts.Scenes {
                 c.transform.eulerAngles = new Vector3(-35, 0, 0);
             }
             PostProcessingManager.Instance._effects[3].Active = true;
+            PostProcessingManager.Instance._effects[2].Active = true;
 
             CreateManagers();
 

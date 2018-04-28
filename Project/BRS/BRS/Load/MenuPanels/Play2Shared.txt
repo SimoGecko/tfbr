@@ -3,7 +3,8 @@ Texture: bigBackground
 Position: 960 500
 ScaleHeight: 0.95
 ScaleWidth: 0.4
-Color: 255 255 255
+Color: 220 220 220
+Transparency: 200
 </Button>
 
 <Button>

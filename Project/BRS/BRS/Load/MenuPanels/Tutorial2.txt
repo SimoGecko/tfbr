@@ -2,11 +2,11 @@
 NameIdentifier: Back
 Texture: buttonCircle
 TextureInside: arrowLeft
-Position: 864 793
-ScaleWidth: 1.5
-ScaleHeight: 1.5
-ScaleWidthInside: 1.5
-ScaleHeightInside: 1.5
+Position: 900 200
+ScaleWidth: 1.2
+ScaleHeight: 1.2
+ScaleWidthInside: 1.2
+ScaleHeightInside: 1.2
 Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Next Next
 NameSwitchTo: tutorial1
@@ -18,11 +18,11 @@ ColorInside: 255 255 255
 NameIdentifier: Next
 Texture: buttonCircle
 TextureInside: arrowRight
-Position: 1056 793
-ScaleWidth: 1.5
-ScaleHeight: 1.5
-ScaleWidthInside: 1.5
-ScaleHeightInside: 1.5
+Position: 1020 200
+ScaleWidth: 1.2
+ScaleHeight: 1.2
+ScaleWidthInside: 1.2
+ScaleHeightInside: 1.2
 Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Back Back
 NameSwitchTo: tutorial3

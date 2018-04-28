@@ -3,7 +3,8 @@ Texture: background
 Position: 960 540
 ScaleHeight: 0.87
 ScaleWidth: 1
-Color: 255 255 255
+Color: 220 220 220
+Transparency: 200
 </Button>
 
 <Button>
@@ -53,7 +54,7 @@ Texture: button
 Position: 1070 320
 Text: 2
 Functions: UpdateNoPlayers HighlightBorders GoDown
-NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount1 PlayerAmount4
+NeighborsUpDownLeftRight: null RoundDuration3min PlayerAmount1 PlayerAmount4
 UniqueChoiceWith: PlayerAmount1 PlayerAmount4
 IsClicked: yes
 ScaleWidth: 0.75
@@ -66,7 +67,7 @@ Texture: button
 Position: 1210 320
 Text: 4
 Functions: UpdateNoPlayers HighlightBorders GoDown
-NeighborsUpDownLeftRight: null RoundDuration2min PlayerAmount2 PlayerAmount1
+NeighborsUpDownLeftRight: null RoundDuration5min PlayerAmount2 PlayerAmount1
 UniqueChoiceWith: PlayerAmount1 PlayerAmount2
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -91,7 +92,7 @@ Texture: button
 Position: 1020 430
 Text: 3
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration2min RoundDuration5min
+NeighborsUpDownLeftRight: PlayerAmount2 ModeBombs RoundDuration2min RoundDuration5min
 UniqueChoiceWith: RoundDuration2min RoundDuration5min RoundDuration10min
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -103,7 +104,7 @@ Texture: button
 Position: 1140 430
 Text: 5
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration3min RoundDuration10min
+NeighborsUpDownLeftRight: PlayerAmount2 ModeCrates RoundDuration3min RoundDuration10min
 UniqueChoiceWith: RoundDuration2min RoundDuration3min RoundDuration10min
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -115,7 +116,7 @@ Texture: button
 Position: 1260 430
 Text: 10
 Functions: UpdateRoundDuration HighlightBorders GoDown
-NeighborsUpDownLeftRight: PlayerAmount1 ModeNormal RoundDuration5min RoundDuration2min
+NeighborsUpDownLeftRight: PlayerAmount4 ModeDynamic RoundDuration5min RoundDuration2min
 UniqueChoiceWith: RoundDuration2min RoundDuration3min RoundDuration5min
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -140,7 +141,7 @@ Texture: button
 Position: 1020 540
 Text: B
 Functions: HighlightBorders GoDown
-NeighborsUpDownLeftRight: RoundDuration2min MapA ModeNormal ModeCrates
+NeighborsUpDownLeftRight: RoundDuration3min MapA ModeNormal ModeCrates
 UniqueChoiceWith: ModeNormal ModeCrates ModeDynamic
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -152,7 +153,7 @@ Texture: button
 Position: 1140 540
 Text: C
 Functions: HighlightBorders GoDown
-NeighborsUpDownLeftRight: RoundDuration2min MapA ModeBombs ModeDynamic
+NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeDynamic
 UniqueChoiceWith: ModeNormal ModeBombs ModeDynamic
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -164,7 +165,7 @@ Texture: button
 Position: 1260 540
 Text: D
 Functions: HighlightBorders GoDown
-NeighborsUpDownLeftRight: RoundDuration2min MapA ModeCrates ModeNormal
+NeighborsUpDownLeftRight: RoundDuration10min MapB ModeCrates ModeNormal
 UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -176,7 +177,7 @@ Texture: button
 Position: 1020 650
 Text: A
 Functions: HighlightBorders GoDown
-NeighborsUpDownLeftRight: ModeNormal Next MapB MapB
+NeighborsUpDownLeftRight: ModeBombs Next MapB MapB
 UniqueChoiceWith: MapB
 IsClicked: yes
 ScaleWidth: 0.75
@@ -189,7 +190,7 @@ Texture: button
 Position: 1140 650
 Text: B
 Functions: HighlightBorders GoDown
-NeighborsUpDownLeftRight: ModeNormal Next MapA MapA
+NeighborsUpDownLeftRight: ModeCrates Next MapA MapA
 UniqueChoiceWith: MapA
 ScaleWidth: 0.75
 ScaleHeight: 0.75
