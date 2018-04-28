@@ -73,6 +73,9 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Material = new Jitter.Dynamics.Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
+            StartPosition = RigidBody.Position;
+            StartOrientation = RigidBody.Orientation;
+
             PhysicsManager.Instance.World.AddBody(RigidBody);
         }
 

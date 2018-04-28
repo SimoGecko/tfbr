@@ -41,12 +41,16 @@ namespace BRS.Scripts.PlayerScripts {
         }
         public override void Update() { }
 
+        public override void Reset() {
+            Start();
+        }
+
 
         // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
-        
+
         public void Collect(Money money) {
             if (CanPickUp(money)) {
                 _carryingWeight += money.Weight;
@@ -83,7 +87,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //lose = leave on ground by attack
         public void LoseMoney() {
-            RemoveMoneyAmount(Math.Max(_carryingMoney.Count/2, 5), LosecashRadius);
+            RemoveMoneyAmount(Math.Max(_carryingMoney.Count / 2, 5), LosecashRadius);
         }
 
         public void LoseAllMoney() {
@@ -93,7 +97,7 @@ namespace BRS.Scripts.PlayerScripts {
         //general to remove
         void RemoveMoneyAmount(int amount, float radius) {
             amount = Math.Min(amount, _carryingMoney.Count);
-            for (int i = 0; i < amount; i++){
+            for (int i = 0; i < amount; i++) {
                 Money money = _carryingMoney.Pop();
                 //Spawn money somewhere
                 Spawner.Instance.SpawnMoneyAround(transform.position, radius, money.type.ToString());
@@ -112,7 +116,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool IsFull() {
-            return _carryingWeight >= _capacity-3;
+            return _carryingWeight >= _capacity - 3;
         }
 
         /*
@@ -121,10 +125,10 @@ namespace BRS.Scripts.PlayerScripts {
         }*/
 
         public float MoneyPercent { get { return (float)_carryingWeight / _capacity; } }
-        public int CarryingValue  { get { return _carryingValue; } }
+        public int CarryingValue { get { return _carryingValue; } }
         public int CarryingWeight { get { return _carryingWeight; } }
-        public int Capacity       { get { return _capacity; } }
-        public int ValueOnTop     { get { return _carryingMoney.Peek().Value; } }
+        public int Capacity { get { return _capacity; } }
+        public int ValueOnTop { get { return _carryingMoney.Peek().Value; } }
 
         // other
 

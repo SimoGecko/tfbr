@@ -47,6 +47,10 @@ namespace BRS.Scripts.Elements {
             //UpdateUI();
         }
 
+        public override void Reset() {
+            Start();
+        }
+
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
@@ -84,8 +88,9 @@ namespace BRS.Scripts.Elements {
         }
 
         public void NotifyRoundEnd() {
-            foreach(var p in TeamPlayers()) {
+            foreach (var p in TeamPlayers()) {
                 if (!PlayerInsideRange(gameObject)) {
+                    Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
@@ -98,7 +103,7 @@ namespace BRS.Scripts.Elements {
 
         // queries
         bool PlayerInsideRange(GameObject p) {
-            return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold* DeloadDistanceThreshold;
+            return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold * DeloadDistanceThreshold;
         }
 
         Player[] TeamPlayers() {
@@ -119,7 +124,7 @@ namespace BRS.Scripts.Elements {
                 OnBringBase?.Invoke();
             }
 
-            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
+            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) {
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();

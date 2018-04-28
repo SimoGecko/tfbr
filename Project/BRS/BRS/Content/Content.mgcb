@@ -7155,7 +7155,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/particles3d/CFX_T_Flame1_ABP.tga
 
-#begin Images/textures/lut_ver1.jpeg
+#begin Images/lut/lut (8).png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -7203,7 +7203,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/countdown.png
 
-#begin Images/UI/end_round.psd
+#begin Images/UI/black.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -7213,5 +7213,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Images/UI/end_round.psd
+/build:Images/UI/black.png
+
+#begin Images/UI/end_round.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/UI/end_round.png
 

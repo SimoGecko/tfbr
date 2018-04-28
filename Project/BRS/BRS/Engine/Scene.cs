@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using BRS.Engine.Physics;
 using BRS.Scripts.Managers;
 using BRS.Scripts.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine {
@@ -72,6 +73,8 @@ namespace BRS.Engine {
         public virtual void Load() { }// levels inherit and fill this
 
         public virtual int GetNumCameras() { return 1; } // override this for more than 1 player
+
+        //public List<Vector3> StartPositions; // WHY THE FUCK IS THIS HERE!!!!
 
         /*
         List<GameObject> objectsInScene = new List<GameObject>();//can create scene graph

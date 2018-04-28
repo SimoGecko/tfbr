@@ -37,7 +37,7 @@ namespace BRS.Scripts.Scenes {
             GameObject rootScene = new GameObject("manager");
             rootScene.AddComponent(new CameraController());
             rootScene.AddComponent(new ElementManager());
-            rootScene.AddComponent(new GameManager());
+            //rootScene.AddComponent(new GameManager());
             rootScene.AddComponent(new RoundManager());
             //rootScene.AddComponent(new Spawner());
             //rootScene.AddComponent(new Minimap());
