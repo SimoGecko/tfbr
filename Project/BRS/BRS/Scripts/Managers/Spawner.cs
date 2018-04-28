@@ -57,7 +57,7 @@ namespace BRS.Scripts.Managers {
         // commands
         void SpawnInitialCash() {
             for (int i = 0; i < _currentMode.CashAmount; i++) {
-                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", EvaluateStackSizeDistribution());
+                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", _currentMode.CashStackDistribution.Evaluate());
             }
         }
         void SpawnInitialGold() {
@@ -66,7 +66,7 @@ namespace BRS.Scripts.Managers {
         }
 
         public void SpawnMoneyAround(Vector3 p, float radius, string moneyType = "") { // cash, gold, diamond
-            if (moneyType == "") moneyType = Utility.EvaluateDistribution(_currentMode.MoneyDistribution);
+            if (moneyType == "") moneyType = _currentMode.MoneyDistribution.Evaluate();
             moneyType = moneyType.ToLower();
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
             SpawnMoneyAt(pos, moneyType + "Prefab", Vector3.Zero);
@@ -79,7 +79,7 @@ namespace BRS.Scripts.Managers {
         }
 
         public void SpawnMoneyFromCenter(Vector3 p, float radius, string moneyType = "") {
-            if (moneyType == "") moneyType = Utility.EvaluateDistribution(_currentMode.MoneyDistribution);
+            if (moneyType == "") moneyType = _currentMode.MoneyDistribution.Evaluate();
             p.Y = MathHelper.Max(p.Y, 0.5f);
             SpawnMoneyAt(p, moneyType + "Prefab", MyRandom.UpsideLinearVelocity() * radius);
         }
@@ -134,25 +134,22 @@ namespace BRS.Scripts.Managers {
 
         void SpawnOnePowerupAt(Vector3 position, Vector3 linearVelocity) {
             position += new Vector3(0, 2, 0);
-            GameObject newPowerup = GameObject.Instantiate(Utility.EvaluateDistribution(_currentMode.PowerupDistribution) + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity, linearVelocity);
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.PowerupDistribution.Evaluate() + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity, linearVelocity);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
         //
-        
-        
+
+
 
 
         // queries
-        int EvaluateStackSizeDistribution() {
-            return Int32.Parse(Utility.EvaluateDistribution(_currentMode.CashStackDistribution));
-        }
 
 
         // OTHER
         async void SpawnCashContinuous() {
             while (true) {
-                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", EvaluateStackSizeDistribution());
+                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", _currentMode.CashStackDistribution.Evaluate());
                 await Time.WaitForSeconds(_currentMode.TimeBetweenCashSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
             }
         }

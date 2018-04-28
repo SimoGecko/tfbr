@@ -155,6 +155,7 @@
     <Compile Include="Engine\UserInterface.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
+    <Compile Include="Engine\Utilities\Distribution.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
     <Compile Include="GamePage.xaml.cs">
