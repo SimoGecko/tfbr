@@ -17,7 +17,11 @@ namespace BRS.Scripts.Particles3D {
         ParticleSystem3D _rayParticles;
         ParticleSystem3D _starParticles;
         Random _random = new Random();
+        Color _mainColor;
 
+        public PowerUpEffect(Color color) {
+            _mainColor = new Color(color, 255);
+        }
         public override bool IsEmitting { get; set; } = true;
 
 
@@ -27,12 +31,16 @@ namespace BRS.Scripts.Particles3D {
         /// Initialization of the particle-system
         /// </summary>
         public override void Awake() {
+            Color MinColor = _mainColor;
+            MinColor.A = 0;
+            Color MaxColor = _mainColor;
+            MaxColor.A = 64;
             _rayParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "CFX3_T_RayStraight",
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(3),
+                    Duration = TimeSpan.FromSeconds(1),
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
@@ -43,8 +51,8 @@ namespace BRS.Scripts.Particles3D {
                     MinVerticalVelocity = 0.5f,
                     MaxVerticalVelocity = 1.0f,
 
-                    MinColor = new Color(255, 255, 200, 0),
-                    MaxColor = new Color(255, 255, 200, 64),
+                    MinColor = MinColor,
+                    MaxColor = MaxColor,
 
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
@@ -56,13 +64,13 @@ namespace BRS.Scripts.Particles3D {
                     MaxEndSize = 0.5f
                 }
             };
-
+            MaxColor.A = 128;
             _starParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "CFX3_T_GlowStar",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(3),
+                    Duration = TimeSpan.FromSeconds(1),
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
@@ -73,8 +81,8 @@ namespace BRS.Scripts.Particles3D {
                     MinVerticalVelocity = 0.1f,
                     MaxVerticalVelocity = 0.5f,
 
-                    MinColor = new Color(255, 255, 200, 0),
-                    MaxColor = new Color(255, 255, 200, 128),
+                    MinColor = MinColor,
+                    MaxColor = MaxColor,
 
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
