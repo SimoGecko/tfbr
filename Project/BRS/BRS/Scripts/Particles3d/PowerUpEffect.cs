@@ -41,7 +41,6 @@ namespace BRS.Scripts.Particles3D {
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
                     Duration = TimeSpan.FromSeconds(1),
-                    // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 

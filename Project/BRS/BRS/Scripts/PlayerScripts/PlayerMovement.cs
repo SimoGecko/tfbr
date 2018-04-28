@@ -46,6 +46,9 @@ namespace BRS.Scripts.PlayerScripts {
         private bool _slowdown;
         public bool SpeedPad;
 
+        // drove through oil
+        public bool OilTracks;
+
         //reference
         PlayerInventory playerInventory;
         private SteerableCollider _collider;
@@ -122,6 +125,10 @@ namespace BRS.Scripts.PlayerScripts {
 
         public void SetSlowdown(bool b) {
             _slowdown = b;
+        }
+
+        public void SetOilTracks(bool b) {
+            OilTracks = b;
         }
 
         internal void SetSpeedPad(bool b) {

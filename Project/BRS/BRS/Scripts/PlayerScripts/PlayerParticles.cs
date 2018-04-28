@@ -7,8 +7,8 @@ using BRS.Scripts.Particles3D;
 namespace BRS.Scripts.PlayerScripts {
     class PlayerParticles : Component {
 
-        private enum PlayerParticleType { Dust, Boost, Cash }
-        List<Type> _effects = new List<Type>() { typeof(Dust), typeof(Boost), typeof(Cash) };
+        private enum PlayerParticleType { Dust, Boost, Cash, Tracks }
+        List<Type> _effects = new List<Type>() { typeof(Dust), typeof(Boost), typeof(Cash), typeof(Tracks) };
         private ParticleComponent[] _particleComponents;
 
         private PlayerAttack _playerAttack;
@@ -48,6 +48,7 @@ namespace BRS.Scripts.PlayerScripts {
             _particleComponents[(int)PlayerParticleType.Dust].IsEmitting = _playerMovement.Speed > 3.0f;
             _particleComponents[(int)PlayerParticleType.Boost].IsEmitting = _playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerMovement.SpeedPad;
             _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsFull();
+            _particleComponents[(int)PlayerParticleType.Tracks].IsEmitting = _playerMovement.OilTracks;
 
             Debug.Log(_playerMovement.Speed);
             foreach (ParticleComponent pc in _particleComponents) {
