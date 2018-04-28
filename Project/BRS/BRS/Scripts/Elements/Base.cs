@@ -7,6 +7,7 @@ using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -23,6 +24,10 @@ namespace BRS.Scripts.Elements {
         private const float TimeBetweenUnloads = .03f;
         private const float MoneyPenalty = .5f; // percent
         private readonly int _baseIndex = 0;
+
+        private int _shownMoneyStacks = 0;
+        private int _bundlesPerStack = 10;
+        private float _margin = 0.05f;
 
         public System.Action OnBringBase;
 
@@ -128,6 +133,20 @@ namespace BRS.Scripts.Elements {
                 pi.DeloadOne();
                 UpdateUI();
                 await Time.WaitForSeconds(TimeBetweenUnloads);
+            }
+
+            int totalStacksToShow = TotalMoney / 1000;
+
+            while (_shownMoneyStacks < totalStacksToShow) {
+                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
+                Vector3 size = BoundingBoxHelper.CalcualteSize(newBundle.Model, transform.scale);
+
+                Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
+                Vector3 right = size.X * (_margin + _shownMoneyStacks / _bundlesPerStack) * Vector3.Right;
+
+                newBundle.transform.position = transform.position + up + right;
+
+                ++_shownMoneyStacks;
             }
         }
 

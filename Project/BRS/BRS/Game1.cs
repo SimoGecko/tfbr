@@ -59,8 +59,8 @@ namespace BRS {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = true;
-            ParticleSystem3D.Enabled = true;
+            PoliceManager.IsActive = false;
+            ParticleSystem3D.Enabled = false;
 
             base.Initialize();
         }
