@@ -127,6 +127,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject playerBase = new GameObject("base_"+i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.transform.Scale(2);
                 playerBase.transform.position = new Vector3(-5 + 10 * i, 0, 1);
                 playerBase.transform.scale = new Vector3(3, 1, 1);

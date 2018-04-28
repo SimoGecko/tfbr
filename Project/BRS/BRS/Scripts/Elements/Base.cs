@@ -17,6 +17,8 @@ namespace BRS.Scripts.Elements {
         //public
         public int TotalMoney { get; private set; }
         public Color BaseColor { get; private set; }
+        // deload done
+        public bool FullDeloadDone = false;
 
         //private
         private const float DeloadDistanceThreshold = 4f;
@@ -114,9 +116,11 @@ namespace BRS.Scripts.Elements {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
+            bool wasDeloading = false;
             if (pi.CarryingValue > 0) {
                 Audio.Play("leaving_cash_base", transform.position);
                 OnBringBase?.Invoke();
+                wasDeloading = true;
             }
 
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) { 
@@ -124,6 +128,10 @@ namespace BRS.Scripts.Elements {
                 pi.DeloadOne();
                 UpdateUI();
                 await Time.WaitForSeconds(TimeBetweenUnloads);
+            }
+            if(wasDeloading) {
+                FullDeloadDone = true;
+                Timer t = new Timer(3, () => FullDeloadDone = false);
             }
         }
 
