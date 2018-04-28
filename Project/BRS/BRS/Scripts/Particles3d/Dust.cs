@@ -32,8 +32,8 @@ namespace BRS.Scripts.Particles3D {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "smoke",
-                    MaxParticles = 10000,
-                    ParticlesPerRound = 5,
+                    MaxParticles = 1000,
+                    ParticlesPerRound = 3,
                     Duration = TimeSpan.FromSeconds(2),
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.01f,
