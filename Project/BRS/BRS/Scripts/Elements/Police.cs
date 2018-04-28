@@ -39,7 +39,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            if (following) {
+            if (GameManager.GameActive && following) {
                 bool wait = false;
 
                 while (Vector3.DistanceSquared(transform.position, waypoints[wpIndex]) < changeThreshold * changeThreshold && !wait) {

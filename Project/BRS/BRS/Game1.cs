@@ -59,8 +59,8 @@ namespace BRS {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = false;
-            ParticleSystem3D.Enabled = false;
+            PoliceManager.IsActive = true;
+            ParticleSystem3D.Enabled = true;
 
             base.Initialize();
         }
@@ -132,7 +132,7 @@ namespace BRS {
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             base.Draw(gameTime);
-            
+
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
             foreach (Camera cam in Screen.Cameras) {
@@ -149,7 +149,7 @@ namespace BRS {
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                Gizmos.DrawFull(cam);            
+                Gizmos.DrawFull(cam);
             }
             Gizmos.ClearOrders();
 

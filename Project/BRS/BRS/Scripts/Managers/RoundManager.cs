@@ -60,6 +60,7 @@ namespace BRS.Scripts.Managers {
 
             GameUI.Instance.StartMatch(roundTimer);
             GameManager.state = GameManager.State.Finished;
+
             CountDown();
         }
 
@@ -99,6 +100,7 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Playing;
             roundStarted = true;
             OnRoundStartAction?.Invoke();
+            PoliceManager.Instance.StartRound();
             new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
         }
 
