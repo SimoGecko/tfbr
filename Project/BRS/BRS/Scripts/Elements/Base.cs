@@ -90,6 +90,7 @@ namespace BRS.Scripts.Elements {
         public void NotifyRoundEnd() {
             foreach (var p in TeamPlayers()) {
                 if (!PlayerInsideRange(gameObject)) {
+                    Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);

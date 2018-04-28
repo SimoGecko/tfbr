@@ -55,6 +55,13 @@ namespace BRS.Scripts {
             }
         }
 
+        // --------------------- CUSTOM METHODS ----------------
+
+
+
+
+
+        // commands
         public void StartRound() {
             targets = ElementManager.Instance.PlayerTransforms();
             numTargets = targets.Length;
@@ -73,12 +80,6 @@ namespace BRS.Scripts {
             new Timer(startDelay, CallSpawnPolice);
         }
 
-
-
-        // --------------------- CUSTOM METHODS ----------------
-
-
-        // commands
         void SpawnNewPolice(int pathToFollow) {
             if (!IsActive)
                 return;

@@ -19,10 +19,11 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 15;
-        public const int TimeBeforePolice = 5;
+        public static int RoundTime = 150;
+        public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
+        public const int TimeBetweenRounds = 3;
 
         public Action OnRoundStartAction;
         public Action OnRoundAlmostEndAction;
@@ -40,6 +41,8 @@ namespace BRS.Scripts.Managers {
         bool calledPolice;
         bool roundEnded;
 
+        bool startingFirstTime = true;
+
         //reference
         public static RoundManager Instance;
 
@@ -48,8 +51,11 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() { // done only once at beginning
             Instance = this;
-            teamWins = new int[2];
-            roundNumber = 0;
+            if (startingFirstTime) {
+                startingFirstTime = false;
+                teamWins = new int[GameManager.NumTeams];
+                roundNumber = 0;
+            }
             RestartRound();
         }
 
@@ -57,6 +63,7 @@ namespace BRS.Scripts.Managers {
             roundTimer = new Timer(0, RoundTime, OnRoundEnd);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
+            RoundUI.instance.ShowEndRound(false);
 
             GameUI.Instance.StartMatch(roundTimer);
             GameManager.state = GameManager.State.Finished;
@@ -65,19 +72,6 @@ namespace BRS.Scripts.Managers {
         }
 
         public override void Update() {
-            /*if (started) {
-                if (roundTimer.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
-                    OnPoliceComing();
-                }
-            }*/
-            if (roundEnded) {
-                if (Input.GetKeyDown(Keys.Space)) {
-                    if (RoundNumber < NumRounds) {
-                        GameManager.RestartCustom();
-                        RestartRound();
-                    } else OnGameEnd();
-                }
-            }
         }
 
 
@@ -121,7 +115,7 @@ namespace BRS.Scripts.Managers {
             //FIND WINNER
             //reset // TODO reorganize
             for (int i=0; i<GameManager.NumPlayers; i++)
-                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Success);
+                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 
@@ -130,11 +124,25 @@ namespace BRS.Scripts.Managers {
             teamWins[Winner]++;
             BaseUI.Instance.UpdateBaseUIWins(Winner);
 
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                if(ElementManager.Instance.Player(i).TeamIndex==Winner)
+                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+            }
+
+
             //ready to restart
             OnRoundEndAction?.Invoke();
-            //new Timer(5, GameManager.RestartCustom, true);
+            new Timer(TimeBetweenRounds, ()=>TryRestartRound(), true);
         }
 
+        void TryRestartRound() {
+            if (RoundNumber < NumRounds) {
+                GameManager.RestartCustom();
+                RestartRound();
+            } else {
+                OnGameEnd();
+            }
+        }
         
 
         void OnGameEnd() {

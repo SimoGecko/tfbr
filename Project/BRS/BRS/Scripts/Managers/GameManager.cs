@@ -52,8 +52,9 @@ namespace BRS.Scripts.Managers {
         public static void RestartCustom() { // TODO refactor
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            RoundManager.Instance.Start();
+            //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
+            PoliceManager.Instance.Reset();
 
             foreach (var b in ElementManager.Instance.Bases()) b.Start();
             foreach (var p in ElementManager.Instance.Players()) p.Start();
@@ -73,7 +74,7 @@ namespace BRS.Scripts.Managers {
         // queries
         public static bool GameActive { get { return state == State.Playing; } }
         public static bool GamePaused { get { return state == State.Paused; } }
-
+        public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
 
 
         // other
