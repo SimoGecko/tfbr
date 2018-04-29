@@ -76,6 +76,7 @@ namespace BRS {
             SceneManager.Start();
             SceneManager.LoadScene("Level1");
 
+
             //start other big components
             UserInterface.Start();
             Input.Start();

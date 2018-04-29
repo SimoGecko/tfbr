@@ -26,7 +26,7 @@ namespace BRS.Engine.PostProcessing {
     class PostProcessingManager {
         public static PostProcessingManager Instance { get; private set; }
 
-        private List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
+        public List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
         private Texture2D _testGrid;

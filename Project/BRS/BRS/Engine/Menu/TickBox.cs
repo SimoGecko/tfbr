@@ -1,10 +1,13 @@
-﻿using BRS.Engine;
+﻿// (c) Nicolas Huart 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using BRS.Engine;
 using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace BRS.Menu {
+namespace BRS.Engine.Menu {
     class TickBox : Component {
         ////////// class to create and display a tickBox //////////
 
@@ -24,9 +27,9 @@ namespace BRS.Menu {
         public Rectangle Rectangle {
             get {
                 if (IsClicked)
-                    return new Rectangle((int)Position.X, (int)Position.Y, _textureClicked.Width, _textureClicked.Height);
+                    return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_textureClicked.Width / 1920f * Screen.Width), (int)(_textureClicked.Height / 1080f * Screen.Height));
                 else
-                    return new Rectangle((int)Position.X, (int)Position.Y, _textureNotClicked.Width, _textureNotClicked.Height);
+                    return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_textureNotClicked.Width / 1920f * Screen.Width), (int)(_textureNotClicked.Height / 1080f * Screen.Height));
             }
         }
 
@@ -56,15 +59,17 @@ namespace BRS.Menu {
 
         // --------------------- CUSTOM METHODS ----------------
         public override void Draw2D(int i) {
-            var colour = Color.White;
+            if (Active && i == 0) {
+                var colour = Color.White;
 
-            if (_isHovering)
-                colour = Color.Gray;
+                if (_isHovering)
+                    colour = Color.Gray;
 
-            if (IsClicked)
-                UserInterface.DrawPicture(_textureClicked, Rectangle, col: colour);
-            else
-                UserInterface.DrawPicture(_textureNotClicked, Rectangle, col: colour);
+                if (IsClicked)
+                    UserInterface.DrawPicture(_textureClicked, Rectangle, col: colour);
+                else
+                    UserInterface.DrawPicture(_textureNotClicked, Rectangle, col: colour);
+            }
         }
     }
 }
