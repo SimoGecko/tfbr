@@ -37,8 +37,6 @@ namespace BRS.Scripts.Managers {
         public string NamePlayerInfosToChange;
         public string panelPlay2NameOption = "play2Shared"; // = "play2_"; // "play2Shared" or "play2_"
 
-        int count = 0;
-
         Color[] colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
         int idColor = 0;
         Color defaultColorModel = new Color(215, 173, 35);
@@ -46,7 +44,6 @@ namespace BRS.Scripts.Managers {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-
 
             if (ScenesCommunicationManager.loadOnlyPauseMenu)
                 LoadPauseMenu();
@@ -67,7 +64,6 @@ namespace BRS.Scripts.Managers {
             _currentMenu = MenuRect["pause"];
             _currentMenuName = "pause";
             Menu.Instance.BuildPausePanel();
-            //MenuRect["pause"].active = false;
         }
 
         public void LoadContent() {
@@ -75,7 +71,7 @@ namespace BRS.Scripts.Managers {
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
-            string[] namePanels = { "main", "play1", /*"play2_0",*/ "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
+            string[] namePanels = { "main", "play1", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
@@ -87,15 +83,15 @@ namespace BRS.Scripts.Managers {
 
             NamePlayerInfosToChange = "player_0";
 
-            modelCharacter = new List<Model>();
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/forklift"));
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/sweeper"));
-            modelCharacter.Add(File.Load<Model>("Models/vehicles/bulldozer"));
+            modelCharacter = new List<Model> {
+                File.Load<Model>("Models/vehicles/forklift"),
+                File.Load<Model>("Models/vehicles/sweeper"),
+                File.Load<Model>("Models/vehicles/bulldozer")
+            };
 
         }
 
         public override void Update() {
-
             uniqueMenuSwitchUsed = false;
             for (int i = 0; i < uniqueFrameInputUsed.Length; ++i)
                 uniqueFrameInputUsed[i] = false;
@@ -141,7 +137,6 @@ namespace BRS.Scripts.Managers {
             Button button = (Button)sender;
 
             if (!uniqueMenuSwitchUsed) {
-
                 if (_currentMenu != null)
                     _currentMenu.active = false;
                 if (_currentMenuName == "play2Shared0") {
@@ -151,26 +146,18 @@ namespace BRS.Scripts.Managers {
                     MenuRect["play2Shared3"].active = false;
                 }
 
-
                 if (button.NameMenuToSwitchTo != "play2Shared") {
                     _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                     _currentMenuName = button.NameMenuToSwitchTo;
                     _currentMenu.active = true;
                 }
                 else {
-                    /*if (panelPlay2NameOption == "play2_") {
-                        string newMenu = button.NameMenuToSwitchTo + "0";
-                        _currentMenu = MenuRect[newMenu];
-                        _currentMenuName = newMenu;
-                        _currentMenu.active = true;
-                    }
-                    else*/ //if (panelPlay2NameOption == "play2Shared") {
-                        ++count;
-                        _currentMenuName = button.NameMenuToSwitchTo + "0";
-                        _currentMenu = MenuRect[_currentMenuName];
-                        MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
-                        if (GameManager.NumPlayers == 2) MenuRect[button.NameMenuToSwitchTo + "1"].active = true;
-                    //}
+                    _currentMenuName = button.NameMenuToSwitchTo + "0";
+                    _currentMenu = MenuRect[_currentMenuName];
+
+                    MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
+                    if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
+                        MenuRect[button.NameMenuToSwitchTo + "1"].active = true;
                 }
                 uniqueMenuSwitchUsed = true;
             }
@@ -191,13 +178,6 @@ namespace BRS.Scripts.Managers {
             GameManager.NumPlayers = Int32.Parse(button.Text);
         }
 
-        public void StartGameFunction(object sender, EventArgs e) {
-            ScenesCommunicationManager.loadOnlyPauseMenu = true;
-            GameManager.state = GameManager.State.Playing;
-            SceneManager.LoadGame = true;
-            //SceneManager.LoadScene("Level1");
-        }
-
         public void StartGamePlayersReady(object sender, EventArgs e) {
             Button button = (Button)sender;
             bool allPlayersReady = false;
@@ -209,8 +189,6 @@ namespace BRS.Scripts.Managers {
             }
             else if (GameManager.NumPlayers == 4) {
                 if (button.indexAssociatedPlayerScreen == 0 || button.indexAssociatedPlayerScreen == 1) {
-                    // TODO: Desactivate panel shared0 and 1 and activate panel shared2 and 3
-                    //if (!uniqueMenuSwitchUsed) {
                     if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
                         MenuRect[panelPlay2NameOption + "0"].active = false;
                         MenuRect[panelPlay2NameOption + "1"].active = false;
@@ -229,17 +207,16 @@ namespace BRS.Scripts.Managers {
             if (allPlayersReady) {
                 PostProcessingManager.Instance._effects[2].Active = false;
                 PostProcessingManager.Instance._effects[3].Active = false;
+
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
                 GameManager.state = GameManager.State.Playing;
                 SceneManager.LoadGame = true;
-                //SceneManager.LoadScene("Level1");
             }
         }
 
         public void LoadMenuFunction(object sender, EventArgs e) {
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
-            //SceneManager.LoadScene("LevelMenu");
         }
 
         public void SetMode(object sender, EventArgs e) {
@@ -274,14 +251,14 @@ namespace BRS.Scripts.Managers {
 
             if (!uniqueMenuSwitchUsed) {
                 foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                    if (elem is Button textBox) {
-                        if (textBox.nameIdentifier == "NamePlayer") {
+                    if (elem is Button bu) {
+                        if (bu.nameIdentifier == "NamePlayer") {
                             if (button.Text == "del") {
-                                if (textBox.Text.Length > 0)
-                                    textBox.Text = textBox.Text.Substring(0, textBox.Text.Length - 1);
+                                if (bu.Text.Length > 0)
+                                    bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
                             }
                             else
-                                textBox.Text += button.Text;
+                                bu.Text += button.Text;
                         }
                     }
                 }
@@ -302,7 +279,6 @@ namespace BRS.Scripts.Managers {
                 screenSplitIndex.Add("1");
             }
             else if (GameManager.NumPlayers == 4) {
-                //panelPlay2NameOption = "play2_";
                 panelPlay2NameOption = "play2Shared";
                 screenSplitIndex.Add("0");
                 screenSplitIndex.Add("1");
