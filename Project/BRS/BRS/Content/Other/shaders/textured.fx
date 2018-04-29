@@ -11,6 +11,7 @@
 float4x4 World;
 float4x4 View;
 float4x4 Projection;
+bool IsTransparent = false;
 
 texture ColorTexture;
 sampler2D textureSampler1 = sampler_state {
@@ -52,11 +53,12 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 {
  
     float4 textureColor = tex2D(textureSampler1, input.UV0);
-    textureColor.a = 1;
 
+	if (!IsTransparent) {
+		textureColor.a = 1;
+	}
  
- 	//return textureColor;
- 	return textureColor;
+	return textureColor;
 }
 
 technique TexturedLight

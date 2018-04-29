@@ -63,7 +63,7 @@ namespace BRS.Engine {
             //if (mat == null) DrawModelSimple(model, view, proj, world);
             if (mat == null) DrawModelWithEffect(model, view, proj, world, skyboxEffect);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
-            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world);
+            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
 
@@ -113,7 +113,7 @@ namespace BRS.Engine {
                 mesh.Draw();
             }
         }
-        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world) {
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     part.Effect = textureEffect;
@@ -122,6 +122,7 @@ namespace BRS.Engine {
                     textureEffect.Parameters["Projection"].SetValue(proj);
 
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
+                    textureEffect.Parameters["IsTransparent"].SetValue(isTransparent);
                 }
                 mesh.Draw();
             }
