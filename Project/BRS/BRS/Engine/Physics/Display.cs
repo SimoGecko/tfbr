@@ -124,7 +124,9 @@ namespace BRS.Engine.Physics {
 
             _displayText[8 + entries] = "------------------------------";
             _displayText[9 + entries] = "Total Physics Time: " + total.ToString("0.00");
-            _displayText[10 + entries] = "Physics Framerate: " + (1000.0d / total).ToString("0") + " fps";
+
+            float frameRate = (float)(1000.0d / total);
+            _displayText[10 + entries] = "Physics Framerate: " + (float.IsInfinity(frameRate) ? "-" : frameRate.ToString("0")) + " fps";
         }
 
         public override void Draw(GameTime gameTime) {
@@ -144,7 +146,7 @@ namespace BRS.Engine.Physics {
 
             for (int i = 0; i < _displayText.Count; i++) {
                 if (!string.IsNullOrEmpty(_displayText[i])) {
-                    _spriteBatch.DrawString(_font2, _displayText[i], new Vector2(11, PaddingTop + 40 + i * 20), Color.White);
+                    _spriteBatch.DrawString(_font2, _displayText[i], new Vector2(11, PaddingTop + 40 + i * 20), Color.Black);
                 }
             }
 

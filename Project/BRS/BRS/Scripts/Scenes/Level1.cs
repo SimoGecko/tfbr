@@ -54,9 +54,9 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
-            for(int i=0; i<GameManager.NumPlayers; i++) {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 int offset = i > 1 ? 3 : 0;
-                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+                StartPositions.Add(new Vector3(-5 + 10 * i + offset, 0, 10));
             }
             /*
             if (GameManager.NumPlayers == 2) {
@@ -148,16 +148,40 @@ namespace BRS.Scripts.Scenes {
         void CreateBases() {
             for (int i = 0; i < 2; i++) {
                 //TODO base object
-                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
+                Texture2D texture = File.Load<Texture2D>("Images/textures/base");
+                Texture2D colored = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
+
+                Color[] data = new Color[texture.Width * texture.Height];
+                texture.GetData(data);
+
+                // You now have a packed array of Colors. 
+                // So, change the 3rd pixel from the right which is the 4th pixel from the top do:
+                for (int j = 0; j < data.Length; ++j) {
+                    if (data[j].A > 0) {
+                    
+                    data[j].R = i == 0 ? Graphics.Red.R : Graphics.Blue.R;
+                    data[j].G = i == 0 ? Graphics.Red.G : Graphics.Blue.G;
+                    data[j].B = i == 0 ? Graphics.Red.B : Graphics.Blue.B;
+                    }
+                }
+
+                // Once you have finished changing data, set it back to the texture:
+
+                colored.SetData(data);
+
+
+
+
+                Material baseMaterial = new Material(colored);
+
+                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/plane"));
                 playerBase.tag = ObjectTag.Base;
+                playerBase.transform.Scale(0.5f);
+                playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
+                //playerBase.transform.scale = new Vector3(1, 1, 1);
+                playerBase.material = baseMaterial;
                 playerBase.AddComponent(new Base(i));
-                playerBase.transform.Scale(2);
-                playerBase.transform.position = StartPositions[i];
-                playerBase.transform.scale = new Vector3(3, 1, 1);
-                playerBase.transform.SetStatic();
-                //playerBase.AddComponent(new BoxCollider(playerBase));
-                playerBase.AddComponent(new StaticRigidBody(pureCollider: true));
-                playerBase.transform.SetStatic();
+                playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
 
