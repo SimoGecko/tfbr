@@ -1,0 +1,15 @@
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 864 793
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: SwitchToMenu
+NameSwitchTo: main
+Color: 250 139 139
+ColorInside: 255 255 255
+CurrentSelection: yes
+</Button>

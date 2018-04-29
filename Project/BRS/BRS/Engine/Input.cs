@@ -28,6 +28,7 @@ namespace BRS.Engine {
         }
 
         public static void Update() {
+
             _oldKstate = _kState;
             _oldMstate = _mState;
 
