@@ -265,53 +265,6 @@ namespace BRS.Scripts.Managers {
             }
         }
 
-        public void UpdatePlayersChangeTo(object sender, EventArgs e) {
-            Button button = (Button)sender;
-
-            List<string> screenSplitIndex = new List<string>();
-            if (GameManager.NumPlayers == 1) {
-                panelPlay2NameOption = "play2Shared";
-                screenSplitIndex.Add("0");
-            }
-            else if (GameManager.NumPlayers == 2) {
-                panelPlay2NameOption = "play2Shared";
-                screenSplitIndex.Add("0");
-                screenSplitIndex.Add("1");
-            }
-            else if (GameManager.NumPlayers == 4) {
-                panelPlay2NameOption = "play2Shared";
-                screenSplitIndex.Add("0");
-                screenSplitIndex.Add("1");
-            }
-            else
-                Debug.Log("Wrong number of players were set");
-
-
-            foreach (string idSplitScreen in screenSplitIndex) {
-                if (GameManager.NumPlayers == 2) {
-                    /*Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen).Active = false;
-                    Menu.Instance.FindMenuComponentinPanelWithName("Player4", panelPlay2NameOption + idSplitScreen).Active = false;
-
-                    Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", panelPlay2NameOption + idSplitScreen);
-                    Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", panelPlay2NameOption + idSplitScreen);
-                    bu1.NeighborLeft = bu2;
-                    bu2.NeighborRight = bu1;*/
-                }
-                else if (GameManager.NumPlayers == 4) {
-                    /*Button bu3 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player3", panelPlay2NameOption + idSplitScreen);
-                    bu3.Active = true;
-                    Button bu4 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player4", panelPlay2NameOption + idSplitScreen);
-                    bu4.Active = true;
-
-                    Button bu1 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player1", panelPlay2NameOption + idSplitScreen);
-                    Button bu2 = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Player2", panelPlay2NameOption + idSplitScreen);
-                    bu1.NeighborLeft = bu4;
-                    bu2.NeighborRight = bu3;*/
-                }
-            }
-            
-        }
-
         public void ChangeNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
