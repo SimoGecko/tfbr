@@ -27,10 +27,6 @@ namespace BRS.Scripts.PlayerScripts {
 
                 PlayerParticleType ppt = (PlayerParticleType) Enum.Parse(typeof(PlayerParticleType), type.Name);
                 _particleComponents[(int)ppt] = pc;
-
-                //if (pc is Dust) _dust = pc as Dust;
-                //if (pc is Boost) _boost = pc as Boost;
-                //if (pc is Cash) _cash = pc as Cash;
             }
         }
 
@@ -49,9 +45,7 @@ namespace BRS.Scripts.PlayerScripts {
             _particleComponents[(int)PlayerParticleType.Boost].IsEmitting = _playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerMovement.SpeedPad;
             _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsFull();
 
-            Debug.Log(_playerMovement.Speed);
             foreach (ParticleComponent pc in _particleComponents) {
-                //Debug.Log(pc.GetType().Name + ": " + pc.IsEmitting);
                 pc.Update();
             }
         }

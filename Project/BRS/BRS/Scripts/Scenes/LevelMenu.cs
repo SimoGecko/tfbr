@@ -21,8 +21,11 @@ namespace BRS.Scripts.Scenes {
                 c.transform.position = new Vector3(0, 10, 12);
                 c.transform.eulerAngles = new Vector3(-35, 0, 0);
             }
-            PostProcessingManager.Instance._effects[3].Active = true;
-            PostProcessingManager.Instance._effects[2].Active = true;
+
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance._effects[2].Activate(i, true);
+                PostProcessingManager.Instance._effects[3].Activate(i, true);
+            }
 
             CreateManagers();
 

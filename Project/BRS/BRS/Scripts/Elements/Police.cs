@@ -13,21 +13,25 @@ namespace BRS.Scripts {
     /// <summary>
     /// Records a player position and then follows it smoothly
     /// </summary>
-    class Police : Component {
+    class Police : Component, IDamageable {
 
         // --------------------- VARIABLES ---------------------
+        enum State { Chasing, Stun }
+        State state;
 
         //public
         const float speed = 4f;
         const float changeThreshold = .8f;
         const float turnSmoothTime = .2f;
         const float bustRadius = .5f;
+        const float stunTime = 2f;
+
 
         //private
         bool following;
         int wpIndex;
         float angleRefVelocity;
-
+        float endStunTime;
 
         //reference
         List<Vector3> waypoints;
@@ -35,11 +39,11 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-
+            state = State.Chasing;
         }
 
         public override void Update() {
-            if (following) {
+            if (GameManager.GameActive && following && state == State.Chasing) {
                 bool wait = false;
 
                 while (Vector3.DistanceSquared(transform.position, waypoints[wpIndex]) < changeThreshold * changeThreshold && !wait) {
@@ -70,6 +74,10 @@ namespace BRS.Scripts {
 
             }
 
+            if(state == State.Stun && Time.CurrentTime > endStunTime) {
+                state = State.Chasing;
+            }
+
             //CheckCollision();
         }
 
@@ -77,7 +85,8 @@ namespace BRS.Scripts {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
-                p.TakeDamage(20);
+                if(!p.IsAttacking() && state==State.Chasing)
+                    p.TakeDamage(20);
             }
         }
 
@@ -102,7 +111,12 @@ namespace BRS.Scripts {
             transform.position = waypoints[0];
         }
 
-        
+        public void TakeDamage(float damage) {
+            state = State.Stun;
+            endStunTime = Time.CurrentTime + stunTime;
+        }
+
+
 
 
 
@@ -111,7 +125,7 @@ namespace BRS.Scripts {
 
 
         // other
-        
+
 
     }
 }

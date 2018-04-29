@@ -11,7 +11,6 @@ using System;
 namespace BRS {
 
     public class Game1 : Game {
-
         //default - don't touch
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -22,14 +21,6 @@ namespace BRS {
         RenderTarget2D _ZBuffer;
         Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
-
-        Skybox skybox;
-        Matrix world = Matrix.Identity;
-        Matrix view = Matrix.CreateLookAt(new Vector3(20, 0, 0), new Vector3(0, 0, 0), Vector3.UnitY);
-        Matrix projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(45), 800f / 600f, 0.1f, 100f);
-        Vector3 cameraPosition;
-        float angle = 0;
-        float distance = 20;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -68,8 +59,8 @@ namespace BRS {
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
             // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = false;
-            ParticleSystem3D.Enabled = false;
+            PoliceManager.IsActive = true;
+            ParticleSystem3D.Enabled = true;
 
             base.Initialize();
         }
@@ -83,7 +74,7 @@ namespace BRS {
             //load prefabs and scene
             Prefabs.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("Level1");
 
 
             //start other big components
@@ -97,7 +88,7 @@ namespace BRS {
             _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
 
             // add skybox
-            skybox = new Skybox("images/skyboxes/Skybox", Content);
+            Skybox.Start();
 
         }
 
@@ -126,12 +117,7 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update(gameTime);
-
-            // Update skybox
-            //angle += 0.002f;
-            //cameraPosition = distance * new Vector3((float)Math.Sin(angle), 0, (float)Math.Cos(angle));
-           // view = Matrix.CreateLookAt(cameraPosition, new Vector3(0, 0, 0), Vector3.UnitY);
+            PostProcessingManager.Instance.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -143,14 +129,13 @@ namespace BRS {
             RasterizerState rasterizerState = new RasterizerState();
             rasterizerState.CullMode = CullMode.None;
             _graphics.GraphicsDevice.RasterizerState = rasterizerState;
-            skybox.Draw(view, projection, cameraPosition);
+            Skybox.Draw(Camera.Main); // TODO move it for every camera
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             base.Draw(gameTime);
-            
+
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -160,12 +145,12 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
+
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);
                 GraphicsDevice.RasterizerState = Screen._fullRasterizer;
                 Gizmos.DrawFull(cam);
-
             }
             Gizmos.ClearOrders();
 

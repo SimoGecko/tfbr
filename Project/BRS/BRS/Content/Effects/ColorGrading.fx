@@ -4,6 +4,8 @@
 
 float Size = 16;
 float SizeRoot = 4;
+float4 active; 
+float players;
 
 //Texture2D InputTexture;
 texture ScreenTexture;
@@ -34,6 +36,21 @@ Texture2D LUT;
 
 float4 PixelShaderApplyLUT(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 textureCoordinate : TEXCOORD0) : COLOR0
 {
+	
+	float4 color = tex2D(TextureSampler, textureCoordinate.xy);
+	// check if the shader needs to be applied to this part of the screen
+	if(active.x == 0 && textureCoordinate.x < 0.5 && textureCoordinate.y < 0.5) {
+			return color;
+	}
+	if(active.y == 0 && textureCoordinate.x >= 0.5 && textureCoordinate.y < 0.5) {
+			return color;
+	}
+	if(active.z == 0 && textureCoordinate.x < 0.5 && textureCoordinate.y >= 0.5) {
+			return color;
+	}
+	if(active.w == 0 && textureCoordinate.x >= 0.5 && textureCoordinate.y >= 0.5) {
+			return color;
+	}
 	
 	//Our input
 	//float4 baseTexture = InputTexture.Load(int3(input.Position.xy, 0));

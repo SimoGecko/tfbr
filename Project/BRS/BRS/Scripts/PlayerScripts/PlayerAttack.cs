@@ -53,6 +53,11 @@ namespace BRS.Scripts.PlayerScripts {
                 Player p = c.GameObject.GetComponent<Player>();
                 DealWithAttack(p);
             }
+            bool isPolice = c.GameObject.tag == ObjectTag.Police;
+            if (isPolice && _attacking) {
+                IDamageable dam = c.GameObject.GetComponent<IDamageable>();
+                dam.TakeDamage(1);
+            }
         }
 
 

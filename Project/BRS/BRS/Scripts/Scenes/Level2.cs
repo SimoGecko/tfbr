@@ -19,12 +19,12 @@ namespace BRS.Scripts.Scenes {
 
         public override void Load() {
             foreach (Camera c in Screen.Cameras) {
-                c.transform.position = new Vector3(0, 20, 20);
-                c.transform.eulerAngles = new Vector3(-35, 0, 0);
+                c.transform.position = new Vector3(0, 2, 8);
+                c.transform.eulerAngles = new Vector3(0, 0, 0);
             }
             //SampleCylinders();
-            MenuScene();
-            //PlayerModels();
+            //MenuScene();
+            PlayerModels();
         }
 
         void SampleCylinders() {
@@ -55,8 +55,8 @@ namespace BRS.Scripts.Scenes {
 
         void PlayerModels() {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
-            GameObject forklift = new GameObject("forklift", File.Load<Model>("Models/vehicles/bulldozer"));
-            forklift.transform.eulerAngles = new Vector3(0, 180 + 45, 0);
+            GameObject forklift = new GameObject("forklift", File.Load<Model>("Models/vehicles/sweeper"));
+            forklift.transform.eulerAngles = new Vector3(0, 180 + 90, 0);
             forklift.material = playerMat;
         }
 

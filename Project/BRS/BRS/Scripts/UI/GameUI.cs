@@ -18,6 +18,7 @@ namespace BRS.Scripts.UI {
 
         //private
         private Texture2D _policeCar, _policeLight;
+        private Texture2D blackTex;
 
         private Timer _roundtime;
         private bool _showWinner;
@@ -35,6 +36,7 @@ namespace BRS.Scripts.UI {
         public override void Start() {
             _policeCar = File.Load<Texture2D>("Images/UI/policeCar");
             _policeLight = File.Load<Texture2D>("Images/UI/policeCar_lights");
+            blackTex = File.Load<Texture2D>("Images/UI/black");
             _showWinner = _showPolice = false;
         }
 
@@ -49,10 +51,14 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) {
-            if (index == 0) return;
+            if (index == 0) {
+                //draw vertical center line
+                UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 4, 2000), null, Align.Right, Align.Center);
+                return;
+            }
             index--;
 
-            string roundString = "round " + GameManager.RoundNumber + "/" + GameManager.NumRounds;
+            string roundString = "round " + RoundManager.RoundNumber + "/" + RoundManager.NumRounds;
             UserInterface.DrawString(roundString, new Rectangle(-20, 140, 100, 25), Align.TopRight, Align.TopRight, Align.Center, scale:.7f);
 
             //police bar

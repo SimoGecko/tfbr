@@ -210,8 +210,10 @@ namespace BRS.Scripts.Managers {
             }
 
             if (allPlayersReady) {
-                PostProcessingManager.Instance._effects[2].Active = false;
-                PostProcessingManager.Instance._effects[3].Active = false;
+                for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                    PostProcessingManager.Instance._effects[2].Activate(i, false);
+                    PostProcessingManager.Instance._effects[3].Activate(i, false);
+                }
 
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
                 GameManager.state = GameManager.State.Playing;
