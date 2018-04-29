@@ -1,0 +1,68 @@
+<Button>
+Texture: background
+Position: 960 540
+ScaleHeight: 0.87
+ScaleWidth: 0.87
+Color: 220 220 220
+Transparency: 200
+</Button>
+
+<Button>
+Texture: title
+Position: 960 162
+Text: Rankings
+Color: 148 148 148
+ColorInside: 255 255 255
+</Button>
+
+
+<Button>
+NameIdentifier: Ranking2min
+Texture: button
+Position: 768 324
+Text: 2 min
+Index: 0
+Functions: SwitchRankingDisplay HighlightBorders
+NeighborsUpDownLeftRight: null Back Ranking5min Ranking3min
+CurrentSelection: yes
+UniqueChoiceWith: Ranking3min Ranking5min
+IsClicked: yes
+</Button>
+
+<Button>
+NameIdentifier: Ranking3min
+Texture: button
+Position: 960 324
+Text: 3 min
+Index: 1
+Functions: SwitchRankingDisplay HighlightBorders
+NeighborsUpDownLeftRight: null Back Ranking2min Ranking5min
+UniqueChoiceWith: Ranking2min Ranking5min
+</Button>
+
+<Button>
+NameIdentifier: Ranking5min 
+Texture: button
+Position: 1152 324
+Text: 5 min
+Index: 2
+Functions: SwitchRankingDisplay HighlightBorders
+NeighborsUpDownLeftRight: null Back Ranking3min Ranking2min
+UniqueChoiceWith: Ranking2min Ranking3min
+</Button>
+
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 864 793
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: SwitchToMenu
+NeighborsUpDownLeftRight: Ranking2min null null null
+NameSwitchTo: main
+Color: 250 139 139
+ColorInside: 255 255 255
+</Button>

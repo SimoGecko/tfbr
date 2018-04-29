@@ -3,7 +3,6 @@
 
 using System;
 using BRS.Engine.Utilities;
-using BRS.Menu;
 using BRS.Scripts;
 using BRS.Scripts.UI;
 using BRS.Scripts.Managers;
@@ -31,6 +30,8 @@ namespace BRS.Engine {
         public static SpriteFont arialFont { get; private set; }
         public static SpriteFont comicFont { get; private set; }
         public static SpriteFont archerFont   { get; private set; }
+        public static SpriteFont menuFont { get; private set; }
+        public static SpriteFont menuHoveringFont { get; private set; }
 
         private static Texture2D barStriped;
 
@@ -44,6 +45,8 @@ namespace BRS.Engine {
             arialFont = File.Load<SpriteFont>("Other/font/debugFont");
             comicFont = File.Load<SpriteFont>("Other/font/comic");
             archerFont   = File.Load<SpriteFont>("Other/font/archer");
+            menuFont = File.Load<SpriteFont>("Other/font/menu");
+            menuHoveringFont = File.Load<SpriteFont>("Other/font/menuHovering");
 
             barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
 
@@ -101,27 +104,27 @@ namespace BRS.Engine {
         }
 
         //Rotation not supported
-        public static void DrawString(string text, Vector2 pos, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale = 1, bool bold = false) { // bounds includes position offset and rectangle size
-            SpriteFont font = bold ? archerFont : comicFont;
+        public static void DrawString(string text, Vector2 pos, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale = 1, bool bold = false, SpriteFont font = null, float rot = 0) { // bounds includes position offset and rectangle size
+            if (font == null ) font = bold ? archerFont : comicFont;
             Rectangle dest = new Rectangle(pos.ToPoint(), (font.MeasureString(text) * scale).ToPoint());
-            DrawString(text, dest, anchor, pivot, paragraph, col, flip, scale, bold);
+            DrawString(text, dest, anchor, pivot, paragraph, col, flip, scale, bold, font, rot);
         }
 
-        public static void DrawString(string text, Rectangle dst, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale=1, bool bold = false) { // bounds includes position offset and rectangle size
+        public static void DrawString(string text, Rectangle dst, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale=1, bool bold = false, SpriteFont font = null, float rot = 0) { // bounds includes position offset and rectangle size
             if (pivot == Align.Undef) pivot = anchor;
             if (paragraph == Align.Undef) paragraph = anchor;
             if (flip) {
                 dst.X *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
             }
-            SpriteFont font = bold ? archerFont : comicFont;
+            if (font == null) font = bold ? archerFont : comicFont;
             Rectangle src = new Rectangle(Point.Zero, (font.MeasureString(text)*scale).ToPoint());
             Rectangle diff = new Rectangle(Point.Zero,  dst.Size - src.Size);
 
             Vector2 origin = PivotPoint(pivot, src).ToVector2();
             dst.Location += AnchorPos(anchor) - PivotPoint(pivot, dst) + PivotPoint(paragraph, diff);//required bc pivot isn't used in call code
 
-            sB.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), 0, Vector2.Zero, scale, SpriteEffects.None, 1);
+            sB.DrawString(font, text, dst.Location.ToVector2(), (col ?? Color.White), MathHelper.ToRadians(rot), Vector2.Zero, scale, SpriteEffects.None, 1);
         }
 
         public static Rectangle AlignRect(Align anchor, Align pivot, Rectangle rect) {
