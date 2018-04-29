@@ -128,6 +128,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
+                player.AddComponent(new DynamicShadow());
 
                 // Nico: Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)

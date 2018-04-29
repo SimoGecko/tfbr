@@ -19,7 +19,7 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// <summary>
         /// Rigid body for the game-object which is used in the physics simulation
         /// </summary>
-        public RigidBody RigidBody;
+        public Collider RigidBody;
 
         /// <summary>
         /// Type of the bounding-shape
@@ -67,8 +67,25 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// </summary>
         protected JVector CenterOfMass;
 
+        /// <summary>
+        /// Stores the start position in the scene of the rigid body
+        /// </summary>
         protected JVector StartPosition;
+
+        /// <summary>
+        /// Stores the start orientation/rotation in the scene of the rigid body
+        /// </summary>
         protected JMatrix StartOrientation;
+
+        /// <summary>
+        /// Stores the objects to sync the position and orientation
+        /// </summary>
+        protected GameObject SyncedObject = null;
+
+        /// <summary>
+        /// Stores the offset of the synced object
+        /// </summary>
+        protected Vector3 SyncedOffset = Vector3.Zero;
 
         #endregion
 
@@ -90,6 +107,8 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = Tag,
                 PureCollider = PureCollider,
                 GameObject = gameObject,
+                SyncedObject = SyncedObject,
+                SyncedOffset = SyncedOffset,
                 Material = new Jitter.Dynamics.Material { KineticFriction = 10.0f, Restitution = 0.0f, StaticFriction = 10.0f },
                 Mass = 20.0f
             };
@@ -162,6 +181,13 @@ namespace BRS.Engine.Physics.RigidBodies {
                 case ShapeType.BoxInvisible:
                     CollisionShape = new BoxShape(bbSize);
                     break;
+            }
+        }
+
+        public void SetSyncedObject(GameObject synced, Vector3 offset) {
+            if (RigidBody != null) {
+                RigidBody.SyncedObject = synced;
+                RigidBody.SyncedOffset = offset;
             }
         }
     }

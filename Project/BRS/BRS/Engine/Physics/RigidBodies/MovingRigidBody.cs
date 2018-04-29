@@ -29,8 +29,9 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// <param name="isActive">Active in physical simulation</param>
         /// <param name="shapeType">Type of the collider-shape</param>
         /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
-        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false)
-            : this(new Vector3(size), isActive, shapeType, pureCollider) {
+        /// <param name="synchedObject">The object which it's location and orientation is syned</param>
+        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, GameObject synchedObject = null)
+            : this(new Vector3(size), isActive, shapeType, pureCollider, synchedObject) {
         }
 
 
@@ -41,7 +42,8 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// <param name="isActive">Active in physical simulation</param>
         /// <param name="shapeType">Type of the collider-shape</param>
         /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
-        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false) {
+        /// <param name="synchedObject">The object which it's location and orientation is syned</param>
+        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, GameObject synchedObject = null) {
             IsStatic = false;
             IsAnimated = false;
             IsActive = isActive;
@@ -49,6 +51,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
             Size = Conversion.ToJitterVector(size);
+            SyncedObject = synchedObject;
         }
 
         #endregion

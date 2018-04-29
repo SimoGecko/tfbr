@@ -155,7 +155,7 @@ namespace BRS.Scripts.Elements {
                 GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
                 _moneyGameObjects.Add(newBundle);
 
-                Vector3 size = BoundingBoxHelper.CalcualteSize(newBundle.Model, newBundle.transform.scale);
+                Vector3 size = BoundingBoxHelper.CalculateSize(newBundle.Model, newBundle.transform.scale);
 
                 int stackId = _shownMoneyStacks / _bundlesPerStack;
                 int rowId = stackId % _columnsPerRow;

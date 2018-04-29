@@ -62,7 +62,7 @@ namespace BRS.Engine.Physics {
         /// <param name="model">XNA-model file</param>
         /// <param name="scale">Scaling per axis</param>
         /// <returns>Size of the scaled local-bounding</returns>
-        public static Vector3 CalcualteSize(Model model, Vector3 scale) {
+        public static Vector3 CalculateSize(Model model, Vector3 scale) {
             BoundingBox bb = Calculate(model);
             Vector3 size = bb.Max - bb.Min;
 
