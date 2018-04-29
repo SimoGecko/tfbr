@@ -94,7 +94,8 @@ namespace BRS.Scripts.UI {
                 { "ResumeGame", MenuManager.Instance.ResumeGame },
                 { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor },
                 { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady },
-                { "StartGameFunction", MenuManager.Instance.StartGameFunction }
+                { "StartGameFunction", MenuManager.Instance.StartGameFunction },
+                { "TransitionUI", MenuManager.Instance.TransitionUI }
             };
         }
 

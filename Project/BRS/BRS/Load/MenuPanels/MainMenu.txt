@@ -21,7 +21,7 @@ Texture: button
 Position: 960 300
 ScaleWidth: 2
 Text: Play
-Functions: SwitchToMenu
+Functions: TransitionUI SwitchToMenu
 NeighborsUpDownLeftRight: Credits Tutorial null null
 NameSwitchTo: play1
 CurrentSelection: yes

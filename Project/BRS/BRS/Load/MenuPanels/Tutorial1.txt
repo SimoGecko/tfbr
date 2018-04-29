@@ -2,7 +2,7 @@
 NameIdentifier: Back
 Texture: buttonCircle
 TextureInside: arrowLeft
-Position: 900 200
+Position: 900 175
 ScaleWidth: 1.2
 ScaleHeight: 1.2
 ScaleWidthInside: 1.2
@@ -18,7 +18,7 @@ ColorInside: 255 255 255
 NameIdentifier: Next
 Texture: buttonCircle
 TextureInside: arrowRight
-Position: 1020 200
+Position: 1020 175
 ScaleWidth: 1.2
 ScaleHeight: 1.2
 ScaleWidthInside: 1.2

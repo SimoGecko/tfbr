@@ -25,8 +25,10 @@ namespace BRS.Scripts.Managers {
         public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
         GameObject _currentMenu;
         string _currentMenuName;
-        public float transitionTime = 3f;
         readonly Menu _menuGame = new Menu();
+
+        public Dictionary<string, Transform> MenuCam = new Dictionary<string, Transform>();
+        Transform _currentMenuCam;
 
         public static MenuManager Instance;
 
@@ -39,6 +41,12 @@ namespace BRS.Scripts.Managers {
         Color[] colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
         int idColor = 0;
         Color defaultColorModel = new Color(215, 173, 35);
+
+        bool moveCam = false;
+        float time = 0;
+        public float transitionTime = 0.5f;
+        //Transform goalTransform;
+        string _changeToMenu;
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -71,13 +79,26 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Menu;
 
             string[] namePanels = { "main", "play1", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            foreach (string name in namePanels) {
-                GameObject go = new GameObject(name);
-                MenuRect.Add(go.name, go);
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(0,20,15), new Vector3(0,10,0), new Vector3(0,10,-10), new Vector3(0,10,-10), new Vector3(-15,10,0), new Vector3(15,10,0), new Vector3(0,10,10), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
+            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-35,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
+
+            for (int i = 0; i < namePanels.Length; ++i) {
+                GameObject go = new GameObject(namePanels[i]);
+                MenuRect.Add(namePanels[i], go);
+
+                Transform tr = new Transform(posCam[i], rotCam[i]);
+                MenuCam.Add(namePanels[i], tr);
             }
 
             _currentMenu = MenuRect["main"];
             _currentMenuName = "main";
+
+            _currentMenuCam = MenuCam["main"];
+            foreach (Camera c in Screen.Cameras) {
+                c.transform.position = _currentMenuCam.position;
+                c.transform.eulerAngles = _currentMenuCam.eulerAngles;
+            }
+
             Menu.Instance.BuildMenuPanels(panelPlay2NameOption);
 
             NamePlayerInfosToChange = "player_0";
@@ -99,6 +120,47 @@ namespace BRS.Scripts.Managers {
                 Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
                 if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
             }
+
+
+            if (moveCam) {
+                string newMenuName = _changeToMenu;
+                if (_changeToMenu == "play2Shared")
+                    newMenuName = _changeToMenu + "0";
+                Transform goalTransform = MenuCam[newMenuName];
+                
+
+                if (/*goalTransform.position != _currentMenuCam.position && goalTransform.eulerAngles != _currentMenuCam.eulerAngles &&*/  time < transitionTime) {
+                    float percent = time / transitionTime; // TODO: SmoothDamp
+
+                    foreach (Camera c in Screen.Cameras) {
+                        c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
+                        //c.transform.rotation = Quaternion.Lerp(_currentMenuCam.rotation, goalTransform.rotation, percent);
+                        c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
+                    }
+                    time += Time.DeltaTime;
+                }
+                else {
+                    time = 0;
+                    moveCam = false;
+
+                    foreach (Camera c in Screen.Cameras) {
+                        c.transform.position = goalTransform.position;
+                        //c.transform.rotation = goalTransform.rotation;
+                        c.transform.eulerAngles = goalTransform.eulerAngles;
+                    }
+
+                    _currentMenuCam = MenuCam[newMenuName];
+                    if (_changeToMenu != "play2Shared")
+                        _currentMenu.active = true;
+                    else {
+                        MenuRect[_changeToMenu + "0"].active = true;
+                        if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
+                            MenuRect[_changeToMenu + "1"].active = true;
+                    }
+
+                }
+            }
+
         }
 
         public override void Draw2D(int i) {
@@ -108,32 +170,35 @@ namespace BRS.Scripts.Managers {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        /*public async void TransitionUI(object sender, EventArgs e) {
+        public void TransitionUI(object sender, EventArgs e) {
             Button button = (Button)sender;
-
-            Image test = MenuRect["play1"].GetComponent<Image>();
-            test.StartPos = test.Position;
-            test.Position = test.Position + new Vector2(Screen.Width, 0);
-            test.Active = true;
+            //goalTransform = MenuCam[button.NameMenuToSwitchTo]; 
+                   /*Transform goalTransform = MenuCam[button.NameMenuToSwitchTo];         
 
             float time = 0;
-            //Task.Run(() => {
+            Task.Run(() => {
                 while (time < transitionTime) {
-                    float percent = time / transitionTime;
-                    //test.Position = test.StartPos - percent * new Vector2(Screen.Width, 0);
-                    test.Position = Vector2.Lerp(test.Position, test.StartPos, percent);
-                    time += Time.DeltaTime - 0.001f;
-                    await Time.WaitForSeconds(0.001f);
+                    float percent = time / transitionTime; // TODO: SmoothDamp
+
+                    foreach (Camera c in Screen.Cameras) {
+                        c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
+                        //c.transform.rotation = Quaternion.Lerp(_currentMenuCam.rotation, goalTransform.rotation, percent);
+                        c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
+                    }
+
+                    time += Time.DeltaTime;
+                    //await;
                 }
-                if (_currentMenu != null)
-                    _currentMenu.active = false;
-                _currentMenu = MenuRect[button.NameMenuToSwitchTo];
-                _currentMenu.active = true;
-            //});
-        }*/
+                //Task.fr
+            });*/
+            //moveCam = true;
+        }
 
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            _changeToMenu = button.NameMenuToSwitchTo;
+            moveCam = true;
 
             if (!uniqueMenuSwitchUsed) {
                 if (_currentMenu != null)
@@ -148,15 +213,19 @@ namespace BRS.Scripts.Managers {
                 if (button.NameMenuToSwitchTo != "play2Shared") {
                     _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                     _currentMenuName = button.NameMenuToSwitchTo;
-                    _currentMenu.active = true;
+                    //_currentMenu.active = true;
+
+                    //_changeToMenu = button.NameMenuToSwitchTo;
                 }
                 else {
                     _currentMenuName = button.NameMenuToSwitchTo + "0";
                     _currentMenu = MenuRect[_currentMenuName];
 
-                    MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
+                    //_changeToMenu = _currentMenuName;
+
+                    /*MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
                     if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
-                        MenuRect[button.NameMenuToSwitchTo + "1"].active = true;
+                        MenuRect[button.NameMenuToSwitchTo + "1"].active = true;*/
                 }
                 uniqueMenuSwitchUsed = true;
             }
