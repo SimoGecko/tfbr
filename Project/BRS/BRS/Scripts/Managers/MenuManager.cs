@@ -26,16 +26,15 @@ namespace BRS.Scripts.Managers {
         GameObject _currentMenu;
         string _currentMenuName;
         public float transitionTime = 3f;
+        readonly Menu _menuGame = new Menu();
 
         public static MenuManager Instance;
-
-        readonly Menu _menuGame = new Menu();
 
         public List<Model> modelCharacter;
         int idModel = 0;
 
         public string NamePlayerInfosToChange;
-        public string panelPlay2NameOption = "play2Shared"; // = "play2_"; // "play2Shared" or "play2_"
+        public string panelPlay2NameOption = "play2Shared";
 
         Color[] colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
         int idColor = 0;
@@ -178,6 +177,12 @@ namespace BRS.Scripts.Managers {
             GameManager.NumPlayers = Int32.Parse(button.Text);
         }
 
+        public void StartGameFunction(object sender, EventArgs e) {
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+            GameManager.state = GameManager.State.Playing;
+            SceneManager.LoadGame = true;
+        }
+
         public void StartGamePlayersReady(object sender, EventArgs e) {
             Button button = (Button)sender;
             bool allPlayersReady = false;
@@ -249,17 +254,15 @@ namespace BRS.Scripts.Managers {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            if (!uniqueMenuSwitchUsed) {
-                foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                    if (elem is Button bu) {
-                        if (bu.nameIdentifier == "NamePlayer") {
-                            if (button.Text == "del") {
-                                if (bu.Text.Length > 0)
-                                    bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
-                            }
-                            else
-                                bu.Text += button.Text;
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+                if (elem is Button bu) {
+                    if (bu.nameIdentifier == "NamePlayer") {
+                        if (button.Text == "del") {
+                            if (bu.Text.Length > 0)
+                                bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
                         }
+                        else
+                            bu.Text += button.Text;
                     }
                 }
             }
@@ -319,49 +322,46 @@ namespace BRS.Scripts.Managers {
                         img.Active = false;
                 }
             }
-
-            //((Button)Menu.Instance.FindMenuComponentinPanelWithName("pictureModel" + (idModel + 1).ToString(), panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString())).Active = true;
-            //((Button)Menu.Instance.FindMenuComponentinPanelWithName("pictureModel" + (idModel).ToString(), panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString())).Active = false;
         }
 
         public void UpdateChosenColor(object sender, EventArgs e) {
-            if (!uniqueMenuSwitchUsed) {
-                Button button = (Button)sender;
+            Button button = (Button)sender;
                 
-                // Change color used
-                if (button.nameIdentifier == "ColorChangeRight") {
-                    ++idColor;
-                    if (idColor >= colorModel.Length) idColor = 0;
-                }
-                else if (button.nameIdentifier == "ColorChangeLeft") {
-                    --idColor;
-                    if (idColor < 0) idColor = colorModel.Length - 1;
-                }
-                else
-                    Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
-
-                // update color for model pictures
-                foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                    if (elem is Image img) {
-                        for (int i = 0; i < modelCharacter.Count; ++i) {
-                            if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
-                                img.colour = colorModel[idColor];
-                        }
-                    }
-                    if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
-                        bu.ImageColor = colorModel[idColor];
-                }
-                uniqueMenuSwitchUsed = true;
-
-                // update color for 3d model
-                Color test = colorModel[idColor];
-                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                    ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, colorModel[idColor]);
-                else
-                    ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, null, colorModel[idColor]));
-
+            // Change color used
+            if (button.nameIdentifier == "ColorChangeRight") {
+                ++idColor;
+                if (idColor >= colorModel.Length) idColor = 0;
             }
+            else if (button.nameIdentifier == "ColorChangeLeft") {
+                --idColor;
+                if (idColor < 0) idColor = colorModel.Length - 1;
+            }
+            else
+                Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+            // update color for model pictures
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+                if (elem is Image img) {
+                    for (int i = 0; i < modelCharacter.Count; ++i) {
+                        if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
+                            img.colour = colorModel[idColor];
+                    }
+                }
+                if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
+                    bu.ImageColor = colorModel[idColor];
+            }
+
+            // update color for 3d model
+            Color test = colorModel[idColor];
+            if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = 
+                    new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
+                    ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, 
+                    colorModel[idColor]);
+            else
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, null, colorModel[idColor]));
         }
+        
 
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -401,7 +401,6 @@ namespace BRS.Scripts.Managers {
         }
 
         public void ChangeModelNameColorPlayer(GameObject player, int i) {
-
             if (ScenesCommunicationManager.Instance != null) {
                 if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
@@ -413,7 +412,6 @@ namespace BRS.Scripts.Managers {
                     if (colorPlayer != null) {
                         Rectangle areaChange = new Rectangle(4, 8, 4, 4);
                         SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
-                        //player.material.colorTex = colorPlayer;
                     }
                     
                 }

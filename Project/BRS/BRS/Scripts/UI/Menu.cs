@@ -38,14 +38,11 @@ namespace BRS.Scripts.UI {
             Texture2D textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
             Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
             Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
-            //Texture2D textureForkLift = File.Load<Texture2D>("Images/UI/forklift_icon");
-            //Texture2D textureModel3 = File.Load<Texture2D>("Images/UI/model3_image");
             Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
             Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
             Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tutorial_1");
             Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tutorial_2");
             Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tutorial_3");
-
             Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
             Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
             Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
@@ -96,7 +93,8 @@ namespace BRS.Scripts.UI {
                 { "LoadMenu", MenuManager.Instance.LoadMenuFunction },
                 { "ResumeGame", MenuManager.Instance.ResumeGame },
                 { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor },
-                { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady }
+                { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady },
+                { "StartGameFunction", MenuManager.Instance.StartGameFunction }
             };
         }
 
@@ -134,7 +132,6 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
             CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared2", offsetWidth: -480, idAssociatePlayerScreen: 2);
             CreatePanel("Load/MenuPanels/Play2Shared.txt", "play2Shared3", offsetWidth: 480, idAssociatePlayerScreen: 3);
-
         }
 
         public void CreateAlphabetButtons(string panelName, int offsetWidth = 0, int idAssociatePlayerScreen = 0) {
@@ -144,16 +141,9 @@ namespace BRS.Scripts.UI {
             string[][] keyboard = { firstLine, secondLine, thirdLine };
             float scaleAlphabet;
 
-            Vector2[] startoffset;
-            if (panelName == "play2_0") {
-                startoffset = new Vector2[] { new Vector2(1152, 540), new Vector2(1210, 540), new Vector2(1248, 540) };
-                scaleAlphabet = 0.5f;
-            }    
-            else{
-                //startoffset = new Vector2[] { new Vector2(935, 560), new Vector2(960, 560), new Vector2(985, 560) };
-                startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(885, 230), new Vector2(910, 230) };
-                scaleAlphabet = 0.37f;
-            }
+            Vector2[] startoffset;           
+            startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(885, 230), new Vector2(910, 230) };
+            scaleAlphabet = 0.37f;
 
             List<Button> buttonsCurrentPanel2 = new List<Button>();
             for (int i = 0; i < keyboard.Length; i++) {
@@ -180,11 +170,6 @@ namespace BRS.Scripts.UI {
                     if (elem == thirdLine[0])
                         letterButton.nameIdentifier = "Alphabet3";
 
-                    //if (i == 0)
-                        //letterButton.NeighborUp = FindMenuComponentinPanelWithName("Player1", panelName);
-                    //if (i == keyboard.Length - 1)
-                        //letterButton.NeighborUp = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
-
                     ++count;
 
                 }
@@ -197,8 +182,8 @@ namespace BRS.Scripts.UI {
                     letterButton.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
                     letterButton.NeighborUp = buttonsCurrentPanel2[firstLine.Length + secondLine.Length - 2];
-                    //letterButton.NeighborDown = FindMenuComponentinPanelWithName("ModelChangeLeft", panelName);
                     MenuManager.Instance.MenuRect[panelName].AddComponent(letterButton);
+
                     linkedButtonLeftRight.Add(letterButton);
                 }
                 SetNeighborsButtonLeftRight(false);
@@ -259,11 +244,14 @@ namespace BRS.Scripts.UI {
         public void CreatePanel(string pathName, string panelName, bool setPanelActive = false, int offsetWidth = 0, int idAssociatePlayerScreen = 0) {
             MenuManager.Instance.MenuRect[panelName].active = setPanelActive;
             List<MenuStruct> panelObjects = File.ReadMenuPanel(pathName);
+
             foreach (MenuStruct MS in panelObjects) {
                 if (MS.menuType == MenuType.Button) {
-                    if (MS.Name == "Alphabet") CreateAlphabetButtons(panelName, offsetWidth, idAssociatePlayerScreen);
+                    if (MS.Name == "Alphabet")
+                        CreateAlphabetButtons(panelName, offsetWidth, idAssociatePlayerScreen);
                     else {
                         Button button = new Button(texturesButtons[MS.TextureName], MS.Position + new Vector2(offsetWidth, 0));
+
                         if (MS.TextureInsideName != null) button.InsideImage = texturesButtons[MS.TextureInsideName];
                         if (MS.Text != null) button.Text = MS.Text;
                         if (MS.NameToSwitchTo != null) button.NameMenuToSwitchTo = MS.NameToSwitchTo;
@@ -276,38 +264,47 @@ namespace BRS.Scripts.UI {
                         if (MS.Color != default(Color)) button.ImageColor = MS.Color;
                         if (MS.ColorInside != default(Color)) button.InsideObjectColor = MS.ColorInside;
                         if (MS.transparency != default(int))
-                            button.ImageColor.A = (byte)MS.transparency; 
+                            button.ImageColor.A = (byte)MS.transparency;
+
                         button.IsCurrentSelection = MS.CurrentSelection;
                         button.IsClicked = MS.IsClicked;
                         button.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.deSelectOnMove = MS.deSelectOnMove;
+
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }
                 }
                 else if (MS.menuType == MenuType.Text) {
                     TextBox textBox = new TextBox();
+
                     if (MS.Name != null) textBox.NameIdentifier = MS.Name;
                     if (MS.Position != null) textBox.InitPos = MS.Position + new Vector2(offsetWidth, 0);
                     if (MS.Text != null) textBox.Text = MS.Text;
                     else textBox.Text = "";
+
                     MenuManager.Instance.MenuRect[panelName].AddComponent(textBox);
                 }
                 else if (MS.menuType == MenuType.Image) {
                     Image img = new Image(texturesButtons[MS.TextureName]);
+
                     if (MS.Position != null) img.Position = MS.Position + new Vector2(offsetWidth, 0);
                     if (MS.Name != null) img.NameIdentifier = MS.Name;
                     if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
                     if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
                     if (MS.Color != default(Color)) img.colour = MS.Color;
-                    img.Active = MS.Active; 
+
+                    img.Active = MS.Active;
+
                     MenuManager.Instance.MenuRect[panelName].AddComponent(img);
                 }
                 else if (MS.menuType == MenuType.Slider) {
                     Slider slider = new Slider(MS.Position + new Vector2(offsetWidth, 0), texturesButtons["button"]);
-                    //if (MS.Position != null) slider.Position = ;
+
                     if (MS.Name != null) slider.nameIdentifier = MS.Name;
                     if (MS.TextureName != null) slider.Texture = texturesButtons[MS.TextureName];
+
                     slider.indexAssociatedPlayerScreen = idAssociatePlayerScreen;
+
                     MenuManager.Instance.MenuRect[panelName].AddComponent(slider);
                 }
             }
@@ -319,9 +316,6 @@ namespace BRS.Scripts.UI {
             }
 
             foreach (MenuStruct MS in panelObjects) {
-                //if (panelName == "options")
-                  //  panelName = panelName;
-
                 if (MS.Name != null && MS.NeighborsUpDownLeftRight != null) {
                     MenuComponent menuComp = FindMenuComponentinPanelWithName(MS.Name, panelName);
 
@@ -350,16 +344,6 @@ namespace BRS.Scripts.UI {
                     }
                 }
             }
-
-            /*if (panelName == "play2" || panelName == "play2Shared0" || panelName == "play2Shared1") {
-                FindMenuComponentinPanelWithName("Model3", panelName).NeighborDown = FindMenuComponentinPanelWithName("Back", panelName);
-                FindMenuComponentinPanelWithName("Back", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName); ;
-                FindMenuComponentinPanelWithName("Next", panelName).NeighborRight = FindMenuComponentinPanelWithName("SaveAlphabet", panelName);
-
-                FindMenuComponentinPanelWithName("Alphabet1", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model1", panelName);
-                FindMenuComponentinPanelWithName("Alphabet2", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model2", panelName);
-                FindMenuComponentinPanelWithName("Alphabet3", panelName).NeighborLeft = FindMenuComponentinPanelWithName("Model3", panelName);
-            }*/
 
             if (panelName == "ranking")
                 LoadRankingsText();
