@@ -12,7 +12,7 @@ namespace BRS.Engine.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) - UserInterface.menuFont.MeasureString(Text) / 2; } }
+        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) /*- UserInterface.menuFont.MeasureString(Text) / 2*/; } }
 
         public SpriteFont Font = UserInterface.menuFont;
 
@@ -23,7 +23,7 @@ namespace BRS.Engine.Menu {
         public override void Draw2D(int i) {
             if (Active && i == 0) {
                 base.Draw2D(i);
-                UserInterface.DrawString(Text, Position, col: Color.Black, font: UserInterface.menuSmallFont);
+                UserInterface.DrawString(Text, Position, pivot: Align.Center, col: Color.Black, font: UserInterface.menuSmallFont);
             }
         }
     }

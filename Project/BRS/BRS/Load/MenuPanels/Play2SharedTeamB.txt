@@ -143,7 +143,7 @@ Text: Model
 
 <Text>
 Position: 700 620
-Text: Color
+Text: Team Color
 </Text>
 
 <Text>

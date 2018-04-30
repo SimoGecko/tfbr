@@ -127,8 +127,18 @@ namespace BRS.Scripts.Managers {
                 uniqueFrameInputUsed[i] = false;
 
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
-                Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
-                if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                if (_currentMenuName == "play2Shared2") {
+                    MenuRect["play2Shared0"].active = true;
+                    MenuRect["play2Shared1"].active = true;
+                    MenuRect["play2Shared2"].active = false;
+                    MenuRect["play2Shared3"].active = false;
+                    _currentMenuName = "play2Shared0";
+                }
+                else {
+                    Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
+                    if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                }
+                
             }
 
 
@@ -241,6 +251,10 @@ namespace BRS.Scripts.Managers {
                         MenuRect[panelPlay2NameOption + "1"].active = false;
                         MenuRect[panelPlay2NameOption + "2"].active = true;
                         MenuRect[panelPlay2NameOption + "3"].active = true;
+
+                        _currentMenuName = panelPlay2NameOption + "2";
+                        _currentMenu = MenuRect[_currentMenuName];
+
                         uniqueMenuSwitchUsed = true;
                     }
                 }
@@ -298,15 +312,17 @@ namespace BRS.Scripts.Managers {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
-                if (elem is Button bu) {
-                    if (bu.nameIdentifier == "NamePlayer") {
-                        if (button.Text == "del") {
-                            if (bu.Text.Length > 0)
-                                bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
+            if (!uniqueMenuSwitchUsed) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
+                    if (elem is Button bu) {
+                        if (bu.nameIdentifier == "NamePlayer") {
+                            if (button.Text == "del") {
+                                if (bu.Text.Length > 0)
+                                    bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
+                            }
+                            else
+                                bu.Text += button.Text;
                         }
-                        else
-                            bu.Text += button.Text;
                     }
                 }
             }
@@ -326,7 +342,7 @@ namespace BRS.Scripts.Managers {
                         else
                             ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(bu.Text, null, button.IndexAssociatedPlayerScreen % 2 == 0 ? _teamAColor : _teamBColor));
 
-                        bu.Text = "";
+                        //bu.Text = "";
                     }
                 }
             }
@@ -450,6 +466,19 @@ namespace BRS.Scripts.Managers {
                 if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
                     bu.ImageColor = _colorModel[_idColor];
             }
+            if (GameManager.NumPlayers == 4) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen+2) % 4).ToString()].components) {
+                    if (elem is Image img) {
+                        for (int i = 0; i < modelCharacter.Count; ++i) {
+                            if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
+                                img.colour = _colorModel[_idColor];
+                        }
+                    }
+                    if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
+                        bu.ImageColor = _colorModel[_idColor];
+                }
+            }
+
 
             // update color for 3d model
             Color test = _colorModel[_idColor];
