@@ -7428,3 +7428,10 @@
 /processorParam:TextureFormat=Compressed
 /build:Other/font/menuHovering.spritefont
 
+#begin Other/font/menuSmall.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Other/font/menuSmall.spritefont
+

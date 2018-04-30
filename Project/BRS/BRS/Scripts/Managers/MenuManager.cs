@@ -42,6 +42,11 @@ namespace BRS.Scripts.Managers {
         int idColor = 0;
         Color defaultColorModel = new Color(215, 173, 35);
 
+        public string[] rankingPlayersText = { "1P", "2P", "4P"};
+        int idRankingPlayerText = 0;
+        public string[] rankingDurationText = { "2 min", "3 min", "5 min", "10 min" };
+        int idRankingDurationText = 0;
+
         bool moveCam = false;
         float time = 0;
         public float transitionTime = 0.5f;
@@ -125,46 +130,9 @@ namespace BRS.Scripts.Managers {
             }
 
 
-            if (moveCam) {
-                string newMenuName = _changeToMenu;
-                if (_changeToMenu == "play2Shared")
-                    newMenuName = _changeToMenu + "0";
-                Transform goalTransform = MenuCam[newMenuName];
-
-                currentDistTransition = (_currentMenuCam.position - goalTransform.position).Length();
-                float newTransitionTime = transitionTime * currentDistTransition / distTransition;
-
-                if (time < newTransitionTime) {
-                    //float percent = time / transitionTime;
-
-                    foreach (Camera c in Screen.Cameras) { 
-                        //c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
-                        //c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
-
-                        c.transform.position = Utility.SmoothDamp(c.transform.position, goalTransform.position, ref velocityPos, newTransitionTime);
-                        c.transform.eulerAngles = Utility.SmoothDampAngle(c.transform.eulerAngles, goalTransform.eulerAngles, ref velocityRot, newTransitionTime);
-                    }
-                    time += Time.DeltaTime;
-                }
-                else {
-                    time = 0;
-                    moveCam = false;
-
-                    /*foreach (Camera c in Screen.Cameras) {
-                        c.transform.position = goalTransform.position;
-                        c.transform.eulerAngles = goalTransform.eulerAngles;
-                    }*/
-
-                    _currentMenuCam = MenuCam[newMenuName];
-                    if (_changeToMenu != "play2Shared")
-                        _currentMenu.active = true;
-                    else {
-                        MenuRect[_changeToMenu + "0"].active = true;
-                        if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
-                            MenuRect[_changeToMenu + "1"].active = true;
-                    }
-                }
-            }
+            if (moveCam) 
+                TransitionCam();               
+            
 
         }
 
@@ -175,28 +143,35 @@ namespace BRS.Scripts.Managers {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        public void TransitionUI(object sender, EventArgs e) {
-            Button button = (Button)sender;
-            //goalTransform = MenuCam[button.NameMenuToSwitchTo]; 
-                   /*Transform goalTransform = MenuCam[button.NameMenuToSwitchTo];         
+        public void TransitionCam() {
+            string newMenuName = _changeToMenu;
+            if (_changeToMenu == "play2Shared")
+                newMenuName = _changeToMenu + "0";
+            Transform goalTransform = MenuCam[newMenuName];
 
-            float time = 0;
-            Task.Run(() => {
-                while (time < transitionTime) {
-                    float percent = time / transitionTime; // TODO: SmoothDamp
+            currentDistTransition = (_currentMenuCam.position - goalTransform.position).Length();
+            float newTransitionTime = transitionTime * currentDistTransition / distTransition;
 
-                    foreach (Camera c in Screen.Cameras) {
-                        c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
-                        //c.transform.rotation = Quaternion.Lerp(_currentMenuCam.rotation, goalTransform.rotation, percent);
-                        c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
-                    }
-
-                    time += Time.DeltaTime;
-                    //await;
+            if (time < newTransitionTime) {
+                foreach (Camera c in Screen.Cameras) {
+                    c.transform.position = Utility.SmoothDamp(c.transform.position, goalTransform.position, ref velocityPos, newTransitionTime);
+                    c.transform.eulerAngles = Utility.SmoothDampAngle(c.transform.eulerAngles, goalTransform.eulerAngles, ref velocityRot, newTransitionTime);
                 }
-                //Task.fr
-            });*/
-            //moveCam = true;
+                time += Time.DeltaTime;
+            }
+            else {
+                time = 0;
+                moveCam = false;
+
+                _currentMenuCam = MenuCam[newMenuName];
+                if (_changeToMenu != "play2Shared")
+                    _currentMenu.active = true;
+                else {
+                    MenuRect[_changeToMenu + "0"].active = true;
+                    if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
+                        MenuRect[_changeToMenu + "1"].active = true;
+                }
+            }
         }
 
         public void SwitchToMenu(object sender, EventArgs e) {
@@ -398,6 +373,46 @@ namespace BRS.Scripts.Managers {
                         img.Active = false;
                 }
             }
+        }
+
+        public void UpdateRanking(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            if (button.nameIdentifier == "PlayersChangeRight") {
+                ++idRankingPlayerText;
+                if (idRankingPlayerText >= rankingPlayersText.Length) idRankingPlayerText = 0;
+            }
+            else if (button.nameIdentifier == "PlayersChangeLeft") {
+                --idRankingPlayerText;
+                if (idRankingPlayerText < 0) idRankingPlayerText = rankingPlayersText.Length - 1;
+            }
+            else if (button.nameIdentifier == "TimeChangeRight") {
+                ++idRankingDurationText;
+                if (idRankingDurationText >= rankingDurationText.Length) idRankingDurationText = 0;
+            }
+            else if (button.nameIdentifier == "TimeChangeLeft") {
+                --idRankingDurationText;
+                if (idRankingDurationText < 0) idRankingDurationText = rankingDurationText.Length - 1;
+            }
+            else
+                Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingTime", _currentMenuName)).Text = rankingDurationText[idRankingDurationText];
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingPlayers", _currentMenuName)).Text = rankingPlayersText[idRankingPlayerText];
+
+            foreach (var elem in MenuRect[_currentMenuName].components) {
+                if (elem is ListComponents listComp) {
+                    if (listComp.NameIdentifier == "rankings_game") {
+                        foreach (var lC in listComp.Components) {
+                            if (((ListComponents)lC).NameIdentifier == "ranking" + rankingDurationText[idRankingDurationText] + rankingPlayersText[idRankingPlayerText])
+                                lC.Active = true;
+                            else
+                                lC.Active = false;
+                        }
+                    }
+                }
+            }
+
         }
 
         public void UpdateChosenColor(object sender, EventArgs e) {

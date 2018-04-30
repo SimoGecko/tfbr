@@ -95,7 +95,7 @@ namespace BRS.Scripts.UI {
                 { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor },
                 { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady },
                 { "StartGameFunction", MenuManager.Instance.StartGameFunction },
-                { "TransitionUI", MenuManager.Instance.TransitionUI }
+                { "UpdateRanking", MenuManager.Instance.UpdateRanking }
             };
         }
 
@@ -213,31 +213,38 @@ namespace BRS.Scripts.UI {
 
         public void LoadRankingsText() {
             ListComponents rankings = new ListComponents("rankings_game");
-            string[] pathRankings = { "ranking2min.txt", "ranking3min.txt", "ranking5min.txt" };
-            Vector2[] offsetStart = { new Vector2(864, 432), new Vector2(1056, 432) };
+            Vector2[] offsetStart = { new Vector2(864, 320), new Vector2(1056, 320) };
 
-            for (int i = 0; i < pathRankings.Length; ++i) {
-                List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/" + pathRankings[i]);
+            //for (int i = 0; i < pathRankings.Length; ++i) {
+            int i = 0;
+            foreach (var noPlayers in MenuManager.Instance.rankingPlayersText) {
+                foreach (var durationRound in MenuManager.Instance.rankingDurationText) {
+                    List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
 
-                ListComponents listPersons = new ListComponents("rankings_" + i.ToString());
-                int count = 0;
-                foreach (var aPerson in rankinglist) {
-                    var namePerson = new TextBox() {
-                        InitPos = offsetStart[0] + new Vector2(0, count * 65),
-                        Text = aPerson.Item1
-                    };
+                    ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);
+                    int count = 0;
+                    foreach (var aPerson in rankinglist) {
+                        var namePerson = new TextBox() {
+                            InitPos = offsetStart[0] + new Vector2(0, count * 40),
+                            Text = aPerson.Item1
+                        };
+                        //namePerson.Font = UserInterface.menuSmallFont;
 
-                    var score = new TextBox() {
-                        InitPos = offsetStart[1] + new Vector2(0, count * 65),
-                        Text = aPerson.Item2
-                    };
+                        var score = new TextBox() {
+                            InitPos = offsetStart[1] + new Vector2(0, count * 40),
+                            Text = aPerson.Item2
+                        };
+                        //score.Font = UserInterface.menuSmallFont;
 
-                    listPersons.AddComponent(namePerson); listPersons.AddComponent(score);
-                    count++;
+                        listPersons.AddComponent(namePerson); listPersons.AddComponent(score);
+                        count++;
+                    }
+
+                    if (i != 0) listPersons.Active = false;
+                    ++i;
+
+                    rankings.AddComponent(listPersons);
                 }
-
-                if (i != 0) listPersons.Active = false;
-                rankings.AddComponent(listPersons);
             }
             MenuManager.Instance.MenuRect["ranking"].AddComponent(rankings);
         }
