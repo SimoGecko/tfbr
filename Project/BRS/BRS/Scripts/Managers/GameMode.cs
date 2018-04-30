@@ -25,8 +25,8 @@ namespace BRS.Scripts {
 
 
         //private
-        public int CashAmount = 80;
-        public int GoldAmount = 20;
+        public int CashAmount = 800;
+        public int GoldAmount = 200;
         public int ValuableAmount = 100;
         public int CrateAmount = 10;
         public int PowerupAmount = 30;

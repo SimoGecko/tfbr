@@ -26,6 +26,7 @@ namespace BRS.Scripts.Managers {
         private List<Crate> _crateList;
         private List<Powerup> _powerupList;
         private List<GameObject> _variousObjects;
+        private List<Police> _policeList;
 
         //reference
         public static ElementManager Instance;
@@ -48,6 +49,9 @@ namespace BRS.Scripts.Managers {
 
             _variousObjects = new List<GameObject>();
             _variousObjects.Clear();
+
+            _policeList = new List<Police>();
+            _policeList.Clear();
         }
 
         public override void Update() {
@@ -83,6 +87,10 @@ namespace BRS.Scripts.Managers {
         //gameobject
         public void Add(GameObject g) { _variousObjects.Add(g); }
         public void Remove(GameObject g) { _variousObjects.Remove(g); }
+
+        //police
+        public void Add(Police p) { _policeList.Add(p); }
+        public void Remove(Police p) { _policeList.Remove(p); }
 
 
         // queries
@@ -148,6 +156,7 @@ namespace BRS.Scripts.Managers {
             return result.ToArray();
         }
         public Player Enemy(int myteam) {
+            if (GameManager.NumTeams == 1) return Player(0);
             //returns a random enemy in the other team
             Player[] enemyTeam = Team(1 - myteam);
             return enemyTeam[MyRandom.Range(0, enemyTeam.Length)];
@@ -160,6 +169,11 @@ namespace BRS.Scripts.Managers {
 
             return _baseList[i];
         }
+
+        public Base EnemyBase(int i) {
+            if (GameManager.NumTeams == 1) return Base(i);
+            return Base(1 - i);
+        }
         public Player[] Players() { return _playerList.ToArray(); }
         public Base[] Bases() { return _baseList.ToArray(); }
 
@@ -169,6 +183,9 @@ namespace BRS.Scripts.Managers {
                 result.Add(p.transform);
             return result.ToArray();
         }
+
+
+        public Police[] Polices() { return _policeList.ToArray(); }
 
 
         // other

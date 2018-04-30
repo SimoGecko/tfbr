@@ -128,6 +128,7 @@ namespace BRS.Scripts.Elements {
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();
+                Input.Vibrate(.01f, .01f, pi.gameObject.GetComponent<Player>().PlayerIndex);
                 await Time.WaitForSeconds(TimeBetweenUnloads);
             }
         }

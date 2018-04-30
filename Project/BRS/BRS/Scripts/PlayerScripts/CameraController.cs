@@ -19,7 +19,7 @@ namespace BRS.Scripts.PlayerScripts {
         //public
         public int CamIndex;
 
-        bool autoFollow = true;
+        bool autoFollow = false;
 
         static readonly Vector3 Offset = new Vector3(0, 10, 10);
         static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);

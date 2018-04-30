@@ -146,7 +146,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < GameManager.NumTeams; i++) {
                 //TODO base object
                 GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;

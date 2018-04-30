@@ -74,13 +74,13 @@ namespace BRS.Scripts {
         public Vector2 GetCashPos() {
             Vector2 pixel = green.Evaluate().ToVector2();
             Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(moneyPic.Width, moneyPic.Height));
-            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return PlayArea.MapArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
 
         public Vector2 GetGoldPos() {
             Vector2 pixel = yellow.Evaluate().ToVector2();
             Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(goldPic.Width, goldPic.Height));
-            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return PlayArea.MapArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
 
 

@@ -113,7 +113,10 @@ namespace BRS.Scripts.PlayerScripts {
             if (State == PlayerState.Normal) {
                 bool boosting = BoostInput() && _pS.HasStaminaForBoost();
                 _pM.Boosting = boosting;
-                if (boosting) _pS.UseStaminaForBoost();
+                if (boosting) {
+                    _pS.UseStaminaForBoost();
+                    //Input.Vibrate(.001f, .001f, PlayerIndex);
+                }
 
                 Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
                 //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
@@ -161,7 +164,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             if (!Dead) {
                 if (Time.CurrentTime > nextStunTime) {
-                    Input.Vibrate(1f, .3f, PlayerIndex);
+                    Input.Vibrate(.05f, .1f, PlayerIndex);
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);

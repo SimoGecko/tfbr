@@ -273,6 +273,39 @@ namespace BRS.Engine {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
             fs.Write(info, 0, info.Length);
         }
+
+        public static List<List<Vector3>> ReadPolicePaths(string pathName) {
+            List<List<Vector3>> policePaths = new List<List<Vector3>>();
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                int idPath = 0;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+
+                    if (nameContent == null)
+                        break;
+
+                    policePaths.Add(new List<Vector3>());
+
+                    string lineNoObj = reader.ReadLine();
+                    int n = int.Parse(lineNoObj.Split(' ')[1]);
+
+                    for (int i = 0; i < n; i++) {
+                        string p = reader.ReadLine();
+
+                        string[] pSplit = p.Split(' '); // pos: x y z in unity coord. system
+
+                        Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
+                        policePaths[idPath].Add(position);
+                    }
+
+                    nameContent = reader.ReadLine();
+                    ++idPath;
+                }
+            }
+            return policePaths;
+        }
     }
 
 }

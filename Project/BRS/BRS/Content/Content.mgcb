@@ -4828,18 +4828,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/textures/PolygonHeist_Texture_01_A.png
 
-#begin Images/heatmap/level1_distribution.psd
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/heatmap/level1_distribution.psd
-
 #begin Images/heatmap/level1_green.png
 /importer:TextureImporter
 /processor:TextureProcessor
