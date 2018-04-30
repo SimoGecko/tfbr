@@ -12,7 +12,7 @@ namespace BRS.Engine.Menu {
         public string NameIdentifier { get; set; }
 
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) /*- UserInterface.menuFont.MeasureString(Text) / 2*/; } }
+        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f); } }
 
         public SpriteFont Font = UserInterface.menuFont;
 
