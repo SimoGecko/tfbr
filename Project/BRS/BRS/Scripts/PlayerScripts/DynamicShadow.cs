@@ -7,16 +7,18 @@ using BRS.Engine.Physics.RigidBodies;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PlayerScripts {
+    /// <summary>
+    /// Initialize the dynamic shadow which will be synchronised with the position of the game-object
+    /// </summary>
     class DynamicShadow : Component {
-        ////////// deals with the attack of the player //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
 
         //private
-        private bool isInitialized = false;
-        private Vector3 _offset = new Vector3(0.25f, 0.1f, -0.25f);
+        private bool _isInitialized;
+        private readonly Vector3 _offset = new Vector3(0.25f, 0.1f, -0.25f);
 
         // const
 
@@ -27,7 +29,7 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- BASE METHODS ------------------
 
         public override void Awake() {
-            if (isInitialized) {
+            if (_isInitialized) {
                 return;
             }
 
@@ -36,7 +38,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             CalculateShadowSize();
 
-            isInitialized = true;
+            _isInitialized = true;
         }
         public override void Start() {
             if (gameObject.HasComponent<MovingRigidBody>()) {

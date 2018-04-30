@@ -75,6 +75,7 @@ namespace BRS.Scripts.Scenes {
 
         void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));
             UiManager.AddComponent(new BaseUI());
             UiManager.AddComponent(new PlayerUI());
             UiManager.AddComponent(new PowerupUI());
@@ -174,9 +175,9 @@ namespace BRS.Scripts.Scenes {
 
                 for (int j = 0; j < data.Length; ++j) {
                     if (data[j].A > 0) {
-                        data[j].R = i == 0 ? Color.Red.R : Color.Blue.R;
-                        data[j].G = i == 0 ? Color.Red.G : Color.Blue.G;
-                        data[j].B = i == 0 ? Color.Red.B : Color.Blue.B;
+                        data[j].R = i == 0 ? Graphics.Red.R : Graphics.White.R;
+                        data[j].G = i == 0 ? Graphics.Red.G : Graphics.White.G;
+                        data[j].B = i == 0 ? Graphics.Red.B : Graphics.White.B;
                     }
                 }
 
