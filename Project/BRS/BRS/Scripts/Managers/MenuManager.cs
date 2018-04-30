@@ -41,6 +41,8 @@ namespace BRS.Scripts.Managers {
         Color[] _colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
         int _idColor = 0;
         Color _defaultColorModel = new Color(215, 173, 35);
+        Color _teamAColor = new Color(215, 173, 35);
+        Color _teamBColor = Color.Red;
 
         public string[] RankingPlayersText = { "1P", "2P", "4P"};
         int _idRankingPlayerText = 0;
@@ -193,19 +195,10 @@ namespace BRS.Scripts.Managers {
                 if (button.NameMenuToSwitchTo != "play2Shared") {
                     _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                     _currentMenuName = button.NameMenuToSwitchTo;
-                    //_currentMenu.active = true;
-
-                    //_changeToMenu = button.NameMenuToSwitchTo;
                 }
                 else {
                     _currentMenuName = button.NameMenuToSwitchTo + "0";
                     _currentMenu = MenuRect[_currentMenuName];
-
-                    //_changeToMenu = _currentMenuName;
-
-                    /*MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
-                    if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
-                        MenuRect[button.NameMenuToSwitchTo + "1"].active = true;*/
                 }
                 uniqueMenuSwitchUsed = true;
             }
@@ -326,14 +319,14 @@ namespace BRS.Scripts.Managers {
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
-                if (elem is TextBox textBox) {
-                    if (textBox.NameIdentifier == "NamePlayer") {
+                if (elem is Button bu) {
+                    if (bu.nameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(textBox.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, _defaultColorModel);
+                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(bu.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, button.IndexAssociatedPlayerScreen % 2 == 0 ? _teamAColor : _teamBColor);
                         else
-                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(textBox.Text, null, _defaultColorModel));
+                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(bu.Text, null, button.IndexAssociatedPlayerScreen % 2 == 0 ? _teamAColor : _teamBColor));
 
-                        textBox.Text = "";
+                        bu.Text = "";
                     }
                 }
             }
@@ -359,9 +352,9 @@ namespace BRS.Scripts.Managers {
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[_idModel], _defaultColorModel);
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[_idModel], button.IndexAssociatedPlayerScreen % 2 == 0 ? _teamAColor : _teamBColor);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, modelCharacter[_idModel], _defaultColorModel));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, modelCharacter[_idModel], button.IndexAssociatedPlayerScreen % 2 == 0 ? _teamAColor : _teamBColor));
 
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
@@ -421,14 +414,30 @@ namespace BRS.Scripts.Managers {
             // Change color used
             if (button.nameIdentifier == "ColorChangeRight") {
                 ++_idColor;
-                if (_idColor >= _colorModel.Length) _idColor = 0;
+                if (_idColor >= _colorModel.Length)
+                    _idColor = 0;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? _colorModel[_idColor] == _teamBColor : _colorModel[_idColor] == _teamAColor)
+                    ++_idColor;
+
+                if (_idColor >= _colorModel.Length)
+                    _idColor = 0;
+                    
             }
             else if (button.nameIdentifier == "ColorChangeLeft") {
                 --_idColor;
                 if (_idColor < 0) _idColor = _colorModel.Length - 1;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? _colorModel[_idColor] == _teamBColor : _colorModel[_idColor] == _teamAColor)
+                    --_idColor;
+
+                if (_idColor < 0) _idColor = _colorModel.Length - 1;
             }
             else
                 Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+            if (button.IndexAssociatedPlayerScreen % 2 == 0)
+                _teamAColor = _colorModel[_idColor];
+            else
+                _teamBColor = _colorModel[_idColor];
 
             // update color for model pictures
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
