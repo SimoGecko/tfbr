@@ -45,7 +45,10 @@ namespace BRS.Scripts.Managers {
         bool moveCam = false;
         float time = 0;
         public float transitionTime = 0.5f;
-        //Transform goalTransform;
+        public float distTransition = 13;
+        public float currentDistTransition;
+        Vector3 velocityPos = Vector3.Zero;
+        Vector3 velocityRot = Vector3.Zero;
         string _changeToMenu;
 
         // --------------------- BASE METHODS ------------------
@@ -127,15 +130,19 @@ namespace BRS.Scripts.Managers {
                 if (_changeToMenu == "play2Shared")
                     newMenuName = _changeToMenu + "0";
                 Transform goalTransform = MenuCam[newMenuName];
-                
 
-                if (/*goalTransform.position != _currentMenuCam.position && goalTransform.eulerAngles != _currentMenuCam.eulerAngles &&*/  time < transitionTime) {
-                    float percent = time / transitionTime; // TODO: SmoothDamp
+                currentDistTransition = (_currentMenuCam.position - goalTransform.position).Length();
+                float newTransitionTime = transitionTime * currentDistTransition / distTransition;
 
-                    foreach (Camera c in Screen.Cameras) {
-                        c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
-                        //c.transform.rotation = Quaternion.Lerp(_currentMenuCam.rotation, goalTransform.rotation, percent);
-                        c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
+                if (time < newTransitionTime) {
+                    //float percent = time / transitionTime;
+
+                    foreach (Camera c in Screen.Cameras) { 
+                        //c.transform.position = Vector3.Lerp(_currentMenuCam.position, goalTransform.position, percent);
+                        //c.transform.eulerAngles = Vector3.Lerp(_currentMenuCam.eulerAngles, goalTransform.eulerAngles, percent);
+
+                        c.transform.position = Utility.SmoothDamp(c.transform.position, goalTransform.position, ref velocityPos, newTransitionTime);
+                        c.transform.eulerAngles = Utility.SmoothDampAngle(c.transform.eulerAngles, goalTransform.eulerAngles, ref velocityRot, newTransitionTime);
                     }
                     time += Time.DeltaTime;
                 }
@@ -143,11 +150,10 @@ namespace BRS.Scripts.Managers {
                     time = 0;
                     moveCam = false;
 
-                    foreach (Camera c in Screen.Cameras) {
+                    /*foreach (Camera c in Screen.Cameras) {
                         c.transform.position = goalTransform.position;
-                        //c.transform.rotation = goalTransform.rotation;
                         c.transform.eulerAngles = goalTransform.eulerAngles;
-                    }
+                    }*/
 
                     _currentMenuCam = MenuCam[newMenuName];
                     if (_changeToMenu != "play2Shared")
@@ -157,7 +163,6 @@ namespace BRS.Scripts.Managers {
                         if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
                             MenuRect[_changeToMenu + "1"].active = true;
                     }
-
                 }
             }
 
