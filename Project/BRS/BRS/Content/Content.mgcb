@@ -7287,3 +7287,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/particles3d/dollar2.png
 
+#begin Effects/Wave.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/Wave.fx
+
