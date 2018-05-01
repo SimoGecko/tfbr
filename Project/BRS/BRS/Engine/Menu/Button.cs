@@ -46,6 +46,8 @@ namespace BRS.Engine.Menu {
         public int IndexAssociatedPlayerScreen = 0;
         public bool DeSelectOnMove = false;
 
+        public SpriteFont Font = UserInterface.menuFont;
+
         public Rectangle Rectangle {
             get {
                 return new Rectangle((int)(Position.X), (int)(Position.Y), (int)(Texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(Texture.Height * ScaleHeight / 1080f * Screen.Height));
@@ -174,7 +176,7 @@ namespace BRS.Engine.Menu {
                     //var x = (Rectangle.X + Rectangle.Width / 2) - (UserInterface.comicFont.MeasureString(Text).X / 2);
                     //var y = (Rectangle.Y + Rectangle.Height / 2) - (UserInterface.comicFont.MeasureString(Text).Y / 2);
 
-                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false, font : IsHovering ? UserInterface.menuHoveringFont : UserInterface.menuFont, rot: rotation);
+                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false, font : IsHovering ? UserInterface.menuHoveringFont : Font, rot: rotation);
                 }
             }
         }

@@ -149,6 +149,7 @@ namespace BRS.Scripts.UI {
                         InitPos = offsetStart[0] + new Vector2(offsetWidth, count * offsetHeight),
                         Text = name,
                     };
+                    nameCapacity.Font = UserInterface.menuSmallFont;
                     nameCapacity.Colour = new Color(148,148,148);
                     //namePerson.Font = UserInterface.menuSmallFont;
                     listStats.AddComponent(nameCapacity);
@@ -159,6 +160,7 @@ namespace BRS.Scripts.UI {
                     InitPos = offsetStart[1] + new Vector2(offsetWidth, 0 * offsetHeight),
                     Text = ScenesCommunicationManager.ValuesStats[i].Capacity.ToString(),
                 };
+                statCapacity.Font = UserInterface.menuSmallFont;
                 statCapacity.Colour = new Color(148, 148, 148);
                 //namePerson.Font = UserInterface.menuSmallFont;
 
@@ -166,6 +168,7 @@ namespace BRS.Scripts.UI {
                     InitPos = offsetStart[1] + new Vector2(offsetWidth, 1 * offsetHeight),
                     Text = ScenesCommunicationManager.ValuesStats[i].AttackDistance.ToString(),
                 };
+                statAttackDistance.Font = UserInterface.menuSmallFont;
                 statAttackDistance.Colour = new Color(148, 148, 148);
                 //namePerson.Font = UserInterface.menuSmallFont;
 
@@ -174,6 +177,7 @@ namespace BRS.Scripts.UI {
                     Text = ScenesCommunicationManager.ValuesStats[i].MinSpeed.ToString() + "-" +
                            ScenesCommunicationManager.ValuesStats[i].MaxSpeed.ToString(),
                 };
+                statSpeed.Font = UserInterface.menuSmallFont;
                 statSpeed.Colour = new Color(148, 148, 148);
                 //namePerson.Font = UserInterface.menuSmallFont;
 
@@ -206,6 +210,7 @@ namespace BRS.Scripts.UI {
                         ScaleWidth = scaleAlphabet,
                         ScaleHeight = scaleAlphabet
                     };
+                    letterButton.Font = UserInterface.menuSmallFont;
                     letterButton.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
                     MenuManager.Instance.MenuRect[panelName].AddComponent(letterButton);
@@ -231,6 +236,7 @@ namespace BRS.Scripts.UI {
                         ScaleWidth = scaleAlphabet,
                         ScaleHeight = scaleAlphabet
                     };
+                    letterButton.Font = UserInterface.menuSmallFont;
                     letterButton.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                     letterButton.Click += MenuManager.Instance.UpdateTemporaryNamePlayer;
                     letterButton.NeighborUp = buttonsCurrentPanel2[firstLine.Length + secondLine.Length - 2];
@@ -279,13 +285,13 @@ namespace BRS.Scripts.UI {
                             InitPos = offsetStart[0] + new Vector2(0, count * 40),
                             Text = aPerson.Item1
                         };
-                        //namePerson.Font = UserInterface.menuSmallFont;
+                        namePerson.Font = UserInterface.menuSmallFont;
 
                         var score = new TextBox() {
                             InitPos = offsetStart[1] + new Vector2(0, count * 40),
                             Text = aPerson.Item2
                         };
-                        //score.Font = UserInterface.menuSmallFont;
+                        score.Font = UserInterface.menuSmallFont;
 
                         listPersons.AddComponent(namePerson); listPersons.AddComponent(score);
                         count++;

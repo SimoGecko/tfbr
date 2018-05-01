@@ -53,6 +53,8 @@ namespace BRS.Scripts.Managers {
         Vector3 _velocityRot = Vector3.Zero;
         string _changeToMenu;
 
+        bool[] NamePlayersChanged = { false, false, false, false };
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
@@ -84,7 +86,7 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Menu;
 
             string[] namePanels = { "main", "play1", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            Vector3[] posCam = { new Vector3(0,50,50), new Vector3(0,20,15), new Vector3(0,10,0), new Vector3(0,10,-10), new Vector3(0,10,-10), new Vector3(-15,10,0), new Vector3(15,10,0), new Vector3(0,10,10), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(0,20,15), new Vector3(0,10,0), new Vector3(0,10,-10), new Vector3(0,10,-10), new Vector3(-15,10,0), new Vector3(15,10,0), new Vector3(0,10,10), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
             Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-35,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
 
             for (int i = 0; i < namePanels.Length; ++i) {
@@ -305,6 +307,11 @@ namespace BRS.Scripts.Managers {
                 foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                     if (elem is Button bu) {
                         if (bu.nameIdentifier == "NamePlayer") {
+                            if (!NamePlayersChanged[button.IndexAssociatedPlayerScreen]) {
+                                bu.Text = "";
+                                NamePlayersChanged[button.IndexAssociatedPlayerScreen] = true;
+                            }
+
                             if (button.Text == "del") {
                                 if (bu.Text.Length > 0)
                                     bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
