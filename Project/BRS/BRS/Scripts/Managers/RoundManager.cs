@@ -136,6 +136,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void TryRestartRound() {
+            UpdateRanking();
             if (RoundNumber < NumRounds) {
                 GameManager.RestartCustom();
                 RestartRound();
@@ -147,24 +148,21 @@ namespace BRS.Scripts.Managers {
 
         void OnGameEnd() {
             //save scores
-            UpdateRanking();
+            //UpdateRanking();
             //return to menu
             SceneManager.LoadScene("Level2");
         }
 
 
         void UpdateRanking() {//@nico move somewhere else
-            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt");
+            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
             rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-            File.WriteRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt", rankinglist, 5);
+            File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
-
-        
-        
 
         // queries
         int FindWinner() { // TODO deal with tie

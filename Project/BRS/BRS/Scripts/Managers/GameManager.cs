@@ -12,7 +12,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
         public enum State { Menu, Playing, Paused, Finished };
 
-        public static State state = State.Playing; // CONTROLS STATE OF THE GAME
+        public static State state; // CONTROLS STATE OF THE GAME
 
         //public
         public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
@@ -41,9 +41,11 @@ namespace BRS.Scripts.Managers {
 
         // commands 
         static void CheckForPause() {
-            if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
+            if (Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
+
+                MenuManager.Instance.MenuRect["pause"].active = GamePaused;
             }
         }
 
@@ -56,11 +58,7 @@ namespace BRS.Scripts.Managers {
             //PowerupUI.instance.Start();
             PoliceManager.Instance.Reset();
 
-            foreach (var b in ElementManager.Instance.Bases()) b.Start();
-            foreach (var p in ElementManager.Instance.Players()) p.Start();
-
-            GameObject vault = GameObject.FindGameObjectWithName("vault");
-            if (vault != null) vault.Start();
+            foreach (var g in GameObject.All) g.Reset();
 
             state = State.Playing;
         }

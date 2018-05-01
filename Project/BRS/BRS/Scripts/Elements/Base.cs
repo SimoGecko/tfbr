@@ -7,6 +7,7 @@ using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Engine.Physics;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -24,6 +25,12 @@ namespace BRS.Scripts.Elements {
         private const float MoneyPenalty = .5f; // percent
         private readonly int _baseIndex = 0;
 
+        private int _shownMoneyStacks = 0;
+        private int _bundlesPerStack = 10;
+        private int _columnsPerRow = 2;
+        private float _margin = 0.05f;
+        private List<GameObject> _moneyGameObjects = new List<GameObject>();
+
         public System.Action OnBringBase;
 
         //reference
@@ -39,6 +46,8 @@ namespace BRS.Scripts.Elements {
             base.Start();
             TotalMoney = 0;
 
+            _shownMoneyStacks = 0;
+
             // Todo: This causes currently a strange loop. Players are need UI to be started already, but the UI which contains the Suggestions uses the player and bases to be startet first!
             UpdateUI();
         }
@@ -48,6 +57,12 @@ namespace BRS.Scripts.Elements {
         }
 
         public override void Reset() {
+            foreach (GameObject go in _moneyGameObjects) {
+                GameObject.Destroy(go);
+            }
+
+            _moneyGameObjects.Clear();
+
             Start();
         }
 
@@ -128,8 +143,31 @@ namespace BRS.Scripts.Elements {
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();
+                UpdateMoneyStack();
                 Input.Vibrate(.01f, .01f, pi.gameObject.GetComponent<Player>().PlayerIndex);
                 await Time.WaitForSeconds(TimeBetweenUnloads);
+            }
+        }
+
+        void UpdateMoneyStack() {
+            int totalStacksToShow = TotalMoney / 1000;
+
+            while (_shownMoneyStacks < totalStacksToShow) {
+                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
+                _moneyGameObjects.Add(newBundle);
+
+                Vector3 size = BoundingBoxHelper.CalcualteSize(newBundle.Model, transform.scale);
+
+                int stackId = _shownMoneyStacks / _bundlesPerStack;
+                int rowId = stackId % _columnsPerRow;
+                int colId = stackId / _columnsPerRow;
+                Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
+                Vector3 right = size.X * (_margin + rowId) * Vector3.Right;
+                Vector3 back = size.X * (_margin + colId) * Vector3.Backward;
+
+                newBundle.transform.position = transform.position + up + right + back;
+
+                ++_shownMoneyStacks;
             }
         }
 

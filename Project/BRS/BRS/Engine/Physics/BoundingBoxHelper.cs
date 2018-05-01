@@ -19,7 +19,7 @@ namespace BRS.Engine.Physics {
             return Calculate(model, Matrix.Identity);
         }
 
-        
+
         /// <summary>
         /// Calculate the bounding-box of the model with a specified world-transformation.
         /// </summary>
@@ -53,6 +53,24 @@ namespace BRS.Engine.Physics {
             }
 
             return new BoundingBox(min, max);
+        }
+
+
+        /// <summary>
+        /// Calculate the local bounding-box-size of the model with the correct scaling.
+        /// </summary>
+        /// <param name="model">XNA-model file</param>
+        /// <param name="scale">Scaling per axis</param>
+        /// <returns>Size of the scaled local-bounding</returns>
+        public static Vector3 CalcualteSize(Model model, Vector3 scale) {
+            BoundingBox bb = Calculate(model);
+            Vector3 size = bb.Max - bb.Min;
+
+            return new Vector3(
+                scale.X * size.X,
+                scale.Y * size.Y,
+                scale.Z * size.Z
+            );
         }
 
     }

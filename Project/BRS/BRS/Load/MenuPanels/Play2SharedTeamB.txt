@@ -1,0 +1,188 @@
+<Button>
+Texture: bigBackground
+Position: 960 500
+ScaleHeight: 0.95
+ScaleWidth: 0.4
+Color: 220 220 220
+Transparency: 200
+</Button>
+
+<Button>
+NameIdentifier: NamePlayer
+Texture: title
+Position: 960 90
+Text: Player
+Color: 148 148 148
+ColorInside: 255 255 255
+</Button>
+
+<Image>
+NameIdentifier: pictureModel1
+Texture: model1Back
+Position: 1080 455
+Active: yes
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+</Image>
+
+<Image>
+NameIdentifier: pictureModel1Color
+Texture: model1Color
+Position: 1080 455
+Active: yes
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+Color: 255 0 0
+</Image>
+
+<Image>
+NameIdentifier: pictureModel2
+Texture: model2Back
+Position: 1080 455
+Active: no
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+</Image>
+
+<Image>
+NameIdentifier: pictureModel2Color
+Texture: model2Color
+Position: 1080 455
+Active: no
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+Color: 255 0 0
+</Image>
+
+<Image>
+NameIdentifier: pictureModel3
+Texture: model3Back
+Position: 1080 455
+Active: no
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+</Image>
+
+<Image>
+NameIdentifier: pictureModel3Color
+Texture: model3Color
+Position: 1080 455
+Active: no
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+Color: 255 0 0
+</Image>
+
+<Button>
+NameIdentifier: ModelChangeLeft
+Texture: arrowLeft
+Position: 905 430
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: Alphabet3 ColorChangeLeft ModelChangeRight ModelChangeRight
+Functions: ChangeModelPlayer SwitchModelStat
+</Button>
+
+<Button>
+NameIdentifier: ModelChangeRight
+Texture: arrowRight
+Position: 1235 430
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: Alphabet3 ColorChangeRight ModelChangeLeft ModelChangeLeft
+Functions: ChangeModelPlayer SwitchModelStat
+</Button>
+
+<Button>
+NameIdentifier: ColorChosen
+Texture: buttonCircle
+Position: 1005 620
+Active: yes
+ScaleWidth: 0.7
+ScaleHeight: 0.7
+Color: 255 0 0
+</Button>
+
+<Button>
+NameIdentifier: ColorChangeRight
+Texture: arrowRight
+Position: 1105 620
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: ModelChangeRight Ready ColorChangeLeft ColorChangeLeft 
+Functions: UpdateChosenColor
+</Button>
+
+<Button>
+NameIdentifier: ColorChangeLeft
+Texture: arrowLeft
+Position: 905 620
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: ModelChangeLeft Ready ColorChangeRight ColorChangeRight
+Functions: UpdateChosenColor
+</Button>
+
+<Text>
+Text: Name
+Position: 700 270
+</Text>
+
+<Text>
+Position: 700 430
+Text: Model
+</Text>
+
+<Text>
+Position: 700 620
+Text: Team Color
+</Text>
+
+<Text>
+Position: 700 720
+Text: Stats
+</Text>
+
+<Button>
+NameIdentifier: Ready
+Texture: button
+Position: 960 900
+Text: Ready!
+ScaleWidth: 1.5
+ScaleHeight: 1
+Functions: HighlightBorders ChangeNamePlayer StartGamePlayersReady
+NeighborsUpDownLeftRight: ColorChangeLeft null Back Back
+DeSelectOnMove: yes
+</Button>
+
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 750 900
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: SwitchToMenu
+NeighborsUpDownLeftRight: ColorChangeLeft null Ready Ready
+NameSwitchTo: play1
+Color: 250 139 139
+ColorInside: 255 255 255
+</Button>
+
+<Button>
+NameIdentifier: Alphabet
+</Button>
+
+<Text>
+NameIdentifier: ModelsStats
+</Text>

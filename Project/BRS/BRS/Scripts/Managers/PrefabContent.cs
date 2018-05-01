@@ -138,6 +138,13 @@ namespace BRS.Engine {
                 dynamicElement.material = elementsMat;
                 Prefabs.AddPrefab(dynamicElement);
             }
+
+            //cash
+            GameObject cashStack = new GameObject("cashStack", File.Load<Model>("Models/elements/stack"));
+            cashStack.transform.Scale(2f);
+            cashStack.material = elementsMat;
+            Prefabs.AddPrefab(cashStack);
+
         }
     }
 }
