@@ -145,6 +145,7 @@ namespace BRS.Scripts.Scenes {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
+            vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
             //vault.transform.position = new Vector3(5, 1.5f, -62);
             //vault.transform.scale = new Vector3(3, .5f, 3);
