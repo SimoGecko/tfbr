@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
@@ -66,6 +67,10 @@ namespace BRS.Scripts.Elements {
             OnVaultOpen?.Invoke();
             _opening = true;
             _openRefTime = 0;
+
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                Input.Vibrate(.03f, OpeningDuration, i);
+            }
         }
 
         protected override void Die() {

@@ -25,7 +25,7 @@ namespace BRS.Engine.Particles {
 
 
         // Number of particles generated in each round
-        public int ParticlesPerRound = 1;
+        public float ParticlesPerRound = 1;
 
 
         // How long these particles will last.

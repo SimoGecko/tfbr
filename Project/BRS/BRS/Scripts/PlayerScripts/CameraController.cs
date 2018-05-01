@@ -17,40 +17,36 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public int CamIndex;
 
-        bool autoFollow = true;
+        // const
+        private const float SmoothTime = .2f;
+        private const float AutoFollowSmoothTime = .4f;
+        private const int AngleVariation = 40;
+        private const float ShakeAmount = .1f;
 
         static readonly Vector3 Offset = new Vector3(0, 10, 10);
         static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
-        static Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation); // -40, 40
+        static readonly Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation);
 
         //private
-        static Vector2 _mouseSensitivity = new Vector2(-.3f, -.3f); // set those (also with sign) into options menu
+        static Vector2 _mouseSensitivity = new Vector2(-.3f, -.3f); // TODO set those (also with sign) into options menu
         static Vector2 _gamepadSensitivity = new Vector2(-2f, -2f);
+
+        public int CamIndex;
+        bool autoFollow = false;
+
         float _xAngle, _xAngleSmooth;
         float _yAngle, _yAngleSmooth;
         float _refVelocityX, _refVelocityY;
-        //Vector3 _targetPosRef;
-
         float _yAnglePlayerSmooth, _refPlayer;
 
         float _shakeDuration = 0;
         Vector3 _shake;
 
-        // const
-        private const float SmoothTime = .2f;
-        private const float AutoFollowSmoothTime = .4f;
-        private const float PositionSmoothTime = .1f;
-        private const int AngleVariation = 40;
-        private const float ShakeAmount = .0f;
+
 
         //reference
         private Transform _player;
-
-        public CameraController() {
-            _yAngle = 0;
-        }
 
 
         // --------------------- BASE METHODS ------------------
@@ -60,7 +56,6 @@ namespace BRS.Scripts.PlayerScripts {
             _player = GameObject.FindGameObjectWithName("player_" + CamIndex).transform;
             if (_player == null) {
                 Debug.LogError("player not found");
-                //return;
             }
 
             transform.position = _player.position + Offset;
@@ -70,13 +65,9 @@ namespace BRS.Scripts.PlayerScripts {
         public override void LateUpdate() { // after player has moved
             if (GameManager.GameActive) ProcessInput();
 
-            if (!autoFollow) {
-                FollowSmoothAndRotate();
-            } else {
-                SetBehindPlayer();
-            }
+            if (!autoFollow) FollowSmoothAndRotate();
+            else  SetBehindPlayer();
             ProcessShake();
-
         }
 
 
@@ -100,19 +91,11 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         void FollowSmoothAndRotate() {
-            // Todo: used? yes
-            //Vector3 currentPosition = transform.position;
-
             transform.position = _player.position + Offset;
             transform.eulerAngles = StartAngle;
 
             transform.RotateAround(_player.position, Vector3.Up, _yAngleSmooth);
             transform.RotateAround(_player.position, transform.Right, _xAngleSmooth);
-
-            // Todo: used? yes
-            //Vector3 targetPos = transform.position;
-            //transform.position = Utility.SmoothDamp(currentPosition, targetPos, ref targetPosRef, positionSmoothTime);
-
         }
 
         void SetBehindPlayer() {

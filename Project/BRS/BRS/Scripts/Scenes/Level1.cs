@@ -58,19 +58,9 @@ namespace BRS.Scripts.Scenes {
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                int offset = i > 1 ? 3 : 0;
-                StartPositions.Add(new Vector3(-5 + 10 * i + offset, 0, 10));
+                int offset = i > 1 ? 1 : 0;
+                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
             }
-            /*
-            if (GameManager.NumPlayers == 2) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
-            } else if (GameManager.NumPlayers == 4) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
-            }*/
         }
 
         void CreateManagers() {
@@ -131,7 +121,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new SpeechManager(i));
                 player.AddComponent(new DynamicShadow());
 
-                // Nico: Modify player's name and model and color(choosen by user during menu)
+                // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 
@@ -164,7 +154,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < GameManager.NumTeams; i++) {
                 // Load the texture and create a copy for the colored base
                 Texture2D texture = File.Load<Texture2D>("Images/textures/base");
                 Texture2D colored = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
@@ -199,6 +189,7 @@ namespace BRS.Scripts.Scenes {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
+            vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
             //vault.transform.position = new Vector3(5, 1.5f, -62);
             //vault.transform.scale = new Vector3(3, .5f, 3);
@@ -207,6 +198,8 @@ namespace BRS.Scripts.Scenes {
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
             vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
+
+            vault.AddComponent(new FlyingCash());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);

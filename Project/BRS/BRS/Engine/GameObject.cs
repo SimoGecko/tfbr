@@ -9,6 +9,7 @@ using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
@@ -24,6 +25,8 @@ namespace BRS.Engine {
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool active { get; set; } = true;
         public string name { private set; get; }
+
+        public int DrawOrder { set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
@@ -33,10 +36,12 @@ namespace BRS.Engine {
             Debug.Assert(!NameExists(name), "Name " + name + " must be unique!");
 
             this.name = name;
+            DrawOrder = 0;
             transform = new Transform();
             components = new List<IComponent>();
             Model = model;
             allGameObjects.Add(this);
+            SortAll();
         }
 
 
@@ -84,6 +89,11 @@ namespace BRS.Engine {
         // ---------- STATIC COMMANDS ----------
         static List<GameObject> allGameObjects = new List<GameObject>();
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
+
+        public static void SortAll() {
+            // Todo: Have to rethink the draw order again
+            //allGameObjects = allGameObjects.OrderBy(x => x.name).ToList();
+        }
 
 
 

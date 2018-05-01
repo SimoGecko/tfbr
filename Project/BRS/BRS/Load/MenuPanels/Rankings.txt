@@ -1,7 +1,7 @@
 <Button>
 Texture: background
-Position: 960 540
-ScaleHeight: 0.87
+Position: 960 500
+ScaleHeight: 0.95
 ScaleWidth: 0.87
 Color: 220 220 220
 Transparency: 200
@@ -9,46 +9,76 @@ Transparency: 200
 
 <Button>
 Texture: title
-Position: 960 162
+Position: 960 90
 Text: Rankings
 Color: 148 148 148
 ColorInside: 255 255 255
 </Button>
 
-
 <Button>
-NameIdentifier: Ranking2min
+NameIdentifier: RankingTime
 Texture: button
-Position: 768 324
+Position: 810 215
+ScaleWidth: 0.8
+ScaleHeight: 0.75
 Text: 2 min
-Index: 0
-Functions: SwitchRankingDisplay HighlightBorders
-NeighborsUpDownLeftRight: null Back Ranking5min Ranking3min
+</Button>
+
+<Button>
+NameIdentifier: TimeChangeRight
+Texture: arrowRight
+Position: 910 215
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: null Back TimeChangeLeft PlayersChangeLeft
+Functions: UpdateRanking
+</Button>
+
+<Button>
+NameIdentifier: TimeChangeLeft
+Texture: arrowLeft
+Position: 710 215
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
 CurrentSelection: yes
-UniqueChoiceWith: Ranking3min Ranking5min
-IsClicked: yes
+NeighborsUpDownLeftRight: null Back PlayersChangeRight TimeChangeRight
+Functions: UpdateRanking
 </Button>
 
 <Button>
-NameIdentifier: Ranking3min
+NameIdentifier: RankingPlayers
 Texture: button
-Position: 960 324
-Text: 3 min
-Index: 1
-Functions: SwitchRankingDisplay HighlightBorders
-NeighborsUpDownLeftRight: null Back Ranking2min Ranking5min
-UniqueChoiceWith: Ranking2min Ranking5min
+Position: 1110 215
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+Text: 1P
 </Button>
 
 <Button>
-NameIdentifier: Ranking5min 
-Texture: button
-Position: 1152 324
-Text: 5 min
-Index: 2
-Functions: SwitchRankingDisplay HighlightBorders
-NeighborsUpDownLeftRight: null Back Ranking3min Ranking2min
-UniqueChoiceWith: Ranking2min Ranking3min
+NameIdentifier: PlayersChangeRight
+Texture: arrowRight
+Position: 1210 215
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: null Back PlayersChangeLeft TimeChangeLeft
+Functions: UpdateRanking
+</Button>
+
+<Button>
+NameIdentifier: PlayersChangeLeft
+Texture: arrowLeft
+Position: 1010 215
+Active: yes
+ScaleWidth: 1.3
+ScaleHeight: 1.3
+Color: 148 148 148
+NeighborsUpDownLeftRight: null Back TimeChangeRight PlayersChangeRight
+Functions: UpdateRanking
 </Button>
 
 <Button>
@@ -61,7 +91,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SwitchToMenu
-NeighborsUpDownLeftRight: Ranking2min null null null
+NeighborsUpDownLeftRight: TimeChangeLeft null null null
 NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255

@@ -35,6 +35,7 @@ namespace BRS.Scripts {
 
         //reference
         List<Vector3> waypoints;
+        bool loopWaypoints = false;
 
 
         // --------------------- BASE METHODS ------------------
@@ -50,7 +51,8 @@ namespace BRS.Scripts {
                     if (wpIndex < waypoints.Count - 1) {
                         wpIndex++;
                     } else {
-                        wait = true;
+                        if (loopWaypoints) wpIndex = 0;
+                        else wait = true;
                     }
                 }
 
@@ -63,29 +65,19 @@ namespace BRS.Scripts {
                     transform.eulerAngles = new Vector3(0, smoothY, 0);
                     transform.Translate(Vector3.Forward * speed * Time.DeltaTime);
                 }
-
-                //ghost.LookAt(target);
-                //ghost.Translate(Vector3.Forward * speed * Time.DeltaTime);
-
-                //float percent = Vector3.Distance(ghost.position, waypoints[wpIndex - 1]) / (Vector3.Distance(waypoints[wpIndex], waypoints[wpIndex - 1])+.01f);
-                //percent = Utility.Clamp01(percent);
-                //smoothTarget = Utility.SmoothDamp(smoothTarget, target , ref refTarget, .2f);
-                //transform.LookAt(smoothTarget);
-
             }
 
             if(state == State.Stun && Time.CurrentTime > endStunTime) {
                 state = State.Chasing;
             }
 
-            //CheckCollision();
         }
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
-                if(!p.IsAttacking() && state==State.Chasing)
+                if(state == State.Chasing && !p.IsAttacking())
                     p.TakeDamage(20);
             }
         }
@@ -96,19 +88,21 @@ namespace BRS.Scripts {
 
 
         // commands
+        /*
         void CheckCollision() {
             foreach(Player p in ElementManager.Instance.Players()) {
                 if(Vector3.DistanceSquared(transform.position, p.transform.position) < bustRadius * bustRadius) {
                     p.TakeDamage(20);
                 }
             }
-        }
+        }*/
 
-        public void StartFollowing(List<Vector3> _wp) {
+        public void StartFollowing(List<Vector3> _wp, bool loop = false) {
             following = true;
             waypoints = _wp;
             wpIndex = 0;
             transform.position = waypoints[0];
+            loopWaypoints = loop;
         }
 
         public void TakeDamage(float damage) {

@@ -19,8 +19,8 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 150;
-        public const int TimeBeforePolice = 15;
+        public static int RoundTime = 100;
+        public const int TimeBeforePolice = 5;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
@@ -94,7 +94,7 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Playing;
             roundStarted = true;
             OnRoundStartAction?.Invoke();
-            PoliceManager.Instance.StartRound();
+            PoliceManager.Instance.StartRound(); // WHY NOT USE START? => (please be aware of the meaning of all capital.. we all have different ways of solving problems). to answer your question: because since start is called automatically when the level is loaded and also with this call we have startet the police timer twice => not very cool! So that's why I put it in a StartRound to avoid the messing arround with if-startet-flags and I didn't want to remove it from the scene-managers.
             new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
         }
 
@@ -136,6 +136,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void TryRestartRound() {
+            UpdateRanking();
             if (RoundNumber < NumRounds) {
                 GameManager.RestartCustom();
                 RestartRound();
@@ -147,24 +148,21 @@ namespace BRS.Scripts.Managers {
 
         void OnGameEnd() {
             //save scores
-            UpdateRanking();
+            //UpdateRanking();
             //return to menu
             SceneManager.LoadScene("Level2");
         }
 
 
         void UpdateRanking() {//@nico move somewhere else
-            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt");
+            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
             rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-            File.WriteRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt", rankinglist, 5);
+            File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
-
-        
-        
 
         // queries
         int FindWinner() { // TODO deal with tie
@@ -189,7 +187,7 @@ namespace BRS.Scripts.Managers {
 
         public static int GetRank(int teamIndex) {
             int team = ElementManager.Instance.Base(teamIndex).TotalMoney;
-            int enemyTeam = ElementManager.Instance.Base(1 - teamIndex).TotalMoney;
+            int enemyTeam = ElementManager.Instance.EnemyBase(teamIndex).TotalMoney;
             return (team > enemyTeam) ? 1 : (enemyTeam > team) ? 2 : 0;
         }
 

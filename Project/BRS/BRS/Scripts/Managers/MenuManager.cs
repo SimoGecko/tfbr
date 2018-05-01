@@ -25,20 +25,35 @@ namespace BRS.Scripts.Managers {
         public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
         GameObject _currentMenu;
         string _currentMenuName;
-        public float transitionTime = 3f;
         readonly Menu _menuGame = new Menu();
+
+        public Dictionary<string, Transform> MenuCam = new Dictionary<string, Transform>();
+        Transform _currentMenuCam;
 
         public static MenuManager Instance;
 
-        public List<Model> modelCharacter;
-        int idModel = 0;
+        int _idModel = 0;
 
         public string NamePlayerInfosToChange;
         public string panelPlay2NameOption = "play2Shared";
 
-        Color[] colorModel = { new Color(215,173,35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
-        int idColor = 0;
-        Color defaultColorModel = new Color(215, 173, 35);
+        int _idColor = 0;
+
+        public string[] RankingPlayersText = { "1P", "2P", "4P"};
+        int _idRankingPlayerText = 0;
+        public string[] RankingDurationText = { "2 min", "3 min", "5 min", "10 min" };
+        int _idRankingDurationText = 0;
+
+        bool _moveCam = false;
+        float _time = 0;
+        public float TransitionTime = 0.5f;
+        public float DistTransition = 13;
+        public float CurrentDistTransition;
+        Vector3 _velocityPos = Vector3.Zero;
+        Vector3 _velocityRot = Vector3.Zero;
+        string _changeToMenu;
+
+        bool[] NamePlayersChanged = { false, false, false, false };
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -71,22 +86,29 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Menu;
 
             string[] namePanels = { "main", "play1", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "credits", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            foreach (string name in namePanels) {
-                GameObject go = new GameObject(name);
-                MenuRect.Add(go.name, go);
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(0,20,15), new Vector3(0,10,0), new Vector3(0,10,-10), new Vector3(0,10,-10), new Vector3(-15,10,0), new Vector3(15,10,0), new Vector3(0,10,10), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
+            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-35,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
+
+            for (int i = 0; i < namePanels.Length; ++i) {
+                GameObject go = new GameObject(namePanels[i]);
+                MenuRect.Add(namePanels[i], go);
+
+                Transform tr = new Transform(posCam[i], rotCam[i]);
+                MenuCam.Add(namePanels[i], tr);
             }
 
             _currentMenu = MenuRect["main"];
             _currentMenuName = "main";
+
+            _currentMenuCam = MenuCam["main"];
+            foreach (Camera c in Screen.Cameras) {
+                c.transform.position = _currentMenuCam.position;
+                c.transform.eulerAngles = _currentMenuCam.eulerAngles;
+            }
+
             Menu.Instance.BuildMenuPanels(panelPlay2NameOption);
 
             NamePlayerInfosToChange = "player_0";
-
-            modelCharacter = new List<Model> {
-                File.Load<Model>("Models/vehicles/forklift"),
-                File.Load<Model>("Models/vehicles/sweeper"),
-                File.Load<Model>("Models/vehicles/bulldozer")
-            };
 
         }
 
@@ -96,9 +118,25 @@ namespace BRS.Scripts.Managers {
                 uniqueFrameInputUsed[i] = false;
 
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
-                Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
-                if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                if (_currentMenuName == "play2Shared2") {
+                    MenuRect["play2Shared0"].active = true;
+                    MenuRect["play2Shared1"].active = true;
+                    MenuRect["play2Shared2"].active = false;
+                    MenuRect["play2Shared3"].active = false;
+                    _currentMenuName = "play2Shared0";
+                }
+                else {
+                    Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
+                    if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                }
+                
             }
+
+
+            if (_moveCam) 
+                TransitionCam();               
+            
+
         }
 
         public override void Draw2D(int i) {
@@ -108,32 +146,42 @@ namespace BRS.Scripts.Managers {
 
         // --------------------- CUSTOM METHODS ----------------
 
-        /*public async void TransitionUI(object sender, EventArgs e) {
-            Button button = (Button)sender;
+        public void TransitionCam() {
+            string newMenuName = _changeToMenu;
+            if (_changeToMenu == "play2Shared")
+                newMenuName = _changeToMenu + "0";
+            Transform goalTransform = MenuCam[newMenuName];
 
-            Image test = MenuRect["play1"].GetComponent<Image>();
-            test.StartPos = test.Position;
-            test.Position = test.Position + new Vector2(Screen.Width, 0);
-            test.Active = true;
+            CurrentDistTransition = (_currentMenuCam.position - goalTransform.position).Length();
+            float newTransitionTime = TransitionTime * CurrentDistTransition / DistTransition;
 
-            float time = 0;
-            //Task.Run(() => {
-                while (time < transitionTime) {
-                    float percent = time / transitionTime;
-                    //test.Position = test.StartPos - percent * new Vector2(Screen.Width, 0);
-                    test.Position = Vector2.Lerp(test.Position, test.StartPos, percent);
-                    time += Time.DeltaTime - 0.001f;
-                    await Time.WaitForSeconds(0.001f);
+            if (_time < newTransitionTime) {
+                foreach (Camera c in Screen.Cameras) {
+                    c.transform.position = Utility.SmoothDamp(c.transform.position, goalTransform.position, ref _velocityPos, newTransitionTime);
+                    c.transform.eulerAngles = Utility.SmoothDampAngle(c.transform.eulerAngles, goalTransform.eulerAngles, ref _velocityRot, newTransitionTime);
                 }
-                if (_currentMenu != null)
-                    _currentMenu.active = false;
-                _currentMenu = MenuRect[button.NameMenuToSwitchTo];
-                _currentMenu.active = true;
-            //});
-        }*/
+                _time += Time.DeltaTime;
+            }
+            else {
+                _time = 0;
+                _moveCam = false;
+
+                _currentMenuCam = MenuCam[newMenuName];
+                if (_changeToMenu != "play2Shared")
+                    _currentMenu.active = true;
+                else {
+                    MenuRect[_changeToMenu + "0"].active = true;
+                    if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
+                        MenuRect[_changeToMenu + "1"].active = true;
+                }
+            }
+        }
 
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            _changeToMenu = button.NameMenuToSwitchTo;
+            _moveCam = true;
 
             if (!uniqueMenuSwitchUsed) {
                 if (_currentMenu != null)
@@ -148,15 +196,10 @@ namespace BRS.Scripts.Managers {
                 if (button.NameMenuToSwitchTo != "play2Shared") {
                     _currentMenu = MenuRect[button.NameMenuToSwitchTo];
                     _currentMenuName = button.NameMenuToSwitchTo;
-                    _currentMenu.active = true;
                 }
                 else {
                     _currentMenuName = button.NameMenuToSwitchTo + "0";
                     _currentMenu = MenuRect[_currentMenuName];
-
-                    MenuRect[button.NameMenuToSwitchTo + "0"].active = true;
-                    if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
-                        MenuRect[button.NameMenuToSwitchTo + "1"].active = true;
                 }
                 uniqueMenuSwitchUsed = true;
             }
@@ -189,21 +232,25 @@ namespace BRS.Scripts.Managers {
 
             if (GameManager.NumPlayers == 1)
                 allPlayersReady = true;
-            else if (GameManager.NumPlayers == 2 && Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
+            else if (GameManager.NumPlayers == 2 && Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
                 allPlayersReady = true;
             }
             else if (GameManager.NumPlayers == 4) {
-                if (button.indexAssociatedPlayerScreen == 0 || button.indexAssociatedPlayerScreen == 1) {
-                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
+                if (button.IndexAssociatedPlayerScreen == 0 || button.IndexAssociatedPlayerScreen == 1) {
+                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
                         MenuRect[panelPlay2NameOption + "0"].active = false;
                         MenuRect[panelPlay2NameOption + "1"].active = false;
                         MenuRect[panelPlay2NameOption + "2"].active = true;
                         MenuRect[panelPlay2NameOption + "3"].active = true;
+
+                        _currentMenuName = panelPlay2NameOption + "2";
+                        _currentMenu = MenuRect[_currentMenuName];
+
                         uniqueMenuSwitchUsed = true;
                     }
                 }
-                else if (button.indexAssociatedPlayerScreen == 2 || button.indexAssociatedPlayerScreen == 3) {
-                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.indexAssociatedPlayerScreen + 1) % 2 + 2).ToString()).IsCurrentSelection) {
+                else if (button.IndexAssociatedPlayerScreen == 2 || button.IndexAssociatedPlayerScreen == 3) {
+                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2 + 2).ToString()).IsCurrentSelection) {
                         allPlayersReady = true;
                     }
                 }
@@ -211,8 +258,8 @@ namespace BRS.Scripts.Managers {
 
             if (allPlayersReady) {
                 for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                    PostProcessingManager.Instance._effects[2].Activate(i, false);
-                    PostProcessingManager.Instance._effects[3].Activate(i, false);
+                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, false);
+                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
                 }
 
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
@@ -256,15 +303,22 @@ namespace BRS.Scripts.Managers {
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                if (elem is Button bu) {
-                    if (bu.nameIdentifier == "NamePlayer") {
-                        if (button.Text == "del") {
-                            if (bu.Text.Length > 0)
-                                bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
+            if (!uniqueMenuSwitchUsed) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
+                    if (elem is Button bu) {
+                        if (bu.nameIdentifier == "NamePlayer") {
+                            if (!NamePlayersChanged[button.IndexAssociatedPlayerScreen]) {
+                                bu.Text = "";
+                                NamePlayersChanged[button.IndexAssociatedPlayerScreen] = true;
+                            }
+
+                            if (button.Text == "del") {
+                                if (bu.Text.Length > 0)
+                                    bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
+                            }
+                            else
+                                bu.Text += button.Text;
                         }
-                        else
-                            bu.Text += button.Text;
                     }
                 }
             }
@@ -274,21 +328,33 @@ namespace BRS.Scripts.Managers {
             Button button = (Button)sender;
 
             if (panelPlay2NameOption == "play2Shared")
-                NamePlayerInfosToChange = "player_" + button.indexAssociatedPlayerScreen.ToString();
+                NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
-                if (elem is TextBox textBox) {
-                    if (textBox.NameIdentifier == "NamePlayer") {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
+                if (elem is Button bu) {
+                    if (bu.nameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(textBox.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, defaultColorModel);
+                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(bu.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
                         else
-                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(textBox.Text, null, defaultColorModel));
+                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(bu.Text, 0, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
-                        textBox.Text = "";
+                        //bu.Text = "";
                     }
                 }
             }
 
+        }
+
+        public void SwitchModelStat(object sender, EventArgs e) {
+            Button button = (Button)sender;
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
+                if (elem is ListComponents lC) {
+                    if (lC.NameIdentifier == "model" + _idModel.ToString() + "Stats")
+                        lC.Active = true;
+                    else
+                        lC.Active = false;
+                }
+            }
         }
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
@@ -296,29 +362,29 @@ namespace BRS.Scripts.Managers {
 
             // Change color used
             if (button.nameIdentifier == "ModelChangeRight") {
-                ++idModel;
-                if (idModel >= modelCharacter.Count) idModel = modelCharacter.Count - 1; //idModel = 0;
+                ++_idModel;
+                if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = 0; //_idModel = 0;
             }
             else if (button.nameIdentifier == "ModelChangeLeft") {
-                --idModel;
-                if (idModel < 0) idModel = 0; //idModel = modelCharacter.Count - 1;
+                --_idModel;
+                if (_idModel < 0) _idModel = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = modelCharacter.Count - 1;
             }
             else
                 Debug.Log("Model was not Changed. NameIdentifier of current button not recognized!");
 
             if (panelPlay2NameOption == "play2Shared")
-                NamePlayerInfosToChange = "player_" + button.indexAssociatedPlayerScreen.ToString();
+                NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[idModel], defaultColorModel);
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, modelCharacter[idModel], defaultColorModel));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
-                    if (img.NameIdentifier == "pictureModel" + (idModel + 1).ToString())
+                    if (img.NameIdentifier == "pictureModel" + (_idModel + 1).ToString())
                         img.Active = true;
-                    else if (img.NameIdentifier == "pictureModel" + (idModel + 1).ToString() + "Color")
+                    else if (img.NameIdentifier == "pictureModel" + (_idModel + 1).ToString() + "Color")
                         img.Active = true;
                     else
                         img.Active = false;
@@ -326,42 +392,111 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        public void UpdateRanking(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            if (button.nameIdentifier == "PlayersChangeRight") {
+                ++_idRankingPlayerText;
+                if (_idRankingPlayerText >= RankingPlayersText.Length) _idRankingPlayerText = 0;
+            }
+            else if (button.nameIdentifier == "PlayersChangeLeft") {
+                --_idRankingPlayerText;
+                if (_idRankingPlayerText < 0) _idRankingPlayerText = RankingPlayersText.Length - 1;
+            }
+            else if (button.nameIdentifier == "TimeChangeRight") {
+                ++_idRankingDurationText;
+                if (_idRankingDurationText >= RankingDurationText.Length) _idRankingDurationText = 0;
+            }
+            else if (button.nameIdentifier == "TimeChangeLeft") {
+                --_idRankingDurationText;
+                if (_idRankingDurationText < 0) _idRankingDurationText = RankingDurationText.Length - 1;
+            }
+            else
+                Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingTime", _currentMenuName)).Text = RankingDurationText[_idRankingDurationText];
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingPlayers", _currentMenuName)).Text = RankingPlayersText[_idRankingPlayerText];
+
+            foreach (var elem in MenuRect[_currentMenuName].components) {
+                if (elem is ListComponents listComp) {
+                    if (listComp.NameIdentifier == "rankings_game") {
+                        foreach (var lC in listComp.Components) {
+                            if (((ListComponents)lC).NameIdentifier == "ranking" + RankingDurationText[_idRankingDurationText] + RankingPlayersText[_idRankingPlayerText])
+                                lC.Active = true;
+                            else
+                                lC.Active = false;
+                        }
+                    }
+                }
+            }
+
+        }
+
         public void UpdateChosenColor(object sender, EventArgs e) {
             Button button = (Button)sender;
                 
             // Change color used
             if (button.nameIdentifier == "ColorChangeRight") {
-                ++idColor;
-                if (idColor >= colorModel.Length) idColor = 0;
+                ++_idColor;
+                if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
+                    _idColor = 0;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
+                    ++_idColor;
+
+                if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
+                    _idColor = 0;
+                    
             }
             else if (button.nameIdentifier == "ColorChangeLeft") {
-                --idColor;
-                if (idColor < 0) idColor = colorModel.Length - 1;
+                --_idColor;
+                if (_idColor < 0) _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
+                    --_idColor;
+
+                if (_idColor < 0) _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
             }
             else
                 Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
 
+            if (button.IndexAssociatedPlayerScreen % 2 == 0)
+                ScenesCommunicationManager.TeamAColor = ScenesCommunicationManager.ColorModel[_idColor];
+            else
+                ScenesCommunicationManager.TeamBColor = ScenesCommunicationManager.ColorModel[_idColor];
+
             // update color for model pictures
-            foreach (var elem in MenuRect[panelPlay2NameOption + button.indexAssociatedPlayerScreen.ToString()].components) {
+            foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
-                    for (int i = 0; i < modelCharacter.Count; ++i) {
+                    for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                         if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
-                            img.colour = colorModel[idColor];
+                            img.colour = ScenesCommunicationManager.ColorModel[_idColor];
                     }
                 }
                 if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
-                    bu.ImageColor = colorModel[idColor];
+                    bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor];
+            }
+            if (GameManager.NumPlayers == 4) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen+2) % 4).ToString()].components) {
+                    if (elem is Image img) {
+                        for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
+                            if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
+                                img.colour = ScenesCommunicationManager.ColorModel[_idColor];
+                        }
+                    }
+                    if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
+                        bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor];
+                }
             }
 
+
             // update color for 3d model
-            Color test = colorModel[idColor];
+            Color test = ScenesCommunicationManager.ColorModel[_idColor];
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                 ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = 
-                    new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
+                    new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
                     ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, 
-                    colorModel[idColor]);
+                    ScenesCommunicationManager.ColorModel[_idColor]);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, null, colorModel[idColor]));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, 0, ScenesCommunicationManager.ColorModel[_idColor]));
         }
         
 
@@ -406,7 +541,8 @@ namespace BRS.Scripts.Managers {
             if (ScenesCommunicationManager.Instance != null) {
                 if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
-                    Model userModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    Model userModel = ScenesCommunicationManager.Instance.ModelCharacter[currIdModel];
                     Color colorPlayer = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
 
                     if (userName != null) player.GetComponent<Player>().PlayerName = userName;
@@ -415,7 +551,11 @@ namespace BRS.Scripts.Managers {
                         Rectangle areaChange = new Rectangle(4, 8, 4, 4);
                         SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
                     }
-                    
+
+                    player.GetComponent<PlayerInventory>().SetCapacity(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity);
+                    player.GetComponent<PlayerAttack>().AttackDistance = ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance;
+                    player.GetComponent<PlayerMovement>().MaxSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed;
+                    player.GetComponent<PlayerMovement>().MinSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed;
                 }
             }
         }

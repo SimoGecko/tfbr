@@ -11,16 +11,31 @@ using System.Collections;
 namespace BRS.Scripts.Managers {
     public class ScenesCommunicationManager : Component {
 
-        public Dictionary<string, Tuple<string, Model, Color>> PlayersInfo; // playerName -> userName, Model 
+        public Dictionary<string, Tuple<string, int, Color>> PlayersInfo; // playerName -> userName, Model, Color
         public static ScenesCommunicationManager Instance;
 
         public static bool loadOnlyPauseMenu;
 
-        public Dictionary<string, Texture2D> textureColorPlayers;        
+        public Dictionary<string, Texture2D> textureColorPlayers;
+
+        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(20,5,5,3), new ModelsStatsStruct(25,3,4,3), new ModelsStatsStruct(15,7,6,4) };
+        public static string[] NameStats = { "Capacity", "Distance of attack", "Speed (min-max)" };
+
+        public static Color[] ColorModel = { new Color(215, 173, 35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
+        public static Color TeamAColor = new Color(215, 173, 35);
+        public static Color TeamBColor = Color.Red;
+
+        public List<Model> ModelCharacter;
 
         public override void Start() {
             Instance = this;
-            PlayersInfo = new Dictionary<string, Tuple<string, Model, Color>>();
+            PlayersInfo = new Dictionary<string, Tuple<string, int, Color>>();
+
+            ModelCharacter = new List<Model> {
+                File.Load<Model>("Models/vehicles/forklift"),
+                File.Load<Model>("Models/vehicles/sweeper"),
+                File.Load<Model>("Models/vehicles/bulldozer")
+            };
 
             textureColorPlayers = new Dictionary<string, Texture2D>();
             Texture2D player0Color = File.Load<Texture2D>("Images/textures/player_colors_p1");
@@ -61,6 +76,19 @@ namespace BRS.Scripts.Managers {
             for (int x = rec.X; x < rec.X + rec.Width; ++x)
                 for (int y = rec.Y; y < rec.Y + rec.Height; ++y)
                     SetPixelColor(x, y, color, texture);
+        }
+
+        public struct ModelsStatsStruct {
+            public int Capacity;
+            public float AttackDistance;
+            public float MaxSpeed, MinSpeed;
+
+            public ModelsStatsStruct(int cap, float att, float maxSp, float minSp) {
+                Capacity = cap;
+                AttackDistance = att;
+                MaxSpeed = maxSp;
+                MinSpeed = minSp;
+            }
         }
     }
 }

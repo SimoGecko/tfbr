@@ -22,19 +22,20 @@ namespace BRS.Scripts.Scenes {
                 c.transform.position = new Vector3(0, 2, 8);
                 c.transform.eulerAngles = new Vector3(0, 0, 0);
             }
-            //SampleCylinders();
+            //
+            SampleCylinders();
             //MenuScene();
-            PlayerModels();
+            //PlayerModels();
         }
 
         void SampleCylinders() {
             //simple scene to tryout change scene
             GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
             GameObject cyl = new GameObject("cube1", File.Load<Model>("models/primitives/cylinder"));
-            cyl.material = new Material(Color.Red, false);
+            //cyl.material = new Material(Color.Red, false);
 
             GameObject cube = new GameObject("cube1", File.Load<Model>("models/primitives/cube"));
-            cube.material = new Material(Color.Green);
+            //cube.material = new Material(Color.Green);
             cube.AddComponent(new MaterialTest(cube.material));
 
             cyl.transform.position = new Vector3(1.5f, 2, 3);

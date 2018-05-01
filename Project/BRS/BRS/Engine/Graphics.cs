@@ -85,9 +85,9 @@ namespace BRS.Engine {
                 foreach (BasicEffect effect in mesh.Effects) {
                     //use base effect with diffuse color and alpha (and ev texture)
                     effect.EnableDefaultLighting();
-                    effect.LightingEnabled = mat.Lit;
+                    //effect.LightingEnabled = mat.Lit;
                     effect.DiffuseColor = mat.DiffuseColor;
-                    effect.Alpha = mat.Diffuse.A;
+                    //effect.Alpha = mat.Diffuse.A;
                     //effect.CurrentTechnique = EffectTechnique
                     //effect.Texture
 

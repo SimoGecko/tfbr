@@ -54,7 +54,8 @@ namespace BRS.Scripts.Particles3D {
                     MaxEndSize = 5
                 }
             };
-            
+
+
             _smokePlumeParticles.Awake();
         }
 
