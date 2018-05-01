@@ -363,11 +363,11 @@ namespace BRS.Scripts.Managers {
             // Change color used
             if (button.nameIdentifier == "ModelChangeRight") {
                 ++_idModel;
-                if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = 0;
+                if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = 0; //_idModel = 0;
             }
             else if (button.nameIdentifier == "ModelChangeLeft") {
                 --_idModel;
-                if (_idModel < 0) _idModel = 0; //_idModel = modelCharacter.Count - 1;
+                if (_idModel < 0) _idModel = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = modelCharacter.Count - 1;
             }
             else
                 Debug.Log("Model was not Changed. NameIdentifier of current button not recognized!");
