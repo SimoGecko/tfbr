@@ -1,4 +1,4 @@
-// (c) Simone Guggiari 2018
+// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
@@ -22,6 +22,7 @@ namespace BRS.Scripts {
         //private
         private List<List<Flare>> _flares;
         private List<bool> _active;
+        private List<float> _strength;
 
         private float _pulseTimer;
         private float _lightScale;
@@ -32,7 +33,6 @@ namespace BRS.Scripts {
 
         //reference
         private Texture2D _flareTexture2D;
-        public static LenseFlareManager Instance;
         private SpriteBatch _spriteBatch;
 
 
@@ -42,8 +42,6 @@ namespace BRS.Scripts {
         }
 
         public override void Awake() {
-            Instance = this;
-
             _flareTexture2D = File.Load<Texture2D>("Images/textures/flares");
         }
 
@@ -51,6 +49,7 @@ namespace BRS.Scripts {
             _spriteBatch = new SpriteBatch(Graphics.gD);
             _flares = new List<List<Flare>>();
             _active = new List<bool> { false, false, false, false };
+            _strength = new List<float> {0.0f, 0.0f, 0.0f, 0.0f };
 
             for (int i = 0; i < 4; ++i) {
                 _flares.Add(new List<Flare>());
@@ -72,6 +71,11 @@ namespace BRS.Scripts {
             }
         }
 
+        /// <summary>
+        /// Update from the GameLoop:
+        /// - Flares are calculated for each active player
+        /// - Flares are only calculated if the camera is directed against the sun
+        /// </summary>
         public override void Update() {
             if (!IsActive) {
                 return;
@@ -90,13 +94,12 @@ namespace BRS.Scripts {
 
                 Vector3 cameraSun = camera.transform.Forward;
 
+                _strength[playerIndex] = Vector3.Dot(cameraSun, _sun);
                 _active[playerIndex] = Vector3.Dot(cameraSun, _sun) > 0.0f;
 
                 if (!_active[playerIndex]) {
                     continue;
                 }
-
-
 
                 // Update the flare positions along the vector and update alpha, and rotation
                 for (int i = 0; i < _flares[playerIndex].Count; ++i) {
@@ -110,17 +113,17 @@ namespace BRS.Scripts {
                     }
 
                     // last flare needs angle to be corrected (should just do on sprite sheet)
-                    if (i + 1 == _flares[playerIndex].Count)
-                        flare.Rot +=
-                            MathHelper
-                                .PiOver2;
+                    if (i + 1 == _flares[playerIndex].Count) {
+                        flare.Rot += MathHelper.PiOver2;
+                    }
+
                     flare.Color = _lightColor;
 
-                    //find the percentage distance the flare is from the center (approximately)
+                    // find the percentage distance the flare is from the center (approximately)
                     // we divide based on approximate maximum distance we want between the opposite ends of the vector (to control fade out rate)
-                    Vector2 radiusVec = (i != 2) ? vec / (30 * 300) : vec / (30 * 450);
+                    Vector2 radiusVec = (i != 2) ? vec / (15 * 300) : vec / (15 * 450);
 
-                    //now scale the alpha transparency by this percent:                
+                    // now scale the alpha transparency by this percent:                
                     flare.Color.A = (byte)MathHelper.Clamp(255.0f - 255.0f * radiusVec.LengthSquared(), 0f, 255f);
                 }
             }
@@ -132,7 +135,7 @@ namespace BRS.Scripts {
 
         private void AddFlare(int index, int x, int y, int w, int h, float distance, float scale) {
             //note: I subtract 0.5 from distance because I need them to extend in the opposite direction along the vector also
-            _flares[index].Add(new Flare(new Rectangle(x, y, w, h), (distance - 0.5f) * 2f, scale, Color.White));
+            _flares[index].Add(new Flare(new Rectangle(x, y, w, h), (distance - 0.5f) * 2f, scale * 0.75f, Color.White));
         }
 
         public override void Draw2D(int i) {
@@ -150,51 +153,54 @@ namespace BRS.Scripts {
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             for (int j = 0; j < _flares[i].Count; ++j) {
                 Flare flare = _flares[i][j];
+                //flare.Color.A = (byte)_strength[i];
                 _spriteBatch.Draw(_flareTexture2D, flare.Pos, flare.Rect, flare.Color, flare.Rot,
                     flare.Origin, flare.Scale + _lightScale / 10, SpriteEffects.None, 0);
             }
             _spriteBatch.End();
         }
-    }
-
-    // other
-    class Flare {
-
-        #region Properties and attributes
-
-        // Source rectangle on texture image
-        public Rectangle Rect;
-
-        // Flare's center
-        public Vector2 Origin;
-
-        // Flare's position
-        public Vector2 Pos;
-
-        // Flare's rotation
-        public float Rot;
-
-        // Set intensity and tint
-        public Color Color;
-
-        // % distance along vector between screen center and light
-        public readonly float Offset;
-
-        // Size of the flare
-        public readonly float Scale;
-
-        #endregion
 
 
 
-        public Flare(Rectangle sourceRect, float distance, float scale, Color tint) {
-            Rect = sourceRect;
-            Origin = new Vector2(sourceRect.Width / 2.0f, sourceRect.Height / 2.0f);
-            Offset = distance;
-            Pos = Vector2.One;
-            Rot = 0f;
-            Scale = scale;
-            Color = tint;
+        // other
+        class Flare {
+
+            #region Properties and attributes
+
+            // Source rectangle on texture image
+            public Rectangle Rect;
+
+            // Flare's center
+            public Vector2 Origin;
+
+            // Flare's position
+            public Vector2 Pos;
+
+            // Flare's rotation
+            public float Rot;
+
+            // Set intensity and tint
+            public Color Color;
+
+            // % distance along vector between screen center and light
+            public readonly float Offset;
+
+            // Size of the flare
+            public readonly float Scale;
+
+            #endregion
+
+
+
+            public Flare(Rectangle sourceRect, float distance, float scale, Color tint) {
+                Rect = sourceRect;
+                Origin = new Vector2(sourceRect.Width / 2.0f, sourceRect.Height / 2.0f);
+                Offset = distance;
+                Pos = Vector2.One;
+                Rot = 0f;
+                Scale = scale;
+                Color = tint;
+            }
         }
     }
 }
