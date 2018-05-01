@@ -53,6 +53,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         public void Collect(Money money) {
             if (CanPickUp(money)) {
+                Input.Vibrate(.01f, .015f, gameObject.GetComponent<Player>().PlayerIndex);
                 _carryingWeight += money.Weight;
                 _carryingValue += money.Value;
                 _carryingMoney.Push(money);

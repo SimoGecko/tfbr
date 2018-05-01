@@ -19,8 +19,8 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 120;
-        public const int TimeBeforePolice = 15;
+        public static int RoundTime = 100;
+        public const int TimeBeforePolice = 5;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
@@ -94,7 +94,7 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Playing;
             roundStarted = true;
             OnRoundStartAction?.Invoke();
-            PoliceManager.Instance.StartRound();
+            PoliceManager.Instance.StartRound(); // WHY NOT USE START?
             new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
         }
 
@@ -187,7 +187,7 @@ namespace BRS.Scripts.Managers {
 
         public static int GetRank(int teamIndex) {
             int team = ElementManager.Instance.Base(teamIndex).TotalMoney;
-            int enemyTeam = ElementManager.Instance.Base(1 - teamIndex).TotalMoney;
+            int enemyTeam = ElementManager.Instance.EnemyBase(teamIndex).TotalMoney;
             return (team > enemyTeam) ? 1 : (enemyTeam > team) ? 2 : 0;
         }
 

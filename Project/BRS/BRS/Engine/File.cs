@@ -48,13 +48,13 @@ namespace BRS.Engine {
         // Todo: Clean up
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
-            string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
-            string fullPath = filePath + s + ".fbx";
+
+            /*
             bool fileExists = false;// System.IO.File.Exists(fullPath);
             if (false && !fileExists && typeof(T) == typeof(Model)) {
                 Debug.Log("File " + s + " doesn't exist!");
                 //return content.Load<T>("Models/primitives/cube");
-            }
+            }*/
 
             T result = content.Load<T>(s);
             return result;
@@ -308,6 +308,7 @@ namespace BRS.Engine {
             }
             return policePaths;
         }
+
 
         public static List<MenuStruct> ReadMenuPanel(string pathName) {
             List<MenuStruct> panel = new List<MenuStruct>();

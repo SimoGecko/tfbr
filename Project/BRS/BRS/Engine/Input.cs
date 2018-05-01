@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -15,6 +16,8 @@ namespace BRS.Engine {
         private static MouseState _mState, _oldMstate;
         private static GamePadState[] _gState, _oldGstate;
 
+        const float VibrationMultiplier = 10;
+
         private static bool[] _vibrating = new bool[4];
 
         public static void Start() {
@@ -25,6 +28,8 @@ namespace BRS.Engine {
             _mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 _gState[i] = GamePad.GetState(i);
+
+            
         }
 
         public static void Update() {
@@ -151,11 +156,23 @@ namespace BRS.Engine {
         }*/
 
         //VIBRATION
-        public static void Vibrate(float left, float right, float time, int i=0) {
-            GamePad.SetVibration(i, left, right);
+        public static void Vibrate(float amount, float time, int i = 0) {
+            Vibrate(amount, amount, time, i);
+        }
+        static void Vibrate(float left, float right, float time, int i=0) {
+            //currently doesnt work
+            GamePad.SetVibration(i, left*VibrationMultiplier, right* VibrationMultiplier);
             new Timer(time, () => StopVibration(i));
             _vibrating[i] = true;
+
+            //Windows.Gaming.Input.GamepadVibration wp = new Windows.Gaming.Input.GamepadVibration();
+            //PlatformSetVibration(index, MathHelper.Clamp(leftMotor, 0.0f, 1.0f), MathHelper.Clamp(rightMotor, 0.0f, 1.0f));
+
         }
+
+        /*public static void Rumble(PlayerIndex playerId, float length, float strength) {
+            GamePad.SetVibration(playerId, strength * VibrationMultiplier, strength * VibrationMultiplier);
+        }*/
 
         private static void StopVibration(int i=0) {
             GamePad.SetVibration(i, 0f, 0f);

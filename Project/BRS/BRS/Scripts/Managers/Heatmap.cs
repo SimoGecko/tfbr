@@ -20,19 +20,14 @@ namespace BRS.Scripts {
 
 
         //private
-        CDFdistrib green; // stores green distribution
-        CDFdistrib yellow; // stores yellow distribution
-        //_upperLeftPt = new Vector3(-25, 0, -75);
-        //_lowerRightPt = new Vector3(25, 0, 5);
+        CDFdistrib green, yellow, white; // stores yellow distribution
 
         float pixelSize;
 
         int[,] playerHeatmap;
-        int width, height;
+        int distribWidth, distribHeight;
 
         //reference
-        Texture2D moneyPic;
-        Texture2D goldPic;
         Texture2D heatmapPic;
         public static Heatmap instance;
 
@@ -43,21 +38,21 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-            moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_green");
-            goldPic  = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_yellow");
-            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
+            //DISTRIB   
+            Texture2D moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_green");
+            Texture2D goldPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_yellow");
+            Texture2D uniformPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_white");
+
             green = new CDFdistrib(moneyPic, 1);
             yellow = new CDFdistrib(goldPic, 1);
+            white = new CDFdistrib(uniformPic, 1);
 
-            width = moneyPic.Width;
-            height = moneyPic.Height;
-
+            distribWidth = moneyPic.Width;
+            distribHeight = moneyPic.Height;
             pixelSize = (float)PlayArea.SpawnArea.Width / moneyPic.Width;
 
-            //int[,] test = new int[,] { { 7, 8, 4 }, { 2, 6, 1 }, { 0, 5, 3 }, { 4, 1, 0 } };
-            //CDFdistrib newdistrib = new CDFdistrib(ref test);
-            //Debug.Log("it");
-
+            //HEATMAP
+            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
             StartComputingHeatmap();
         }
 
@@ -72,15 +67,21 @@ namespace BRS.Scripts {
 
         // commands
         public Vector2 GetCashPos() {
-            Vector2 pixel = green.Evaluate().ToVector2();
-            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(moneyPic.Width, moneyPic.Height));
-            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return EvaluateCDFAndGetPos(green);
         }
 
         public Vector2 GetGoldPos() {
-            Vector2 pixel = yellow.Evaluate().ToVector2();
-            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(goldPic.Width, goldPic.Height));
-            return PlayArea.SpawnArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
+            return EvaluateCDFAndGetPos(yellow);
+        }
+
+        public Vector2 GetUniformPos() {
+            return EvaluateCDFAndGetPos(white);
+        }
+
+        Vector2 EvaluateCDFAndGetPos(CDFdistrib distrib) {
+            Vector2 pixel = distrib.Evaluate().ToVector2();
+            Vector2 normalizedCoords = Vector2.Divide(new Vector2(pixel.Y, pixel.X), new Vector2(distribWidth, distribHeight));
+            return PlayArea.MapArea.Evaluate(normalizedCoords) + MyRandom.InsideUnitCircle() * pixelSize;
         }
 
 
@@ -91,13 +92,13 @@ namespace BRS.Scripts {
         async void StartComputingHeatmap() {
             int refreshFps = 40;
             //checks continuously to see where the players are and increases a counter to get a heatmap in the end
-            playerHeatmap = new int[width, height];
+            playerHeatmap = new int[distribWidth, distribHeight];
             while (true) {
                 foreach (Player p in ElementManager.Instance.Players()) {
                     Vector2 normCoord = PlayArea.Pos3DNormalized(p.transform.position);
-                    Point coord = new Point((int)(width * normCoord.X), (int)(height * normCoord.Y));
-                    coord.X = MathHelper.Clamp(coord.X, 0, width-1);
-                    coord.Y = MathHelper.Clamp(coord.Y, 0, height-1);
+                    Point coord = new Point((int)(distribWidth * normCoord.X), (int)(distribHeight * normCoord.Y));
+                    coord.X = MathHelper.Clamp(coord.X, 0, distribWidth-1);
+                    coord.Y = MathHelper.Clamp(coord.Y, 0, distribHeight-1);
                     playerHeatmap[coord.X, coord.Y]+=10;
                     //Texture2D heatmapResult = Graphics.ColorToTexture(Graphics.IntToColor(playerHeatmap));
                     Color[] colors = Graphics.Color2DToColor1D(Graphics.IntToColor(playerHeatmap));
@@ -106,10 +107,9 @@ namespace BRS.Scripts {
                 }
                 await Time.WaitForSeconds(1f / refreshFps);
             }
-            //TODO call save
         }
 
-        public void SaveHeatMap() {
+        public void SaveHeatMap() { // TODO have nico save this to array/picture
             //when game is closed
             Stream stream = System.IO.File.Create("Images/heatmap/level1_heatmap.png");
             heatmapPic.SaveAsPng(stream, heatmapPic.Width, heatmapPic.Height);
@@ -123,6 +123,10 @@ namespace BRS.Scripts {
 
 
     }
+
+
+
+
     // other
     public class CDFdistrib {
         //represents a distribution on a grid, initialized with simple CDF

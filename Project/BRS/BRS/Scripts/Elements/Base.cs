@@ -144,6 +144,7 @@ namespace BRS.Scripts.Elements {
                 pi.DeloadOne();
                 UpdateUI();
                 UpdateMoneyStack();
+                Input.Vibrate(.01f, .01f, pi.gameObject.GetComponent<Player>().PlayerIndex);
                 await Time.WaitForSeconds(TimeBetweenUnloads);
             }
         }

@@ -67,6 +67,7 @@ namespace BRS.Scripts.PlayerScripts {
         // commands
         public void BeginAttack() {
             Audio.Play("dash", transform.position);
+            Input.Vibrate(.04f, .1f, gameObject.GetComponent<Player>().PlayerIndex);
             OnAttackBegin?.Invoke();
 
             //Debug.Log(Time.CurrentTime);

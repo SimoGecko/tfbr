@@ -57,20 +57,10 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
-            for(int i=0; i<GameManager.NumPlayers; i++) {
-                int offset = i > 1 ? 3 : 0;
-                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                int offset = i > 1 ? 1 : 0;
+                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
             }
-            /*
-            if (GameManager.NumPlayers == 2) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
-            } else if (GameManager.NumPlayers == 4) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
-            }*/
         }
 
         void CreateManagers() {
@@ -162,7 +152,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
-            for (int i = 0; i < 2; i++) {
+            for (int i = 0; i < GameManager.NumTeams; i++) {
                 //TODO base object
                 GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
