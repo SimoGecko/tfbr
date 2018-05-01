@@ -37,19 +37,21 @@ float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor,
 	float2 distVec = textureCoordinate.xy - centerCoord;
 	float distance = length(distVec);
 	float duration = (time - startTime[playerId]) / animationLength;
-	float dampValue = exp(-duration) * cos(2.0 * PI * duration);
-	if (dampValue > 0.1) {
-		float diff = lerp((distance - duration), 0, dampValue);
-		float powDiff = 1.0 - pow(abs(diff*shockParams.x), shockParams.y);
-		float diffTime = diff  * powDiff;
-		float2 diffUV = normalize(distVec);
-		float2 newTexCoord = textureCoordinate.xy + (diffUV * diffTime);
-		float4 color = tex2D(TextureSampler, newTexCoord.xy);
-		return color;
+	
+	float sinArg = distance * 5.0 - duration * 5.0;
+	float slope = cos(sinArg);
+	
+	float2 diffUV = normalize(distVec);
+	float2 newTexCoord = textureCoordinate.xy + (diffUV * slope * 0.05);
+	float4 color = tex2D(TextureSampler, newTexCoord.xy);
+	
+	
+	float4 origColor = tex2D(TextureSampler, textureCoordinate.xy);
+	
+	if(distance < 0.1) {
+		return lerp(color, origColor, distance / 0.1);
 	}
-
-	float4 color = tex2D(TextureSampler, textureCoordinate.xy);
-	return color;
+	return origColor;
 }
 
 //------------------------ PIXEL SHADER ----------------------------------------

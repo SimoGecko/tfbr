@@ -35,7 +35,7 @@ namespace BRS.Scripts.Elements {
             GameObject.Destroy(gameObject, Duration);
 
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
+                PostProcessingManager.Instance.ActivateWave(i, transform.position);
             }
         }
 

@@ -31,6 +31,7 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
         private Texture2D _testGrid;
+        private Vector3 _wavePosition;
         private bool DEBUG = false;
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
@@ -185,7 +186,8 @@ namespace BRS.Engine.PostProcessing {
         /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
         /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
         public void ActivateWave(int playerId, Vector3 position, float animationLength = 5.0f, bool deactivate = true, float deactivateAfter = 5.0f) {
-            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
+            _wavePosition = position;
+            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
 
             _effects[(int)PostprocessingType.Wave].Activate(playerId, true);
             _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
@@ -281,6 +283,13 @@ namespace BRS.Engine.PostProcessing {
                         // set the blurred scene and the depth map as parameter
                         ppShader.SetParameter("BlurScene", _blurTarget);
                         ppShader.SetParameter("D1M", depth1Texture);
+                    }
+
+                    if(ppShader.Type == PostprocessingType.Wave) {
+                        for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
+                            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+                            ppShader.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                        }                 
                     }
 
                     // Setup next render-target to apply next filter
