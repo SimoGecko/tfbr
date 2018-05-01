@@ -195,7 +195,7 @@ namespace BRS.Engine.PostProcessing {
             _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "animationLength", animationLength);
 
             if (deactivate) {
-                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.ShockWave, playerId));
+                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.Wave, playerId));
             }
         }
 
