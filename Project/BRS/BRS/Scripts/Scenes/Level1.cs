@@ -163,11 +163,15 @@ namespace BRS.Scripts.Scenes {
                 Color[] data = new Color[texture.Width * texture.Height];
                 texture.GetData(data);
 
+                Color teamColor = i == 0
+                    ? ScenesCommunicationManager.TeamAColor
+                    : ScenesCommunicationManager.TeamBColor;
+
                 for (int j = 0; j < data.Length; ++j) {
                     if (data[j].A > 0) {
-                        data[j].R = i == 0 ? Graphics.Red.R : Graphics.White.R;
-                        data[j].G = i == 0 ? Graphics.Red.G : Graphics.White.G;
-                        data[j].B = i == 0 ? Graphics.Red.B : Graphics.White.B;
+                        data[j].R = teamColor.R;
+                        data[j].G = teamColor.G;
+                        data[j].B = teamColor.B;
                     }
                 }
 
