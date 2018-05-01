@@ -15,6 +15,8 @@ namespace BRS.Engine {
         static Dictionary<string, Scene> scenes = new Dictionary<string, Scene>();
         static Scene currentScene;
 
+        public static bool LoadMenu, LoadGame;
+
         public static void Start() {
             scenes = new Dictionary<string, Scene>();
 
@@ -22,15 +24,27 @@ namespace BRS.Engine {
             Add("Level1", new Level1());
             Add("Level2", new Level2());
             Add("Level3", new Level3());
-            Add("LevelPhysics", new LevelPhysics());
+            Add("LevelMenu", new LevelMenu());
+
+            LoadMenu = false;
+            LoadGame = false;
         }
 
         public static void Update() {
+            if (LoadGame) {
+                LoadScene("Level1");
+                LoadGame = false;
+            }
+
+            if (LoadMenu) {
+                LoadScene("LevelMenu");
+                LoadMenu = false;
+            }
+
             // For Simone to test other levels
             //if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1");
             //if (Input.GetKeyDown(Keys.D2)) LoadScene("Level2");
             //if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
-            //if (Input.GetKeyDown(Keys.D4)) LoadScene("LevelPhysics");
 
             // For chris to load the different levels
             if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1", 1);

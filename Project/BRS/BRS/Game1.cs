@@ -73,12 +73,13 @@ namespace BRS {
 
             //load prefabs and scene
             Prefabs.Start();
+            UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
             SceneManager.LoadScene("Level1");
 
+
             //start other big components
-            UserInterface.Start();
             Input.Start();
             Audio.Start();
             PostProcessingManager.Instance.Start(_spriteBatch);

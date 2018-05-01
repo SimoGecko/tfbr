@@ -1,0 +1,49 @@
+<Button>
+Texture: background
+Position: 960 540
+ScaleHeight: 0.87
+ScaleWidth: 0.87
+Color: 220 220 220
+Transparency: 200
+</Button>
+
+<Button>
+Texture: title
+Position: 960 162
+Text: Game Settings
+Color: 148 148 148
+ColorInside: 255 255 255
+</Button>
+
+<Slider>
+NameIdentifier: SliderAudio
+Texture: slider
+Position: 956 432
+Text: Game Settings
+Color: 148 148 148
+ColorInside: 255 255 255
+NeighborsUpDownLeftRight: null Back null null
+Functions: UpdateVolume
+</Slider>
+
+<Text>
+Text: Volume: 
+Position: 814 432
+</Text>
+
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 864 793
+ScaleWidth: 1.5
+ScaleHeight: 1.5
+ScaleWidthInside: 1.5
+ScaleHeightInside: 1.5
+Functions: SwitchToMenu
+NameSwitchTo: main
+Color: 250 139 139
+ColorInside: 255 255 255
+CurrentSelection: yes
+NeighborsUpDownLeftRight: SliderAudio null null null
+</Button>

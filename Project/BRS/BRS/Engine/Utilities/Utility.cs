@@ -69,6 +69,12 @@ namespace BRS.Engine {
             return result;
         }
 
+        public static Vector3 SmoothDampAngle(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float smoothTime) {
+            return new Vector3(SmoothDampAngle(current.X, target.X, ref currentVelocity.X, smoothTime),
+                                SmoothDampAngle(current.Y, target.Y, ref currentVelocity.Y, smoothTime),
+                                SmoothDampAngle(current.Z, target.Z, ref currentVelocity.Z, smoothTime));
+        }
+
         public static Vector3 SmoothDamp(Vector3 current, Vector3 target, ref Vector3 currentVelocity, float smoothTime) {
             return new Vector3( SmoothDamp(current.X, target.X, ref currentVelocity.X, smoothTime),
                                 SmoothDamp(current.Y, target.Y, ref currentVelocity.Y, smoothTime),

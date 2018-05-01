@@ -4,6 +4,9 @@
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Utilities;
+using BRS.Scripts;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
@@ -54,20 +57,10 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
-            for(int i=0; i<GameManager.NumPlayers; i++) {
-                int offset = i > 1 ? 3 : 0;
-                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                int offset = i > 1 ? 1 : 0;
+                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
             }
-            /*
-            if (GameManager.NumPlayers == 2) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
-            } else if (GameManager.NumPlayers == 4) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
-            }*/
         }
 
         void CreateManagers() {
@@ -92,11 +85,17 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager());
 
+
+            Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+            //Add(Manager);         
+
             //new MenuManager().LoadContent(); // TODO add as component to manager
         }
 
         void CreatePlayers() {
-            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+            //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 Vector3 startPos = StartPositions[i];
@@ -104,7 +103,8 @@ namespace BRS.Scripts.Scenes {
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
-                player.material = playerMat;
+
+                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i+1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -119,6 +119,12 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
 
+                // Modify player's name and model and color(choosen by user during menu)
+                if (MenuManager.Instance != null)
+                    MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
+
+
+                //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow for base

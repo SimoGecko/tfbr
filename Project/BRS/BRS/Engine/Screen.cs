@@ -15,8 +15,9 @@ namespace BRS.Engine {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public const int Width = 1920; // 1920x1080, 2560x1440
-        public const int Height = 1080;
+        // Todo: Verify if this holds for everybody
+        public static readonly int Width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // 1920x1080, 2560x1440
+        public static readonly int Height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         public const string Title = "GAME TITLE";
 
         static bool verticalSplit = true;
