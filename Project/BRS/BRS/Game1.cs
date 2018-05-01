@@ -73,6 +73,7 @@ namespace BRS {
 
             //load prefabs and scene
             Prefabs.Start();
+            GameMode.Start();
             SceneManager.Start();
             SceneManager.LoadScene("Level1");
 

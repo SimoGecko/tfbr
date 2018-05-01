@@ -16,7 +16,7 @@ namespace BRS.Engine {
         static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, Song> songs;
         const float pitchRange = .2f;
-        const float volumeBoost = 2f;
+        //const float volumeBoost = 2f;
 
         static List<SoundEmit> currentlyPlayingEffects = new List<SoundEmit>();
 

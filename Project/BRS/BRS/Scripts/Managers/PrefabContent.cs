@@ -28,7 +28,7 @@ namespace BRS.Engine {
             //-------------------VALUABLES-------------------
             //cash
             GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/elements/cash"));
-            cashPrefab.transform.Scale(2f);
+            cashPrefab.transform.Scale(2.5f);
             cashPrefab.material = elementsMat;
             cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
             cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(1.5f, 3.0f, 3.0f)));
@@ -44,7 +44,7 @@ namespace BRS.Engine {
 
             //diamond
             GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/elements/diamond"));
-            diamondPrefab.transform.Scale(5f);
+            diamondPrefab.transform.Scale(1.5f);
             diamondPrefab.material = powerupMat;
             diamondPrefab.AddComponent(new Money(2000, 1, Money.Type.Diamond));
             diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
