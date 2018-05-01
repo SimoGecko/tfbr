@@ -107,6 +107,7 @@
     <Compile Include="Engine\Audio.cs" />
     <Compile Include="Engine\Billboard.cs" />
     <Compile Include="Engine\Camera.cs" />
+    <Compile Include="Engine\Menu\MenuComponent.cs" />
     <Compile Include="Engine\Particles\Particle2D.cs" />
     <Compile Include="Engine\Component.cs" />
     <Compile Include="Engine\File.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Engine\UserInterface.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
+    <Compile Include="Engine\Utilities\Distribution.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
     <Compile Include="GamePage.xaml.cs">
@@ -165,6 +167,7 @@
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />
+    <Compile Include="Scripts\Managers\ScenesCommunicationManager.cs" />
     <Compile Include="Scripts\Particles3D\Cash.cs" />
     <Compile Include="Scripts\Particles3D\Boost.cs" />
     <Compile Include="Scripts\Particles3D\CashDrop.cs" />
@@ -181,7 +184,7 @@
     <Compile Include="Scripts\Scenes\Level1.cs" />
     <Compile Include="Scripts\Scenes\Level2.cs" />
     <Compile Include="Scripts\Scenes\Level3.cs" />
-    <Compile Include="Scripts\Scenes\LevelPhysics.cs" />
+    <Compile Include="Scripts\Scenes\LevelMenu.cs" />
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
     <Compile Include="Engine\Menu\Image.cs" />
@@ -256,11 +259,39 @@
     </AppxManifest>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\BadgeLogo.png" />
     <Content Include="Assets\Logo.scale-200.png" />
+    <Content Include="Load\MenuPanels\Credits.txt" />
+    <Content Include="Load\MenuPanels\MainMenu.txt" />
+    <Content Include="Load\MenuPanels\Options.txt" />
+    <Content Include="Load\MenuPanels\PauseMenu.txt" />
+    <Content Include="Load\MenuPanels\Play1.txt" />
+    <Content Include="Load\MenuPanels\Play2SharedTeamA.txt" />
+    <Content Include="Load\MenuPanels\Play2SharedTeamB.txt" />
+    <Content Include="Load\MenuPanels\Rankings.txt" />
+    <Content Include="Load\MenuPanels\Tutorial1.txt" />
+    <Content Include="Load\MenuPanels\Tutorial2.txt" />
+    <Content Include="Load\MenuPanels\Tutorial3.txt" />
     <Content Include="Assets\SmallLogo.scale-200.png" />
-    <Content Include="Load\Rankings\ranking2min.txt" />
-    <Content Include="Load\Rankings\ranking3min.txt" />
-    <Content Include="Load\Rankings\ranking5min.txt" />
+    <Content Include="Assets\SplashScreen.scale-200.png" />
+    <Content Include="Assets\SplashScreen.scale-400.png" />
+    <Content Include="Assets\Square310x310Logo.scale-200.png" />
+    <Content Include="Assets\StoreLogo.png" />
+    <Content Include="Assets\Wide310x150Logo.scale-400.png" />
+    <Content Include="Assets\WideTile.scale-200.png" />
+    <Content Include="Load\PolicePaths.txt" />
+    <Content Include="Load\Rankings\ranking10 min1P.txt" />
+    <Content Include="Load\Rankings\ranking10 min2P.txt" />
+    <Content Include="Load\Rankings\ranking10 min4P.txt" />
+    <Content Include="Load\Rankings\ranking2 min1P.txt" />
+    <Content Include="Load\Rankings\ranking2 min2P.txt" />
+    <Content Include="Load\Rankings\ranking2 min4P.txt" />
+    <Content Include="Load\Rankings\ranking3 min1P.txt" />
+    <Content Include="Load\Rankings\ranking3 min2P.txt" />
+    <Content Include="Load\Rankings\ranking3 min4P.txt" />
+    <Content Include="Load\Rankings\ranking5 min1P.txt" />
+    <Content Include="Load\Rankings\ranking5 min2P.txt" />
+    <Content Include="Load\Rankings\ranking5 min4P.txt" />
     <Content Include="Load\robber_speech.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
@@ -273,13 +304,6 @@
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
     <Content Include="Properties\Default.rd.xml" />
-    <Content Include="Assets\LockScreenLogo.scale-200.png" />
-    <Content Include="Assets\SplashScreen.scale-200.png" />
-    <Content Include="Assets\Square150x150Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.scale-200.png" />
-    <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
-    <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
     <MonoGameContentReference Include="Content\Content.mgcb" />

@@ -30,8 +30,11 @@ namespace BRS.Scripts.PlayerScripts {
 
         //HIT and STUN
         const float StunTime = 2f;
+        const float StunDisabledTime = 1f;
         const float RespawnTime = 5f;
         public PlayerState State { get; set; } = PlayerState.Normal;
+
+        float nextStunTime;
 
         //private
         Vector3 startPosition;
@@ -60,7 +63,7 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
             startPosition = startPos;
-            
+
             // TODO make mesh have this color
         }
         public override void Start() {
@@ -110,7 +113,10 @@ namespace BRS.Scripts.PlayerScripts {
             if (State == PlayerState.Normal) {
                 bool boosting = BoostInput() && _pS.HasStaminaForBoost();
                 _pM.Boosting = boosting;
-                if (boosting) _pS.UseStaminaForBoost();
+                if (boosting) {
+                    _pS.UseStaminaForBoost();
+                    //Input.Vibrate(.001f, .001f, PlayerIndex);
+                }
 
                 Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
                 //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
@@ -132,20 +138,15 @@ namespace BRS.Scripts.PlayerScripts {
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
-            // Todo: Remove if bouncing is not needed
-            //} else if (State == PlayerState.Collided) {
-            //    _pC.Coroutine();
-            //    _steerableCollider.Speed = JVector.Zero;
-
-            //    if (!_pC.IsCollided) {
-            //        State = PlayerState.Normal;
-            //        _pM.ResetRotation(_pC.CurrentRotation);
-            //    }
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
 
             _pS.UpdateStamina();
+        }
+
+        public override void Reset() {
+            Start();
         }
 
         public override void OnCollisionEnter(Collider c) {
@@ -162,12 +163,18 @@ namespace BRS.Scripts.PlayerScripts {
             //base.TakeDamage(damage); // don't override state
 
             if (!Dead) {
-                State = PlayerState.Stun;
-                Audio.Play("stun", transform.position);
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
-                PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
-                _pI.LoseMoney();
-                Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
+                if (Time.CurrentTime > nextStunTime) {
+                    Input.Vibrate(.05f, .1f, PlayerIndex);
+                    nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
+                    State = PlayerState.Stun;
+                    Audio.Play("stun", transform.position);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
+                    _pI.LoseMoney();
+                    Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
+                }
+
+                
             }
         }
 
@@ -190,7 +197,7 @@ namespace BRS.Scripts.PlayerScripts {
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
             bool playerInRange = false;
             if (_other != null) {
-                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(PlayerAttack.AttackDistance, 2);
+                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(_pA.AttackDistance, 2);
             }
             bool canAttack = _pS.HasStaminaForAttack() && playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
@@ -211,6 +218,9 @@ namespace BRS.Scripts.PlayerScripts {
             //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
+
+
+        public bool IsAttacking() { return State == PlayerState.Attack; }
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries

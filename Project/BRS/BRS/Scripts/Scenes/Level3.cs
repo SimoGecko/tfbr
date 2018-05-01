@@ -3,7 +3,6 @@
 
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Menu;
 using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

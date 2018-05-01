@@ -10,6 +10,7 @@ using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Scripts.Managers;
 
 namespace BRS.Engine.Physics {
     /// <summary>
@@ -85,7 +86,7 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="gameTime">Current game-time</param>
         public void Update(GameTime gameTime) {
-            if (!IsActive) {
+            if (!IsActive || !GameManager.GameActive) {
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace BRS.Engine.Physics {
         /// <param name="arg1">Rigidbody 1</param>
         /// <param name="arg2">Rigidbody 2</param>
         private void Events_BodiesBeginCollide(RigidBody arg1, RigidBody arg2) {
-            if (!IsActive) {
+            if (!IsActive || !GameManager.GameActive) {
                 return;
             }
 
@@ -135,7 +136,7 @@ namespace BRS.Engine.Physics {
         /// </summary>
         /// <param name="obj"></param>
         private void Events_ContactCreated(Contact obj) {
-            if (!IsActive) {
+            if (!IsActive || !GameManager.GameActive) {
                 return;
             }
 

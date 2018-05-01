@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
@@ -41,13 +42,20 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Health = 10;
+            Dead = false;
+
+            _open = false;
+            _opening = false;
+            _openRefTime = 0.0f;
         }
 
         public override void Update() {
             if (_opening) OpenCoroutine();
-
         }
 
+        public override void Reset() {
+            Start();
+        }
 
 
         // --------------------- CUSTOM METHODS ----------------
@@ -59,6 +67,10 @@ namespace BRS.Scripts.Elements {
             OnVaultOpen?.Invoke();
             _opening = true;
             _openRefTime = 0;
+
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                Input.Vibrate(.03f, OpeningDuration, i);
+            }
         }
 
         protected override void Die() {
@@ -67,7 +79,7 @@ namespace BRS.Scripts.Elements {
         }
 
         // queries
-        Vector3 pivotPoint { get { return transform.position + transform.Right*PivotOffset; } }
+        Vector3 pivotPoint { get { return transform.position + transform.Right * PivotOffset; } }
 
 
         // other
@@ -76,7 +88,7 @@ namespace BRS.Scripts.Elements {
                 float amount = Time.DeltaTime / OpeningDuration;
                 _openRefTime += amount;
                 //float t = Curve.EvaluateSqrt(openRefTime);
-                transform.RotateAround(pivotPoint, Vector3.Up, amount*OpeningAnge);
+                transform.RotateAround(pivotPoint, Vector3.Up, amount * OpeningAnge);
             } else {
                 _opening = false;
                 _open = true;

@@ -30,7 +30,7 @@ namespace BRS.Scripts.PlayerScripts {
         private bool _hasAppliedDamage;
 
         //const
-        public const float AttackDistance = 5;
+        public float AttackDistance = 5;
         private const float AttackDuration = .2f;
         private const float AttackDistanceThreshold = 2f;
         private const float AttackDamage = 40;
@@ -53,6 +53,11 @@ namespace BRS.Scripts.PlayerScripts {
                 Player p = c.GameObject.GetComponent<Player>();
                 DealWithAttack(p);
             }
+            bool isPolice = c.GameObject.tag == ObjectTag.Police;
+            if (isPolice && _attacking) {
+                IDamageable dam = c.GameObject.GetComponent<IDamageable>();
+                dam.TakeDamage(1);
+            }
         }
 
 
@@ -62,6 +67,7 @@ namespace BRS.Scripts.PlayerScripts {
         // commands
         public void BeginAttack() {
             Audio.Play("dash", transform.position);
+            Input.Vibrate(.04f, .1f, gameObject.GetComponent<Player>().PlayerIndex);
             OnAttackBegin?.Invoke();
 
             //Debug.Log(Time.CurrentTime);

@@ -8,6 +8,7 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 
 namespace BRS.Scripts.Managers {
@@ -18,44 +19,59 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 150;
-        public const int TimeBeforePolice = 10;
+        public static int RoundTime = 100;
+        public const int TimeBeforePolice = 5;
         public const int MoneyToWinRound = 20000;
+        public const int NumRounds = 3;
+        public const int TimeBetweenRounds = 3;
 
-        //private
-        private Timer _rt;
-        private Base[] _bases;
-        bool calledPolice = false;
-        public int Winner {get; private set;}
-        bool started = false;
-        //reference
-        public static RoundManager Instance;
         public Action OnRoundStartAction;
         public Action OnRoundAlmostEndAction;
         public Action OnRoundEndAction;
 
+        public int Winner { get; private set; }
+
+        //private
+        Timer roundTimer;
+
+        int[] teamWins;
+        static int roundNumber;
+
+        bool roundStarted;
+        bool calledPolice;
+        bool roundEnded;
+
+        bool startingFirstTime = true;
+
+        //reference
+        public static RoundManager Instance;
 
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
+        public override void Start() { // done only once at beginning
             Instance = this;
-            _rt = new Timer(0, RoundTime, OnRoundEnd);
-            GameUI.Instance.StartMatch(_rt);
+            if (startingFirstTime) {
+                startingFirstTime = false;
+                teamWins = new int[GameManager.NumTeams];
+                roundNumber = 0;
+            }
+            RestartRound();
+        }
+
+        void RestartRound() { // done at beginning of every round
+            roundTimer = new Timer(0, RoundTime, OnRoundEnd);
+            roundNumber++;
+            roundStarted = calledPolice = roundEnded = false;
+            RoundUI.instance.ShowEndRound(false);
+
+            GameUI.Instance.StartMatch(roundTimer);
             GameManager.state = GameManager.State.Finished;
+
             CountDown();
         }
 
         public override void Update() {
-            if (started) {
-                if (_rt.Span.TotalSeconds < TimeBeforePolice && !calledPolice) {
-                    calledPolice = true;
-                    //Audio.SetLoop("police", true);
-                    Audio.Play("police", Vector3.Zero);
-                    GameUI.Instance.UpdatePoliceComing();
-                }
-            }
-            
         }
 
 
@@ -64,76 +80,92 @@ namespace BRS.Scripts.Managers {
 
 
         // commands
+        async void CountDown() {
+            for (int i = 3; i >= 0; i--) {
+                await Time.WaitForSeconds(1f);
+                RoundUI.instance.ShowCountDown(i);
+                if (i == 0) OnRoundStart();
+            }
+            await Time.WaitForSeconds(1f);
+            RoundUI.instance.ShowCountDown(-1);//disables it
+        }
 
         void OnRoundStart() {
             GameManager.state = GameManager.State.Playing;
+            roundStarted = true;
             OnRoundStartAction?.Invoke();
-            new Timer(RoundTime * .8f, () => OnRoundAlmostEndAction?.Invoke());
-            started = true;
+            PoliceManager.Instance.StartRound(); // WHY NOT USE START?
+            new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
+        }
+
+        void OnPoliceComing() {
+            calledPolice = true;
+            OnRoundAlmostEndAction?.Invoke();
+            //Audio.SetLoop("police", true);
+            Audio.Play("police", Vector3.Zero);
+            GameUI.Instance.UpdatePoliceComing();
         }
 
         void OnRoundEnd() {
             //Audio.Stop("police");
             //Audio.SetLoop("police", false);
+            roundEnded = true;
+            GameManager.state = GameManager.State.Finished;
 
-            //reset
-            for(int i=0; i<GameManager.NumPlayers; i++)
-                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Success);
+            //FIND WINNER
+            //reset // TODO reorganize
+            for (int i=0; i<GameManager.NumPlayers; i++)
+                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
 
-
-            NotifyBases();
-
-            Tuple<int, int> winner = FindWinner();
-            OnRoundEndAction?.Invoke();
-            Winner = winner.Item1;
-
-            GameUI.Instance.UpdateGameWinnerUI(winner.Item1);
-            //UpdateRanking();
-            GameManager.Instance.OnRoundEnd(winner.Item1);
-        }
-
-        void UpdateRanking() {
-            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt");
-
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), _bases[i%2].TotalMoney.ToString()));
-            }
-
-            rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-
-            File.WriteRanking("Load/Rankings/ranking" + (RoundTime / 60) + "min.txt", rankinglist, 5);
-        }
-
-        /*
-        void FindBases() {
-            //find bases
-            GameObject[] basesObject = GameObject.FindGameObjectsWithTag(ObjectTag.Base);
-            if (basesObject.Length < 1) {
-                Debug.LogError("could not find the bases"); // avoids tag messup
-            } else {
-                _bases = new Base[basesObject.Length];
-                for (int i = 0; i < _bases.Length; i++)
-                    _bases[i] = basesObject[i].GetComponent<Base>();
-            }
-        }*/
-
-        void NotifyBases() {
-            //for (int i = 0; i < bases.Length; i++)
-            //bases[i].NotifyRoundEnd();
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
+
+            Winner = FindWinner();
+            GameUI.Instance.UpdateGameWinnerUI(Winner);
+            teamWins[Winner]++;
+            BaseUI.Instance.UpdateBaseUIWins(Winner);
+
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                if(ElementManager.Instance.Player(i).TeamIndex==Winner)
+                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+            }
+
+
+            //ready to restart
+            OnRoundEndAction?.Invoke();
+            new Timer(TimeBetweenRounds, ()=>TryRestartRound(), true);
         }
 
-        public static int GetRank(int teamIndex) {
-            int team = ElementManager.Instance.Base(teamIndex).TotalMoney;
-            int enemyTeam = ElementManager.Instance.Base(1-teamIndex).TotalMoney;
-            return (team > enemyTeam) ? 1 : (enemyTeam > team) ? 2 : 0; 
+        void TryRestartRound() {
+            UpdateRanking();
+            if (RoundNumber < NumRounds) {
+                GameManager.RestartCustom();
+                RestartRound();
+            } else {
+                OnGameEnd();
+            }
         }
-        public static string RankToString(int rank) {
-            return rank == 1 ? "1." : rank == 2 ? "2." : "-";
+        
+
+        void OnGameEnd() {
+            //save scores
+            //UpdateRanking();
+            //return to menu
+            SceneManager.LoadScene("Level2");
+        }
+
+
+        void UpdateRanking() {//@nico move somewhere else
+            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                Base b = ElementManager.Instance.Base(i % 2);
+                rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
+            }
+            rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
+            File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
 
         // queries
-        Tuple<int, int> FindWinner() {
+        int FindWinner() { // TODO deal with tie
             Base[] bases = ElementManager.Instance.Bases();
             int winner = 0;
             int maxCash = bases[0].TotalMoney;
@@ -141,26 +173,33 @@ namespace BRS.Scripts.Managers {
             for (int i = 1; i < bases.Length; i++) {
                 int totmoney = bases[i].TotalMoney;
 
-                if (totmoney > maxCash) { // TODO deal with tie
+                if (totmoney > maxCash) { 
                     winner = i;
                     maxCash = totmoney;
                 }
             }
-
-            return new Tuple<int, int>(winner, maxCash);
+            return winner;
         }
 
+        int BaseCash(int baseIndex) {
+            return ElementManager.Instance.Bases()[baseIndex].TotalMoney;
+        }
+
+        public static int GetRank(int teamIndex) {
+            int team = ElementManager.Instance.Base(teamIndex).TotalMoney;
+            int enemyTeam = ElementManager.Instance.EnemyBase(teamIndex).TotalMoney;
+            return (team > enemyTeam) ? 1 : (enemyTeam > team) ? 2 : 0;
+        }
+
+        public static string RankToString(int rank) {
+            return rank == 1 ? "1." : rank == 2 ? "2." : "-";
+        }
 
         // other
-        async void CountDown() {
-            for(int i=3; i>=0; i--) {
-                RoundUI.instance.ShowCountDown(i);
-                if(i==0)
-                    OnRoundStart();
-                await Time.WaitForSeconds(1f);
-            }
-            RoundUI.instance.ShowCountDown(-1);//disables it
-        }
+
+
+        public static int RoundNumber { get { return roundNumber; } }
+
 
     }
 }

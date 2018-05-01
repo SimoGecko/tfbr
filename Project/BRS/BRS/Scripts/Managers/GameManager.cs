@@ -6,40 +6,31 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts.Managers {
-    class GameManager : Component {
-        ////////// controls the game state, ie round time, ... //////////
+    static class GameManager {
+        ////////// controls the game state ... //////////
 
         // --------------------- VARIABLES ---------------------
         public enum State { Menu, Playing, Paused, Finished };
 
-        public static State state = State.Playing; // CONTROLS STATE OF THE GAME
+        public static State state; // CONTROLS STATE OF THE GAME
 
         //public
         public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 4;
-        public const int NumRounds = 3;
-
 
 
         //private
-        private static int _roundNumber;
-        private int[] _teamWins;
-        private bool _paused;
 
 
         //reference
-        public static GameManager Instance;
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            Instance = this;
+        public static void Start() {
             state = State.Playing;
-            _teamWins = new int[2];
-            _roundNumber = 1;
         }
 
-        public override void Update() {
+        public static void Update() {//TODO call this
             CheckForPause();
         }
 
@@ -49,49 +40,27 @@ namespace BRS.Scripts.Managers {
 
 
         // commands 
-        void CheckForPause() {
-            if (!(state == State.Playing || state == State.Paused)) return;
-            if(Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
-                _paused = !_paused;
-                state = _paused ? State.Paused : State.Playing;
+        static void CheckForPause() {
+            if (Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
+                if (state == State.Playing || state == State.Paused)
+                    state = GamePaused ? State.Playing : State.Paused;
+
+                MenuManager.Instance.MenuRect["pause"].active = GamePaused;
             }
         }
 
-        public void OnRoundEnd(int winner) {
-            _teamWins[winner]++;
-            state = State.Finished;
-            BaseUI.Instance.UpdateBaseUIWins(winner);
-            new Timer(5, RestartCustom, true);
-        }
 
 
-        void Restart() { // TODO fix this shit
-            //UserInterface.instance.Start();
-            //GameObject.ClearAll();
-            //Game1.instance.Reset();
-
-            //scene.Start();
-            /*
-            foreach (GameObject go in GameObject.All) {
-                Debug.Log("restart " + go.Name);
-                go.Start();
-            }*/
-        }
-
-        void RestartCustom() { // it still slows down for some reason
+        public static void RestartCustom() { // TODO refactor
             ElementManager.Instance.Restart(); 
             Spawner.Instance.Start();
-            RoundManager.Instance.Start();
+            //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
+            PoliceManager.Instance.Reset();
 
-            foreach (var b in ElementManager.Instance.Bases()) b.Start();
-            foreach (var p in ElementManager.Instance.Players()) p.Start();
-
-            GameObject vault = GameObject.FindGameObjectWithName("vault");
-            if (vault != null) vault.Start();
+            foreach (var g in GameObject.All) g.Reset();
 
             state = State.Playing;
-            _roundNumber++;
         }
 
 
@@ -101,10 +70,9 @@ namespace BRS.Scripts.Managers {
 
 
         // queries
-        public static int RoundNumber { get { return _roundNumber; } }
         public static bool GameActive { get { return state == State.Playing; } }
         public static bool GamePaused { get { return state == State.Paused; } }
-
+        public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
 
 
         // other

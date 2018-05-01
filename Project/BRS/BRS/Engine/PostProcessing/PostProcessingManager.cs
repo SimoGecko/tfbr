@@ -38,13 +38,13 @@ namespace BRS.Engine.PostProcessing {
         private int _maxLuT = 20;
 
         public static void Initialize(ContentManager content) {
-            Instance = new PostProcessingManager(content);
+            Instance = new PostProcessingManager();
         }
 
-        private PostProcessingManager(ContentManager content) {
+        private PostProcessingManager() {
             foreach (PostprocessingType pType in Enum.GetValues(typeof(PostprocessingType))) {
                 string fileName = pType.ToString();
-                Effect ppShader = content.Load<Effect>("Effects/" + fileName);
+                Effect ppShader = File.Load<Effect>("Effects/" + fileName);
                 PostProcessingEffect ppEffect = new PostProcessingEffect(pType, 1, false, ppShader);
 
                 ppEffect.SetParameter("players", (float)GameManager.NumPlayers);
@@ -76,7 +76,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
                         for (var i = 0; i < _maxLuT; i++) {
-                            _lut.Add(content.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
+                            _lut.Add(File.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
                         }
                         ppEffect.SetParameter("LUT", _lut[0]);
                         
@@ -84,12 +84,12 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.ShockWave:
-                        _testGrid = content.Load<Texture2D>("Images/textures/Pixel_grid");
+                        _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;
                     case PostprocessingType.Wave:
-                        _testGrid = content.Load<Texture2D>("Images/textures/Pixel_grid");
+                        _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;

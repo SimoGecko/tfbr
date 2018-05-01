@@ -18,10 +18,10 @@ namespace BRS.Scripts.PlayerScripts {
         private bool _canReloadStamina = true;
 
         // const
-        private const float StaminaReloadPerSecond = .1f;
+        private const float StaminaReloadPerSecond = .15f;
         private const float StaminaPerBoost = .3f;
         private const float StaminaPerAttack = .3f;
-        private const float StaminaReloadDelay = .2f;
+        private const float StaminaReloadDelay = .1f;
 
         //reference
 

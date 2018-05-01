@@ -1,8 +1,9 @@
-﻿// (c) Simone Guggiari 2018
+﻿// (c) Simone Guggiari / Nicolas Huart 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using BRS.Engine.Physics;
@@ -11,6 +12,7 @@ using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using static BRS.Scripts.UI.Menu;
 
 namespace BRS.Engine {
     class File : Component {
@@ -46,13 +48,13 @@ namespace BRS.Engine {
         // Todo: Clean up
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
-            string filePath = "C:/Users/simog/Documents/ETHP/GLAB/Project/BRS/BRS/Content/";
-            string fullPath = filePath + s + ".fbx";
+
+            /*
             bool fileExists = false;// System.IO.File.Exists(fullPath);
             if (false && !fileExists && typeof(T) == typeof(Model)) {
                 Debug.Log("File " + s + " doesn't exist!");
                 //return content.Load<T>("Models/primitives/cube");
-            }
+            }*/
 
             T result = content.Load<T>(s);
             return result;
@@ -273,6 +275,149 @@ namespace BRS.Engine {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
             fs.Write(info, 0, info.Length);
         }
-    }
 
+        public static List<List<Vector3>> ReadPolicePaths(string pathName) {
+            List<List<Vector3>> policePaths = new List<List<Vector3>>();
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                int idPath = 0;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+
+                    if (nameContent == null)
+                        break;
+
+                    policePaths.Add(new List<Vector3>());
+
+                    string lineNoObj = reader.ReadLine();
+                    int n = int.Parse(lineNoObj.Split(' ')[1]);
+
+                    for (int i = 0; i < n; i++) {
+                        string p = reader.ReadLine();
+
+                        string[] pSplit = p.Split(' '); // pos: x y z in unity coord. system
+
+                        Vector3 position = new Vector3(float.Parse(pSplit[3]), float.Parse(pSplit[2]), float.Parse(pSplit[1]));
+                        policePaths[idPath].Add(position);
+                    }
+
+                    nameContent = reader.ReadLine();
+                    ++idPath;
+                }
+            }
+            return policePaths;
+        }
+
+
+        public static List<MenuStruct> ReadMenuPanel(string pathName) {
+            List<MenuStruct> panel = new List<MenuStruct>();
+
+            using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                string nameContent;
+                while ((nameContent = reader.ReadLine()) != null) {
+                    while (nameContent == "")
+                        nameContent = reader.ReadLine();
+
+                    if (nameContent == null)
+                        break;
+
+                    string line, key;
+                    MenuStruct menuObject = new MenuStruct();
+                    if (nameContent == "<Button>")
+                        menuObject.menuType = MenuType.Button;
+                    else if (nameContent == "<Text>")
+                        menuObject.menuType = MenuType.Text;
+                    else if (nameContent == "<Image>") 
+                        menuObject.menuType = MenuType.Image;
+                    else if (nameContent == "<Slider>")
+                        menuObject.menuType = MenuType.Slider;
+                    else if (nameContent == "<TickBox>")
+                        menuObject.menuType = MenuType.TickBox;
+
+                    while ((!(line = reader.ReadLine()).Contains("</"))) {
+                        key = line.Split(':')[0];
+                        string[] values = line.Split(':')[1].Substring(1).Split(' ');
+
+                        switch (key) {
+                            case "Position":
+                                menuObject.Position = new Vector2(float.Parse(values[0]), float.Parse(values[1]));
+                                break;
+                            case "Texture":
+                                menuObject.TextureName = values[0];
+                                break;
+                            case "TextureInside":
+                                menuObject.TextureInsideName = values[0];
+                                break;
+                            case "Text":
+                                menuObject.Text = line.Split(':')[1].Substring(1);
+                                break;
+                            case "ScaleWidth":
+                                menuObject.ScaleWidth = float.Parse(values[0]);
+                                break;
+                            case "ScaleHeight":
+                                menuObject.ScaleHeight = float.Parse(values[0]);
+                                break;
+                            case "Color":
+                                menuObject.Color = new Color(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                                break;
+                            case "ColorInside":
+                                menuObject.ColorInside = new Color(int.Parse(values[0]), int.Parse(values[1]), int.Parse(values[2]));
+                                break;
+                            case "Transparency":
+                                menuObject.transparency = int.Parse(values[0]);
+                                break;
+                            case "Functions":
+                                menuObject.Functions = new List<string>();
+                                foreach (var elem in values)
+                                    menuObject.Functions.Add(elem);
+                                break;
+                            case "UniqueChoiceWith":
+                                menuObject.UniqueChoiceButtonWith = new List<string>();
+                                foreach (var elem in values)
+                                    menuObject.UniqueChoiceButtonWith.Add(elem);
+                                break;
+                            case "NeighborsUpDownLeftRight":
+                                menuObject.NeighborsUpDownLeftRight = new string[4];
+                                for (int i = 0; i < 4; ++i)
+                                    menuObject.NeighborsUpDownLeftRight[i] = values[i];
+                                break;
+                            case "NameIdentifier":
+                                menuObject.Name = values[0];
+                                break;
+                            case "NameSwitchTo":
+                                menuObject.NameToSwitchTo = values[0];
+                                break;
+                            case "ScaleWidthInside":
+                                menuObject.ScaleWidthInside = float.Parse(values[0]);
+                                break;
+                            case "ScaleHeightInside":
+                                menuObject.ScaleHeightInside = float.Parse(values[0]);
+                                break;
+                            case "Index":
+                                menuObject.Index = Int32.Parse(values[0]);
+                                break;
+                            case "CurrentSelection":
+                                menuObject.CurrentSelection = values[0] == "yes" ? true : false;
+                                break;
+                            case "IsClicked":
+                                menuObject.IsClicked = values[0] == "yes" ? true : false;
+                                break;
+                            case "DeSelectOnMove":
+                                menuObject.deSelectOnMove = values[0] == "yes" ? true : false;
+                                break;
+                            case "Active":
+                                menuObject.Active = values[0] == "yes" ? true : false;
+                                break;
+                            default:
+                                    Debug.LogError("key: " + key + "  Menu Panel not found !");
+                                    break;
+                        }
+                    }
+                    panel.Add(menuObject);                  
+                }             
+            }
+            return panel;
+        }
+    }
 }

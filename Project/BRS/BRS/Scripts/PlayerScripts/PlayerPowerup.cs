@@ -46,6 +46,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (_carryingPowerup.Count > 0) {
                 _carryingPowerup[_carryingPowerup.Count - 1].UsePowerup();
                 _carryingPowerup.RemoveAt(_carryingPowerup.Count - 1);
+                Input.Vibrate(.03f, .04f, gameObject.GetComponent<Player>().PlayerIndex);
             }
             PowerupUI.Instance.UpdatePlayerPowerupUI(p.PlayerIndex, CarryingPowerups());
         }
@@ -54,6 +55,8 @@ namespace BRS.Scripts.PlayerScripts {
             if (_carryingPowerup.Count == MaxNumberPowerups) {
                 _carryingPowerup.RemoveAt(0);
             }
+            Input.Vibrate(.03f, .04f, gameObject.GetComponent<Player>().PlayerIndex);
+
             OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
