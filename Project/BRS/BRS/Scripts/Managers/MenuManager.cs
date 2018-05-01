@@ -32,7 +32,6 @@ namespace BRS.Scripts.Managers {
 
         public static MenuManager Instance;
 
-        public List<Model> modelCharacter;
         int _idModel = 0;
 
         public string NamePlayerInfosToChange;
@@ -108,12 +107,6 @@ namespace BRS.Scripts.Managers {
             Menu.Instance.BuildMenuPanels(panelPlay2NameOption);
 
             NamePlayerInfosToChange = "player_0";
-
-            modelCharacter = new List<Model> {
-                File.Load<Model>("Models/vehicles/forklift"),
-                File.Load<Model>("Models/vehicles/sweeper"),
-                File.Load<Model>("Models/vehicles/bulldozer")
-            };
 
         }
 
@@ -334,9 +327,9 @@ namespace BRS.Scripts.Managers {
                 if (elem is Button bu) {
                     if (bu.nameIdentifier == "NamePlayer") {
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(bu.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
+                            ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(bu.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
                         else
-                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(bu.Text, null, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
+                            ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(bu.Text, 0, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
                         //bu.Text = "";
                     }
@@ -363,7 +356,7 @@ namespace BRS.Scripts.Managers {
             // Change color used
             if (button.nameIdentifier == "ModelChangeRight") {
                 ++_idModel;
-                if (_idModel >= modelCharacter.Count) _idModel = modelCharacter.Count - 1; //_idModel = 0;
+                if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = 0;
             }
             else if (button.nameIdentifier == "ModelChangeLeft") {
                 --_idModel;
@@ -376,9 +369,9 @@ namespace BRS.Scripts.Managers {
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, modelCharacter[_idModel], button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, modelCharacter[_idModel], button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
@@ -466,7 +459,7 @@ namespace BRS.Scripts.Managers {
             // update color for model pictures
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
-                    for (int i = 0; i < modelCharacter.Count; ++i) {
+                    for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                         if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
                             img.colour = ScenesCommunicationManager.ColorModel[_idColor];
                     }
@@ -477,7 +470,7 @@ namespace BRS.Scripts.Managers {
             if (GameManager.NumPlayers == 4) {
                 foreach (var elem in MenuRect[panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen+2) % 4).ToString()].components) {
                     if (elem is Image img) {
-                        for (int i = 0; i < modelCharacter.Count; ++i) {
+                        for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                             if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
                                 img.colour = ScenesCommunicationManager.ColorModel[_idColor];
                         }
@@ -492,11 +485,11 @@ namespace BRS.Scripts.Managers {
             Color test = ScenesCommunicationManager.ColorModel[_idColor];
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                 ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = 
-                    new Tuple<string, Model, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
+                    new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
                     ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, 
                     ScenesCommunicationManager.ColorModel[_idColor]);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, Model, Color>(NamePlayerInfosToChange, null, ScenesCommunicationManager.ColorModel[_idColor]));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, 0, ScenesCommunicationManager.ColorModel[_idColor]));
         }
         
 
@@ -541,7 +534,8 @@ namespace BRS.Scripts.Managers {
             if (ScenesCommunicationManager.Instance != null) {
                 if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
                     string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
-                    Model userModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    Model userModel = ScenesCommunicationManager.Instance.ModelCharacter[currIdModel];
                     Color colorPlayer = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
 
                     if (userName != null) player.GetComponent<Player>().PlayerName = userName;
@@ -550,7 +544,11 @@ namespace BRS.Scripts.Managers {
                         Rectangle areaChange = new Rectangle(4, 8, 4, 4);
                         SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
                     }
-                    
+
+                    player.GetComponent<PlayerInventory>().SetCapacity(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity);
+                    player.GetComponent<PlayerAttack>().AttackDistance = ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance;
+                    player.GetComponent<PlayerMovement>().MaxSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed;
+                    player.GetComponent<PlayerMovement>().MinSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed;
                 }
             }
         }

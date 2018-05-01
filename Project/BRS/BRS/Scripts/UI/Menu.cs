@@ -171,7 +171,8 @@ namespace BRS.Scripts.UI {
 
                 var statSpeed = new TextBox() {
                     InitPos = offsetStart[1] + new Vector2(offsetWidth, 2 * offsetHeight),
-                    Text = ScenesCommunicationManager.ValuesStats[i].Speed.ToString(),
+                    Text = ScenesCommunicationManager.ValuesStats[i].MinSpeed.ToString() + "-" +
+                           ScenesCommunicationManager.ValuesStats[i].MaxSpeed.ToString(),
                 };
                 statSpeed.Colour = new Color(148, 148, 148);
                 //namePerson.Font = UserInterface.menuSmallFont;

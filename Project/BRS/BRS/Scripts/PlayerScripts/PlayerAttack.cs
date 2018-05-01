@@ -30,7 +30,7 @@ namespace BRS.Scripts.PlayerScripts {
         private bool _hasAppliedDamage;
 
         //const
-        public const float AttackDistance = 5;
+        public float AttackDistance = 5;
         private const float AttackDuration = .2f;
         private const float AttackDistanceThreshold = 2f;
         private const float AttackDamage = 40;

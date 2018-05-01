@@ -130,6 +130,8 @@ namespace BRS.Scripts.PlayerScripts {
         public int Capacity { get { return _capacity; } }
         public int ValueOnTop { get { return _carryingMoney.Peek().Value; } }
 
+        public void SetCapacity(int cap) { _capacity = cap; }
+
         // other
 
     }

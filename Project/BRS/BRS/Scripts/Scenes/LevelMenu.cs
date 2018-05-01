@@ -26,7 +26,9 @@ namespace BRS.Scripts.Scenes {
 
             // huge ground
             GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
-            plane.material = new Material(new Color(35,35,35));
+            //Material planeMat = new Material(File.Load<Texture2D>("Images/textures/ground"));
+            //plane.material = planeMat;
+            //plane.material = new Material(new Color(35,35,35), false);
             plane.transform.position = new Vector3(0,-0.5f,0);
             plane.transform.scale = new Vector3(1000,1,1000);
             
