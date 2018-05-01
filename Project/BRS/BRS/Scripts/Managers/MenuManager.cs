@@ -489,14 +489,24 @@ namespace BRS.Scripts.Managers {
 
 
             // update color for 3d model
-            Color test = ScenesCommunicationManager.ColorModel[_idColor];
-            if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = 
-                    new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, 
-                    ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, 
-                    ScenesCommunicationManager.ColorModel[_idColor]);
+            if (panelPlay2NameOption == "play2Shared")
+                NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
+
+            string[] playersToChange;
+            if (GameManager.NumPlayers == 4)
+                playersToChange = new string[2] { NamePlayerInfosToChange, NamePlayerInfosToChange.Substring(0, NamePlayerInfosToChange.Length - 1) + ((button.IndexAssociatedPlayerScreen + 2) % 4).ToString() };
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, 0, ScenesCommunicationManager.ColorModel[_idColor]));
+                playersToChange = new string[1] { NamePlayerInfosToChange };
+
+            foreach (string playerName in playersToChange) {
+                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(playerName))
+                    ScenesCommunicationManager.Instance.PlayersInfo[playerName] =
+                        new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[playerName].Item1,
+                        ScenesCommunicationManager.Instance.PlayersInfo[playerName].Item2,
+                        ScenesCommunicationManager.ColorModel[_idColor]);
+                else
+                    ScenesCommunicationManager.Instance.PlayersInfo.Add(playerName, new Tuple<string, int, Color>(playerName, 0, ScenesCommunicationManager.ColorModel[_idColor]));
+            }
         }
         
 
