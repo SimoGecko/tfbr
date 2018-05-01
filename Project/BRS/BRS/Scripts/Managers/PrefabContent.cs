@@ -5,6 +5,7 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
+using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.PowerUps;
 using BRS.Scripts.Particles3D;
 using Microsoft.Xna.Framework;
@@ -12,8 +13,6 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 
-// Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
-// ReSharper disable once CheckNamespace
 namespace BRS.Engine {
     static class PrefabContent {
         ////////// builds all the prefabs and gives them to Prefabs //////////
@@ -24,6 +23,7 @@ namespace BRS.Engine {
 
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
+            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), isTransparent: true);
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
@@ -93,6 +93,7 @@ namespace BRS.Engine {
             police.transform.Scale(1f);
             police.material = policeMat;
             police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
+            police.AddComponent(new DynamicShadow());
             Prefabs.AddPrefab(police);
 
             //crate
@@ -101,6 +102,7 @@ namespace BRS.Engine {
             cratePrefab.material = powerupMat;
             cratePrefab.AddComponent(new Crate());
             cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            cratePrefab.AddComponent(new DynamicShadow());
             Prefabs.AddPrefab(cratePrefab);
 
             //oil
@@ -126,6 +128,7 @@ namespace BRS.Engine {
             fallingWeight.transform.Scale(1.5f);
             fallingWeight.AddComponent(new FallingWeight());
             fallingWeight.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            fallingWeight.AddComponent(new DynamicShadow());
             fallingWeight.material = powerupMat;
             Prefabs.AddPrefab(fallingWeight);
 
@@ -152,15 +155,23 @@ namespace BRS.Engine {
             foreach(string s in dynamicElements) {
                 GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
                 dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box));
+                dynamicElement.AddComponent(new DynamicShadow());
                 dynamicElement.material = elementsMat;
                 Prefabs.AddPrefab(dynamicElement);
             }
 
-            //cash
+            // cash-stacks for the base
             GameObject cashStack = new GameObject("cashStack", File.Load<Model>("Models/elements/stack"));
             cashStack.transform.Scale(2f);
             cashStack.material = elementsMat;
             Prefabs.AddPrefab(cashStack);
+
+
+            // dynamic shadow
+            GameObject dynamicShadow = new GameObject("dynamicShadow", File.Load<Model>("Models/primitives/plane"));
+            dynamicShadow.transform.Scale(2f);
+            dynamicShadow.material = shadowMat;
+            Prefabs.AddPrefab(dynamicShadow);
 
         }
     }

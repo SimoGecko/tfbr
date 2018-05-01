@@ -77,6 +77,8 @@ namespace BRS.Engine {
             PhysicsManager.Instance.Start();
             foreach (GameObject go in GameObject.All) go.Awake();
             foreach (GameObject go in GameObject.All) go.Start();
+
+            GameObject.SortAll();
         }
     }
 

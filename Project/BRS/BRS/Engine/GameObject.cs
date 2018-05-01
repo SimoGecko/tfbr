@@ -9,6 +9,7 @@ using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
@@ -40,7 +41,7 @@ namespace BRS.Engine {
             components = new List<IComponent>();
             Model = model;
             allGameObjects.Add(this);
-            allGameObjects.Sort((g1, g2) => g1.DrawOrder.CompareTo(g2.DrawOrder));
+            SortAll();
         }
 
 
@@ -88,6 +89,11 @@ namespace BRS.Engine {
         // ---------- STATIC COMMANDS ----------
         static List<GameObject> allGameObjects = new List<GameObject>();
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
+
+        public static void SortAll() {
+            // Todo: Have to rethink the draw order again
+            //allGameObjects = allGameObjects.OrderBy(x => x.name).ToList();
+        }
 
 
 

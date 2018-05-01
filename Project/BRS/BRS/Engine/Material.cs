@@ -13,6 +13,7 @@ namespace BRS.Engine {
         //public
         public bool Lit;
         public Color Diffuse;
+        public bool IsTransparent;
 
         public bool baked;
         public bool textured;
@@ -39,10 +40,11 @@ namespace BRS.Engine {
             colorTex = color;
             lightTex = light;
         }
-        public Material(Texture2D color) {
+        public Material(Texture2D color, bool isTransparent = false) {
             baked = false;
             textured = true;
             colorTex = color;
+            IsTransparent = isTransparent;
         }
 
         public Material(Color color, bool lit=true) {

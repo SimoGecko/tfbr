@@ -65,6 +65,7 @@ namespace BRS.Scripts.Scenes {
 
         void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));
             UiManager.AddComponent(new BaseUI());
             UiManager.AddComponent(new PlayerUI());
             UiManager.AddComponent(new PowerupUI());
@@ -118,6 +119,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
+                player.AddComponent(new DynamicShadow());
 
                 // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)
@@ -153,22 +155,38 @@ namespace BRS.Scripts.Scenes {
 
         void CreateBases() {
             for (int i = 0; i < GameManager.NumTeams; i++) {
-                //TODO base object
-                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
+                // Load the texture and create a copy for the colored base
+                Texture2D texture = File.Load<Texture2D>("Images/textures/base");
+                Texture2D colored = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
+
+                // Read the texture-data into a color-array and replace all visible pixels to the base-color
+                Color[] data = new Color[texture.Width * texture.Height];
+                texture.GetData(data);
+
+                Color teamColor = i == 0
+                    ? ScenesCommunicationManager.TeamAColor
+                    : ScenesCommunicationManager.TeamBColor;
+
+                for (int j = 0; j < data.Length; ++j) {
+                    if (data[j].A > 0) {
+                        data[j].R = teamColor.R;
+                        data[j].G = teamColor.G;
+                        data[j].B = teamColor.B;
+                    }
+                }
+
+                // Once you have finished changing data, set it back to the texture:
+                colored.SetData(data);
+
+                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/plane"));
                 playerBase.tag = ObjectTag.Base;
+                playerBase.transform.Scale(0.5f);
+                playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
+                playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
-                playerBase.AddComponent(new BaseParticles());
-                playerBase.transform.Scale(2);
-                playerBase.transform.position = StartPositions[i];
-                playerBase.transform.scale = new Vector3(3, 1, 1);
-                playerBase.transform.SetStatic();
-                //playerBase.AddComponent(new BoxCollider(playerBase));
-                playerBase.AddComponent(new StaticRigidBody(pureCollider: true));
-                playerBase.transform.SetStatic();
+                playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
-
-
         }
 
         void CreateSpecialObjects() {

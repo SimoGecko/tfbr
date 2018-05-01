@@ -60,7 +60,8 @@ namespace BRS {
 
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = true;
-            ParticleSystem3D.Enabled = true;
+            LenseFlareManager.IsActive = true;
+            ParticleSystem3D.IsActive = true;
 
             base.Initialize();
         }
@@ -110,7 +111,8 @@ namespace BRS {
 
             // Todo: Switch for the interim
             if (Input.GetKeyDown(Keys.Tab)) {
-                ParticleSystem3D.Enabled = !ParticleSystem3D.Enabled;
+                ParticleSystem3D.IsActive = !ParticleSystem3D.IsActive;
+                LenseFlareManager.IsActive = !LenseFlareManager.IsActive;
             }
 
             foreach (GameObject go in GameObject.All) go.Update();

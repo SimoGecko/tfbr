@@ -150,9 +150,10 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void OnCollisionEnter(Collider c) {
-            //if (c.IsStatic) {
-            //    CamController.Shake(.3f);
-            //}
+            if (c.GameObject.tag == ObjectTag.StaticObstacle) {
+                _pM.SetSpeedPad(false);
+                // CamController.Shake(.3f);
+            }
         }
 
 
