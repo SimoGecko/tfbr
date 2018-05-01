@@ -15,6 +15,7 @@ namespace BRS.Engine.Menu {
         public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f); } }
 
         public SpriteFont Font = UserInterface.menuFont;
+        public Color Colour = Color.Black;
 
         public TextBox() {
             Active = true;
@@ -23,7 +24,7 @@ namespace BRS.Engine.Menu {
         public override void Draw2D(int i) {
             if (Active && i == 0) {
                 base.Draw2D(i);
-                UserInterface.DrawString(Text, Position, pivot: Align.Center, col: Color.Black, font: UserInterface.menuSmallFont);
+                UserInterface.DrawString(Text, Position, pivot: Align.Center, col: Colour, font: UserInterface.menuSmallFont);
             }
         }
     }

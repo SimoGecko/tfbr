@@ -49,6 +49,7 @@ namespace BRS.Scripts.UI {
             Texture2D textureModel1Color = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
             Texture2D textureModel2Color = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color");
             Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
+            Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
 
 
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -65,15 +66,14 @@ namespace BRS.Scripts.UI {
                 { "title", textureButtonTitle },
                 { "arrowLeft", textureArrowLeft },
                 { "arrowRight", textureArrowRight },
-                //{ "forklift", textureForkLift },
-                //{ "bulldozer", textureModel3 },
                 { "buttonAccept", textureButtonAccept },
                 { "slider", textureSlider },
                 { "menu", textureMenuIcon },
                 { "restart", textureRestartIcon },
                 { "imageTuto1", textureTuto1 },
                 { "imageTuto2", textureTuto2 },
-                { "imageTuto3", textureTuto3 }
+                { "imageTuto3", textureTuto3 },
+                { "imageCredits", textureCredits }
             };
 
             FunctionsMenu = new Dictionary<string, EventHandler> {
@@ -95,7 +95,8 @@ namespace BRS.Scripts.UI {
                 { "UpdateChosenColor", MenuManager.Instance.UpdateChosenColor },
                 { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady },
                 { "StartGameFunction", MenuManager.Instance.StartGameFunction },
-                { "UpdateRanking", MenuManager.Instance.UpdateRanking }
+                { "UpdateRanking", MenuManager.Instance.UpdateRanking },
+                { "SwitchModelStat", MenuManager.Instance.SwitchModelStat }
             };
         }
 
@@ -133,6 +134,55 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Play2SharedTeamB.txt", "play2Shared1", offsetWidth: 480, idAssociatePlayerScreen: 1);
             CreatePanel("Load/MenuPanels/Play2SharedTeamA.txt", "play2Shared2", offsetWidth: -480, idAssociatePlayerScreen: 2);
             CreatePanel("Load/MenuPanels/Play2SharedTeamB.txt", "play2Shared3", offsetWidth: 480, idAssociatePlayerScreen: 3);
+        }
+
+        public void CreateTextModelsStats(string panelName, int offsetWidth = 0, int idAssociatePlayerScreen = 0) {
+            Vector2[] offsetStart = { new Vector2(950, 720), new Vector2(1150, 720) };
+            
+            for (int i=0; i< ScenesCommunicationManager.ValuesStats.Length; ++i) {
+                ListComponents listStats = new ListComponents("model" + i.ToString() + "Stats");
+                int count = 0;
+                float offsetHeight = 40;
+
+                foreach (string name in ScenesCommunicationManager.NameStats) {
+                    var nameCapacity = new TextBox() {
+                        InitPos = offsetStart[0] + new Vector2(offsetWidth, count * offsetHeight),
+                        Text = name,
+                    };
+                    nameCapacity.Colour = new Color(148,148,148);
+                    //namePerson.Font = UserInterface.menuSmallFont;
+                    listStats.AddComponent(nameCapacity);
+                    ++count;
+                }
+
+                var statCapacity = new TextBox() {
+                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 0 * offsetHeight),
+                    Text = ScenesCommunicationManager.ValuesStats[i].Capacity.ToString(),
+                };
+                statCapacity.Colour = new Color(148, 148, 148);
+                //namePerson.Font = UserInterface.menuSmallFont;
+
+                var statAttackDistance = new TextBox() {
+                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 1 * offsetHeight),
+                    Text = ScenesCommunicationManager.ValuesStats[i].AttackDistance.ToString(),
+                };
+                statAttackDistance.Colour = new Color(148, 148, 148);
+                //namePerson.Font = UserInterface.menuSmallFont;
+
+                var statSpeed = new TextBox() {
+                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 2 * offsetHeight),
+                    Text = ScenesCommunicationManager.ValuesStats[i].Speed.ToString(),
+                };
+                statSpeed.Colour = new Color(148, 148, 148);
+                //namePerson.Font = UserInterface.menuSmallFont;
+
+                listStats.AddComponent(statCapacity);
+                listStats.AddComponent(statAttackDistance);
+                listStats.AddComponent(statSpeed);
+                if (i != 0) listStats.Active = false;
+                MenuManager.Instance.MenuRect[panelName].AddComponent(listStats);
+            }
+            
         }
 
         public void CreateAlphabetButtons(string panelName, int offsetWidth = 0, int idAssociatePlayerScreen = 0) {
@@ -283,14 +333,18 @@ namespace BRS.Scripts.UI {
                     }
                 }
                 else if (MS.menuType == MenuType.Text) {
-                    TextBox textBox = new TextBox();
+                    if (MS.Name == "ModelsStats")
+                        CreateTextModelsStats(panelName, offsetWidth, idAssociatePlayerScreen);
+                    else {
+                        TextBox textBox = new TextBox();
 
-                    if (MS.Name != null) textBox.NameIdentifier = MS.Name;
-                    if (MS.Position != null) textBox.InitPos = MS.Position + new Vector2(offsetWidth, 0);
-                    if (MS.Text != null) textBox.Text = MS.Text;
-                    else textBox.Text = "";
+                        if (MS.Name != null) textBox.NameIdentifier = MS.Name;
+                        if (MS.Position != null) textBox.InitPos = MS.Position + new Vector2(offsetWidth, 0);
+                        if (MS.Text != null) textBox.Text = MS.Text;
+                        else textBox.Text = "";
 
-                    MenuManager.Instance.MenuRect[panelName].AddComponent(textBox);
+                        MenuManager.Instance.MenuRect[panelName].AddComponent(textBox);
+                    }
                 }
                 else if (MS.menuType == MenuType.Image) {
                     Image img = new Image(TexturesButtons[MS.TextureName]);
@@ -387,5 +441,7 @@ namespace BRS.Scripts.UI {
             public List<string> UniqueChoiceButtonWith;
             public int transparency;
         }
+
+
     }
 }

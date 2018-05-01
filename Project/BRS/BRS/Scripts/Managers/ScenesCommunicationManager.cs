@@ -16,7 +16,14 @@ namespace BRS.Scripts.Managers {
 
         public static bool loadOnlyPauseMenu;
 
-        public Dictionary<string, Texture2D> textureColorPlayers;        
+        public Dictionary<string, Texture2D> textureColorPlayers;
+
+        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(5, 5, 5), new ModelsStatsStruct(10, 10, 10), new ModelsStatsStruct(15, 15, 15) };
+        public static string[] NameStats = { "Capacity", "AttackDistance", "Speed" };
+
+        public static Color[] ColorModel = { new Color(215, 173, 35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
+        public static Color TeamAColor = new Color(215, 173, 35);
+        public static Color TeamBColor = Color.Red;
 
         public override void Start() {
             Instance = this;
@@ -61,6 +68,18 @@ namespace BRS.Scripts.Managers {
             for (int x = rec.X; x < rec.X + rec.Width; ++x)
                 for (int y = rec.Y; y < rec.Y + rec.Height; ++y)
                     SetPixelColor(x, y, color, texture);
+        }
+
+        public struct ModelsStatsStruct {
+            public int Capacity;
+            public float AttackDistance;
+            public float Speed;
+
+            public ModelsStatsStruct(int c, float a, float m) {
+                Capacity = c;
+                AttackDistance = a;
+                Speed = m;
+            }
         }
     }
 }

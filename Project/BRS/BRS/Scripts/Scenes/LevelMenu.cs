@@ -24,6 +24,13 @@ namespace BRS.Scripts.Scenes {
 
             CreateManagers();
 
+            // huge ground
+            GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
+            plane.material = new Material(new Color(35,35,35));
+            plane.transform.position = new Vector3(0,-0.5f,0);
+            plane.transform.scale = new Vector3(1000,1,1000);
+            
+
             // @ Simone
             //List<List<Vector3>> policePaths = File.ReadPolicePaths("Load/PolicePaths.txt");
         }
