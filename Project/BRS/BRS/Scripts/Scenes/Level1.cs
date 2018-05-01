@@ -129,7 +129,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
 
-                // Nico: Modify player's name and model and color(choosen by user during menu)
+                // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 

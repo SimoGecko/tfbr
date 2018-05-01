@@ -193,7 +193,7 @@ namespace BRS.Scripts.PlayerScripts {
             // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
             bool playerInRange = false;
             if (_other != null) {
-                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(PlayerAttack.AttackDistance, 2);
+                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(_pA.AttackDistance, 2);
             }
             bool canAttack = _pS.HasStaminaForAttack() && playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,

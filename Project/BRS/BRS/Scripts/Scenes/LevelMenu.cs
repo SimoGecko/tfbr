@@ -17,17 +17,21 @@ namespace BRS.Scripts.Scenes {
            
             MenuScene();
 
-            foreach (Camera c in Screen.Cameras) {
-                c.transform.position = new Vector3(0, 10, 12);
-                c.transform.eulerAngles = new Vector3(-35, 0, 0);
-            }
-
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance._effects[2].Activate(i, true);
                 PostProcessingManager.Instance._effects[3].Activate(i, true);
             }
 
             CreateManagers();
+
+            // huge ground
+            GameObject plane = new GameObject("plane1", File.Load<Model>("models/primitives/plane"));
+            //Material planeMat = new Material(File.Load<Texture2D>("Images/textures/ground"));
+            //plane.material = planeMat;
+            //plane.material = new Material(new Color(35,35,35), false);
+            plane.transform.position = new Vector3(0,-0.5f,0);
+            plane.transform.scale = new Vector3(1000,1,1000);
+            
 
             // @ Simone
             //List<List<Vector3>> policePaths = File.ReadPolicePaths("Load/PolicePaths.txt");

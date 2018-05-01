@@ -2,14 +2,21 @@
 NameIdentifier: Back
 Texture: buttonCircle
 TextureInside: arrowLeft
-Position: 864 793
-ScaleWidth: 1.5
-ScaleHeight: 1.5
-ScaleWidthInside: 1.5
-ScaleHeightInside: 1.5
+Position: 960 175
+ScaleWidth: 1.2
+ScaleHeight: 1.2
+ScaleWidthInside: 1.2
+ScaleHeightInside: 1.2
 Functions: SwitchToMenu
 NameSwitchTo: main
 Color: 250 139 139
 ColorInside: 255 255 255
 CurrentSelection: yes
 </Button>
+
+<Image>
+NameIdentifier: pictureCredits
+Texture: imageCredits
+Position: 960 540
+Active: yes
+</Image>
