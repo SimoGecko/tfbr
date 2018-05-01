@@ -76,7 +76,7 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("Level1");
 
 
             //start other big components
