@@ -158,24 +158,22 @@ namespace BRS.Scripts.Managers {
         // OTHER
         async void SpawnValuableContinuous() {
             while (true) {
+                await Time.WaitForSeconds(_currentMode.TimeBetweenValuables * TimeVariance);
                 SpawnOneValuableRandom();
-                float waitTime = _currentMode.TimeBetweenValuables * TimeVariance;
-                await Time.WaitForSeconds(waitTime);
             }
         }
 
         async void SpawnCrateContinuous() {
             while (true) {
-                SpawnOneCrateRandom();
                 await Time.WaitForSeconds(_currentMode.TimeBetweenCrates * TimeVariance);
+                SpawnOneCrateRandom();
             }
         }
 
         async void SpawnPowerupContinuous() {
             while (true) {
+                await Time.WaitForSeconds(_currentMode.TimeBetweenPowerups * TimeVariance);
                 SpawnOnePowerupRandom();
-                float waitTime = _currentMode.TimeBetweenPowerups * TimeVariance;
-                await Time.WaitForSeconds(waitTime);
             }
         }
 

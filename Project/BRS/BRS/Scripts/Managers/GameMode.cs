@@ -11,55 +11,28 @@ namespace BRS.Scripts {
         public enum WinCondition { Time, Cash} // if you win after a certain time or by accumulating cash
 
         // --------------------- VARIABLES ---------------------
+        //static
+        static Dictionary<string, GameMode> gameModes = new Dictionary<string, GameMode>();
+        public static string currentGameMode = "survival";
 
+        //gamemode params
         string gameModeName;
 
         int roundTime;
         int maxCashToWin;
-        float percentAtBeginning;
         WinCondition winCondition;
 
-        //public
         Dictionary<string, float> ValuableDistribution;
         Dictionary<string, float> PowerupDistribution;
-        /*
-        public readonly Dictionary<string, float> MoneyDistribution = new Dictionary<string, float> {
-            { "cash", .8f }, { "gold", .2f }, { "diamond", .01f} };
 
-        public readonly Dictionary<string, float> PowerupDistribution = new Dictionary<string, float> {
-            { "bomb", .3f }, { "key", .1f }, { "weight", .3f }, { "magnet", .3f },
-            { "trap", .3f }, { "explodingbox", .2f },  { "stamina", .1f },
-            { "health", .0f }, { "shield", .0f }, { "capacity", .0f }, { "speed", .0f }};
-        */
+        float percentAtBeginning;
 
-
-        //private
         int ValuableAmount;
         int CrateAmount;
         int PowerupAmount;
 
 
-        //STATIC
-        static Dictionary<string, GameMode> gameModes = new Dictionary<string, GameMode>();
-        public static string currentGameMode = "default";
-
-        /*
-        public int CashAmount = 40;
-        public int GoldAmount = 10;
-        //public int ValuableAmount = 100;
-        public int CrateAmount = 10;
-        public int PowerupAmount = 30;
-
-        public float TimeBetweenValuableSpawn = 10f;
-        public float TimeBetweenCashSpawn = 10f;
-        public float TimeBetweenGoldSpawn = 10f;
-        public float TimeBetweenCrateSpawn = 30f;
-        public float TimeBetweenPowerupSpawn = 30f;
-
-        public float ProbOfDiamond = .5f;*/
-
-
-        //reference
+        // --------------------- BASE METHODS ------------------
 
         public static void Start() {
             ReadGameModes();
@@ -73,8 +46,8 @@ namespace BRS.Scripts {
             gameModes.Add(name, this);
         }
 
-        void SetBaseParams(int rt, int maxcash, float pab, WinCondition wincon = WinCondition.Time) {
-            roundTime = rt; maxCashToWin = maxcash; percentAtBeginning = pab; winCondition = wincon;
+        void SetBaseParams(int rt, int maxcash, WinCondition wincon = WinCondition.Time) {
+            roundTime = rt; maxCashToWin = maxcash; winCondition = wincon;
         }
 
         void SetMoneyDistrib(float cash, float gold, float diamond) {
@@ -89,7 +62,8 @@ namespace BRS.Scripts {
 
         }
 
-        void SetAmount(int money, int crate, int powerup) {
+        void SetAmount(int money, int crate, int powerup, float pab) {
+            percentAtBeginning = pab;
             ValuableAmount = money; CrateAmount = crate; PowerupAmount = powerup;
         }
 
@@ -98,9 +72,9 @@ namespace BRS.Scripts {
         public int StartCrateAmount    { get { return (int)System.Math.Round(CrateAmount    * percentAtBeginning); } }
         public int StartPowerupAmount  { get { return (int)System.Math.Round(PowerupAmount  * percentAtBeginning); } }
 
-        public float TimeBetweenValuables { get { return ((float)roundTime) / (ValuableAmount - StartValuableAmount); } }
-        public float TimeBetweenCrates    { get { return ((float)roundTime) / (CrateAmount - StartCrateAmount); } }
-        public float TimeBetweenPowerups  { get { return ((float)roundTime) / (PowerupAmount - StartPowerupAmount); } }
+        public float TimeBetweenValuables { get { return ((float)roundTime) / (ValuableAmount - StartValuableAmount+1); } } // +1 to avoid division by 0
+        public float TimeBetweenCrates    { get { return ((float)roundTime) / (CrateAmount - StartCrateAmount+1); } }
+        public float TimeBetweenPowerups  { get { return ((float)roundTime) / (PowerupAmount - StartPowerupAmount+1); } }
 
         public string RandomValuable { get { return Utility.EvaluateDistribution(ValuableDistribution); } }
         public string RandomPowerup  { get { return Utility.EvaluateDistribution(PowerupDistribution); } }
@@ -112,14 +86,31 @@ namespace BRS.Scripts {
         // commands
         public static void ReadGameModes() {
             CreateDefaultMode();
+            CreateSurvivalMode();
         }
 
         static void CreateDefaultMode() {
-            GameMode def = new GameMode("default");
-            def.SetBaseParams(150, 20000, .5f, WinCondition.Time);
-            def.SetMoneyDistrib(.8f, .2f, .05f);
-            def.SetPowerupDistribution(.1f, .1f, .1f, .1f, .1f, .1f, .1f);
-            def.SetAmount(80, 30, 15);
+            GameMode gm = new GameMode("default");
+            gm.SetBaseParams(150, 20000, WinCondition.Time);
+            gm.SetAmount(80, 30, 15, .5f);
+            gm.SetMoneyDistrib(.8f, .2f, .05f);
+            gm.SetPowerupDistribution(.1f, .1f, .1f, .1f, .1f, .1f, .1f);
+        }
+
+        static void CreateSurvivalMode() {
+            GameMode gm = new GameMode("survival");
+            gm.SetBaseParams(150, 20000, WinCondition.Time);
+            gm.SetAmount(10, 0, 4, .3f);
+            gm.SetMoneyDistrib(0f, .3f, .0f);
+            gm.SetPowerupDistribution(1, 0, 1, 0, 1, 1, 0);
+        }
+
+        static void CreateBomberMode() {
+            GameMode gm = new GameMode("bomber");
+            gm.SetBaseParams(150, 20000, WinCondition.Time);
+            gm.SetAmount(100, 0, 20, 1f);
+            gm.SetMoneyDistrib(1f, .3f, .0f);
+            gm.SetPowerupDistribution(1, 0, 0, 0, 0, 1, 0);
         }
 
 
