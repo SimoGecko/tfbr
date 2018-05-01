@@ -19,6 +19,8 @@ namespace BRS.Engine {
         public const int Height = 1080;
         public const string Title = "GAME TITLE";
 
+        static bool verticalSplit = true;
+
         public static int SplitWidth, SplitHeight;
 
         //private
@@ -82,9 +84,15 @@ namespace BRS.Engine {
             if (numCameras == 1) {
                 _splitViewport[0] = new Viewport(0, 0, Width, Height, 0, 1);
             } else if (numCameras == 2) {
-                SplitWidth = Width / 2;
-                _splitViewport[0] = new Viewport(0, 0, Width / 2, Height, 0, 1);
-                _splitViewport[1] = new Viewport(Width / 2, 0, Width / 2, Height, 0, 1);
+                if (verticalSplit) {
+                    SplitWidth = Width / 2;
+                    _splitViewport[0] = new Viewport(0, 0, Width / 2, Height, 0, 1);
+                    _splitViewport[1] = new Viewport(Width / 2, 0, Width / 2, Height, 0, 1);
+                } else {
+                    SplitHeight = Height / 2;
+                    _splitViewport[0] = new Viewport(0, 0, Width, Height / 2, 0, 1);
+                    _splitViewport[1] = new Viewport(0, Height / 2, Width, Height / 2, 0, 1);
+                }
             } else if (numCameras == 4) {
                 int h2 = SplitHeight = Height / 2;
                 int w2 = SplitWidth = Width / 2;
@@ -106,7 +114,7 @@ namespace BRS.Engine {
 
             for (int i = 0; i < numCameras; i++) {
                 GameObject camObject = new GameObject("camera_" + i); // CREATES gameobject
-                camObject.AddComponent(new Camera(_splitViewport[i]));
+                camObject.AddComponent(new Camera(_splitViewport[i], CameraFov()));
                 Cameras[i] = camObject.GetComponent<Camera>();
             }
         }
@@ -121,6 +129,10 @@ namespace BRS.Engine {
         }
         public static Rectangle Split {
             get { return new Rectangle(0, 0, SplitWidth, SplitHeight); }
+        }
+
+        public static int CameraFov() {
+            return verticalSplit ? 70 : 40;
         }
 
 

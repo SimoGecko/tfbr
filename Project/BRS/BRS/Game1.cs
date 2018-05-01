@@ -83,8 +83,8 @@ namespace BRS {
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _ZBufferShader = Content.Load<Effect>("Effects/Depth");
-            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
+            _ZBufferShader = File.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = File.Load<Texture2D>("Images/textures/zbuffer");
 
             // add skybox
             Skybox.Start();
