@@ -157,6 +157,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.transform.Scale(2);
                 playerBase.transform.position = StartPositions[i];
                 playerBase.transform.scale = new Vector3(3, 1, 1);
@@ -174,6 +175,7 @@ namespace BRS.Scripts.Scenes {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
+            vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
             //vault.transform.position = new Vector3(5, 1.5f, -62);
             //vault.transform.scale = new Vector3(3, .5f, 3);
@@ -182,6 +184,8 @@ namespace BRS.Scripts.Scenes {
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
             vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
+
+            vault.AddComponent(new FlyingCash());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);

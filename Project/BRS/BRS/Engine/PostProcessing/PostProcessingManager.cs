@@ -19,17 +19,19 @@ namespace BRS.Engine.PostProcessing {
         GaussianBlur,
         DepthOfField,
         ColorGrading,
-        ShockWave
+        ShockWave,
+        Wave
     }
 
 
     class PostProcessingManager {
         public static PostProcessingManager Instance { get; private set; }
 
-        public List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
+        private List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
         private Texture2D _testGrid;
+        private Vector3 _wavePosition;
         private bool DEBUG = false;
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
@@ -82,6 +84,11 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.ShockWave:
+                        _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
+                        ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
+                        ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
+                        break;
+                    case PostprocessingType.Wave:
                         _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
@@ -169,6 +176,29 @@ namespace BRS.Engine.PostProcessing {
             }
         }
 
+        /// <summary>
+        /// Activate the shockwave filter for a given player.
+        /// Important: parameters about duration are set in the shader-initialization.
+        /// </summary>
+        /// <param name="playerId">Id of the player to apply the shader</param>
+        /// <param name="position">3D-space coordinate of the position for the shockwave</param>
+        /// <param name="animationLength">Length  of the animation for the shockwave to go over the whole screen</param>
+        /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
+        /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
+        public void ActivateWave(int playerId, Vector3 position, float animationLength = 5.0f, bool deactivate = true, float deactivateAfter = 5.0f) {
+            _wavePosition = position;
+            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+
+            _effects[(int)PostprocessingType.Wave].Activate(playerId, true);
+            _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+            _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+            _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "animationLength", animationLength);
+
+            if (deactivate) {
+                new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.Wave, playerId));
+            }
+        }
+
         public void DectivateShader(PostprocessingType shader, int playerId) {
             _effects[(int)shader].Activate(playerId, false);
         }
@@ -203,7 +233,7 @@ namespace BRS.Engine.PostProcessing {
                 _effects[5].Activate(1, !_effects[5].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F7)) {
-                ActivateShockWave(0, Vector3.Zero);
+                ActivateWave(0, Vector3.Zero);
             }
             if (Input.GetKeyDown(Keys.PageUp)) {
                 _effects[3].Passes = MathHelper.Clamp(_effects[3].Passes + 1, 1, 4);
@@ -253,6 +283,13 @@ namespace BRS.Engine.PostProcessing {
                         // set the blurred scene and the depth map as parameter
                         ppShader.SetParameter("BlurScene", _blurTarget);
                         ppShader.SetParameter("D1M", depth1Texture);
+                    }
+
+                    if(ppShader.Type == PostprocessingType.Wave) {
+                        for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
+                            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+                            ppShader.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                        }                 
                     }
 
                     // Setup next render-target to apply next filter

@@ -258,8 +258,8 @@ namespace BRS.Scripts.Managers {
 
             if (allPlayersReady) {
                 for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                    PostProcessingManager.Instance._effects[2].Activate(i, false);
-                    PostProcessingManager.Instance._effects[3].Activate(i, false);
+                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, false);
+                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
                 }
 
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;

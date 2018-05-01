@@ -1,20 +1,21 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using BRS.Engine.Particles;
-using System;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
     /// <summary>
-    /// Particle-effect for the full-state of the player
+    /// Particle-effect for the normal-state of the player
     /// </summary>
-    class Cash : ParticleComponent {
+    class Tracks : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
 
-        ParticleSystem3D _projectileTrailParticles;
-        Projectile _projectile;
+        private ParticleSystem3D _projectileTrailParticles;
+        private Projectile _projectile;
 
         public override bool IsEmitting {
             get => _projectile.IsEmitting;
@@ -28,28 +29,33 @@ namespace BRS.Scripts.Particles3D {
         /// Initialization of the particle-system
         /// </summary>
         public override void Awake() {
+            float size = 1.0f;
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "cash",
-                    MaxParticles = 64,
-                    Duration = TimeSpan.FromSeconds(1),
-                    DurationRandomness = 3.5f,
-                    EmitterVelocitySensitivity = 0.1f,
+                    TextureName = "tracks",
+                    MaxParticles = 400,
+                    ParticlesPerRound = 0.1f,
+                    Duration = TimeSpan.FromSeconds(4),
+                    DurationRandomness = 1.5f,
+                    EmitterVelocitySensitivity = 0.00f,
 
-                    MinHorizontalVelocity = 0.5f,
-                    MaxHorizontalVelocity = 0.75f,
+                    MinHorizontalVelocity = 0,
+                    MaxHorizontalVelocity = 0.0f,
 
-                    MinVerticalVelocity = -1.0f,
-                    MaxVerticalVelocity = 1.0f,
+                    MinVerticalVelocity = 0.00f,
+                    MaxVerticalVelocity = 0.0000001f,
 
-                    MinRotateSpeed = -4.0f,
-                    MaxRotateSpeed = 4.0f,
+                    MinColor = new Color(255, 255, 255, 255),
+                    MaxColor = new Color(255, 255, 255, 255),
 
-                    MinStartSize = 0.1f,
-                    MaxStartSize = 0.3f,
+                    MinRotateSpeed = 0,
+                    MaxRotateSpeed = 0,
 
-                    MinEndSize = 0.4f,
-                    MaxEndSize = 0.11f
+                    MinStartSize = size,
+                    MaxStartSize = size,
+
+                    MinEndSize = size,
+                    MaxEndSize = size
                 }
             };
 
@@ -61,7 +67,7 @@ namespace BRS.Scripts.Particles3D {
         /// </summary>
         public override void Start() {
             _projectileTrailParticles.Start();
-            _projectile = new Projectile(_projectileTrailParticles, transform.position, 32);
+            _projectile = new Projectile(_projectileTrailParticles, transform.position);
         }
 
         /// <summary>

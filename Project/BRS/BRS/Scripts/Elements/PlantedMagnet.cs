@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BRS.Engine;
+using BRS.Engine.PostProcessing;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
@@ -32,6 +33,10 @@ namespace BRS.Scripts.Elements {
             Audio.Play("active_magnet", transform.position);
             ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
             GameObject.Destroy(gameObject, Duration);
+
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.ActivateWave(i, transform.position, deactivate: true, deactivateAfter: Duration);
+            }
         }
 
         public override void Update() {
@@ -51,6 +56,7 @@ namespace BRS.Scripts.Elements {
             _pMAffected.Clear();
 
             bool playSound = false;
+
 
             foreach (Player p in ElementManager.Instance.Players()) {
                 if (InActionRadius(p.gameObject)) {

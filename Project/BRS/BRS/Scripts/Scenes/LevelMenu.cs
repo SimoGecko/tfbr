@@ -18,8 +18,8 @@ namespace BRS.Scripts.Scenes {
             MenuScene();
 
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance._effects[2].Activate(i, true);
-                PostProcessingManager.Instance._effects[3].Activate(i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, true);
             }
 
             CreateManagers();

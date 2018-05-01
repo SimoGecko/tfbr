@@ -10,7 +10,7 @@ namespace BRS.Scripts.Particles3D {
     /// <summary>
     /// Particle-effect for the vault
     /// </summary>
-    class Smoke : ParticleComponent {
+    class CashDrop : ParticleComponent {
 
         // --------------------- VARIABLES ---------------------
 
@@ -27,28 +27,28 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _smokePlumeParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX4Smoke",
-                    MaxParticles = 1800,
-                    ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(3),
+                    TextureName = "dollar2",
+                    MaxParticles = 2,
+                    ParticlesPerRound = 1,
+                    Duration = TimeSpan.FromSeconds(5),
                     // Create a wind effect by tilting the gravity vector sideways.
-                    Gravity = new Vector3(-5, -2.5f, 0),
+                    Gravity = new Vector3(-0.5f, -0.2f, 0),
                     EndVelocity = 0.75f,
 
                     MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 5,
+                    MaxHorizontalVelocity = 1.0f,
 
                     MinVerticalVelocity = 2.5f,
-                    MaxVerticalVelocity = 25,
+                    MaxVerticalVelocity = 3.0f,
 
-                    MinColor = new Color(0, 0, 0, 255),
-                    MaxColor = new Color(128, 128, 128, 128),
+                    //MinColor = new Color(255, 215, 0, 255),
+                    //MaxColor = new Color(255, 215, 0, 128),
 
-                    MinRotateSpeed = -1,
-                    MaxRotateSpeed = 1,
+                    MinRotateSpeed = 0,
+                    MaxRotateSpeed = 0,
 
                     MinStartSize = 1,
-                    MaxStartSize = 2,
+                    MaxStartSize = 3,
 
                     MinEndSize = 2,
                     MaxEndSize = 5

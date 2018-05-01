@@ -24,6 +24,8 @@ namespace BRS.Engine {
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
         public bool active { get; set; } = true;
         public string name { private set; get; }
+
+        public int DrawOrder { set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
@@ -33,10 +35,12 @@ namespace BRS.Engine {
             Debug.Assert(!NameExists(name), "Name " + name + " must be unique!");
 
             this.name = name;
+            DrawOrder = 0;
             transform = new Transform();
             components = new List<IComponent>();
             Model = model;
             allGameObjects.Add(this);
+            allGameObjects.Sort((g1, g2) => g1.DrawOrder.CompareTo(g2.DrawOrder));
         }
 
 

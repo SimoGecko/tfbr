@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Scripts.Elements;
 using BRS.Scripts.Particles3D;
 
 namespace BRS.Scripts.PlayerScripts {
-    class PlayerParticles : Component {
+    class BaseParticles : Component {
 
-        private enum PlayerParticleType { Dust, Boost, Cash, Tracks }
-        List<Type> _effects = new List<Type>() { typeof(Dust), typeof(Boost), typeof(Cash), typeof(Tracks) };
+        private enum PlayerParticleType { CashDrop };
+        List<Type> _effects = new List<Type>() { typeof(CashDrop)};
         private ParticleComponent[] _particleComponents;
 
-        private PlayerAttack _playerAttack;
-        private PlayerMovement _playerMovement;
-        private PlayerInventory _playerInventory;
+        private Base _base;
 
         // --------------------- BASE METHODS ------------------
 
@@ -27,26 +26,27 @@ namespace BRS.Scripts.PlayerScripts {
 
                 PlayerParticleType ppt = (PlayerParticleType) Enum.Parse(typeof(PlayerParticleType), type.Name);
                 _particleComponents[(int)ppt] = pc;
+
+                //if (pc is Dust) _dust = pc as Dust;
+                //if (pc is Boost) _boost = pc as Boost;
+                //if (pc is Cash) _cash = pc as Cash;
             }
         }
 
         public override void Start() {
-            _playerAttack = gameObject.GetComponent<PlayerAttack>();
-            _playerMovement = gameObject.GetComponent<PlayerMovement>();
-            _playerInventory = gameObject.GetComponent<PlayerInventory>();
-
+            _base = gameObject.GetComponent<Base>();
+            
             foreach (ParticleComponent pc in _particleComponents) {
                 pc.Start();
             }
         }
 
         public override void Update() {
-            _particleComponents[(int)PlayerParticleType.Dust].IsEmitting = _playerMovement.Speed > 3.0f;
-            _particleComponents[(int)PlayerParticleType.Boost].IsEmitting = _playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerMovement.SpeedPad;
-            _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsFull();
-            _particleComponents[(int)PlayerParticleType.Tracks].IsEmitting = _playerMovement.OilTracks;
+            _particleComponents[(int)PlayerParticleType.CashDrop].IsEmitting = _base.FullDeloadDone;
+
 
             foreach (ParticleComponent pc in _particleComponents) {
+                //Debug.Log(pc.GetType().Name + ": " + pc.IsEmitting);
                 pc.Update();
             }
         }

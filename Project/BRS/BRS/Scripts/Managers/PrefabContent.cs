@@ -6,8 +6,11 @@ using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
 using BRS.Scripts.PowerUps;
+using BRS.Scripts.Particles3D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+
 
 // Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
 // ReSharper disable once CheckNamespace
@@ -56,13 +59,27 @@ namespace BRS.Engine {
             //expand these two arrays to add new powerups with a particular name and a powerup script
             string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
             Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
-
+            var colorMapping = new Dictionary<string, Color>()
+                {
+                    { "bomb", Color.Red},
+                    { "capacity", Color.Green},
+                    { "stamina", Color.Green},
+                    { "key", Color.Yellow},
+                    { "health", Color.Green},
+                    { "shield", Color.Green},
+                    { "speed", Color.Yellow},
+                    { "trap", Color.Red},
+                    { "explodingbox", Color.Red},
+                    { "weight", Color.Red},
+                    { "magnet", Color.Purple},
+                };
 
             for (int i=0; i<powerupName.Length; i++) {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
                 powerupPrefab.transform.Scale(1.5f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
+                powerupPrefab.AddComponent(new PowerUpEffect(colorMapping[powerupName[i]]));
                 powerupPrefab.material = powerupMat;
                 Prefabs.AddPrefab(powerupPrefab);
             }
