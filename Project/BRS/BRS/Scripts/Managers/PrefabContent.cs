@@ -5,12 +5,14 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
 using BRS.Scripts.Elements;
+using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.PowerUps;
+using BRS.Scripts.Particles3D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
-// Partial classes have to have the same namespace. Could maybe be solved with inheritance which would be nicer?
-// ReSharper disable once CheckNamespace
+
 namespace BRS.Engine {
     static class PrefabContent {
         ////////// builds all the prefabs and gives them to Prefabs //////////
@@ -21,6 +23,7 @@ namespace BRS.Engine {
 
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
+            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), isTransparent: true);
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
@@ -28,7 +31,7 @@ namespace BRS.Engine {
             //-------------------VALUABLES-------------------
             //cash
             GameObject cashPrefab = new GameObject("cashPrefab", File.Load<Model>("Models/elements/cash"));
-            cashPrefab.transform.Scale(2f);
+            cashPrefab.transform.Scale(2.5f);
             cashPrefab.material = elementsMat;
             cashPrefab.AddComponent(new Money(100, 1, Money.Type.Cash));
             cashPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(1.5f, 3.0f, 3.0f)));
@@ -44,7 +47,7 @@ namespace BRS.Engine {
 
             //diamond
             GameObject diamondPrefab = new GameObject("diamondPrefab", File.Load<Model>("Models/elements/diamond"));
-            diamondPrefab.transform.Scale(2f);
+            diamondPrefab.transform.Scale(1.5f);
             diamondPrefab.material = powerupMat;
             diamondPrefab.AddComponent(new Money(2000, 1, Money.Type.Diamond));
             diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
@@ -56,13 +59,27 @@ namespace BRS.Engine {
             //expand these two arrays to add new powerups with a particular name and a powerup script
             string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
             Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
-
+            var colorMapping = new Dictionary<string, Color>()
+                {
+                    { "bomb", Color.Red},
+                    { "capacity", Color.Green},
+                    { "stamina", Color.Green},
+                    { "key", Color.Yellow},
+                    { "health", Color.Green},
+                    { "shield", Color.Green},
+                    { "speed", Color.Yellow},
+                    { "trap", Color.Red},
+                    { "explodingbox", Color.Red},
+                    { "weight", Color.Red},
+                    { "magnet", Color.Purple},
+                };
 
             for (int i=0; i<powerupName.Length; i++) {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
                 powerupPrefab.transform.Scale(1.5f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
+                powerupPrefab.AddComponent(new PowerUpEffect(colorMapping[powerupName[i]]));
                 powerupPrefab.material = powerupMat;
                 Prefabs.AddPrefab(powerupPrefab);
             }
@@ -76,6 +93,7 @@ namespace BRS.Engine {
             police.transform.Scale(1f);
             police.material = policeMat;
             police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
+            police.AddComponent(new DynamicShadow());
             Prefabs.AddPrefab(police);
 
             //crate
@@ -84,6 +102,7 @@ namespace BRS.Engine {
             cratePrefab.material = powerupMat;
             cratePrefab.AddComponent(new Crate());
             cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            cratePrefab.AddComponent(new DynamicShadow());
             Prefabs.AddPrefab(cratePrefab);
 
             //oil
@@ -109,6 +128,7 @@ namespace BRS.Engine {
             fallingWeight.transform.Scale(1.5f);
             fallingWeight.AddComponent(new FallingWeight());
             fallingWeight.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            fallingWeight.AddComponent(new DynamicShadow());
             fallingWeight.material = powerupMat;
             Prefabs.AddPrefab(fallingWeight);
 
@@ -135,15 +155,23 @@ namespace BRS.Engine {
             foreach(string s in dynamicElements) {
                 GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
                 dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box));
+                dynamicElement.AddComponent(new DynamicShadow());
                 dynamicElement.material = elementsMat;
                 Prefabs.AddPrefab(dynamicElement);
             }
 
-            //cash
+            // cash-stacks for the base
             GameObject cashStack = new GameObject("cashStack", File.Load<Model>("Models/elements/stack"));
             cashStack.transform.Scale(2f);
             cashStack.material = elementsMat;
             Prefabs.AddPrefab(cashStack);
+
+
+            // dynamic shadow
+            GameObject dynamicShadow = new GameObject("dynamicShadow", File.Load<Model>("Models/primitives/plane"));
+            dynamicShadow.transform.Scale(2f);
+            dynamicShadow.material = shadowMat;
+            Prefabs.AddPrefab(dynamicShadow);
 
         }
     }

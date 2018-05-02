@@ -4,6 +4,9 @@
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
+using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Utilities;
+using BRS.Scripts;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
@@ -54,24 +57,15 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
-            for(int i=0; i<GameManager.NumPlayers; i++) {
-                int offset = i > 1 ? 3 : 0;
-                StartPositions.Add(new Vector3(-5 + 10*i + offset, 0, 10));
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                int offset = i > 1 ? 1 : 0;
+                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
             }
-            /*
-            if (GameManager.NumPlayers == 2) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1, 0, 0));
-            } else if (GameManager.NumPlayers == 4) {
-                StartPositions.Add(new Vector3(-5 + 10 * 0,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1,0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 0 + .5f, 0, 0));
-                StartPositions.Add(new Vector3(-5 + 10 * 1 + 0.5f, 0, 0));
-            }*/
         }
 
         void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));
             UiManager.AddComponent(new BaseUI());
             UiManager.AddComponent(new PlayerUI());
             UiManager.AddComponent(new PowerupUI());
@@ -92,11 +86,17 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager());
 
+
+            Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+            //Add(Manager);         
+
             //new MenuManager().LoadContent(); // TODO add as component to manager
         }
 
         void CreatePlayers() {
-            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+            //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 Vector3 startPos = StartPositions[i];
@@ -104,7 +104,8 @@ namespace BRS.Scripts.Scenes {
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
-                player.material = playerMat;
+
+                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i+1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -118,7 +119,14 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
+                player.AddComponent(new DynamicShadow());
 
+                // Modify player's name and model and color(choosen by user during menu)
+                if (MenuManager.Instance != null)
+                    MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
+
+
+                //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 //arrow for base
@@ -146,28 +154,46 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateBases() {
-            for (int i = 0; i < 2; i++) {
-                //TODO base object
-                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/cube"));
+            for (int i = 0; i < GameManager.NumTeams; i++) {
+                // Load the texture and create a copy for the colored base
+                Texture2D texture = File.Load<Texture2D>("Images/textures/base");
+                Texture2D colored = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
+
+                // Read the texture-data into a color-array and replace all visible pixels to the base-color
+                Color[] data = new Color[texture.Width * texture.Height];
+                texture.GetData(data);
+
+                Color teamColor = i == 0
+                    ? ScenesCommunicationManager.TeamAColor
+                    : ScenesCommunicationManager.TeamBColor;
+
+                for (int j = 0; j < data.Length; ++j) {
+                    if (data[j].A > 0) {
+                        data[j].R = teamColor.R;
+                        data[j].G = teamColor.G;
+                        data[j].B = teamColor.B;
+                    }
+                }
+
+                // Once you have finished changing data, set it back to the texture:
+                colored.SetData(data);
+
+                GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/plane"));
                 playerBase.tag = ObjectTag.Base;
+                playerBase.transform.Scale(0.5f);
+                playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
+                playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
-                playerBase.transform.Scale(2);
-                playerBase.transform.position = StartPositions[i];
-                playerBase.transform.scale = new Vector3(3, 1, 1);
-                playerBase.transform.SetStatic();
-                //playerBase.AddComponent(new BoxCollider(playerBase));
-                playerBase.AddComponent(new StaticRigidBody(pureCollider: true));
-                playerBase.transform.SetStatic();
+                playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
-
-
         }
 
         void CreateSpecialObjects() {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
+            vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
             //vault.transform.position = new Vector3(5, 1.5f, -62);
             //vault.transform.scale = new Vector3(3, .5f, 3);
@@ -176,6 +202,8 @@ namespace BRS.Scripts.Scenes {
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
             vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
+
+            vault.AddComponent(new FlyingCash());
             vault.material = playerMat;
             //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
             //Add(vault);

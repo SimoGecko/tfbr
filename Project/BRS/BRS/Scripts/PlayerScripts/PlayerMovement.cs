@@ -28,8 +28,8 @@ namespace BRS.Scripts.PlayerScripts {
         private float _targetRotation;
 
         // const
-        private const float MinSpeed = 3f;
-        private const float MaxSpeed = 5f; // Todo: As soon as it is built in Release-mode, 7 is too fast
+        public float MinSpeed = 3f;
+        public float MaxSpeed = 5f; // Todo: As soon as it is built in Release-mode, 7 is too fast
         private const float MaxTurningRate = 10*360; // deg/sec
         private const float BoostSpeedMultiplier = 1.5f;
 
@@ -45,6 +45,9 @@ namespace BRS.Scripts.PlayerScripts {
         //SLOWDOWN
         private bool _slowdown;
         public bool SpeedPad;
+
+        // drove through oil
+        public bool OilTracks;
 
         //reference
         PlayerInventory playerInventory;
@@ -122,6 +125,10 @@ namespace BRS.Scripts.PlayerScripts {
 
         public void SetSlowdown(bool b) {
             _slowdown = b;
+        }
+
+        public void SetOilTracks(bool b) {
+            OilTracks = b;
         }
 
         internal void SetSpeedPad(bool b) {

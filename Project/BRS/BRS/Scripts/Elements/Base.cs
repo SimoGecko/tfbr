@@ -18,6 +18,8 @@ namespace BRS.Scripts.Elements {
         //public
         public int TotalMoney { get; private set; }
         public Color BaseColor { get; private set; }
+        // deload done
+        public bool FullDeloadDone = false;
 
         //private
         private const float DeloadDistanceThreshold = 4f;
@@ -134,9 +136,11 @@ namespace BRS.Scripts.Elements {
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
+            bool wasDeloading = false;
             if (pi.CarryingValue > 0) {
                 Audio.Play("leaving_cash_base", transform.position);
                 OnBringBase?.Invoke();
+                wasDeloading = true;
             }
 
             while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) {
@@ -144,7 +148,12 @@ namespace BRS.Scripts.Elements {
                 pi.DeloadOne();
                 UpdateUI();
                 UpdateMoneyStack();
+                Input.Vibrate(.01f, .01f, pi.gameObject.GetComponent<Player>().PlayerIndex);
                 await Time.WaitForSeconds(TimeBetweenUnloads);
+            }
+            if(wasDeloading) {
+                FullDeloadDone = true;
+                Timer t = new Timer(3, () => FullDeloadDone = false);
             }
         }
 
@@ -155,14 +164,14 @@ namespace BRS.Scripts.Elements {
                 GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
                 _moneyGameObjects.Add(newBundle);
 
-                Vector3 size = BoundingBoxHelper.CalcualteSize(newBundle.Model, transform.scale);
+                Vector3 size = BoundingBoxHelper.CalculateSize(newBundle.Model, newBundle.transform.scale);
 
                 int stackId = _shownMoneyStacks / _bundlesPerStack;
                 int rowId = stackId % _columnsPerRow;
                 int colId = stackId / _columnsPerRow;
                 Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
                 Vector3 right = size.X * (_margin + rowId) * Vector3.Right;
-                Vector3 back = size.X * (_margin + colId) * Vector3.Backward;
+                Vector3 back = size.Z * (_margin + colId) * Vector3.Backward;
 
                 newBundle.transform.position = transform.position + up + right + back;
 

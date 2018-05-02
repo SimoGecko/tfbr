@@ -15,7 +15,7 @@ namespace BRS.Scripts.UI {
         enum IconType { Triangle, Square, Circle, Star, House }
 
         //public
-        const bool rotateMinimap = false;
+        const bool rotateMinimap = true;
 
         //private
         static Rectangle _mapDest, _mapAreaVirgin, _miniDest;
@@ -74,6 +74,7 @@ namespace BRS.Scripts.UI {
             //MAP
             spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
 
+
             //MONEY
             foreach (Vector3 pos in ElementManager.Instance.AllMoneyPosition()) {
                 spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
@@ -115,8 +116,25 @@ namespace BRS.Scripts.UI {
             Point mapPivot2 = new Point( SmallMapWidth / 2, SmallMapWidth / 2);
 
             Rectangle miniDest2 = _miniDest; miniDest2.Location += mapPivot2;
-            spriteBatch.Draw(_mapSprite, miniDest2, sourceRect, Color.White, MathHelper.ToRadians(_cameraRot), mapPivot.ToVector2(), SpriteEffects.None, 1); // todo make rotation
-            //TODO cut map accordingly
+
+
+            //MAP (a bit of a HACK but it works)
+            UserInterface.sB.End();
+            Viewport tempVp = Graphics.gD.Viewport;
+            Point BR = new Point(tempVp.Bounds.Right, tempVp.Bounds.Bottom); // bottomright
+            Graphics.gD.Viewport = new Viewport(new Rectangle(BR.X-20-SmallMapWidth, BR.Y-20- SmallMapWidth, SmallMapWidth, SmallMapWidth));
+
+            UserInterface.sB.Begin();
+            Vector2 position = Vector2.One * SmallMapWidth / 2;
+            Vector2 pivot = playerPosVirgin; // PLAYER POSITION
+            spriteBatch.Draw(_mapSprite, Vector2.Zero, new Rectangle(0, 0, 1, 1), Color.White, 0, Vector2.Zero, 1000f, SpriteEffects.None, 1); // draws grey bg
+
+            spriteBatch.Draw(_mapSprite, position, null, Color.White, MathHelper.ToRadians(_cameraRot), pivot, 1f, SpriteEffects.None, 1);
+            UserInterface.sB.End();
+
+            Graphics.gD.Viewport = tempVp;
+            UserInterface.sB.Begin();
+
 
             Vector2 finalPx;
             //MONEY

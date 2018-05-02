@@ -31,19 +31,19 @@ namespace BRS.Scripts.Particles3D {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "cash",
-                    MaxParticles = 100,
+                    MaxParticles = 64,
                     Duration = TimeSpan.FromSeconds(1),
                     DurationRandomness = 3.5f,
                     EmitterVelocitySensitivity = 0.1f,
 
-                    MinHorizontalVelocity = 2,
-                    MaxHorizontalVelocity = 3,
+                    MinHorizontalVelocity = 0.5f,
+                    MaxHorizontalVelocity = 0.75f,
 
-                    MinVerticalVelocity = -1,
-                    MaxVerticalVelocity = 1,
+                    MinVerticalVelocity = -1.0f,
+                    MaxVerticalVelocity = 1.0f,
 
-                    MinRotateSpeed = -4,
-                    MaxRotateSpeed = 4,
+                    MinRotateSpeed = -4.0f,
+                    MaxRotateSpeed = 4.0f,
 
                     MinStartSize = 0.1f,
                     MaxStartSize = 0.3f,
@@ -61,7 +61,7 @@ namespace BRS.Scripts.Particles3D {
         /// </summary>
         public override void Start() {
             _projectileTrailParticles.Start();
-            _projectile = new Projectile(_projectileTrailParticles, transform.position, 5);
+            _projectile = new Projectile(_projectileTrailParticles, transform.position, 32);
         }
 
         /// <summary>

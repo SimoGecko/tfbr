@@ -60,7 +60,8 @@ namespace BRS {
 
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = true;
-            ParticleSystem3D.Enabled = true;
+            LenseFlareManager.IsActive = true;
+            ParticleSystem3D.IsActive = true;
 
             base.Initialize();
         }
@@ -73,18 +74,20 @@ namespace BRS {
 
             //load prefabs and scene
             Prefabs.Start();
+            UserInterface.Start();
+            GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("LevelMenu");
+
 
             //start other big components
-            UserInterface.Start();
             Input.Start();
             Audio.Start();
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _ZBufferShader = Content.Load<Effect>("Effects/Depth");
-            _ZBufferTexture = Content.Load<Texture2D>("Images/textures/zbuffer");
+            _ZBufferShader = File.Load<Effect>("Effects/Depth");
+            _ZBufferTexture = File.Load<Texture2D>("Images/textures/zbuffer");
 
             // add skybox
             Skybox.Start();
@@ -108,7 +111,8 @@ namespace BRS {
 
             // Todo: Switch for the interim
             if (Input.GetKeyDown(Keys.Tab)) {
-                ParticleSystem3D.Enabled = !ParticleSystem3D.Enabled;
+                ParticleSystem3D.IsActive = !ParticleSystem3D.IsActive;
+                LenseFlareManager.IsActive = !LenseFlareManager.IsActive;
             }
 
             foreach (GameObject go in GameObject.All) go.Update();

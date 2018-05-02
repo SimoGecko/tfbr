@@ -1,0 +1,65 @@
+<Button>
+Texture: background
+Position: 960 380
+ScaleHeight: 0.5
+ScaleWidth: 0.87
+Color: 255 255 255
+</Button>
+
+<Button>
+Texture: title
+Position: 960 162
+Text: Paused
+Color: 148 148 148
+ColorInside: 255 255 255
+</Button>
+
+<Button>
+NameIdentifier: Resume
+Texture: buttonCircle
+TextureInside: arrowRight
+Position: 860 350
+Functions: ResumeGame
+NeighborsUpDownLeftRight: null SliderAudio Restart Menu
+Color: 110 235 150
+ColorInside: 255 255 255
+CurrentSelection: yes
+</Button>
+
+<Button>
+NameIdentifier: Menu
+Texture: buttonCircle
+TextureInside: menu
+Position: 960 350
+Functions: LoadMenu
+NeighborsUpDownLeftRight: null SliderAudio Resume Restart
+Color: 110 235 150
+ColorInside: 255 255 255
+</Button>
+
+<Button>
+NameIdentifier: Restart
+Texture: buttonCircle
+TextureInside: restart
+Position: 1060 350
+Functions: StartGameFunction
+NeighborsUpDownLeftRight: null SliderAudio Menu Resume
+Color: 110 235 150
+ColorInside: 255 255 255
+</Button>
+
+<Slider>
+NameIdentifier: SliderAudio
+Texture: slider
+Position: 956 500
+Text: Game Settings
+Color: 148 148 148
+ColorInside: 255 255 255
+NeighborsUpDownLeftRight: Resume null null null
+Functions: UpdateVolume
+</Slider>
+
+<Text>
+Text: Volume: 
+Position: 815 500
+</Text>

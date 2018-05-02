@@ -24,22 +24,19 @@ namespace BRS.Scripts.Managers {
 
         //reference
         public static Spawner Instance;
-        GameMode _currentMode = new GameMode(); // to access actual parameters
+        GameMode _currentMode; // to access actual parameters
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
+            _currentMode = GameMode.GetCurrentGameMode();
 
-            //SpawnInitialValuables();
-            SpawnInitialCash();
-            SpawnInitialGold();
+            SpawnInitialValuables();
             SpawnInitialCrates();
             SpawnInitialPowerup();
 
-            //SpawnValuablesContinuous();
-            SpawnCashContinuous();
-            SpawnGoldContinuous();
+            SpawnValuableContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
             //SpawnDiamondCasual();
@@ -55,18 +52,28 @@ namespace BRS.Scripts.Managers {
 
 
         // commands
-        void SpawnInitialCash() {
-            for (int i = 0; i < _currentMode.CashAmount; i++) {
-                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", _currentMode.CashStackDistribution.Evaluate());
+        void SpawnInitialValuables() {
+            for(int i=0; i<_currentMode.StartValuableAmount; i++) {
+                SpawnOneValuableRandom();
             }
         }
-        void SpawnInitialGold() {
-            for (int i = 0; i < _currentMode.GoldAmount; i++)
-                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab", Vector3.Zero);
+
+        void SpawnOneValuableRandom() {
+            string valuable = _currentMode.RandomValuable;
+            switch (valuable) {
+                case "cash": SpawnRandomStack(); break;
+                case "gold": SpawnRandomGold(); break;
+                case "diamond": SpawnRandomDiamond(); break;
+                default: Debug.LogError("weird case"); break;
+            }
         }
 
+        void SpawnRandomStack()   { SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", EvaluateStackSizeDistribution()); }
+        void SpawnRandomGold()    { SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab"); }
+        void SpawnRandomDiamond() { SpawnMoneyAt(Heatmap.instance.GetUniformPos().To3(), "diamondPrefab"); }
+
         public void SpawnMoneyAround(Vector3 p, float radius, string moneyType = "") { // cash, gold, diamond
-            if (moneyType == "") moneyType = _currentMode.MoneyDistribution.Evaluate();
+            if (moneyType == "") moneyType = _currentMode.RandomValuable;
             moneyType = moneyType.ToLower();
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
             SpawnMoneyAt(pos, moneyType + "Prefab", Vector3.Zero);
@@ -79,7 +86,7 @@ namespace BRS.Scripts.Managers {
         }
 
         public void SpawnMoneyFromCenter(Vector3 p, float radius, string moneyType = "") {
-            if (moneyType == "") moneyType = _currentMode.MoneyDistribution.Evaluate();
+            if (moneyType == "") moneyType = _currentMode.RandomValuable;
             p.Y = MathHelper.Max(p.Y, 0.5f);
             SpawnMoneyAt(p, moneyType + "Prefab", MyRandom.UpsideLinearVelocity() * radius);
         }
@@ -90,8 +97,8 @@ namespace BRS.Scripts.Managers {
             SpawnMoneyAt(position.To3(), "diamondPrefab", Vector3.Zero);
         }
 
-        void SpawnMoneyAt(Vector3 pos, string prefab, Vector3 linearVelocity) {//cashPrefab, goldPrefab, diamondPrefab
-            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity);
+        void SpawnMoneyAt(Vector3 pos, string prefab, Vector3? linearVelocity = null) {//cashPrefab, goldPrefab, diamondPrefab
+            GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newMoney.GetComponent<Money>());
         }
 
@@ -99,32 +106,29 @@ namespace BRS.Scripts.Managers {
 
         // CRATE
         void SpawnInitialCrates() {
-            for (int i = 0; i < _currentMode.CrateAmount; i++)
+            for (int i = 0; i < _currentMode.StartCrateAmount; i++)
                 SpawnOneCrateRandom();
         }
 
         void SpawnOneCrateRandom() {
-            Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
-            GameObject newCrate = GameObject.Instantiate("cratePrefab", position.To3() + Vector3.Up * .25f, Quaternion.Identity);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", RandomPos() + Vector3.Up * .25f, Quaternion.Identity);
             ElementManager.Instance.Add(newCrate.GetComponent<Crate>());
         }
 
 
         // POWERUP
         void SpawnInitialPowerup() {
-            for (int i = 0; i < _currentMode.PowerupAmount; i++)
+            for (int i = 0; i < _currentMode.StartPowerupAmount; i++)
                 SpawnOnePowerupRandom();
-                //SpawnOnePowerupAt(new Vector3(i * 3, 0, -10));
         }
 
         void SpawnOnePowerupRandom() {
-            Vector2 position = MyRandom.InsideRectangle(PlayArea.SpawnArea);
-            SpawnOnePowerupAt(position.To3(), Vector3.Zero);
+            SpawnOnePowerupAt(RandomPos());
         }
 
         public void SpawnPowerupAround(Vector3 p, float radius) {
             Vector3 pos = p + MyRandom.InsideUnitCircle().To3() * radius;
-            SpawnOnePowerupAt(pos, Vector3.Zero);
+            SpawnOnePowerupAt(pos);
         }
 
         public void SpawnPowerupFromCenter(Vector3 p, float radius) {
@@ -132,56 +136,56 @@ namespace BRS.Scripts.Managers {
             SpawnOnePowerupAt(p, MyRandom.UpsideLinearVelocity() * radius);
         }
 
-        void SpawnOnePowerupAt(Vector3 position, Vector3 linearVelocity) {
-            position += new Vector3(0, 2, 0);
-            GameObject newPowerup = GameObject.Instantiate(_currentMode.PowerupDistribution.Evaluate() + "Prefab", position + Vector3.Up * .45f, Quaternion.Identity, linearVelocity);
+        void SpawnOnePowerupAt(Vector3 position, Vector3? linearVelocity=null) {
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position + Vector3.Up * 2.5f, Quaternion.Identity, linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
-
-        //
-
 
 
 
         // queries
+        Vector3 RandomPos() {
+            return Heatmap.instance.GetUniformPos().To3();
+        }
+        float TimeVariance { get { return MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer); } } // to spice things up
+
+        int EvaluateStackSizeDistribution() {
+            return MyRandom.Range(1, 5);
+            //return Int32.Parse(Utility.EvaluateDistribution(_currentMode.CashStackDistribution));
+        }
 
 
         // OTHER
-        async void SpawnCashContinuous() {
+        async void SpawnValuableContinuous() {
             while (true) {
-                SpawnClusterAt(Heatmap.instance.GetCashPos().To3(), "cashPrefab", _currentMode.CashStackDistribution.Evaluate());
-                await Time.WaitForSeconds(_currentMode.TimeBetweenCashSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
-            }
-        }
-
-        async void SpawnGoldContinuous() {
-            while (true) {
-                SpawnMoneyAt(Heatmap.instance.GetGoldPos().To3(), "goldPrefab", Vector3.Zero);
-                await Time.WaitForSeconds(_currentMode.TimeBetweenGoldSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
+                SpawnOneValuableRandom();
+                float waitTime = _currentMode.TimeBetweenValuables * TimeVariance;
+                await Time.WaitForSeconds(waitTime);
             }
         }
 
         async void SpawnCrateContinuous() {
             while (true) {
                 SpawnOneCrateRandom();
-                await Time.WaitForSeconds(_currentMode.TimeBetweenCrateSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
+                await Time.WaitForSeconds(_currentMode.TimeBetweenCrates * TimeVariance);
             }
         }
 
         async void SpawnPowerupContinuous() {
             while (true) {
                 SpawnOnePowerupRandom();
-                await Time.WaitForSeconds(_currentMode.TimeBetweenPowerupSpawn * MyRandom.Range(1 - TimeRandomizer, 1 + TimeRandomizer));
+                float waitTime = _currentMode.TimeBetweenPowerups * TimeVariance;
+                await Time.WaitForSeconds(waitTime);
             }
         }
 
-        //
+        /*
         async void SpawnDiamondCasual() {
             if(MyRandom.Value< _currentMode.ProbOfDiamond) {
                 await Time.WaitForSeconds(MyRandom.Range(10, RoundManager.RoundTime));
                 SpawnOneDiamondRandom();
             }
-        }
+        }*/
 
 
     }

@@ -159,7 +159,7 @@ namespace BRS.Engine.Physics.Primitives3D {
             for (int i = 0; i < _index; i++) {
                 effect.World = _worlds[i];
                 effect.CurrentTechnique.Passes[0].Apply();
-                effect.Alpha = 0.5f;
+                //effect.Alpha = 0.5f;
 
                 graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0,
                                                      _vertices.Count, 0, primitiveCount);

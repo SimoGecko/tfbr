@@ -28,7 +28,7 @@ namespace BRS.Scripts.PowerUps {
             base.UsePowerup();
             transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedBomb = GameObject.Instantiate("plantedBombPrefab", transform);
-            plantedBomb.GetComponent<PlantedBomb>().Plant();
+            plantedBomb.GetComponent<PlantedBomb>().Plant(Owner.TeamIndex);
             ElementManager.Instance.Add(plantedBomb);
         }
     }

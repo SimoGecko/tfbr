@@ -46,8 +46,8 @@ namespace BRS.Scripts.Elements {
         public override void Start() {
             scale = transform.scale.X;
             if (_followEnemy) {
-                if (ElementManager.Instance.Player(1 - _playerIndex) != null)
-                    _target = ElementManager.Instance.Player(1 - _playerIndex).transform;
+                if (ElementManager.Instance.Enemy(_playerIndex % 2) != null)
+                    _target = ElementManager.Instance.Enemy(_playerIndex%2).transform;
             } else {
                 _target = ElementManager.Instance.Base(_playerIndex % 2).transform;
             }
@@ -55,7 +55,7 @@ namespace BRS.Scripts.Elements {
 
         public override void Update() {
             CheckIfDisplay();
-            LookAtPoi();
+            //LookAtPoi();
         }
 
 

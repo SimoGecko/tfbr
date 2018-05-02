@@ -4,6 +4,7 @@
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
 using Jitter.LinearMath;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Engine.Physics.Colliders {
     /// <summary>
@@ -15,6 +16,10 @@ namespace BRS.Engine.Physics.Colliders {
 
         // Link to the simulated gameobject
         public GameObject GameObject { get; set; }
+        // Link to the synced object (shadow)
+        public GameObject SyncedObject { get; set; }
+        // Offset of the synced object
+        public Vector3 SyncedOffset { get; set; }
 
         public float Length => BoundingBoxSize.X;
         public float Height => BoundingBoxSize.Y;
@@ -72,6 +77,15 @@ namespace BRS.Engine.Physics.Colliders {
             if (!IsStatic && !IsAnimated) {
                 GameObject.transform.position = Conversion.ToXnaVector(Position - JVector.Transform(CenterOfMass, Orientation));
                 GameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(Orientation));
+            }
+
+            if (SyncedObject != null) {
+                Vector3 projectedToGround = GameObject.transform.position;
+                projectedToGround.Y = 0;
+                float rotation = GameObject.transform.eulerAngles.Y;
+
+                SyncedObject.transform.position = projectedToGround + MathHelper.Clamp(GameObject.transform.position.Y, 1, 10) * SyncedOffset;
+                SyncedObject.transform.rotation = Quaternion.CreateFromAxisAngle(Vector3.Up, MathHelper.ToRadians(rotation));
             }
 
             base.PostStep(timestep);
