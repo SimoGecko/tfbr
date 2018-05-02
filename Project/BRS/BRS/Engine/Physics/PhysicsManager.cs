@@ -174,7 +174,7 @@ namespace BRS.Engine.Physics {
         /// <param name="fraction">Fraction of the collision on the ray. (start + fraction * direction)</param>
         /// <returns>True if the body is considered as a hit.</returns>
         private bool RaycastCallback(RigidBody body, JVector normal, float fraction) {
-            return body.IsStatic && body.PureCollider == false;
+            return body.IsStatic && body.PureCollider == false && !(body is SteerableCollider);
         }
 
         #endregion
@@ -253,10 +253,12 @@ namespace BRS.Engine.Physics {
                 p + d5, RaycastCallback, out resBody,
                 out hitNormal, out fraction);
 
-            if (result) {
+            if (result && resBody != rigidBody) {
                 float maxLength = d.LengthSquared();
                 JVector collisionAt = p + fraction * d5;
                 JVector position = GetPosition(collider, collisionAt, hitNormal);
+                Debug.Log(fraction);
+                Debug.Log((resBody as Collider).GameObject.name);
 
                 float ncLength = (position - p).LengthSquared();
 
