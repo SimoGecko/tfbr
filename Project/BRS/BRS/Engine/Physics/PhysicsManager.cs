@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using Jitter;
@@ -125,8 +126,8 @@ namespace BRS.Engine.Physics {
                     Instance._colliders.Add(body2);
                 }
             } else {
-                body1?.GameObject.OnCollisionEnter(body2);
-                body2?.GameObject.OnCollisionEnter(body1);
+                if (body2 != null) body1?.GameObject.OnCollisionEnter(body2);
+                if (body1 != null) body2?.GameObject.OnCollisionEnter(body1);
             }
         }
 
@@ -249,18 +250,23 @@ namespace BRS.Engine.Physics {
             JVector hitNormal;
             float fraction;
 
-            bool result = World.CollisionSystem.Raycast(p,
-                p + d5, RaycastCallback, out resBody,
-                out hitNormal, out fraction);
+            bool result = World.CollisionSystem.Raycast(p, d5, RaycastCallback,
+                out resBody, out hitNormal, out fraction);
 
             if (result && resBody != rigidBody) {
                 float maxLength = d.LengthSquared();
                 JVector collisionAt = p + fraction * d5;
                 JVector position = GetPosition(collider, collisionAt, hitNormal);
-                Debug.Log(fraction);
-                Debug.Log((resBody as Collider).GameObject.name);
 
                 float ncLength = (position - p).LengthSquared();
+
+                //resBody.Tag = BodyTag.DrawMe;
+                //Debug.Log(fraction);
+                //Debug.Log((resBody as Collider).GameObject.name);
+                //World.AddBody(new RigidBody(new CylinderShape(1.0f, .25f)) { Position = p, IsStatic = true, PureCollider = true });
+                //World.AddBody(new RigidBody(new CylinderShape(2.5f, 0.5f)) { Position = end, IsStatic = true, PureCollider = true });
+                ////World.AddBody(new RigidBody(new CylinderShape(1.0f, 1.0f)) { Position = p + d5, IsStatic = true, PureCollider = true });
+                //World.AddBody(new RigidBody(new CylinderShape(1.0f, 1.0f)) { Position = collisionAt, IsStatic = true, PureCollider = true });
 
                 return maxLength < ncLength ? end : position;
             }
@@ -376,9 +382,6 @@ namespace BRS.Engine.Physics {
             JVector nonCollidedSize = ProjectOn(distColToPos, hitNormal);
             JVector penetration = nonCollidedSize - projectedSize;
 
-            // Todo: Visual debuggin might be removed in the end
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collider.Position - (1 + Epsilon) * penetration));
-
             // Calcualte the position for the player so it doesn't collide anymore
             return collider.Position - (1 + Epsilon) * penetration;
         }
@@ -403,8 +406,6 @@ namespace BRS.Engine.Physics {
 
             player.GameObject.GetComponent<Player>().SetCollisionState(other, Conversion.ToXnaVector(newPosition), angle);
             player.Position = newPosition;
-            //player.RotationY = MathHelper.ToRadians(angle);
-            //player.Orientation = JMatrix.CreateRotationY(MathHelper.ToRadians(angle));
         }
 
         #endregion
@@ -473,7 +474,7 @@ namespace BRS.Engine.Physics {
             float det = a1 * b2 - a2 * b1;
 
             // If 0 => parallel => no intersection
-            if (det == 0.0f) {
+            if (Math.Abs(det) < JMath.Epsilon) {
                 intersection = JVector.Zero;
                 return false;
             }
