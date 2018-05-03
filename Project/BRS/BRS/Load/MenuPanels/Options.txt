@@ -42,8 +42,7 @@ ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NameSwitchTo: main
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 CurrentSelection: yes
 NeighborsUpDownLeftRight: SliderAudio null null null
 </Button>

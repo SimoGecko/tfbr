@@ -1,17 +1,17 @@
 ﻿// (c) Nicolas Huart 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
-using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.Menu {
-    class TickBox : Component {
-        ////////// class to create and display a tickBox //////////
 
-        // --------------------- VARIABLES ---------------------
+    /// <summary>
+    /// Class to create and display a tickBox
+    /// !!!! STILL OLD VERSION WITH MOUSE CLICK!!!
+    /// </summary>
+    class TickBox : Component {
 
         private MouseState _currentMouse;
         private MouseState _previousMouse;
@@ -33,7 +33,6 @@ namespace BRS.Engine.Menu {
             }
         }
 
-        // --------------------- BASE METHODS ------------------
         public TickBox(Texture2D tnotC, Texture2D tC) {
             _textureNotClicked = tnotC;
             _textureClicked = tC;
@@ -57,7 +56,6 @@ namespace BRS.Engine.Menu {
             }
         }
 
-        // --------------------- CUSTOM METHODS ----------------
         public override void Draw2D(int i) {
             if (Active && i == 0) {
                 var colour = Color.White;

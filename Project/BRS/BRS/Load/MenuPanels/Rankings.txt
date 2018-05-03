@@ -93,6 +93,5 @@ ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: TimeChangeLeft null null null
 NameSwitchTo: main
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>

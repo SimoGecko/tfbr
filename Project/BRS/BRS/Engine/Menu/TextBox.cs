@@ -1,26 +1,51 @@
 ﻿// (c) Nicolas Huart 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
-using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Menu {
-    class TextBox : Component {
-        public string Text { get; set; }
-        public string NameIdentifier { get; set; }
 
+    /// <summary>
+    /// Class to create and display a text
+    /// </summary>
+    class TextBox : Component {
+
+        #region Properties and attributes
+
+        /// <summary>
+        /// Positon of the textbox
+        /// </summary>
         public Vector2 InitPos { get; set; }
         public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f); } }
 
+        /// Content of the textbox
+        /// </summary>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// Visual Aspect of the content of the textbox
+        /// </summary>
         public SpriteFont Font = UserInterface.menuFont;
         public Color Colour = Color.Black;
+
+        /// <summary>
+        /// Name to identify the textbox
+        /// </summary>
+        public string NameIdentifier { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public TextBox() {
             Active = true;
             
         }
+
+        #endregion
+
+        #region Monogame-methods
 
         public override void Draw2D(int i) {
             if (Active && i == 0) {
@@ -28,5 +53,7 @@ namespace BRS.Engine.Menu {
                 UserInterface.DrawString(Text, Position, pivot: Align.Center, col: Colour, font: Font);
             }
         }
+
+        #endregion
     }
 }
