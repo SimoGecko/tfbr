@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using BRS.Engine.Utilities;
+using BRS.Scripts.Elements.Lighting;
 
 
 namespace BRS.Engine {
@@ -25,10 +26,10 @@ namespace BRS.Engine {
 
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
-            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), isTransparent: true);
-            Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
-            Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
-            Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
+            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
+            Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
+            Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
+            Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
@@ -99,10 +100,9 @@ namespace BRS.Engine {
             police.material = policeMat;
             police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
             police.AddComponent(new DynamicShadow());
-            police.AddComponent(new LightFlare(LightFlare.LightType.LightBlue, new Vector3(0.2f, 0.85f, 0f), Quaternion.Identity, (float)Math.PI, LightFlare.UpdateFunction.SinAbsolute));
-            police.AddComponent(new LightFlare(LightFlare.LightType.LightRed, new Vector3(-0.2f, 0.851f, 0f), Quaternion.Identity, 0.0f, LightFlare.UpdateFunction.SinAbsolute));
-            police.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(0.27f, 0.35f, 0.931f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), MyRandom.Value, LightFlare.UpdateFunction.SinPositive));
-            police.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(-0.27f, 0.35f, 0.93f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), MyRandom.Value, LightFlare.UpdateFunction.SinPositive));
+            police.AddComponent(new AlarmLight(FollowerType.LightRed, new Vector3(-0.2f, 0.850f, 0f),
+                FollowerType.LightBlue, new Vector3(0.2f, 0.851f, 0f)));
+            police.AddComponent(new FrontLight(new Vector3(0.27f, 0.35f, -0.97f), new Vector3(-0.27f, 0.35f, 0.93f)));
             Prefabs.AddPrefab(police);
 
             //crate
@@ -177,21 +177,21 @@ namespace BRS.Engine {
 
 
             // dynamic shadow
-            GameObject dynamicShadow = new GameObject("dynamicShadow", File.Load<Model>("Models/primitives/plane"));
+            GameObject dynamicShadow = new GameObject(FollowerType.DynamicShadow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
             dynamicShadow.material = shadowMat;
             Prefabs.AddPrefab(dynamicShadow);
 
 
-            // dynamic shadow
-            GameObject lightPlayer = new GameObject(LightFlare.LightType.LightYellow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            // dynamic lights
+            GameObject lightPlayer = new GameObject(FollowerType.LightYellow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
             lightPlayer.material = lightPlayerMat;
             Prefabs.AddPrefab(lightPlayer);
 
-            GameObject lightBlue = new GameObject(LightFlare.LightType.LightBlue.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            GameObject lightBlue = new GameObject(FollowerType.LightBlue.GetDescription(), File.Load<Model>("Models/primitives/plane"));
             lightBlue.material = lightBlueMat;
             Prefabs.AddPrefab(lightBlue);
 
-            GameObject lightRed = new GameObject(LightFlare.LightType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            GameObject lightRed = new GameObject(FollowerType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
             lightRed.material = lightRedMat;
             Prefabs.AddPrefab(lightRed);
         }

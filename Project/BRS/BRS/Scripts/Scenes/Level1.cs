@@ -17,6 +17,7 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading.Tasks;
+using BRS.Scripts.Elements.Lighting;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -121,7 +122,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
                 player.AddComponent(new DynamicShadow());
-                player.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(-0.2f, 0.851f, 1.0f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), 0.0f, LightFlare.UpdateFunction.SinPositive));
+                //player.AddComponent(new FrontLight(new Vector3(-0.2f, 0.851f, 1.0f), new Vector3(-0.2f, 0.851f, 1.0f)));
 
                 // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)

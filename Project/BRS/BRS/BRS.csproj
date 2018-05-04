@@ -165,6 +165,9 @@
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerComponent.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerType.cs" />
+    <Compile Include="Scripts\Elements\Lighting\AlarmLight.cs" />
     <Compile Include="Scripts\Elements\Police.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
@@ -179,11 +182,11 @@
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
-    <Compile Include="Scripts\PlayerScripts\LightFlare.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\PlayerScripts\BaseParticles.cs" />
-    <Compile Include="Scripts\PlayerScripts\DynamicShadow.cs" />
+    <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />

@@ -30,9 +30,9 @@ namespace BRS.Engine.Physics {
         #endregion
 
         public Follower(GameObject syncedObject) 
-            : this(syncedObject, Vector3.Zero, Quaternion.Identity) { }
+            : this(syncedObject, Vector3.Zero, Quaternion.Identity, FollowingType.Orientated) { }
 
-        public Follower(GameObject gameObject, Vector3 offset, Quaternion orientation, FollowingType type = FollowingType.Orientated) {
+        public Follower(GameObject gameObject, Vector3 offset, Quaternion orientation, FollowingType type) {
             GameObject = gameObject;
             Offset = offset;
             Orientation = orientation;
