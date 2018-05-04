@@ -305,6 +305,7 @@
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
+    <Content Include="Load\UnitySceneData\originalStatic.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>

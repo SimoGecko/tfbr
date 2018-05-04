@@ -209,7 +209,7 @@ namespace BRS.Scripts.Managers {
             if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
                 GameManager.NumPlayers = 2;
             if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
-                RoundManager.RoundTime = 2 * 60;
+                RoundManager.RoundTime = 2*60;
 
 
         }
