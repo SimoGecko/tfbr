@@ -15,7 +15,7 @@ namespace BRS.Scripts {
         //public
         const float distThreshold = .2f; // if player hasn't moved this much don't record
         const float recordRefreshTime = .3f;
-        const int totalNumPolicePerPlayer = 3;
+        int totalNumPolicePerPlayer = 1;
         const int startDelay = 5; // how much time to wait before first police spawn
 
         public static bool IsActive = true;
@@ -44,7 +44,7 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-
+            totalNumPolicePerPlayer = GameManager.lvlDifficulty;
         }
 
         public override void Update() {

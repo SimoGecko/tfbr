@@ -153,7 +153,8 @@ namespace BRS.Scripts.UI {
                 { "StartGameFunction", MenuManager.Instance.StartGameFunction },
                 { "UpdateRanking", MenuManager.Instance.UpdateRanking },
                 { "SwitchModelStat", MenuManager.Instance.SwitchModelStat },
-                { "SetMusic", MenuManager.Instance.SetMusic }
+                { "SetMusic", MenuManager.Instance.SetMusic },
+                { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty }
             };
         }
 
@@ -576,6 +577,8 @@ namespace BRS.Scripts.UI {
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
                     // load ranking
+                    if (durationRound == "3 min" && noPlayers == "2P")
+                        ;
                     List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);

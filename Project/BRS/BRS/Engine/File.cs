@@ -259,6 +259,7 @@ namespace BRS.Engine {
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
                 using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                    fs.Flush();
                     int count = 0;
                     foreach (var elem in listPlayersNameScore) {
                         AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");

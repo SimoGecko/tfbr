@@ -208,6 +208,10 @@ namespace BRS.Scripts.Managers {
         public void SetDefaultParametersGame(object sender, EventArgs e) {
             if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
                 GameManager.NumPlayers = 2;
+            if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
+                RoundManager.RoundTime = 2 * 60;
+
+
         }
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
@@ -509,7 +513,6 @@ namespace BRS.Scripts.Managers {
             }
         }
         
-
         public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
             Button button = (Button)sender;
             NamePlayerInfosToChange = "player_" + button.Index.ToString();
@@ -543,7 +546,6 @@ namespace BRS.Scripts.Managers {
 
         public void UpdateVolume(object sender, EventArgs e) {
             Slider slider = (Slider)sender;
-            //Audio.SetMusicVolume(.01f);
             Audio.SetSoundVolume(slider.percentPosButon);
         }
 
@@ -553,6 +555,14 @@ namespace BRS.Scripts.Managers {
                 Audio.SetMusicVolume(.005f);
             else
                 Audio.SetMusicVolume(0);
+        }
+
+        public void SetLevelDiffculty(object sender, EventArgs e) {
+            Button bu = (Button)sender;
+            if (bu.Text == "Easy") GameManager.lvlDifficulty = 0;
+            else if (bu.Text == "Normal") GameManager.lvlDifficulty = 1;
+            else if (bu.Text == "Hard") GameManager.lvlDifficulty = 2;
+            else Debug.Log("Wrong level difficulty");
         }
 
         public void ChangeModelNameColorPlayer(GameObject player, int i) {

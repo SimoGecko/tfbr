@@ -18,17 +18,17 @@ ColorInside: 255 255 255
 <Slider>
 NameIdentifier: SliderAudio
 Texture: slider
-Position: 956 432
+Position: 956 475
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
-NeighborsUpDownLeftRight: null TickBoxMusic null null
+NeighborsUpDownLeftRight: DifficultyMedium TickBoxMusic null null
 Functions: UpdateVolume
 </Slider>
 
 <TickBox>
 NameIdentifier: TickBoxMusic
-Position: 1056 632
+Position: 1056 565
 NeighborsUpDownLeftRight: SliderAudio Back null null
 ScaleWidth: 0.75
 ScaleHeight: 0.75
@@ -38,14 +38,57 @@ Functions: SetMusic
 IsClicked: yes
 </TickBox>
 
+<Button>
+NameIdentifier: DifficultyEasy
+Texture: button
+Position: 760 365
+Text: Easy
+NeighborsUpDownLeftRight: null SliderAudio DifficultyHard DifficultyMedium
+UniqueChoiceWith: DifficultyMedium DifficultyHard
+ScaleWidth: 1.3
+ScaleHeight: 0.75
+Functions: SetLevelDiffculty
+</Button>
+
+<Button>
+NameIdentifier: DifficultyMedium
+Texture: button
+Position: 960 365
+Text: Normal
+NeighborsUpDownLeftRight: null SliderAudio DifficultyEasy DifficultyHard
+UniqueChoiceWith: DifficultyEasy DifficultyHard
+IsClicked: yes
+ScaleWidth: 1.3
+ScaleHeight: 0.75
+CurrentSelection: yes
+Functions: SetLevelDiffculty
+</Button>
+
+<Button>
+NameIdentifier: DifficultyHard
+Texture: button
+Position: 1160 365
+Text: Hard
+NeighborsUpDownLeftRight: null SliderAudio DifficultyMedium DifficultyEasy
+UniqueChoiceWith: DifficultyEasy DifficultyMedium
+ScaleWidth: 1.3
+ScaleHeight: 0.75
+Functions: SetLevelDiffculty
+</Button>
+
+<Text>
+Text: Level Difficulty:
+Position: 960 265
+</Text>
+
 <Text>
 Text: Volume: 
-Position: 814 432
+Position: 814 475
 </Text>
 
 <Text>
 Text: Music:
-Position: 814 632
+Position: 814 565
 </Text>
 
 <Button>
@@ -60,6 +103,5 @@ ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NameSwitchTo: main
 ColorInside: 148 148 148
-CurrentSelection: yes
 NeighborsUpDownLeftRight: TickBoxMusic null null null
 </Button>
