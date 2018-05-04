@@ -14,6 +14,7 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public bool CanDeload = false;
 
         //private
         private int _capacity = 20;

@@ -67,6 +67,10 @@ namespace BRS.Engine {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
+        public void OnCollisionEnd(Collider col) {
+            if (active) foreach (IComponent c in components) c.OnCollisionEnd(col);
+        }
+
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && active) {
