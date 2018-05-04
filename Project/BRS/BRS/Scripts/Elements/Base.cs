@@ -30,7 +30,7 @@ namespace BRS.Scripts.Elements {
         private int _shownMoneyStacks = 0;
         private int _bundlesPerStack = 10;
         private int _columnsPerRow = 2;
-        private float _margin = 0.05f;
+        private float _margin = 1f;
         private List<GameObject> _moneyGameObjects = new List<GameObject>();
 
         public System.Action OnBringBase;
@@ -170,10 +170,11 @@ namespace BRS.Scripts.Elements {
                 int rowId = stackId % _columnsPerRow;
                 int colId = stackId / _columnsPerRow;
                 Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
-                Vector3 right = size.X * (_margin + rowId) * Vector3.Right;
-                Vector3 back = size.Z * (_margin + colId) * Vector3.Backward;
+                Vector3 right = (rowId * _margin + size.X * rowId) * Vector3.Right;
+                Vector3 back = (colId * _margin + size.Z * colId) * Vector3.Backward;
 
                 newBundle.transform.position = transform.position + up + right + back;
+                newBundle.transform.eulerAngles = new Vector3(0, MyRandom.Range(-90.0f, 90.0f), 0);
 
                 ++_shownMoneyStacks;
             }
