@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using BRS.Scripts.Managers;
 
 namespace BRS {
 
@@ -108,6 +109,8 @@ namespace BRS {
             Input.Update();
             Audio.Update();
             SceneManager.Update(); // check for scene change (can remove later)
+
+            GameManager.Update();
 
             // Todo: Switch for the interim
             if (Input.GetKeyDown(Keys.Tab)) {

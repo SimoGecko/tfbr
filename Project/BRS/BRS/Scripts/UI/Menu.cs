@@ -126,7 +126,9 @@ namespace BRS.Scripts.UI {
                 { "imageTuto2", textureTuto2 },
                 { "imageTuto3", textureTuto3 },
                 { "imageCredits", textureCredits },
-                { "deleteLetter", textureButtonDelete }
+                { "deleteLetter", textureButtonDelete },
+                { "tickBoxCliqued", textureTickBoxCliqued },
+                { "tickBoxNotCliqued", textureTickBoxNotCliqued }
             };
 
             // Set mapping name - functions
@@ -150,7 +152,8 @@ namespace BRS.Scripts.UI {
                 { "StartGamePlayersReady", MenuManager.Instance.StartGamePlayersReady },
                 { "StartGameFunction", MenuManager.Instance.StartGameFunction },
                 { "UpdateRanking", MenuManager.Instance.UpdateRanking },
-                { "SwitchModelStat", MenuManager.Instance.SwitchModelStat }
+                { "SwitchModelStat", MenuManager.Instance.SwitchModelStat },
+                { "SetMusic", MenuManager.Instance.SetMusic }
             };
         }
 
@@ -262,6 +265,20 @@ namespace BRS.Scripts.UI {
 
                     MenuManager.Instance.MenuRect[panelName].AddComponent(slider);
                 }
+                else if (MS.menuType == MenuType.TickBox) {
+                    TickBox tickBox = new TickBox(MS.Position + new Vector2(offsetWidth, 0), TexturesButtons["buttonCircle"], TexturesButtons["buttonCircle"]);
+
+                    if (MS.Name != null) tickBox.nameIdentifier = MS.Name;
+                    if (MS.ScaleHeight != default(float)) tickBox.ScaleHeight = MS.ScaleHeight;
+                    if (MS.ScaleWidth != default(float)) tickBox.ScaleWidth = MS.ScaleWidth;
+                    if (MS.ScaleHeightInside != default(float)) tickBox.ScaleHeightClicked = MS.ScaleHeightInside;
+                    if (MS.ScaleWidthInside != default(float)) tickBox.ScaleWidthClicked = MS.ScaleWidthInside;
+
+                    tickBox.IsClicked = MS.IsClicked;
+                    tickBox.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
+
+                    MenuManager.Instance.MenuRect[panelName].AddComponent(tickBox);
+                }
             }
 
             // dirty hack :(
@@ -299,9 +316,15 @@ namespace BRS.Scripts.UI {
                     }
                 }
                 else if (MS.menuType == MenuType.Slider && MS.Name != null && MS.Functions != null) {
-                    Slider bu = (Slider)FindMenuComponentinPanelWithName(MS.Name, panelName);
+                    Slider sl = (Slider)FindMenuComponentinPanelWithName(MS.Name, panelName);
                     foreach (string elem in MS.Functions) {
-                        bu.OnReleaseSlider += FunctionsMenu[elem];
+                        sl.OnReleaseSlider += FunctionsMenu[elem];
+                    }
+                }
+                else if (MS.menuType == MenuType.TickBox && MS.Name != null && MS.Functions != null) {
+                    TickBox tc = (TickBox)FindMenuComponentinPanelWithName(MS.Name, panelName);
+                    foreach (string elem in MS.Functions) {
+                        tc.Click += FunctionsMenu[elem];
                     }
                 }
             }

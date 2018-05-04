@@ -23,8 +23,8 @@ namespace BRS.Scripts {
         // --------------------- BASE METHODS ------------------
         public static void Start() {
             Audio.PlaySong("Happy Happy Game Show");
-            Audio.SetMusicVolume(.1f);
-            Audio.SetSoundVolume(1f);
+            Audio.SetMusicVolume(.005f);
+            Audio.SetSoundVolume(0.5f);
         }
 
 

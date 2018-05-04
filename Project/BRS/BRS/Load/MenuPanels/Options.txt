@@ -22,13 +22,30 @@ Position: 956 432
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
-NeighborsUpDownLeftRight: null Back null null
+NeighborsUpDownLeftRight: null TickBoxMusic null null
 Functions: UpdateVolume
 </Slider>
+
+<TickBox>
+NameIdentifier: TickBoxMusic
+Position: 1056 632
+NeighborsUpDownLeftRight: SliderAudio Back null null
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+ScaleWidthInside: 0.4
+ScaleHeightInside: 0.4
+Functions: SetMusic
+IsClicked: yes
+</TickBox>
 
 <Text>
 Text: Volume: 
 Position: 814 432
+</Text>
+
+<Text>
+Text: Music:
+Position: 814 632
 </Text>
 
 <Button>
@@ -44,5 +61,5 @@ Functions: SwitchToMenu
 NameSwitchTo: main
 ColorInside: 148 148 148
 CurrentSelection: yes
-NeighborsUpDownLeftRight: SliderAudio null null null
+NeighborsUpDownLeftRight: TickBoxMusic null null null
 </Button>

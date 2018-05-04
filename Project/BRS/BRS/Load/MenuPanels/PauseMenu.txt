@@ -21,8 +21,7 @@ TextureInside: arrowRight
 Position: 860 350
 Functions: ResumeGame
 NeighborsUpDownLeftRight: null SliderAudio Restart Menu
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 CurrentSelection: yes
 </Button>
 
@@ -33,8 +32,7 @@ TextureInside: menu
 Position: 960 350
 Functions: LoadMenu
 NeighborsUpDownLeftRight: null SliderAudio Resume Restart
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Button>
@@ -44,8 +42,7 @@ TextureInside: restart
 Position: 1060 350
 Functions: StartGameFunction
 NeighborsUpDownLeftRight: null SliderAudio Menu Resume
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Slider>
@@ -53,8 +50,6 @@ NameIdentifier: SliderAudio
 Texture: slider
 Position: 956 500
 Text: Game Settings
-Color: 148 148 148
-ColorInside: 255 255 255
 NeighborsUpDownLeftRight: Resume null null null
 Functions: UpdateVolume
 </Slider>

@@ -68,7 +68,7 @@ namespace BRS.Engine.Menu {
             Position = pos;
 
             if (tbu != null) {
-                ButtonSlider = new Button(tbu, new Vector2(pos.X + lengthSlider - t.Width * 0.5f / 2, pos.Y));
+                ButtonSlider = new Button(tbu, new Vector2(pos.X + lengthSlider/2f, pos.Y));
                 ButtonSlider.ScaleHeight = 0.5f;
                 ButtonSlider.ScaleWidth = 0.5f;
                 ButtonSlider.HilightsChoice1 = false;
@@ -161,7 +161,7 @@ namespace BRS.Engine.Menu {
                     percentPosButon = ((ButtonSlider.InitPos.X - Position.X) / (lengthSlider));
 
                 dest.Width = (int)Math.Round(dest.Width * percentPosButon);
-                UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: Color.LightSkyBlue);
+                UserInterface.DrawPicture(Texture, dest, null, Align.TopLeft, pivot: Align.Left, col: new Color(250, 203, 104));
 
                 if (ButtonSlider != null)
                     ButtonSlider.Draw2D(i);

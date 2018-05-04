@@ -547,6 +547,14 @@ namespace BRS.Scripts.Managers {
             Audio.SetSoundVolume(slider.percentPosButon);
         }
 
+        public void SetMusic(object sender, EventArgs e) {
+            TickBox tickbox = (TickBox)sender;
+            if (tickbox.IsClicked)
+                Audio.SetMusicVolume(.005f);
+            else
+                Audio.SetMusicVolume(0);
+        }
+
         public void ChangeModelNameColorPlayer(GameObject player, int i) {
             if (ScenesCommunicationManager.Instance != null) {
                 if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
