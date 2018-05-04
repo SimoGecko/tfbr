@@ -127,7 +127,7 @@ NameIdentifier: ModeNormal
 Texture: button
 Position: 900 540
 Text: N
-Functions: HighlightBorders GoDown
+Functions: SetMode HighlightBorders GoDown
 NeighborsUpDownLeftRight: RoundDuration2min MapA ModeDynamic ModeBombs
 UniqueChoiceWith: ModeBombs ModeCrates ModeDynamic
 IsClicked: yes
@@ -140,7 +140,7 @@ NameIdentifier: ModeBombs
 Texture: button
 Position: 1020 540
 Text: B
-Functions: HighlightBorders GoDown
+Functions: SetMode HighlightBorders GoDown
 NeighborsUpDownLeftRight: RoundDuration3min MapA ModeNormal ModeCrates
 UniqueChoiceWith: ModeNormal ModeCrates ModeDynamic
 ScaleWidth: 0.75
@@ -152,7 +152,7 @@ NameIdentifier: ModeCrates
 Texture: button
 Position: 1140 540
 Text: C
-Functions: HighlightBorders GoDown
+Functions: SetMode HighlightBorders GoDown
 NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeDynamic
 UniqueChoiceWith: ModeNormal ModeBombs ModeDynamic
 ScaleWidth: 0.75
@@ -164,7 +164,7 @@ NameIdentifier: ModeDynamic
 Texture: button
 Position: 1260 540
 Text: D
-Functions: HighlightBorders GoDown
+Functions: SetMode HighlightBorders GoDown
 NeighborsUpDownLeftRight: RoundDuration10min MapB ModeCrates ModeNormal
 UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
 ScaleWidth: 0.75

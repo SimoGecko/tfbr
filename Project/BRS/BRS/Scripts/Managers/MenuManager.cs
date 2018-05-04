@@ -279,6 +279,16 @@ namespace BRS.Scripts.Managers {
 
         public void SetMode(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            if (button.nameIdentifier == "ModeNormal")
+                GameMode.currentGameMode = "default";
+            if (button.nameIdentifier == "ModeBombs")
+                GameMode.currentGameMode = "default";
+            if (button.nameIdentifier == "ModeCrates")
+                GameMode.currentGameMode = "default";
+            if (button.nameIdentifier == "ModeDynamic")
+                GameMode.currentGameMode = "default";
+
         }
 
         public void SetMap(object sender, EventArgs e) {

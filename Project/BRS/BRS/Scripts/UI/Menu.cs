@@ -155,7 +155,8 @@ namespace BRS.Scripts.UI {
                 { "SwitchModelStat", MenuManager.Instance.SwitchModelStat },
                 { "SetMusic", MenuManager.Instance.SetMusic },
                 { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty },
-                { "SetCamera", MenuManager.Instance.SetCamera}
+                { "SetCamera", MenuManager.Instance.SetCamera},
+                { "SetMode", MenuManager.Instance.SetMode}
             };
         }
 
