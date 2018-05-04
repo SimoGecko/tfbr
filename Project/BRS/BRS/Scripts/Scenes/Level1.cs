@@ -24,6 +24,7 @@ namespace BRS.Scripts.Scenes {
         ////////// first game level, loads all the things //////////
 
         public List<Vector3> StartPositions;
+        public List<Vector3> PoliceStartPositions;
 
 
         public override int GetNumCameras() { return GameManager.NumPlayers; }
@@ -59,9 +60,15 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
+            PoliceStartPositions = new List<Vector3>();
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 int offset = i > 1 ? 1 : 0;
-                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
+                int x = -5 + 10 * (i % 2 == 0 ? 0 : 1) + offset;
+                int zPolice = 10 + offset;
+
+                StartPositions.Add(new Vector3(x, 0, 10));
+                PoliceStartPositions.Add(new Vector3(5 * x, 0, zPolice));
             }
         }
 
@@ -86,7 +93,7 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
-            Manager.AddComponent(new PoliceManager());
+            Manager.AddComponent(new PoliceManager(PoliceStartPositions));
 
 
             Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)

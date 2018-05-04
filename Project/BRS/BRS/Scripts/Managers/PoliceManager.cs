@@ -31,6 +31,7 @@ namespace BRS.Scripts {
         Transform[] targets;
         List<Vector3>[] recordedWaypoints;
         List<Vector3>[] staticWaypoints;
+        private List<Vector3> _startPositions;
 
         private bool _isRecording;
         private bool _isSpawning;
@@ -39,7 +40,8 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public PoliceManager() {
+        public PoliceManager(List<Vector3> startPositions) {
+            _startPositions = startPositions;
             Instance = this;
         }
 
@@ -89,7 +91,8 @@ namespace BRS.Scripts {
             recordedWaypoints = new List<Vector3>[numTargets];
 
             for (int i = 0; i < numTargets; i++)
-                recordedWaypoints[i] = new List<Vector3>();
+                recordedWaypoints[i] = new List<Vector3> {_startPositions[i]};
+
             if (!_isRecording)
                 RecordWaypoints();
         }
@@ -149,6 +152,6 @@ namespace BRS.Scripts {
             _isRecording = false;
         }
 
-        
+
     }
 }
