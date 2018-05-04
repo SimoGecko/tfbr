@@ -102,7 +102,7 @@ namespace BRS.Engine {
             police.AddComponent(new DynamicShadow());
             police.AddComponent(new AlarmLight(FollowerType.LightRed, new Vector3(-0.2f, 0.850f, 0f),
                 FollowerType.LightBlue, new Vector3(0.2f, 0.851f, 0f)));
-            police.AddComponent(new FrontLight(new Vector3(0.27f, 0.35f, -0.97f), new Vector3(-0.27f, 0.35f, 0.93f)));
+            police.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, new Vector3(0.27f, 0.35f, -0.97f), new Vector3(-0.27f, 0.35f, 0.93f)));
             Prefabs.AddPrefab(police);
 
             //crate

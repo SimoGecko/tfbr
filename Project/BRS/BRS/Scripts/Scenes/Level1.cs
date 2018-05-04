@@ -107,7 +107,7 @@ namespace BRS.Scripts.Scenes {
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
 
-                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i+1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
+                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i + 1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -122,11 +122,15 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
                 player.AddComponent(new DynamicShadow());
-                //player.AddComponent(new FrontLight(new Vector3(-0.2f, 0.851f, 1.0f), new Vector3(-0.2f, 0.851f, 1.0f)));
 
                 // Modify player's name and model and color(choosen by user during menu)
-                if (MenuManager.Instance != null)
+                if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
+                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2));
+
+                } else {
+                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, 0));
+                }
 
 
                 //Add(player);

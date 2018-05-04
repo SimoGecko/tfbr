@@ -12,7 +12,7 @@ namespace BRS.Engine {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public bool Lit;
+        //public bool Lit;
         public Color Diffuse;
         public bool IsTransparent;
 
@@ -29,7 +29,7 @@ namespace BRS.Engine {
         //EffectTechnique tt;
 
         public static Material Default = new Material(new Color(140, 140, 140), true);
-           
+
 
 
         //private
@@ -38,7 +38,8 @@ namespace BRS.Engine {
         //reference
         public Material() {
             Diffuse = Color.White;
-            Lit = baked = false;
+            baked = false;
+            //Lit = false;
         }
         public Material(Texture2D color, Texture2D light) {
             baked = true;
@@ -54,12 +55,26 @@ namespace BRS.Engine {
             Alpha = alpha;
         }
 
-        public Material(Color color, bool lit=true) {
-            Lit = lit; Diffuse = color;
+        public Material(Color color, bool lit = true) {
+            Diffuse = color;
+            //Lit = lit;
         }
 
 
         // --------------------- CUSTOM METHODS ----------------
+
+        public Material Clone() {
+            return new Material {
+                Diffuse = Diffuse,
+                IsTransparent = IsTransparent,
+                IsAlphaAnimated = IsAlphaAnimated,
+                Alpha = Alpha,
+                baked = baked,
+                textured = textured,
+                colorTex = colorTex,
+                lightTex = lightTex
+            };
+        }
 
 
         // commands

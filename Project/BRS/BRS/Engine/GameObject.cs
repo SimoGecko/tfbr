@@ -146,7 +146,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = this.material;
+            newObject.material = material.Clone();
             return newObject;
         }
 
