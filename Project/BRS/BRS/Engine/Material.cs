@@ -1,6 +1,7 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,6 +15,10 @@ namespace BRS.Engine {
         public bool Lit;
         public Color Diffuse;
         public bool IsTransparent;
+
+        public bool IsAlphaAnimated;
+        [Range(0.0f, 1.0f)]
+        public float Alpha;
 
         public bool baked;
         public bool textured;
@@ -40,11 +45,13 @@ namespace BRS.Engine {
             colorTex = color;
             lightTex = light;
         }
-        public Material(Texture2D color, bool isTransparent = false) {
+        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false, float alpha = 1.0f) {
             baked = false;
             textured = true;
             colorTex = color;
             IsTransparent = isTransparent;
+            IsAlphaAnimated = isAlphaAnimated;
+            Alpha = alpha;
         }
 
         public Material(Color color, bool lit=true) {

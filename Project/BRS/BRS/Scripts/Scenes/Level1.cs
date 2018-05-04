@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
@@ -120,6 +121,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
                 player.AddComponent(new DynamicShadow());
+                player.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(-0.2f, 0.851f, 1.0f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), 0.0f, LightFlare.UpdateFunction.SinPositive));
 
                 // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null)
@@ -185,6 +187,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+                playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
         }

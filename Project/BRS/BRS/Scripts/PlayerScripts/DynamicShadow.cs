@@ -1,4 +1,4 @@
-﻿// (c) Simone Guggiari 2018
+﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
@@ -25,6 +25,7 @@ namespace BRS.Scripts.PlayerScripts {
         //reference
         private Transform _target;
         private GameObject _shadow;
+        private Follower _follower;
 
         // --------------------- BASE METHODS ------------------
 
@@ -35,20 +36,22 @@ namespace BRS.Scripts.PlayerScripts {
 
             _target = gameObject.transform;
             _shadow = GameObject.Instantiate("dynamicShadow", _target);
+            _follower = new Follower(_shadow, _offset, Quaternion.Identity, Follower.FollowingType.OnFloor);
 
             CalculateShadowSize();
 
             _isInitialized = true;
         }
+
         public override void Start() {
             if (gameObject.HasComponent<MovingRigidBody>()) {
-                gameObject.GetComponent<MovingRigidBody>().SetSyncedObject(_shadow, _offset);
+                gameObject.GetComponent<MovingRigidBody>().AddSyncedObject(_follower);
             }
             if (gameObject.HasComponent<AnimatedRigidBody>()) {
-                gameObject.GetComponent<AnimatedRigidBody>().SetSyncedObject(_shadow, _offset);
+                gameObject.GetComponent<AnimatedRigidBody>().AddSyncedObject(_follower);
             }
             if (gameObject.HasComponent<DynamicRigidBody>()) {
-                gameObject.GetComponent<DynamicRigidBody>().SetSyncedObject(_shadow, _offset);
+                gameObject.GetComponent<DynamicRigidBody>().AddSyncedObject(_follower);
             }
         }
 
@@ -71,7 +74,7 @@ namespace BRS.Scripts.PlayerScripts {
             float xFactor = shadowSize.X / modelSize.X;
             float zFactor = shadowSize.Z / modelSize.Z;
 
-            Vector3 scale = new Vector3(3.0f / xFactor, 1.0f, 3.0f / zFactor);
+            Vector3 scale = new Vector3(1.5f / xFactor, 1.0f, 1.5f / zFactor);
             _shadow.transform.scale = scale;
         }
 

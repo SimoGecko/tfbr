@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts;
@@ -11,6 +12,7 @@ using BRS.Scripts.Particles3D;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using BRS.Engine.Utilities;
 
 
 namespace BRS.Engine {
@@ -24,6 +26,9 @@ namespace BRS.Engine {
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), isTransparent: true);
+            Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
+            Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
+            Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), isTransparent: true, isAlphaAnimated: true, alpha: 1.0f);
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
@@ -53,12 +58,12 @@ namespace BRS.Engine {
             diamondPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true, size: 1.5f));
             Prefabs.AddPrefab(diamondPrefab);
 
-           
+
 
             //-------------------POWERUPS-------------------
             //expand these two arrays to add new powerups with a particular name and a powerup script
             string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
-            Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
+            Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet() };
             var colorMapping = new Dictionary<string, Color>()
                 {
                     { "bomb", Color.Red},
@@ -74,8 +79,8 @@ namespace BRS.Engine {
                     { "magnet", Color.Purple},
                 };
 
-            for (int i=0; i<powerupName.Length; i++) {
-                GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
+            for (int i = 0; i < powerupName.Length; i++) {
+                GameObject powerupPrefab = new GameObject(powerupName[i] + "Prefab", File.Load<Model>("Models/powerups/" + powerupName[i]));
                 powerupPrefab.transform.Scale(1.5f);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
@@ -94,6 +99,10 @@ namespace BRS.Engine {
             police.material = policeMat;
             police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
             police.AddComponent(new DynamicShadow());
+            police.AddComponent(new LightFlare(LightFlare.LightType.LightBlue, new Vector3(0.2f, 0.85f, 0f), Quaternion.Identity, (float)Math.PI, LightFlare.UpdateFunction.SinAbsolute));
+            police.AddComponent(new LightFlare(LightFlare.LightType.LightRed, new Vector3(-0.2f, 0.851f, 0f), Quaternion.Identity, 0.0f, LightFlare.UpdateFunction.SinAbsolute));
+            police.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(0.27f, 0.35f, 0.931f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), MyRandom.Value, LightFlare.UpdateFunction.SinPositive));
+            police.AddComponent(new LightFlare(LightFlare.LightType.LightYellow, new Vector3(-0.27f, 0.35f, 0.93f), Quaternion.CreateFromAxisAngle(Vector3.Right, (float)Math.PI / 2.0f), MyRandom.Value, LightFlare.UpdateFunction.SinPositive));
             Prefabs.AddPrefab(police);
 
             //crate
@@ -101,7 +110,7 @@ namespace BRS.Engine {
             cratePrefab.transform.Scale(1.5f);
             cratePrefab.material = powerupMat;
             cratePrefab.AddComponent(new Crate());
-            cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+            cratePrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: false));
             cratePrefab.AddComponent(new DynamicShadow());
             Prefabs.AddPrefab(cratePrefab);
 
@@ -152,7 +161,7 @@ namespace BRS.Engine {
 
             //-------------------DYNAMIC OBJECTS-------------------
             string[] dynamicElements = new string[] { "chair", "plant", "cart" };
-            foreach(string s in dynamicElements) {
+            foreach (string s in dynamicElements) {
                 GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
                 dynamicElement.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box));
                 dynamicElement.AddComponent(new DynamicShadow());
@@ -169,10 +178,22 @@ namespace BRS.Engine {
 
             // dynamic shadow
             GameObject dynamicShadow = new GameObject("dynamicShadow", File.Load<Model>("Models/primitives/plane"));
-            dynamicShadow.transform.Scale(2f);
             dynamicShadow.material = shadowMat;
             Prefabs.AddPrefab(dynamicShadow);
 
+
+            // dynamic shadow
+            GameObject lightPlayer = new GameObject(LightFlare.LightType.LightYellow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightPlayer.material = lightPlayerMat;
+            Prefabs.AddPrefab(lightPlayer);
+
+            GameObject lightBlue = new GameObject(LightFlare.LightType.LightBlue.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightBlue.material = lightBlueMat;
+            Prefabs.AddPrefab(lightBlue);
+
+            GameObject lightRed = new GameObject(LightFlare.LightType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightRed.material = lightRedMat;
+            Prefabs.AddPrefab(lightRed);
         }
     }
 }
