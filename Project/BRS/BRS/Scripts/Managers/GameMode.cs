@@ -136,7 +136,10 @@ namespace BRS.Scripts {
             return GetGameMode(currentGameMode);
         }
 
-
+        //@ Simone: fill this and send me the the possible string name
+        public static GameMode SetCurrentGameMode(string name) {
+            return new GameMode("");
+        }
 
     }
 }

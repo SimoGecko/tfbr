@@ -290,7 +290,7 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Playing;
         }
 
-        public void SwitchRankingDisplay(object sender, EventArgs e) {
+        /*public void SwitchRankingDisplay(object sender, EventArgs e) {
             Button button = (Button)sender;
 
             foreach (var elem in MenuRect["ranking"].components) {
@@ -302,7 +302,7 @@ namespace BRS.Scripts.Managers {
                     }
                 }
             }
-        }
+        }*/
 
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -513,10 +513,10 @@ namespace BRS.Scripts.Managers {
             }
         }
         
-        public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
+        /*public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
             Button button = (Button)sender;
             NamePlayerInfosToChange = "player_" + button.Index.ToString();
-        }
+        }*/
 
         public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -555,6 +555,14 @@ namespace BRS.Scripts.Managers {
                 Audio.SetMusicVolume(.005f);
             else
                 Audio.SetMusicVolume(0);
+        }
+
+        public void SetCamera(object sender, EventArgs e) {
+            TickBox tickbox = (TickBox)sender;
+            if (tickbox.IsClicked)
+                CameraController.autoFollow = true;
+            else
+                CameraController.autoFollow = false;
         }
 
         public void SetLevelDiffculty(object sender, EventArgs e) {

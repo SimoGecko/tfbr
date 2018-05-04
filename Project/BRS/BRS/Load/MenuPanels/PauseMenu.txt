@@ -29,7 +29,7 @@ CurrentSelection: yes
 NameIdentifier: Menu
 Texture: buttonCircle
 TextureInside: menu
-Position: 960 350
+Position: 1060 350
 Functions: LoadMenu
 NeighborsUpDownLeftRight: null SliderAudio Resume Restart
 ColorInside: 148 148 148
@@ -39,7 +39,7 @@ ColorInside: 148 148 148
 NameIdentifier: Restart
 Texture: buttonCircle
 TextureInside: restart
-Position: 1060 350
+Position: 960 350
 Functions: StartGameFunction
 NeighborsUpDownLeftRight: null SliderAudio Menu Resume
 ColorInside: 148 148 148

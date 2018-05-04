@@ -137,11 +137,11 @@ namespace BRS.Scripts.UI {
                 { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
-                { "SwitchRankingDisplay", MenuManager.Instance.SwitchRankingDisplay },
+                //{ "SwitchRankingDisplay", MenuManager.Instance.SwitchRankingDisplay },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
                 { "ChangeNamePlayer", MenuManager.Instance.ChangeNamePlayer },
                 { "ChangeModelPlayer", MenuManager.Instance.ChangeModelPlayer },
-                { "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
+                //{ "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
@@ -154,7 +154,8 @@ namespace BRS.Scripts.UI {
                 { "UpdateRanking", MenuManager.Instance.UpdateRanking },
                 { "SwitchModelStat", MenuManager.Instance.SwitchModelStat },
                 { "SetMusic", MenuManager.Instance.SetMusic },
-                { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty }
+                { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty },
+                { "SetCamera", MenuManager.Instance.SetCamera}
             };
         }
 
@@ -215,7 +216,7 @@ namespace BRS.Scripts.UI {
                         if (MS.ScaleWidth != default(float)) button.ScaleWidth = MS.ScaleWidth;
                         if (MS.ScaleHeightInside != default(float)) button.ScaleHeightInside = MS.ScaleHeightInside;
                         if (MS.ScaleWidthInside != default(float)) button.ScaleWidthInside = MS.ScaleWidthInside;
-                        if (MS.Index != default(int)) button.Index = MS.Index;
+                        //if (MS.Index != default(int)) button.Index = MS.Index;
                         if (MS.Color != default(Color)) button.ImageColor = MS.Color;
                         if (MS.ColorInside != default(Color)) button.InsideObjectColor = MS.ColorInside;
                         if (MS.transparency != default(int))
@@ -286,7 +287,7 @@ namespace BRS.Scripts.UI {
             if (panelName == "play2Shared0" || panelName == "play2Shared1" || panelName == "play2Shared2" || panelName == "play2Shared3") {
                 Button bu = ((Button)FindMenuComponentinPanelWithName("NamePlayer", panelName));
                 bu.Text = "Player " + (idAssociatePlayerScreen + 1).ToString();
-                bu.Index = idAssociatePlayerScreen;
+                bu.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
             }
 
             // Set constraints

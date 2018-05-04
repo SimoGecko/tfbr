@@ -29,7 +29,7 @@ Functions: UpdateVolume
 <TickBox>
 NameIdentifier: TickBoxMusic
 Position: 1056 565
-NeighborsUpDownLeftRight: SliderAudio Back null null
+NeighborsUpDownLeftRight: SliderAudio TickBoxCamera null null
 ScaleWidth: 0.75
 ScaleHeight: 0.75
 ScaleWidthInside: 0.4
@@ -76,6 +76,18 @@ ScaleHeight: 0.75
 Functions: SetLevelDiffculty
 </Button>
 
+<TickBox>
+NameIdentifier: TickBoxCamera
+Position: 1056 655
+NeighborsUpDownLeftRight: TickBoxMusic Back null null
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+ScaleWidthInside: 0.4
+ScaleHeightInside: 0.4
+Functions: SetCamera
+IsClicked: yes
+</TickBox>
+
 <Text>
 Text: Level Difficulty:
 Position: 960 265
@@ -91,6 +103,11 @@ Text: Music:
 Position: 814 565
 </Text>
 
+<Text>
+Text: Autofollow Camera:
+Position: 814 655
+</Text>
+
 <Button>
 NameIdentifier: Back
 Texture: buttonCircle
@@ -103,5 +120,5 @@ ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NameSwitchTo: main
 ColorInside: 148 148 148
-NeighborsUpDownLeftRight: TickBoxMusic null null null
+NeighborsUpDownLeftRight: TickBoxCamera null null null
 </Button>

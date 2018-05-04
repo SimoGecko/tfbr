@@ -67,7 +67,7 @@ namespace BRS.Engine.Menu {
         /// <summary>
         /// Index of the associate playerScreen for split screen menu
         /// </summary>
-        public int Index { get; set; } //TODO: Still used?
+        //public int Index { get; set; } //TODO: Still used?
         public int IndexAssociatedPlayerScreen = 0;
 
         /// <summary>
