@@ -18,7 +18,7 @@ namespace BRS.Scripts.PowerUps {
         public override void Start() {
             base.Start();
             PowerupType = PowerupType.Stamina;
-            _useInstantly = true;
+            _useInstantly = false;
             powerupColor = Color.LightBlue;
         }
 
