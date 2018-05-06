@@ -16,7 +16,7 @@ namespace BRS.Scripts {
         const float distThreshold = .2f; // if player hasn't moved this much don't record
         const float recordRefreshTime = .3f;
         const int totalNumPolicePerPlayer = 3;
-        const int startDelay = 1; // how much time to wait before first police spawn
+        const int startDelay = 10; // how much time to wait before first police spawn
 
         public static bool IsActive = true;
 

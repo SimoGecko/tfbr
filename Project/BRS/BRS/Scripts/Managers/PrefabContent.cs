@@ -100,9 +100,10 @@ namespace BRS.Engine {
             police.material = policeMat;
             police.AddComponent(new AnimatedRigidBody(shapeType: ShapeType.Box, pureCollider: true));
             police.AddComponent(new DynamicShadow());
-            police.AddComponent(new AlarmLight(FollowerType.LightRed, new Vector3(-0.2f, 0.850f, 0f),
-                FollowerType.LightBlue, new Vector3(0.2f, 0.851f, 0f)));
+            police.AddComponent(new AlarmLight(FollowerType.LightRed, new Vector3(-0.2f, 0.850f, 0.035f),
+                FollowerType.LightBlue, new Vector3(0.2f, 0.851f, 0.035f)));
             police.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, new Vector3(0.27f, 0.35f, -0.97f), new Vector3(-0.27f, 0.35f, 0.93f)));
+            //police.AddComponent(new AnimatedWheels(AnimatedWheels.Type.FrontAndBack, 20, 3, "wheel_fl"));
             Prefabs.AddPrefab(police);
 
             //crate
@@ -194,6 +195,15 @@ namespace BRS.Engine {
             GameObject lightRed = new GameObject(FollowerType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
             lightRed.material = lightRedMat;
             Prefabs.AddPrefab(lightRed);
+
+            // Wheels for the player-models
+            GameObject wheelType1 = new GameObject("wheelType1", File.Load<Model>("Models/vehicles/wheel_fl"));
+            wheelType1.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Prefabs.AddPrefab(wheelType1);
+
+            GameObject wheelType2 = new GameObject("wheelType2", File.Load<Model>("Models/vehicles/wheel_bz"));
+            wheelType2.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Prefabs.AddPrefab(wheelType2);
         }
     }
 }

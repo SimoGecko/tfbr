@@ -20,7 +20,7 @@ namespace BRS.Engine.Physics {
         /// <summary>
         /// Local orientation of the synced object
         /// </summary>
-        public readonly Quaternion Orientation;
+        public Quaternion Orientation;
 
         /// <summary>
         /// Follower-type: Projecting as shadow to ground or relative with correct orientation

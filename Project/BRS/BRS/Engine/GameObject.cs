@@ -95,8 +95,7 @@ namespace BRS.Engine {
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
 
         public static void SortAll() {
-            // Todo: Have to rethink the draw order again
-            //allGameObjects = allGameObjects.OrderBy(x => x.name).ToList();
+            allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
         }
 
 
@@ -150,7 +149,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = material.Clone();
+            newObject.material = material?.Clone();
             return newObject;
         }
 

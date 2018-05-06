@@ -6,6 +6,7 @@ using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
+using BRS.Engine.Physics.Colliders;
 
 namespace BRS.Scripts.Elements.Lighting {
     /// <summary>
@@ -24,6 +25,7 @@ namespace BRS.Scripts.Elements.Lighting {
 
         //reference
         protected List<Follower> Followers;
+        protected Collider Collider;
 
 
         // --------------------- BASE METHODS ------------------
@@ -43,12 +45,15 @@ namespace BRS.Scripts.Elements.Lighting {
                 Follower follower = Followers[i];
                 if (gameObject.HasComponent<MovingRigidBody>()) {
                     gameObject.GetComponent<MovingRigidBody>().AddSyncedObject(follower);
+                    Collider = gameObject.GetComponent<MovingRigidBody>().RigidBody;
                 }
                 if (gameObject.HasComponent<AnimatedRigidBody>()) {
                     gameObject.GetComponent<AnimatedRigidBody>().AddSyncedObject(follower);
+                    Collider = gameObject.GetComponent<AnimatedRigidBody>().RigidBody;
                 }
                 if (gameObject.HasComponent<DynamicRigidBody>()) {
                     gameObject.GetComponent<DynamicRigidBody>().AddSyncedObject(follower);
+                    Collider = gameObject.GetComponent<DynamicRigidBody>().RigidBody;
                 }
             }
         }

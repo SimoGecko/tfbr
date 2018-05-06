@@ -133,10 +133,13 @@ namespace BRS.Scripts.Scenes {
                 // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
-                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2));
 
+                    int modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, modelIndex));
+                    player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, modelIndex));
                 } else {
                     player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, 0));
+                    player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, 0));
                 }
 
 

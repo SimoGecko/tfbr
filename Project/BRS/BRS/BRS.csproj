@@ -169,6 +169,7 @@
     <Compile Include="Scripts\Elements\Lighting\FollowerType.cs" />
     <Compile Include="Scripts\Elements\Lighting\AlarmLight.cs" />
     <Compile Include="Scripts\Elements\Police.cs" />
+    <Compile Include="Scripts\Elements\AnimatedWheels.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\LenseFlareManager.cs" />
