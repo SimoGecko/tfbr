@@ -133,6 +133,7 @@ UniqueChoiceWith: ModeBombs ModeCrates ModeDynamic
 IsClicked: yes
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 0
 </Button>
 
 <Button>
@@ -145,6 +146,7 @@ NeighborsUpDownLeftRight: RoundDuration3min MapA ModeNormal ModeCrates
 UniqueChoiceWith: ModeNormal ModeCrates ModeDynamic
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 1
 </Button>
 
 <Button>
@@ -157,6 +159,7 @@ NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeDynamic
 UniqueChoiceWith: ModeNormal ModeBombs ModeDynamic
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 2
 </Button>
 
 <Button>
@@ -169,6 +172,7 @@ NeighborsUpDownLeftRight: RoundDuration10min MapB ModeCrates ModeNormal
 UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 3
 </Button>
 
 <Button>

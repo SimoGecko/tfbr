@@ -67,8 +67,12 @@ namespace BRS.Engine.Menu {
         /// <summary>
         /// Index of the associate playerScreen for split screen menu
         /// </summary>
-        //public int Index { get; set; } //TODO: Still used?
         public int IndexAssociatedPlayerScreen = 0;
+
+        /// <summary>
+        /// Index used for specific indexing in MenuManager
+        /// </summary>
+        public int Index { get; set; } 
 
         /// <summary>
         /// List of buttons where only 1 can be selected simulatenously

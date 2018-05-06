@@ -87,6 +87,7 @@ namespace BRS.Scripts {
         public static void ReadGameModes() {
             CreateDefaultMode();
             CreateSurvivalMode();
+            CreateBomberMode();
         }
 
         static void CreateDefaultMode() {
