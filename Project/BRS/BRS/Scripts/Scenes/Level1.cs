@@ -16,6 +16,7 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading.Tasks;
+using BRS.Engine.PostProcessing;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
@@ -35,6 +36,7 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+            SetMenuShaderEffects();
         }
 
 
@@ -212,6 +214,16 @@ namespace BRS.Scripts.Scenes {
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
             //Add(speedpad);
+        }
+
+        void SetMenuShaderEffects() {
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+            }
+
         }
     }
 }

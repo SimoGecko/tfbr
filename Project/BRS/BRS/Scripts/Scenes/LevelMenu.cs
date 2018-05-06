@@ -45,6 +45,7 @@ namespace BRS.Scripts.Scenes {
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
             }
         }
 

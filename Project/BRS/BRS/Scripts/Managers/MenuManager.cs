@@ -261,11 +261,6 @@ namespace BRS.Scripts.Managers {
             }
 
             if (allPlayersReady) {
-                for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, false);
-                    PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
-                }
-
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
                 GameManager.state = GameManager.State.Playing;
                 SceneManager.LoadGame = true;
@@ -600,8 +595,8 @@ namespace BRS.Scripts.Managers {
 
                     player.GetComponent<PlayerInventory>().SetCapacity(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity);
                     player.GetComponent<PlayerAttack>().AttackDistance = ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance;
-                    player.GetComponent<PlayerMovement>().MaxSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed;
-                    player.GetComponent<PlayerMovement>().MinSpeed = ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed;
+                    player.GetComponent<PlayerMovement>().SetMaxSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed);
+                    player.GetComponent<PlayerMovement>().SetMinSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed);
                 }
             }
         }

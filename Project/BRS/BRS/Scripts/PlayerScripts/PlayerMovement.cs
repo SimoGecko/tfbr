@@ -28,8 +28,8 @@ namespace BRS.Scripts.PlayerScripts {
         private float _targetRotation;
 
         // const
-        private const float MinSpeed = 4f;
-        private const float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
+        private float MinSpeed = 4f;
+        private float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
         private const float MaxTurningRate = 10*360; // deg/sec
         private const float BoostSpeedMultiplier = 1.5f;
 
@@ -140,6 +140,13 @@ namespace BRS.Scripts.PlayerScripts {
             _refMagnitude = 0.0f;
         }
 
+        public void SetMaxSpeed(float f) {
+            MaxSpeed = f;
+        }
+
+        public void SetMinSpeed(float f) {
+            MinSpeed = f;
+        }
 
         // queries
         float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }
