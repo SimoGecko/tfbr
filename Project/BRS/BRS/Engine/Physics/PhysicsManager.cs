@@ -331,10 +331,10 @@ namespace BRS.Engine.Physics {
                 endPosition = collisionPoint + margin;
             }
 
-            // Todo: Visual debuggin might be removed in the end
-            PhysicsDrawer.Instance.ClearPointsToDraw();
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint));
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(endPosition));
+            //// Todo: Visual debuggin might be removed in the end
+            //PhysicsDrawer.Instance.ClearPointsToDraw();
+            //PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint));
+            //PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(endPosition));
 
             //return collider.Position;
             return endPosition;
