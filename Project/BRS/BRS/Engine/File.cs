@@ -259,6 +259,7 @@ namespace BRS.Engine {
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
                 using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                    fs.Flush();
                     int count = 0;
                     foreach (var elem in listPlayersNameScore) {
                         AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
@@ -309,6 +310,27 @@ namespace BRS.Engine {
             return policePaths;
         }
 
+        public static void Write2DArrayIntToFile(string pathName, int[,] values) {
+            try {
+                using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                    fs.Flush();
+
+                    int width = values.GetLength(0);
+                    int height = values.GetLength(1);
+
+                    for (int x = 0; x < width; x++) {
+                        for (int y = 0; y < height; y++) {
+                            AddText(fs, values[x,y] + " ");
+                        }
+                        AddText(fs, "\n");
+                    }
+
+                }
+            }
+            catch (Exception e) {
+                Debug.LogError(e.Message);
+            }
+        }
 
         public static List<MenuStruct> ReadMenuPanel(string pathName) {
             List<MenuStruct> panel = new List<MenuStruct>();

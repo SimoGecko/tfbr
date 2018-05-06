@@ -12,7 +12,7 @@ namespace BRS.Scripts.Elements {
     /// </summary>
     class PlantedBomb : Component {
 
-        private const float TimeBeforeExplosion = 5f;
+        private const float TimeBeforeExplosion = 3f;
         private const float ExplosionRadius = 5f; // also proximity explosion
         private const float ExplosionDamage = 60;
 
@@ -25,6 +25,7 @@ namespace BRS.Scripts.Elements {
 
         public override void Update() {
             base.Update();
+            CheckProximity();
         }
 
         public void Plant(int teamIndex) {
@@ -60,7 +61,7 @@ namespace BRS.Scripts.Elements {
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
             }
-
+            ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject);
         }
 

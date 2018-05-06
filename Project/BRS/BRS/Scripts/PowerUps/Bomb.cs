@@ -13,12 +13,15 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public Bomb() {
+            PowerupType = PowerupType.Bomb;
+            powerupColor = Color.Purple;
+        }
         
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Bomb;
-            powerupColor = Color.Purple;
+           
         }
 
 

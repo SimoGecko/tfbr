@@ -60,11 +60,12 @@ namespace BRS.Scripts.PlayerScripts {
             OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
+            PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor);
         }
 
         public bool CanPickUp(Powerup powerup) {
-            return true;
-            //return carryingPowerup.Count < maxNumberPowerups;
+            //return true;
+            return _carryingPowerup.Count < MaxNumberPowerups;
         }
 
         // queries

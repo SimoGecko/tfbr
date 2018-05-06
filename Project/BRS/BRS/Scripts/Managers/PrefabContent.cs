@@ -27,6 +27,7 @@ namespace BRS.Engine {
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
+            float powerupScale = 2.2f;
 
             //-------------------VALUABLES-------------------
             //cash
@@ -38,9 +39,9 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(cashPrefab);
 
             //gold
-            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/goldP"));////SM_Prop_Jewellery_Necklace_02
+            GameObject goldPrefab = new GameObject("goldPrefab", File.Load<Model>("Models/elements/gold"));////SM_Prop_Jewellery_Necklace_02
             goldPrefab.transform.Scale(2f);
-            goldPrefab.material = elementsMat;
+            goldPrefab.material = powerupMat;
             goldPrefab.AddComponent(new Money(500, 1, Money.Type.Gold));
             goldPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Box, pureCollider: true, size: new Vector3(3.0f, 3.0f, 1.5f)));
             Prefabs.AddPrefab(goldPrefab);
@@ -59,7 +60,7 @@ namespace BRS.Engine {
             //expand these two arrays to add new powerups with a particular name and a powerup script
             string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
             Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
-            var colorMapping = new Dictionary<string, Color>()
+            /*var colorMapping = new Dictionary<string, Color>()
                 {
                     { "bomb", Color.Red},
                     { "capacity", Color.Green},
@@ -72,14 +73,15 @@ namespace BRS.Engine {
                     { "explodingbox", Color.Red},
                     { "weight", Color.Red},
                     { "magnet", Color.Purple},
-                };
+                };*/
 
             for (int i=0; i<powerupName.Length; i++) {
                 GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
-                powerupPrefab.transform.Scale(1.5f);
+                powerupPrefab.transform.Scale(powerupScale);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
-                powerupPrefab.AddComponent(new PowerUpEffect(colorMapping[powerupName[i]]));
+                
+                powerupPrefab.AddComponent(new PowerUpEffect(powerupcomponents[i].powerupColor));
                 powerupPrefab.material = powerupMat;
                 Prefabs.AddPrefab(powerupPrefab);
             }
@@ -116,7 +118,7 @@ namespace BRS.Engine {
 
             //planted bomb
             GameObject plantedBombPrefab = new GameObject("plantedBombPrefab", File.Load<Model>("Models/powerups/bomb"));
-            plantedBombPrefab.transform.Scale(1.5f);
+            plantedBombPrefab.transform.Scale(powerupScale);
             plantedBombPrefab.transform.SetStatic();
             plantedBombPrefab.AddComponent(new PlantedBomb());
             plantedBombPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
@@ -125,7 +127,7 @@ namespace BRS.Engine {
 
             //falling weight
             GameObject fallingWeight = new GameObject("fallingWeightPrefab", File.Load<Model>("Models/powerups/weight"));
-            fallingWeight.transform.Scale(1.5f);
+            fallingWeight.transform.Scale(powerupScale);
             fallingWeight.AddComponent(new FallingWeight());
             fallingWeight.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             fallingWeight.AddComponent(new DynamicShadow());
@@ -134,7 +136,7 @@ namespace BRS.Engine {
 
             //planted magnet
             GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", File.Load<Model>("Models/powerups/magnet"));
-            plantedMagnet.transform.Scale(1.5f);
+            plantedMagnet.transform.Scale(powerupScale);
             plantedMagnet.AddComponent(new PlantedMagnet());
             plantedMagnet.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
             plantedMagnet.material = powerupMat;

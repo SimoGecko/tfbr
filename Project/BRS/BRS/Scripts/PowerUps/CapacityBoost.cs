@@ -12,12 +12,15 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- VARIABLES ---------------------
         private const int ValueBoost = 2;
 
+        public CapacityBoost() {
+            PowerupType = PowerupType.Capacity;
+            _useInstantly = true;
+        }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Capacity;
-            _useInstantly = true;
+            
         }
 
 

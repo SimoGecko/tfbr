@@ -175,8 +175,7 @@ ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: ColorChangeLeft null Ready Ready
 NameSwitchTo: play1
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Button>

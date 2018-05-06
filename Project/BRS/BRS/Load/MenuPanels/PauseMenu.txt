@@ -18,11 +18,10 @@ ColorInside: 255 255 255
 NameIdentifier: Resume
 Texture: buttonCircle
 TextureInside: arrowRight
-Position: 860 350
+Position: 860 315
 Functions: ResumeGame
 NeighborsUpDownLeftRight: null SliderAudio Restart Menu
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 CurrentSelection: yes
 </Button>
 
@@ -30,36 +29,49 @@ CurrentSelection: yes
 NameIdentifier: Menu
 Texture: buttonCircle
 TextureInside: menu
-Position: 960 350
+Position: 1060 315
 Functions: LoadMenu
 NeighborsUpDownLeftRight: null SliderAudio Resume Restart
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Button>
 NameIdentifier: Restart
 Texture: buttonCircle
 TextureInside: restart
-Position: 1060 350
+Position: 960 315
 Functions: StartGameFunction
 NeighborsUpDownLeftRight: null SliderAudio Menu Resume
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Slider>
 NameIdentifier: SliderAudio
 Texture: slider
-Position: 956 500
+Position: 956 430
 Text: Game Settings
-Color: 148 148 148
-ColorInside: 255 255 255
-NeighborsUpDownLeftRight: Resume null null null
+NeighborsUpDownLeftRight: Resume TickBoxMusic null null
 Functions: UpdateVolume
 </Slider>
 
+<TickBox>
+NameIdentifier: TickBoxMusic
+Position: 1125 525
+NeighborsUpDownLeftRight: SliderAudio null null null
+ScaleWidth: 0.75
+ScaleHeight: 0.75
+ScaleWidthInside: 0.4
+ScaleHeightInside: 0.4
+Functions: SetMusic
+IsClicked: yes
+</TickBox>
+
 <Text>
 Text: Volume: 
-Position: 815 500
+Position: 815 430
+</Text>
+
+<Text>
+Text: Music:
+Position: 815 525
 </Text>

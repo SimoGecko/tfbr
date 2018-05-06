@@ -15,11 +15,15 @@ namespace BRS.Scripts.PowerUps {
         //public
         private const float ValuePotion = 20f;
 
+        public ShieldPotion() {
+            PowerupType = PowerupType.Shield;
+            _useInstantly = true;
+        }
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Shield;
-            _useInstantly = true;
+            
 
         }
 

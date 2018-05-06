@@ -20,13 +20,16 @@ namespace BRS.Scripts.Elements {
         private const float OpenRadius = 10f;
 
         //reference
+        public Key() {
+            PowerupType = PowerupType.Key;
+            powerupColor = Color.LightBlue;
+        }
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Key;
-            powerupColor = Color.Blue;
+            
         }
 
 
