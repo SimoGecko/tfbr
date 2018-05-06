@@ -70,35 +70,7 @@ namespace BRS.Scripts.UI {
         }
 
 
-        public void Draw(SpriteBatch spriteBatch) { // draws the whole map in the middle
-            //MAP
-            spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
-
-
-            //MONEY
-            foreach (Vector3 pos in ElementManager.Instance.AllMoneyPosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
-            }
-            //CRATES
-            foreach (Vector3 pos in ElementManager.Instance.AllCratePosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
-            }
-            //POWERUPS
-            foreach (Vector3 pos in ElementManager.Instance.AllPowerupPosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
-            }
-            //BASES
-            foreach (var b in ElementManager.Instance.Bases()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(b.transform.position), IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
-            }
-            //PLAYERS
-            foreach (var p in ElementManager.Instance.Players()) {
-                Vector3 pos = p.transform.position;
-                float rotY = -p.transform.eulerAngles.Y;
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY), _pivot, .3f, SpriteEffects.None, 1f);
-            }
-        }
-
+        
 
         //---------------------------------------------------------------------
         public void DrawSmall(SpriteBatch spriteBatch, int index) { // drawp it relative to the player
@@ -145,29 +117,41 @@ namespace BRS.Scripts.UI {
             }
             foreach (Vector3 pos in ElementManager.Instance.AllGoldPosition()) {
                 if (IsInsideMini(pos, out finalPx)) {
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Graphics.Yellow, 0, _pivot, .08f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Graphics.Yellow, 0, _pivot, .10f, SpriteEffects.None, 1f);
                 }
             }
             foreach (Vector3 pos in ElementManager.Instance.AllDiamondPosition()) {
                 if (IsInsideMini(pos, out finalPx)) {
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Color.LightBlue, 0, _pivot, .08f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Circle), Color.LightBlue, 0, _pivot, .12f, SpriteEffects.None, 1f);
                 }
             }
             //CRATES
             foreach (Vector3 pos in ElementManager.Instance.AllCratePosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .10f, SpriteEffects.None, 1f);
             }
             //POWERUPS
             foreach (Vector3 pos in ElementManager.Instance.AllPowerupPosition()) {
                 if(IsInsideMini(pos, out finalPx))
-                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Star), Graphics.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Star), Graphics.Blue, 0, _pivot, .15f, SpriteEffects.None, 1f);
+            }
+            //TRAPS
+            foreach (Vector3 pos in ElementManager.Instance.AllVariousGameobjectsPosition()) {
+                if (IsInsideMini(pos, out finalPx))
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Square), Graphics.Red, 0, _pivot, .20f, SpriteEffects.None, 1f);
             }
             //BASES
             foreach (var b in ElementManager.Instance.Bases()) {
                 Vector3 pos = b.transform.position;
                 if (IsInsideMiniProject(pos, out finalPx))
                     spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
+            }
+            //POLICE
+            foreach (var p in ElementManager.Instance.Polices()) {
+                Vector3 pos = p.transform.position;
+                float rotY = -p.transform.eulerAngles.Y;
+                if (IsInsideMini(pos, out finalPx))
+                    spriteBatch.Draw(_mapIcons, finalPx, IconFromType(IconType.Triangle), new Color(50, 50, 50), MathHelper.ToRadians(rotY + _cameraRot), _pivot, .3f, SpriteEffects.None, 1f);
             }
             //PLAYERS
             foreach (var p in ElementManager.Instance.Players()) {
@@ -178,6 +162,34 @@ namespace BRS.Scripts.UI {
             }
         }
 
+        public void DrawBigOld(SpriteBatch spriteBatch) { // draws the whole map in the middle
+            //MAP
+            spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
+
+
+            //MONEY
+            foreach (Vector3 pos in ElementManager.Instance.AllMoneyPosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
+            }
+            //CRATES
+            foreach (Vector3 pos in ElementManager.Instance.AllCratePosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
+            }
+            //POWERUPS
+            foreach (Vector3 pos in ElementManager.Instance.AllPowerupPosition()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
+            }
+            //BASES
+            foreach (var b in ElementManager.Instance.Bases()) {
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(b.transform.position), IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
+            }
+            //PLAYERS
+            foreach (var p in ElementManager.Instance.Players()) {
+                Vector3 pos = p.transform.position;
+                float rotY = -p.transform.eulerAngles.Y;
+                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY), _pivot, .3f, SpriteEffects.None, 1f);
+            }
+        }
 
 
         // queries

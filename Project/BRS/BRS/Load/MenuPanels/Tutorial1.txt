@@ -10,8 +10,7 @@ ScaleHeightInside: 1.2
 Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Next Next
 NameSwitchTo: main
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Button>
@@ -26,8 +25,7 @@ ScaleHeightInside: 1.2
 Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Back Back
 NameSwitchTo: tutorial2
-Color: 110 235 150
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 CurrentSelection: yes
 </Button>
 

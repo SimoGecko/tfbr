@@ -138,6 +138,12 @@ namespace BRS.Engine {
             MediaPlayer.Play(songs[name]);
         }
 
+        public static void PlayRandomSong() {
+            List<string> keyList = new List<string>(songs.Keys);
+            string randomKey = keyList[MyRandom.Range(0, keyList.Count)];
+            MediaPlayer.Play(songs[randomKey]);
+        }
+
         public static void PauseSong()  { MediaPlayer.Pause(); }
         public static void ResumeSong() { MediaPlayer.Resume(); }
         public static void StopSong()   { MediaPlayer.Stop(); }

@@ -17,6 +17,7 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading.Tasks;
+using BRS.Engine.PostProcessing;
 using BRS.Scripts.Elements.Lighting;
 
 namespace BRS.Scripts.Scenes {
@@ -38,6 +39,7 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+            SetMenuShaderEffects();
         }
 
 
@@ -49,6 +51,14 @@ namespace BRS.Scripts.Scenes {
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
             GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             outsideScene.material = outsideMat;
+
+            
+            Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
+            infinitePlane.material = groundMat;
+            //infinitePlane.transform.position = new;
+            infinitePlane.transform.Scale(1000);
+            infinitePlane.transform.position = new Vector3(0, 0, -.1f);
         }
 
         void LoadUnityScene() {
@@ -151,13 +161,13 @@ namespace BRS.Scripts.Scenes {
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.material = new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
-                arrow.transform.Scale(.2f);
+                //arrow.transform.Scale(.2f);
 
                 //arrow for enemy
                 GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow2.material = new Material(Graphics.Red);
                 arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                arrow2.transform.Scale(.08f);
+                //arrow2.transform.Scale(.08f);
             }
         }
 
@@ -213,9 +223,6 @@ namespace BRS.Scripts.Scenes {
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
             vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
-            //vault.transform.position = new Vector3(5, 1.5f, -62);
-            //vault.transform.scale = new Vector3(3, .5f, 3);
-            //vault.transform.eulerAngles = new Vector3(90, 0, 0);
 
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
             vault.AddComponent(new AnimatedRigidBody());
@@ -223,13 +230,21 @@ namespace BRS.Scripts.Scenes {
 
             vault.AddComponent(new FlyingCash());
             vault.material = playerMat;
-            //vault.AddComponent(new SphereCollider(Vector3.Zero, 3f));
-            //Add(vault);
-
 
             //other elements
-            GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -20), Quaternion.Identity);
-            //Add(speedpad);
+            GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);
+            speedpad.transform.eulerAngles = Vector3.Up * 90;
+
+        }
+
+        void SetMenuShaderEffects() {
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+            }
+
         }
     }
 }

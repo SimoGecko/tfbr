@@ -22,8 +22,8 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public static void Start() {
-            Audio.PlaySong("Happy Happy Game Show");
-            Audio.SetMusicVolume(.1f);
+            //Audio.PlaySong("Happy Happy Game Show");
+            Audio.SetMusicVolume(.005f);
             Audio.SetSoundVolume(1f);
         }
 
@@ -34,7 +34,7 @@ namespace BRS.Scripts {
 
         // commands
         public static string[] SongString() {
-            return new string[] { "Happy Happy Game Show" };
+            return new string[] { "Happy Happy Game Show", "fun", "lively" };
         }
 
         public static string[] SoundString() {

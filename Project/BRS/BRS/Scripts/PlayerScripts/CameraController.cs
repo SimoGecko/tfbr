@@ -33,7 +33,7 @@ namespace BRS.Scripts.PlayerScripts {
         static Vector2 _gamepadSensitivity = new Vector2(-2f, -2f);
 
         public int CamIndex;
-        bool autoFollow = false;
+        public static bool autoFollow = true;
 
         float _xAngle, _xAngleSmooth;
         float _yAngle, _yAngleSmooth;

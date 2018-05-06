@@ -22,6 +22,7 @@ namespace BRS.Engine {
 
         public bool baked;
         public bool textured;
+        public bool skybox;
         public Texture2D colorTex;
         public Texture2D lightTex;
 
@@ -53,6 +54,9 @@ namespace BRS.Engine {
             IsTransparent = isTransparent;
             IsAlphaAnimated = isAlphaAnimated;
             Alpha = alpha;
+        }
+        public Material(string type) {
+            if (type == "skybox") skybox = true;
         }
 
         public Material(Color color, bool lit = true) {

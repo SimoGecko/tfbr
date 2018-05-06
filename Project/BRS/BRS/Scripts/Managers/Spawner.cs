@@ -137,7 +137,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOnePowerupAt(Vector3 position, Vector3? linearVelocity=null) {
-            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position + Vector3.Up * 2.5f, Quaternion.Identity, linearVelocity??Vector3.Zero);
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position + Vector3.Up * 1f, Quaternion.Identity, linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
@@ -158,24 +158,22 @@ namespace BRS.Scripts.Managers {
         // OTHER
         async void SpawnValuableContinuous() {
             while (true) {
+                await Time.WaitForSeconds(_currentMode.TimeBetweenValuables * TimeVariance);
                 SpawnOneValuableRandom();
-                float waitTime = _currentMode.TimeBetweenValuables * TimeVariance;
-                await Time.WaitForSeconds(waitTime);
             }
         }
 
         async void SpawnCrateContinuous() {
             while (true) {
-                SpawnOneCrateRandom();
                 await Time.WaitForSeconds(_currentMode.TimeBetweenCrates * TimeVariance);
+                SpawnOneCrateRandom();
             }
         }
 
         async void SpawnPowerupContinuous() {
             while (true) {
+                await Time.WaitForSeconds(_currentMode.TimeBetweenPowerups * TimeVariance);
                 SpawnOnePowerupRandom();
-                float waitTime = _currentMode.TimeBetweenPowerups * TimeVariance;
-                await Time.WaitForSeconds(waitTime);
             }
         }
 

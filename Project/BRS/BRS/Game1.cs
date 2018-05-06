@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using BRS.Scripts.Managers;
 
 namespace BRS {
 
@@ -97,7 +98,7 @@ namespace BRS {
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
-            Heatmap.instance.SaveHeatMap();
+            //Heatmap.instance.SaveHeatMap();
         }
 
         protected override void Update(GameTime gameTime) {
@@ -108,6 +109,8 @@ namespace BRS {
             Input.Update();
             Audio.Update();
             SceneManager.Update(); // check for scene change (can remove later)
+
+            GameManager.Update();
 
             // Todo: Switch for the interim
             if (Input.GetKeyDown(Keys.Tab)) {
@@ -126,7 +129,7 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Graphics.StreetGray);
+            GraphicsDevice.Clear(Graphics.SkyBlue);
 
             RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
             RasterizerState rasterizerState = new RasterizerState();
