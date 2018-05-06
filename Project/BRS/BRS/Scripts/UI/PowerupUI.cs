@@ -30,6 +30,7 @@ namespace BRS.Scripts.UI {
 
         // const
         const int AtlasWidth = 128;
+        Color backgroundColor;
 
         //reference
         public static PowerupUI Instance;
@@ -80,7 +81,8 @@ namespace BRS.Scripts.UI {
             if (_powerupUi[index].CurrentPowerups.Length > 0) { // it's going to draw just one
                 foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
-                    UserInterface.DrawPicture(smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 64, 64, 64), Align.Top, col:Color.Orange);
+                    //Color backgroundColor = Powerup.PowerupColor(powerup);//Color.Orange;
+                    UserInterface.DrawPicture(smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 64, 64, 64), Align.Top, col:backgroundColor);
                     UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 65, 55, 55), _powerupsRectangle[powerup], Align.Top);
                     string powerupName = ((PowerupType)powerup).ToString();
                     UserInterface.DrawString(powerupName, new Rectangle(0, 127, 125, 25), Align.Top, Align.Top, Align.Top);
@@ -97,7 +99,9 @@ namespace BRS.Scripts.UI {
 
 
         // queries
-
+        public void SetBackgroundColor(Color c) {
+            backgroundColor = c;
+        }
 
 
         // other

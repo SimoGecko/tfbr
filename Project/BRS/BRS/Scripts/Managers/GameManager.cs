@@ -17,6 +17,7 @@ namespace BRS.Scripts.Managers {
         //public
         public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 4;
+        public static int lvlDifficulty = 2; // 0 for Easy, 1 for Normal, 2 for Hard
 
 
         //private
@@ -45,7 +46,8 @@ namespace BRS.Scripts.Managers {
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
 
-                MenuManager.Instance.MenuRect["pause"].active = GamePaused;
+                if (MenuManager.Instance.MenuRect.ContainsKey("pause"))
+                    MenuManager.Instance.MenuRect["pause"].active = GamePaused;
             }
         }
 

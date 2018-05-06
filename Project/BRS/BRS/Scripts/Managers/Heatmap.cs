@@ -53,6 +53,7 @@ namespace BRS.Scripts {
 
             //HEATMAP
             heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
+            //playerHeatmap = new int[distribWidth, distribHeight];
             StartComputingHeatmap();
         }
 
@@ -111,10 +112,15 @@ namespace BRS.Scripts {
 
         public void SaveHeatMap() { // TODO have nico save this to array/picture
             //when game is closed
-            Stream stream = System.IO.File.Create("Images/heatmap/level1_heatmap.png");
-            heatmapPic.SaveAsPng(stream, heatmapPic.Width, heatmapPic.Height);
-            stream.Dispose();
-            heatmapPic.Dispose();
+
+            Color[,] colorData = Graphics.TextureTo2DArray(heatmapPic);
+            int[,] array2Dint = Graphics.ColorToInt(colorData, 0);
+            Engine.File.Write2DArrayIntToFile("Load/saved_heatmap_level1.txt", array2Dint);
+
+            //Stream stream = System.IO.File.Create("Load/saved_heatmap_level1.png");
+            //heatmapPic.SaveAsPng(stream, heatmapPic.Width, heatmapPic.Height);
+            //stream.Dispose();
+            //heatmapPic.Dispose();
         }
 
         public override void Draw2D(int index) {

@@ -16,6 +16,7 @@ namespace BRS.Engine {
         void Update();
         void LateUpdate();
         void OnCollisionEnter(Collider c);
+        void OnCollisionEnd(Collider c);
         void Draw3D(Camera camera);
         void Draw2D(int i);
 
@@ -38,6 +39,7 @@ namespace BRS.Engine {
 
         public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
+        public virtual void OnCollisionEnd(Collider c) { }
         public virtual void Draw3D(Camera camera) { }
         public virtual void Draw2D(int i) { }
 

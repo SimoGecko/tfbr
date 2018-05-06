@@ -32,7 +32,7 @@ Position: 1080 455
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 255 0 0
+Color: 234 67 53
 </Image>
 
 <Image>
@@ -51,7 +51,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 255 0 0
+Color: 234 67 53
 </Image>
 
 <Image>
@@ -70,7 +70,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 255 0 0
+Color: 234 67 53
 </Image>
 
 <Button>
@@ -104,7 +104,7 @@ Position: 1005 620
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 255 0 0
+Color: 234 67 53
 </Button>
 
 <Button>
@@ -175,8 +175,7 @@ ScaleHeightInside: 1.5
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: ColorChangeLeft null Ready Ready
 NameSwitchTo: play1
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 </Button>
 
 <Button>

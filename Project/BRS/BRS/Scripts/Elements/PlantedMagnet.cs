@@ -32,7 +32,7 @@ namespace BRS.Scripts.Elements {
             Invoke(StartDelay, () => _active = true);
             Audio.Play("active_magnet", transform.position);
             ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
-            GameObject.Destroy(gameObject, Duration);
+            new Timer(Duration, () => RemoveMagnet());
 
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance.ActivateWave(i, transform.position, deactivate: true, deactivateAfter: Duration);
@@ -72,6 +72,12 @@ namespace BRS.Scripts.Elements {
                 canPlaySound = false;
                 new Timer(soundDuration, () => canPlaySound = true);
             }
+
+        }
+
+        void RemoveMagnet() {
+            ElementManager.Instance.Remove(this.gameObject);
+            GameObject.Destroy(gameObject);
 
         }
 

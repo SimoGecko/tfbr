@@ -28,8 +28,6 @@ namespace BRS.Engine {
             _mState = Mouse.GetState();
             for(int i=0; i<4; i++)
                 _gState[i] = GamePad.GetState(i);
-
-            
         }
 
         public static void Update() {
@@ -44,17 +42,6 @@ namespace BRS.Engine {
                 _oldGstate[i] = _gState[i];
                 _gState[i] = GamePad.GetState(i);
             }
-
-            //check for vibration stop
-            /*
-            for (int i = 0; i < 4; i++) {
-                if (vibrating[i]) {
-                    timer[i] -= Time.deltatime;
-                    if(timer[i] <= 0) {
-                        StopVibration(i);
-                    }
-                }
-            }*/
         }
 
         //AXIS
@@ -147,32 +134,19 @@ namespace BRS.Engine {
             return 0f;
         }
 
-        /*
-        const float amountDown = 0.5f; // how much to press to be considered down
-        public static bool IsTriggerDown(string v, int i = 0) {
-            if (v == "Left")  { return gState[i].Triggers.Left >=amountDown; }
-            if (v == "Right") { return gState[i].Triggers.Right>=amountDown; }
-            return false;
-        }*/
 
         //VIBRATION
         public static void Vibrate(float amount, float time, int i = 0) {
             Vibrate(amount, amount, time, i);
         }
         static void Vibrate(float left, float right, float time, int i=0) {
-            //currently doesnt work
             GamePad.SetVibration(i, left*VibrationMultiplier, right* VibrationMultiplier);
-            new Timer(time, () => StopVibration(i));
+            new Timer(time, () => StopVibration(i), true);
             _vibrating[i] = true;
-
             //Windows.Gaming.Input.GamepadVibration wp = new Windows.Gaming.Input.GamepadVibration();
             //PlatformSetVibration(index, MathHelper.Clamp(leftMotor, 0.0f, 1.0f), MathHelper.Clamp(rightMotor, 0.0f, 1.0f));
-
         }
 
-        /*public static void Rumble(PlayerIndex playerId, float length, float strength) {
-            GamePad.SetVibration(playerId, strength * VibrationMultiplier, strength * VibrationMultiplier);
-        }*/
 
         private static void StopVibration(int i=0) {
             GamePad.SetVibration(i, 0f, 0f);

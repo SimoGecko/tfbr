@@ -8,6 +8,9 @@ using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.IO;
 
 namespace BRS.Scripts {
     /// <summary>
@@ -16,7 +19,7 @@ namespace BRS.Scripts {
     class Police : Component, IDamageable {
 
         // --------------------- VARIABLES ---------------------
-        enum State { Chasing, Stun }
+        enum State { Chasing, Stun, Collided }
         State state;
 
         //public
@@ -67,7 +70,7 @@ namespace BRS.Scripts {
                 }
             }
 
-            if(state == State.Stun && Time.CurrentTime > endStunTime) {
+            if (state == State.Stun && Time.CurrentTime > endStunTime) {
                 state = State.Chasing;
             }
 
@@ -75,13 +78,31 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
-                if(state == State.Chasing && !p.IsAttacking())
+
+                if (state == State.Chasing && !p.IsAttacking()) {
                     p.TakeDamage(20);
+                    state = State.Collided;
+                }
+            }
+
+            if (c.GameObject.tag == ObjectTag.Police) {
+                state = State.Collided;
             }
         }
 
+        public override void OnCollisionEnd(Collider c) {
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+            if (isPlayer) {
+                state = State.Chasing;
+            }
+
+            if (c.GameObject.tag == ObjectTag.Police) {
+                state = State.Chasing;
+            }
+        }
 
 
         // --------------------- CUSTOM METHODS ----------------
@@ -122,4 +143,5 @@ namespace BRS.Scripts {
 
 
     }
+
 }

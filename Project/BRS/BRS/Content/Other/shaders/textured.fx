@@ -13,6 +13,9 @@ float4x4 View;
 float4x4 Projection;
 bool IsTransparent = false;
 
+bool IsAlphaAnimated = false;
+float Alpha = 1.0f;
+
 texture ColorTexture;
 sampler2D textureSampler1 = sampler_state {
     Texture = (ColorTexture);
@@ -56,6 +59,8 @@ float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
 
 	if (!IsTransparent) {
 		textureColor.a = 1;
+	} else if (IsAlphaAnimated) {
+		textureColor.a = lerp(textureColor.a, 0, Alpha);
 	}
  
 	return textureColor;

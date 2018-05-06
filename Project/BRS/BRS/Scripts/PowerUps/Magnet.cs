@@ -13,11 +13,14 @@ namespace BRS.Scripts.PowerUps {
 
         //public
 
+        public Magnet() {
+            PowerupType = PowerupType.Magnet;
+            powerupColor = Color.Red;
+        }
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Magnet;
-            powerupColor = Color.Red;
+            
         }
 
 

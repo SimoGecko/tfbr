@@ -19,8 +19,8 @@ namespace BRS.Scripts.Elements {
         //public
         const float Margin = .4f;
         const float SmoothTime = .1f;
-        const float smallSize = .05f;
-        const float bigSize = .2f;
+        //const float smallSize = .05f;
+        //const float bigSize = .2f;
 
 
         //private
@@ -45,11 +45,12 @@ namespace BRS.Scripts.Elements {
 
         public override void Start() {
             scale = transform.scale.X;
+            int teamIndex = _playerIndex % 2;
             if (_followEnemy) {
-                if (ElementManager.Instance.Enemy(_playerIndex % 2) != null)
-                    _target = ElementManager.Instance.Enemy(_playerIndex%2).transform;
+                if (ElementManager.Instance.Enemy(teamIndex) != null)
+                    _target = ElementManager.Instance.Enemy(teamIndex).transform;
             } else {
-                _target = ElementManager.Instance.Base(_playerIndex % 2).transform;
+                _target = ElementManager.Instance.Base(teamIndex).transform;
             }
         }
 

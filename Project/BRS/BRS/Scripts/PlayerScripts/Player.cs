@@ -131,7 +131,7 @@ namespace BRS.Scripts.PlayerScripts {
                     _pA.BeginAttack();
                     CamController.Shake(.5f);
                 }
-
+                
                 if (LiftInput()) {
                     _pL.Lift();
                 }

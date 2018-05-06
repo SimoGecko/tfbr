@@ -129,6 +129,7 @@
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
     <Compile Include="Engine\Physics\Colliders\Collider.cs" />
+    <Compile Include="Engine\Physics\Follower.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
@@ -157,13 +158,18 @@
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
     <Compile Include="Engine\Utilities\Distribution.cs" />
+    <Compile Include="Engine\Utilities\EnumExtensions.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerComponent.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerType.cs" />
+    <Compile Include="Scripts\Elements\Lighting\AlarmLight.cs" />
     <Compile Include="Scripts\Elements\Police.cs" />
+    <Compile Include="Scripts\Elements\AnimatedWheels.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\LenseFlareManager.cs" />
@@ -177,10 +183,11 @@
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\PlayerScripts\BaseParticles.cs" />
-    <Compile Include="Scripts\PlayerScripts\DynamicShadow.cs" />
+    <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
@@ -295,6 +302,7 @@
     <Content Include="Load\Rankings\ranking5 min2P.txt" />
     <Content Include="Load\Rankings\ranking5 min4P.txt" />
     <Content Include="Load\robber_speech.txt" />
+    <Content Include="Load\saved_heatmap_level1.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
@@ -305,6 +313,7 @@
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
+    <Content Include="Load\UnitySceneData\originalStatic.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
