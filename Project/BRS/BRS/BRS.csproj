@@ -295,6 +295,7 @@
     <Content Include="Load\Rankings\ranking5 min2P.txt" />
     <Content Include="Load\Rankings\ranking5 min4P.txt" />
     <Content Include="Load\robber_speech.txt" />
+    <Content Include="Load\saved_heatmap_level1.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
