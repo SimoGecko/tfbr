@@ -78,7 +78,7 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("Level1");
 
 
             //start other big components
@@ -129,7 +129,7 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Graphics.StreetGray);
+            GraphicsDevice.Clear(Graphics.SkyBlue);
 
             RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
             RasterizerState rasterizerState = new RasterizerState();

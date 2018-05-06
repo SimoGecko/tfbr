@@ -286,7 +286,7 @@ namespace BRS.Scripts.Managers {
                 GameMode.currentGameMode = "default";
             if (button.nameIdentifier == "ModeCrates")
                 GameMode.currentGameMode = "default";
-            if (button.nameIdentifier == "ModeDynamic")
+            if (button.nameIdentifier == "ModeDynamic")//survival
                 GameMode.currentGameMode = "default";
 
         }

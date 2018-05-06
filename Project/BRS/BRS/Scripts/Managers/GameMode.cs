@@ -13,7 +13,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
         //static
         static Dictionary<string, GameMode> gameModes = new Dictionary<string, GameMode>();
-        public static string currentGameMode = "survival";
+        public static string currentGameMode = "default";
 
         //gamemode params
         string gameModeName;
@@ -87,12 +87,14 @@ namespace BRS.Scripts {
         public static void ReadGameModes() {
             CreateDefaultMode();
             CreateSurvivalMode();
+            CreateBomberMode();
+            CreateCrateOnlyMode();
         }
 
         static void CreateDefaultMode() {
             GameMode gm = new GameMode("default");
             gm.SetBaseParams(150, 20000, WinCondition.Time);
-            gm.SetAmount(80, 30, 15, .5f);
+            gm.SetAmount(80, 30, 50, .5f);
             gm.SetMoneyDistrib(.8f, .2f, .05f);
             gm.SetPowerupDistribution(.1f, .1f, .1f, .1f, .1f, .1f, .1f);
         }
@@ -100,7 +102,7 @@ namespace BRS.Scripts {
         static void CreateSurvivalMode() {
             GameMode gm = new GameMode("survival");
             gm.SetBaseParams(150, 20000, WinCondition.Time);
-            gm.SetAmount(10, 0, 4, .3f);
+            gm.SetAmount(20, 0, 4, .3f);
             gm.SetMoneyDistrib(0f, .3f, .0f);
             gm.SetPowerupDistribution(1, 0, 1, 0, 1, 1, 0);
         }
@@ -109,8 +111,15 @@ namespace BRS.Scripts {
             GameMode gm = new GameMode("bomber");
             gm.SetBaseParams(150, 20000, WinCondition.Time);
             gm.SetAmount(100, 0, 20, 1f);
-            gm.SetMoneyDistrib(1f, .3f, .0f);
-            gm.SetPowerupDistribution(1, 0, 0, 0, 0, 1, 0);
+            gm.SetMoneyDistrib(1f, .3f, .02f);
+            gm.SetPowerupDistribution(1, 0, 0, 0, 0, 0, 0);
+        }
+        static void CreateCrateOnlyMode() {
+            GameMode gm = new GameMode("crateonly");
+            gm.SetBaseParams(150, 20000, WinCondition.Time);
+            gm.SetAmount(0, 50, 0, 1f);
+            gm.SetMoneyDistrib(1f, .3f, .05f);
+            gm.SetPowerupDistribution(1, 0, 1, 1, 1, 3, 0);
         }
 
 
