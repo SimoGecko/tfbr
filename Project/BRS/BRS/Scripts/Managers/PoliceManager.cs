@@ -28,6 +28,7 @@ namespace BRS.Scripts {
         Transform[] targets;
         List<Vector3>[] recordedWaypoints;
         List<Vector3>[] staticWaypoints;
+        private List<Vector3> _startPositions;
 
         private bool recordingInitialized;
 
@@ -35,7 +36,8 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public PoliceManager() {
+        public PoliceManager(List<Vector3> startPositions) {
+            _startPositions = startPositions;
             Instance = this;
         }
 
@@ -151,6 +153,6 @@ namespace BRS.Scripts {
             }
         }
 
-        
+
     }
 }

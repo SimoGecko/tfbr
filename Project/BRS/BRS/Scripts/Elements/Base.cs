@@ -30,7 +30,7 @@ namespace BRS.Scripts.Elements {
         private int _shownMoneyStacks = 0;
         private int _bundlesPerStack = 10;
         private int _columnsPerRow = 2;
-        private float _margin = 0.05f;
+        private float _margin = 1f;
         private List<GameObject> _moneyGameObjects = new List<GameObject>();
 
         public System.Action OnBringBase;
@@ -70,11 +70,24 @@ namespace BRS.Scripts.Elements {
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+
+            if (isPlayer) {
+                Player p = c.GameObject.GetComponent<Player>();
+
+                if (p.TeamIndex == _baseIndex) {
+                    PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
+                    pi.CanDeload = true;
+                    DeloadPlayerProgression(pi);
+                }
+            }
+        }
+
+        public override void OnCollisionEnd(Collider c) {
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
                 if (p.TeamIndex == _baseIndex) {
-                    //DeloadPlayer(p.gameObject.GetComponent<PlayerInventory>());
-                    DeloadPlayerProgression(p.gameObject.GetComponent<PlayerInventory>());
+                    p.gameObject.GetComponent<PlayerInventory>().CanDeload = false;
                 }
             }
         }
@@ -85,11 +98,11 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        public void DeloadPlayer(PlayerInventory pi) {
-            TotalMoney += pi.CarryingValue;
-            pi.DeloadAll();
-            UpdateUI();
-        }
+        //public void DeloadPlayer(PlayerInventory pi) {
+        //    TotalMoney += pi.CarryingValue;
+        //    pi.DeloadAll();
+        //    UpdateUI();
+        //}
 
         void UpdateUI() {
             BaseUI.Instance.UpdateBaseUI(_baseIndex, Health, StartingHealth, TotalMoney);
@@ -106,7 +119,9 @@ namespace BRS.Scripts.Elements {
 
         public void NotifyRoundEnd() {
             foreach (var p in TeamPlayers()) {
-                if (!PlayerInsideRange(gameObject)) {
+                PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
+
+                if (!pi.CanDeload) {
                     Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);
@@ -119,9 +134,9 @@ namespace BRS.Scripts.Elements {
 
 
         // queries
-        bool PlayerInsideRange(GameObject p) {
-            return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold * DeloadDistanceThreshold;
-        }
+        //bool PlayerInsideRange(GameObject p) {
+        //    return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold * DeloadDistanceThreshold;
+        //}
 
         Player[] TeamPlayers() {
             List<Player> result = new List<Player>();
@@ -143,7 +158,7 @@ namespace BRS.Scripts.Elements {
                 wasDeloading = true;
             }
 
-            while (pi.CarryingValue > 0 && PlayerInsideRange(pi.gameObject)) {
+            while (pi.CarryingValue > 0 && pi.CanDeload) {
                 TotalMoney += pi.ValueOnTop;
                 pi.DeloadOne();
                 UpdateUI();
@@ -151,7 +166,8 @@ namespace BRS.Scripts.Elements {
                 Input.Vibrate(.01f, .01f, pi.gameObject.GetComponent<Player>().PlayerIndex);
                 await Time.WaitForSeconds(TimeBetweenUnloads);
             }
-            if(wasDeloading) {
+
+            if (wasDeloading) {
                 FullDeloadDone = true;
                 Timer t = new Timer(3, () => FullDeloadDone = false);
             }
@@ -170,10 +186,11 @@ namespace BRS.Scripts.Elements {
                 int rowId = stackId % _columnsPerRow;
                 int colId = stackId / _columnsPerRow;
                 Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
-                Vector3 right = size.X * (_margin + rowId) * Vector3.Right;
-                Vector3 back = size.Z * (_margin + colId) * Vector3.Backward;
+                Vector3 right = (rowId * _margin + size.X * rowId) * Vector3.Right;
+                Vector3 back = (colId * _margin + size.Z * colId) * Vector3.Backward;
 
                 newBundle.transform.position = transform.position + up + right + back;
+                newBundle.transform.eulerAngles = new Vector3(0, MyRandom.Range(0.0f, 360.0f), 0);
 
                 ++_shownMoneyStacks;
             }
