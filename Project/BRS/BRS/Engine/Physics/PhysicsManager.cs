@@ -68,6 +68,7 @@ namespace BRS.Engine.Physics {
 
             // Event-handling
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
+            World.Events.BodiesEndCollide += Events_BodiesEndCollide;
             World.Events.ContactCreated += Events_ContactCreated;
         }
 
@@ -129,6 +130,24 @@ namespace BRS.Engine.Physics {
                 if (body2 != null) body1?.GameObject.OnCollisionEnter(body2);
                 if (body1 != null) body2?.GameObject.OnCollisionEnter(body1);
             }
+        }
+
+        /// <summary>
+        /// Event as soon as two objects started the collision.
+        /// </summary>
+        /// <param name="arg1">Rigidbody 1</param>
+        /// <param name="arg2">Rigidbody 2</param>
+        private void Events_BodiesEndCollide(RigidBody arg1, RigidBody arg2) {
+            if (!IsActive || !GameManager.GameActive) {
+                return;
+            }
+
+            Collider body1 = arg1 as Collider;
+            Collider body2 = arg2 as Collider;
+
+            
+            body1?.GameObject.OnCollisionEnd(body2);
+            body2?.GameObject.OnCollisionEnd(body1);
         }
 
         /// <summary>

@@ -34,6 +34,7 @@ namespace BRS.Engine {
 
         public static Color Clear = new Color(255, 255, 255, 0);
         public static Color StreetGray = new Color(64, 64, 64, 0);
+        public static Color SkyBlue = new Color(50, 206, 244, 0);
         //private
 
         public static GraphicsDeviceManager gDM;
@@ -64,7 +65,7 @@ namespace BRS.Engine {
             //if (mat == null) DrawModelSimple(model, view, proj, world);
             if (mat == null) DrawModelWithEffect(model, view, proj, world, skyboxEffect);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
-            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent);
+            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated, mat.Alpha);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
 
@@ -114,7 +115,7 @@ namespace BRS.Engine {
                 mesh.Draw();
             }
         }
-        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent) {
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     part.Effect = textureEffect;
@@ -124,6 +125,8 @@ namespace BRS.Engine {
 
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
                     textureEffect.Parameters["IsTransparent"].SetValue(isTransparent);
+                    textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
+                    textureEffect.Parameters["Alpha"].SetValue(alpha);
                 }
                 mesh.Draw();
             }
@@ -155,6 +158,12 @@ namespace BRS.Engine {
                 for (int y = 0; y < texture.Height; y++)
                     colors2D[x, y] = colors1D[x + y * texture.Width];
             return colors2D;
+        }
+
+        public static Color[] TextureTo1DArray(Texture2D texture) {
+            Color[] colors1D = new Color[texture.Width * texture.Height];
+            texture.GetData(colors1D);
+            return colors1D;
         }
 
         public static Texture2D ColorToTexture(Color[,] color) {

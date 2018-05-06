@@ -18,7 +18,7 @@ namespace BRS.Engine {
         // Todo: Verify if this holds for everybody
         public static readonly int Width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // 1920x1080, 2560x1440
         public static readonly int Height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-        public const string Title = "GAME TITLE";
+        public const string Title = "THAT FAILED BANK ROBBERY";
 
         static bool verticalSplit = true;
 

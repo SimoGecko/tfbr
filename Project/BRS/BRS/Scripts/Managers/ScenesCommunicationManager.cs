@@ -18,12 +18,15 @@ namespace BRS.Scripts.Managers {
 
         public Dictionary<string, Texture2D> textureColorPlayers;
 
-        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(20,5,5,3), new ModelsStatsStruct(25,3,4,3), new ModelsStatsStruct(15,7,6,4) };
+        public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 6, 4);
+        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 6, 4), new ModelsStatsStruct(27, 4.667f, 4, 2.667f), new ModelsStatsStruct(18, 7, 4, 2.667f) };
         public static string[] NameStats = { "Capacity", "Distance of attack", "Speed (min-max)" };
 
-        public static Color[] ColorModel = { new Color(215, 173, 35), Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Violet };
+        public static Color[] ColorModel = { new Color(215, 173, 35), Graphics.Red, Graphics.Green, Graphics.Blue, Graphics.Yellow, Color.Violet };
         public static Color TeamAColor = new Color(215, 173, 35);
-        public static Color TeamBColor = Color.Red;
+        public static Color TeamBColor = Graphics.Red;
+
+        public static string[] ModesName = { "default", "bomber", "crateonly", "survival" };
 
         public List<Model> ModelCharacter;
 

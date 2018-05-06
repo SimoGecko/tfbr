@@ -15,11 +15,15 @@ namespace BRS.Scripts.PowerUps {
         //public
         const float WeightSpawnHeight = 5;
 
+        public Weight() {
+            PowerupType = PowerupType.Weight;
+            powerupColor = Color.Gray;
+        }
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Weight;
-            powerupColor = Color.Gray;
+            
         }
 
 

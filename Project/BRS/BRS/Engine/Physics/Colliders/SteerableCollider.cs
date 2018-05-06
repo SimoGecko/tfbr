@@ -61,7 +61,7 @@ namespace BRS.Engine.Physics.Colliders {
             //AddForce(Speed);
             //LinearVelocity = Speed;
 
-            Position = new JVector(Position.X, HeightHalf + 0.0001f, Position.Z);
+            Position = new JVector(Position.X, HeightHalf + 0.1f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
 
             base.PostStep(timestep);

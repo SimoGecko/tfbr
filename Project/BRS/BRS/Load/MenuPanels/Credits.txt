@@ -9,8 +9,7 @@ ScaleWidthInside: 1.2
 ScaleHeightInside: 1.2
 Functions: SwitchToMenu
 NameSwitchTo: main
-Color: 250 139 139
-ColorInside: 255 255 255
+ColorInside: 148 148 148
 CurrentSelection: yes
 </Button>
 

@@ -94,6 +94,11 @@ namespace BRS.Scripts.Managers {
 
 
         // queries
+        //-----------MONEY-----------
+        public Vector3[] AllCashPosition() { return AllMoneyTypePosition(Money.Type.Cash); }
+        public Vector3[] AllGoldPosition() { return AllMoneyTypePosition(Money.Type.Gold); }
+        public Vector3[] AllDiamondPosition() { return AllMoneyTypePosition(Money.Type.Diamond); }
+
         public Vector3[] AllMoneyPosition() {
             List<Vector3> result = new List<Vector3>();
             foreach (Money m in _moneyList) {
@@ -111,27 +116,25 @@ namespace BRS.Scripts.Managers {
             return result.ToArray();
         }
 
-        public Vector3[] AllCashPosition() { return AllMoneyTypePosition(Money.Type.Cash); }
-        public Vector3[] AllGoldPosition() { return AllMoneyTypePosition(Money.Type.Gold); }
-        public Vector3[] AllDiamondPosition() { return AllMoneyTypePosition(Money.Type.Diamond); }
+        //-----------ELEMENTS-----------
+        
 
-        public Vector3[] AllCratePosition() {
+        Vector3[] AllListElementsPosition<T>(List<T> list) where T : IComponent {
             List<Vector3> result = new List<Vector3>();
-
-            foreach (Crate c in _crateList) {
-                result.Add(c.gameObject.transform.position);
+            foreach (T el in list) {
+                result.Add(el.gameObject.transform.position);
             }
-
             return result.ToArray();
         }
 
-        public Vector3[] AllPowerupPosition() {
+        public Vector3[] AllCratePosition() { return AllListElementsPosition(_crateList); }
+        public Vector3[] AllPowerupPosition() { return AllListElementsPosition(_powerupList); }
+        public Vector3[] AllPolicePosition() { return AllListElementsPosition(_policeList); }
+        public Vector3[] AllVariousGameobjectsPosition() {
             List<Vector3> result = new List<Vector3>();
-
-            foreach (Powerup p in _powerupList) {
-                result.Add(p.gameObject.transform.position);
+            foreach (var el in _variousObjects) {
+                result.Add(el.transform.position);
             }
-
             return result.ToArray();
         }
 
@@ -194,6 +197,7 @@ namespace BRS.Scripts.Managers {
             foreach (var g in _crateList) GameObject.Destroy(g.gameObject);
             foreach (var g in _powerupList) GameObject.Destroy(g.gameObject);
             foreach (var g in _variousObjects) GameObject.Destroy(g);
+            foreach (var g in _policeList) GameObject.Destroy(g.gameObject);
             Start();
         }
 

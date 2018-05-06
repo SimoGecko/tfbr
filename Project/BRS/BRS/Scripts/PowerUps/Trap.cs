@@ -13,11 +13,15 @@ namespace BRS.Scripts.PowerUps {
 
         //public
 
+        public Trap() {
+            PowerupType = PowerupType.Trap;
+            powerupColor = Color.Yellow;
+        }
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Trap;
-            powerupColor = Color.Yellow;
+            
         }
 
 

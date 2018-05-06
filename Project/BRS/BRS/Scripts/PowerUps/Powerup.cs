@@ -8,6 +8,7 @@ using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.PowerUps {
 
@@ -27,7 +28,8 @@ namespace BRS.Scripts.PowerUps {
         private bool _rotate = true;
         protected bool _useInstantly = false;
 
-        protected Color powerupColor = Color.White;
+        public Color powerupColor = Color.White;
+        static Color[] powerupColors;
 
         //private float _rotationAngle = 0.0f;
 
@@ -43,7 +45,8 @@ namespace BRS.Scripts.PowerUps {
             base.Start();
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
-            CreateUseCallbacks();
+            Texture2D pcol = File.Load<Texture2D>("Images/powerup/powerupColors");
+            powerupColors = Graphics.TextureTo1DArray(pcol);
 
             if (gameObject.HasComponent<DynamicRigidBody>()) {
                 _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
@@ -98,9 +101,10 @@ namespace BRS.Scripts.PowerUps {
             return true;
         }
 
-        void CreateUseCallbacks() {
-
+        public static Color PowerupColor(int index) {
+            return powerupColors[11-index%powerupColors.Length];
         }
+
 
 
         // other

@@ -127,6 +127,9 @@ namespace BRS.Engine {
         public static string IntToMoneyString(int value) {
             return "CHF " + value.ToString("N0") + ".-";//"$" + value.ToString("N0")
         }
+        public static string IntToMoneyStringSimple(int value) {
+            return value.ToString("N0") + ".-";//"$" + value.ToString("N0")
+        }
 
 
 
