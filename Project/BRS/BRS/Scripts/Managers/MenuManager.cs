@@ -217,8 +217,6 @@ namespace BRS.Scripts.Managers {
                 GameManager.NumPlayers = 2;
             if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
                 RoundManager.RoundTime = 2*60;
-
-
         }
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
@@ -319,7 +317,7 @@ namespace BRS.Scripts.Managers {
                                 NamePlayersChanged[button.IndexAssociatedPlayerScreen] = true;
                             }
 
-                            if (button.Text == "del") {
+                            if (button.nameIdentifier == "delete") {
                                 if (bu.Text.Length > 0)
                                     bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
                             }

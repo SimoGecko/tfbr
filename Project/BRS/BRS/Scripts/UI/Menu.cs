@@ -497,7 +497,8 @@ namespace BRS.Scripts.UI {
                     var letterButton = new Button(TexturesButtons["button"], startoffset[i] + new Vector2(offsetWidth, i * scaleAlphabet * TexturesButtons["button"].Height) + count * new Vector2(scaleAlphabet * TexturesButtons["button"].Width, 0)) {
                         //Text = "del",
                         ScaleWidth = scaleAlphabet,
-                        ScaleHeight = scaleAlphabet
+                        ScaleHeight = scaleAlphabet,
+                        nameIdentifier = "delete"
                     };
                     letterButton.InsideImage = TexturesButtons["deleteLetter"];
                     letterButton.Font = UserInterface.menuSmallFont;

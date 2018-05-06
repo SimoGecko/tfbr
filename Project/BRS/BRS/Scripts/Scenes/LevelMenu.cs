@@ -2,6 +2,7 @@
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Engine.PostProcessing;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Scenes {
 
@@ -20,7 +21,7 @@ namespace BRS.Scripts.Scenes {
             SetMenuShaderEffects();
             CreateManagers();
 
-            Audio.PlayRandomSong();
+            //Audio.PlayRandomSong();
         }
 
         #endregion
@@ -38,6 +39,13 @@ namespace BRS.Scripts.Scenes {
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/menu_outside"));
             GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
             outsideScene.material = outsideMat;
+
+            Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
+            infinitePlane.material = groundMat;
+            //infinitePlane.transform.position = new;
+            infinitePlane.transform.Scale(1000);
+            infinitePlane.transform.position = new Vector3(0, 0, -.1f);
         }
 
         /// <summary>
