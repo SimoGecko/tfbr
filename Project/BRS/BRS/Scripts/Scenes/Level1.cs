@@ -184,6 +184,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
