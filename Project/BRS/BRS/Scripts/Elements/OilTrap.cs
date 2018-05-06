@@ -1,5 +1,6 @@
 using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {
@@ -40,6 +41,8 @@ namespace BRS.Scripts.Elements {
                     pM.SetOilTracks(false);
                 });
                 Audio.Play("catched_trap", transform.position);
+
+                ElementManager.Instance.Remove(this.gameObject);
 
                 GameObject.Destroy(gameObject);
             }

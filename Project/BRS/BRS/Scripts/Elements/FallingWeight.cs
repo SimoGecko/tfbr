@@ -1,5 +1,6 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.Elements {
@@ -30,7 +31,7 @@ namespace BRS.Scripts.Elements {
         public override void OnCollisionEnter(Collider c) {
             // As soon as the weight collided with any static-element (most likely the ground) it's going to be destroyed.
             if (c.IsStatic) {
-                GameObject.Destroy(gameObject, Lifetime);
+                new Timer(Lifetime, () => RemoveWeight());
             }
 
             // If the weight collided with something which can be damaged => damage it
@@ -40,7 +41,11 @@ namespace BRS.Scripts.Elements {
         }
 
         // commands
+        void RemoveWeight() {
+            ElementManager.Instance.Remove(this.gameObject);
+            GameObject.Destroy(gameObject, Lifetime);
 
+        }
 
 
         // queries

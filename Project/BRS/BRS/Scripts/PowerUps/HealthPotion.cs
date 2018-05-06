@@ -13,11 +13,15 @@ namespace BRS.Scripts.PowerUps {
         //public
         private const float ValuePotion = 20;
 
+        public HealthPotion() {
+            PowerupType = PowerupType.Health;
+            _useInstantly = true;
+        }
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Health;
-            _useInstantly = true;
+            
 
         }
 

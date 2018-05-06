@@ -14,12 +14,16 @@ namespace BRS.Scripts.PowerUps {
         //public
         private const float ValuePotion = .2f;
 
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
+        public StaminaPotion() {
             PowerupType = PowerupType.Stamina;
             _useInstantly = false;
             powerupColor = Color.LightBlue;
+        }
+
+        // --------------------- BASE METHODS ------------------
+        public override void Start() {
+            base.Start();
+            
         }
 
 

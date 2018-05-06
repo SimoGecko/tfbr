@@ -14,11 +14,15 @@ namespace BRS.Scripts.PowerUps {
         //public
         private const float BoostTime = 3f;
 
+        public SpeedBoost() {
+            PowerupType = PowerupType.Speed;
+            powerupColor = Color.Green;
+        }
+
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            PowerupType = PowerupType.Speed;
-            powerupColor = Color.Yellow;
+            
         }
 
 

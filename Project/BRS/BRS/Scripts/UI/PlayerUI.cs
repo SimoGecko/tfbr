@@ -63,8 +63,9 @@ namespace BRS.Scripts.UI {
             UserInterface.DrawString("carrying", new Rectangle(145, 32, 125, 25), Align.TopLeft, Align.TopLeft, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_playerUi[index].CarryingWeight / _playerUi[index].MaxCapacity;
             UserInterface.DrawBarStriped(capacityPercent, new Rectangle(145, 57, 125, 25), Graphics.Green, Align.TopLeft, flip: flip);
-            string capacityString = _playerUi[index].CarryingWeight +  "/" + _playerUi[index].MaxCapacity;
-            UserInterface.DrawString(capacityString, new Rectangle(275, 57, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
+            string capacityString = _playerUi[index].CarryingWeight + "/" + _playerUi[index].MaxCapacity;
+            string valueString = Utility.IntToMoneyStringSimple(_playerUi[index].CarryingValue);
+            UserInterface.DrawString(valueString, new Rectangle(275, 57, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //fuel
             UserInterface.DrawPicture(_barIcons, new Rectangle(120, 107, 25, 25), new Rectangle(0, 200, 200, 200), Align.TopLeft, flip: flip);

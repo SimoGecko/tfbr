@@ -129,7 +129,7 @@ namespace BRS {
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
             GraphicsDevice.SetRenderTarget(_renderTarget);
-            GraphicsDevice.Clear(Graphics.StreetGray);
+            GraphicsDevice.Clear(Graphics.SkyBlue);
 
             RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
             RasterizerState rasterizerState = new RasterizerState();

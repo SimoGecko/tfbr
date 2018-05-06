@@ -547,9 +547,6 @@ namespace BRS.Scripts.UI {
             // Create list of components for each combinaison of (#players <-> duration of a round)
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
-                    // load ranking
-                    if (durationRound == "3 min" && noPlayers == "2P")
-                        ;
                     List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);

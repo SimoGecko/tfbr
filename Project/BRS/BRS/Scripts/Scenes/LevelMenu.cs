@@ -18,7 +18,9 @@ namespace BRS.Scripts.Scenes {
         public override void Load() {
             MenuScene();
             SetMenuShaderEffects();
-            CreateManagers();           
+            CreateManagers();
+
+            Audio.PlayRandomSong();
         }
 
         #endregion

@@ -26,7 +26,7 @@ namespace BRS.Scripts.Managers {
         public static Color TeamAColor = new Color(215, 173, 35);
         public static Color TeamBColor = Graphics.Red;
 
-        public static string[] ModesName = { "default", "bomber", "survival", "default"};
+        public static string[] ModesName = { "default", "bomber", "crateonly", "survival" };
 
         public List<Model> ModelCharacter;
 
