@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-
+        bool showHeatMapOnScreen = false;
 
         //private
         CDFdistrib green, yellow, white; // stores yellow distribution
@@ -118,7 +118,7 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int index) {
-            //UserInterface.DrawPicture(heatmapPic, Vector2.One * 100);
+            if(showHeatMapOnScreen) UserInterface.DrawPicture(heatmapPic, Vector2.One * 100);
         }
 
 

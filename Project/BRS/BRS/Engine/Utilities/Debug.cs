@@ -46,7 +46,8 @@ namespace BRS.Engine {
         }
 
         public static void Assert(bool b, string s) {
-            if (!b) System.Diagnostics.Debug.WriteLine("//ASSERTION FAIL//: " + s);
+            if (!b)
+                System.Diagnostics.Debug.WriteLine("//ASSERTION FAIL//: " + s);
         }
     }
 }

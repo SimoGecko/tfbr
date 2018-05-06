@@ -141,7 +141,7 @@ namespace BRS.Scripts.Scenes {
                 //TODO add correct materials
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.material = new Material(Graphics.Green);
-                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
+                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
                 //arrow.transform.Scale(.2f);
 
                 //arrow for enemy

@@ -16,11 +16,14 @@ using System.Collections.Generic;
 namespace BRS.Engine {
     static class PrefabContent {
         ////////// builds all the prefabs and gives them to Prefabs //////////
+        static bool builtAlready = false;
 
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
         public static void BuildPrefabs() {
-
+            Debug.Assert(!builtAlready, "Calling buildprefab a second time");
+            if (builtAlready) return;
+            builtAlready = true;
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), isTransparent: true);
@@ -174,6 +177,9 @@ namespace BRS.Engine {
             dynamicShadow.transform.Scale(2f);
             dynamicShadow.material = shadowMat;
             Prefabs.AddPrefab(dynamicShadow);
+
+
+            //builtAlready = true;
 
         }
     }

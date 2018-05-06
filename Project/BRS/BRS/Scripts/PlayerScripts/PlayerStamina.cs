@@ -13,10 +13,12 @@ namespace BRS.Scripts.PlayerScripts {
         //public
         public float MaxStamina = 1;
         public float Stamina = 1;
+        const float TimeOfUnsuccessfulTry = .3f; // how to long to notify unsuccessful use of stamina
 
         //private
         private bool _canReloadStamina = true;
-
+        bool triedToUseStaminaUnsuccessfully = false;
+        float timerForUnsuccessfulStamina;
         // const
         private const float StaminaReloadPerSecond = .15f;
         private const float StaminaPerBoost = .3f;
@@ -32,7 +34,11 @@ namespace BRS.Scripts.PlayerScripts {
             _canReloadStamina = true;
         }
 
-        public override void Update() { }
+        public override void Update() {
+            if (Time.CurrentTime > timerForUnsuccessfulStamina) {
+                triedToUseStaminaUnsuccessfully = false;
+            }
+        }
 
 
 
@@ -68,17 +74,28 @@ namespace BRS.Scripts.PlayerScripts {
 
         // queries
         public bool HasStaminaForBoost() {
-            return Stamina > 0; //staminaPerBoost * Time.deltatime)
+            bool result = Stamina > 0;
+            if (!result) {
+                triedToUseStaminaUnsuccessfully = true;
+                timerForUnsuccessfulStamina = Time.CurrentTime + TimeOfUnsuccessfulTry;
+            }
+            return result; //staminaPerBoost * Time.deltatime)
         }
 
         public bool HasStaminaForAttack() {
-            return Stamina >= StaminaPerAttack;
+            bool result = Stamina >= StaminaPerAttack;//staminaPerBoost * Time.deltatime)
+            if (!result) {
+                triedToUseStaminaUnsuccessfully = true;
+                timerForUnsuccessfulStamina = Time.CurrentTime + TimeOfUnsuccessfulTry;
+            }
+            return result; 
         }
 
 
 
         // other
         public float StaminaPercent { get { return Stamina / MaxStamina; } }
+        public bool TriedToUseUnsuccessfully { get { return triedToUseStaminaUnsuccessfully || Stamina<=0; } }
 
     }
 
