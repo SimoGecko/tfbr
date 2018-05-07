@@ -17,45 +17,92 @@ using Microsoft.Xna.Framework.Input;
 using BRS.Engine.PostProcessing;
 
 namespace BRS.Scripts.Managers {
+
+    /// <summary>
+    /// Controls the menu: set,update and draw menu
+    ///                    handles transition, 
+    ///                    defines functions for the components of the menu
+    /// </summary>
     class MenuManager : Component{
-        // --------------------- VARIABLES ---------------------
-        public static bool[] uniqueFrameInputUsed = { false, false, false, false };
-        private bool uniqueMenuSwitchUsed = false;
 
-        public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
-        GameObject _currentMenu;
-        string _currentMenuName;
-        readonly Menu _menuGame = new Menu();
+        #region Properties and attributes
 
-        public Dictionary<string, Transform> MenuCam = new Dictionary<string, Transform>();
-        Transform _currentMenuCam;
-
+        /// <summary>
+        /// Instance of MenuManager
+        /// </summary>
         public static MenuManager Instance;
 
-        int _idModel = 0;
+        /// <summary>
+        /// List of menu panels and their associated camera positions
+        /// </summary>
+        public Dictionary<string, GameObject> MenuRect = new Dictionary<string, GameObject>();
+        public Dictionary<string, Transform> MenuCam = new Dictionary<string, Transform>();
 
-        public string NamePlayerInfosToChange;
+        /// <summary>
+        /// Store current settings
+        /// </summary>
+        GameObject _currentMenu;
+        string _currentMenuName;
+        Transform _currentMenuCam;
+        readonly Menu _menuGame = new Menu();
+
+        /// <summary>
+        /// Name of the new panel for transition
+        /// </summary>
+        string _changeToMenu;
+
+        /// <summary>
+        /// Name of the panel for splitScreen
+        /// </summary>
         public string panelPlay2NameOption = "play2Shared";
 
-        int _idColor = 0;
-
-        public string[] RankingPlayersText = { "1P", "2P", "4P"};
-        int _idRankingPlayerText = 0;
+        /// <summary>
+        /// Rankings possibilities
+        /// </summary>
+        public string[] RankingPlayersText = { "1P", "2P", "4P" };
         public string[] RankingDurationText = { "2 min", "3 min", "5 min", "10 min" };
+        int _idRankingPlayerText = 0;
         int _idRankingDurationText = 0;
 
-        bool _moveCam = false;
-        float _time = 0;
+        /// <summary>
+        /// Camera transition settings
+        /// </summary>
         public float TransitionTime = 0.5f;
         public float DistTransition = 13;
         public float CurrentDistTransition;
         Vector3 _velocityPos = Vector3.Zero;
         Vector3 _velocityRot = Vector3.Zero;
-        string _changeToMenu;
+        float _time = 0;
 
+        /// <summary>
+        /// Name of the player for which paramaters are going to change
+        /// </summary>
+        public string NamePlayerInfosToChange;
+
+        /// <summary>
+        /// Ensure that the default players name get overwritten for the first letter button press
+        /// </summary>
         bool[] NamePlayersChanged = { false, false, false, false };
 
-        // --------------------- BASE METHODS ------------------
+        /// <summary>
+        /// Ensure only one change per frame
+        /// </summary>
+        public static bool[] uniqueFrameInputUsed = { false, false, false, false };
+        private bool uniqueMenuSwitchUsed = false;
+
+        /// <summary>
+        /// Index for chosable parameter from ScenesCommunicationManager
+        /// </summary>
+        int _idModel = 0;
+        int _idColor = 0;
+
+        #endregion
+
+        #region Monogame-methods
+
+        /// <summary>
+        /// Monogame Start function
+        /// </summary>
         public override void Start() {
             base.Start();
 
@@ -65,26 +112,41 @@ namespace BRS.Scripts.Managers {
                 LoadContent();
         }
 
+        /// <summary>
+        /// Load Pause Menu
+        /// </summary>
         public void LoadPauseMenu() {
             Instance = this;
+
+            // Load menu content (texture,functions)
             _menuGame.LoadContent();
 
+            // Create panels to be load from files
             string[] namePanels = { "pause" };
             foreach (string name in namePanels) {
                 GameObject go = new GameObject(name);
                 MenuRect.Add(go.name, go);
             }
 
+            // Set current settings
             _currentMenu = MenuRect["pause"];
             _currentMenuName = "pause";
+
+            // Load panels components from files
             Menu.Instance.BuildPausePanel();
         }
 
+        /// <summary>
+        /// Load Menu
+        /// </summary>
         public void LoadContent() {
             Instance = this;
+
+            // Load menu content (texture,functions)
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
+            // Create panels to be load from files
             string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
             Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
             Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
@@ -97,26 +159,33 @@ namespace BRS.Scripts.Managers {
                 MenuCam.Add(namePanels[i], tr);
             }
 
+            // Set current settings
             _currentMenu = MenuRect["main"];
             _currentMenuName = "main";
-
             _currentMenuCam = MenuCam["main"];
+
+            NamePlayerInfosToChange = "player_0";
+
             foreach (Camera c in Screen.Cameras) {
                 c.transform.position = _currentMenuCam.position;
                 c.transform.eulerAngles = _currentMenuCam.eulerAngles;
             }
 
+            // Load panels components from files
             Menu.Instance.BuildMenuPanels(panelPlay2NameOption);
-
-            NamePlayerInfosToChange = "player_0";
-
         }
 
+        /// <summary>
+        /// Monogame Update function
+        /// </summary>
         public override void Update() {
+            
+            // Ensure one change per frame
             uniqueMenuSwitchUsed = false;
             for (int i = 0; i < uniqueFrameInputUsed.Length; ++i)
                 uniqueFrameInputUsed[i] = false;
 
+            // Check for button B pressed to go to previous panel
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
                 if (_currentMenuName == "play2Shared2") {
                     MenuRect["play2Shared0"].active = true;
@@ -135,43 +204,51 @@ namespace BRS.Scripts.Managers {
                 
             }
 
-
-            //if (_moveCam) 
+            // Update camera transition
             if (_changeToMenu != null)
                 TransitionCam();               
-            
-
         }
 
+        /// <summary>
+        /// Monogame Draw function
+        /// </summary>
         public override void Draw2D(int i) {
             
         }
 
+        #endregion
 
-        // --------------------- CUSTOM METHODS ----------------
+        #region Custom methods
 
+        /// <summary>
+        /// Updates Camera position and rotation for a smooth camera transition towards a goal
+        /// </summary>
         public void TransitionCam() {
+            // Transition destination (=goal)
             string newMenuName = _changeToMenu;
             if (_changeToMenu == "play2Shared")
                 newMenuName = _changeToMenu + "0";
             Transform goalTransform = MenuCam[newMenuName];
 
+            // Compute time of transition based on length
             CurrentDistTransition = (Screen.Cameras[0].transform.position - goalTransform.position).Length();
             float newTransitionTime = TransitionTime * CurrentDistTransition / DistTransition;
 
+            // Update camera position and rotation
             foreach (Camera c in Screen.Cameras) {
                 c.transform.position = Utility.SmoothDamp(c.transform.position, goalTransform.position, ref _velocityPos, newTransitionTime);
                 c.transform.eulerAngles = Utility.SmoothDampAngle(c.transform.eulerAngles, goalTransform.eulerAngles, ref _velocityRot, newTransitionTime);
             }
             
-
+            // Show new panel after a certain time
             if (_time < newTransitionTime*2) {
                 _time += Time.DeltaTime;
             }
             else {
+                // Reset time for next transition
                 _time = 0;
-                _moveCam = false;
 
+                // Set new current menu settings
                 if (_changeToMenu != "play2Shared") {
                     _currentMenu = MenuRect[_changeToMenu];
                     _currentMenuName = _changeToMenu;
@@ -181,7 +258,7 @@ namespace BRS.Scripts.Managers {
                     _currentMenu = MenuRect[_currentMenuName];
                 }
 
-                //_currentMenuCam = MenuCam[newMenuName];
+                // activate new current menu panel
                 if (_changeToMenu != "play2Shared")
                     _currentMenu.active = true;
                 else {
@@ -189,19 +266,26 @@ namespace BRS.Scripts.Managers {
                     if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
                         MenuRect[_changeToMenu + "1"].active = true;
                 }
-
-
             }
         }
 
+        #endregion
+
+        #region Callbacks method when button are pressed
+
+        /// <summary>
+        /// Set information of the new menu panel to switch to
+        /// </summary>
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
 
+            // Audio transition
             Audio.Play("menu_change", transform.position);
 
+            // Set Menu to change to
             _changeToMenu = button.NameMenuToSwitchTo;
-            _moveCam = true;
 
+            // Desactivate current menu panel
             if (!uniqueMenuSwitchUsed) {
                 if (_currentMenu != null)
                     _currentMenu.active = false;
@@ -212,11 +296,14 @@ namespace BRS.Scripts.Managers {
                     MenuRect["play2Shared3"].active = false;
                 }
 
-                
+                // only one change per frame
                 uniqueMenuSwitchUsed = true;
             }
         }
 
+        /// <summary>
+        /// Set default the parameters of the game
+        /// </summary>
         public void SetDefaultParametersGame(object sender, EventArgs e) {
             if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
                 GameManager.NumPlayers = 2;
@@ -224,26 +311,41 @@ namespace BRS.Scripts.Managers {
                 RoundManager.RoundTime = 2*60;
         }
 
+        /// <summary>
+        /// Update the duration of a round 
+        /// </summary>
         public void UpdateRoundDuration(object sender, EventArgs e) {
             Button button = (Button)sender;
-            RoundManager.RoundTime = Int32.Parse(button.Text[0].ToString()) * 60;
+            RoundManager.RoundTime = Int32.Parse(button.Text) * 60;
         }
 
+        /// <summary>
+        /// Update the number of players
+        /// </summary>
         public void UpdateNoPlayers(object sender, EventArgs e) {
             Button button = (Button)sender;
             GameManager.NumPlayers = Int32.Parse(button.Text);
         }
 
+        /// <summary>
+        /// Start (directly) the game
+        /// </summary>
         public void StartGameFunction(object sender, EventArgs e) {
             ScenesCommunicationManager.loadOnlyPauseMenu = true;
             GameManager.state = GameManager.State.Playing;
             SceneManager.LoadGame = true;
         }
 
+        /// <summary>
+        /// Start the game if all other players are ready 
+        /// </summary>
         public void StartGamePlayersReady(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            // Per default other players are not ready
             bool allPlayersReady = false;
 
+            // Check if others players are ready
             if (GameManager.NumPlayers == 1)
                 allPlayersReady = true;
             else if (GameManager.NumPlayers == 2 && ((Button)Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString())).IsClicked) {
@@ -260,6 +362,7 @@ namespace BRS.Scripts.Managers {
                         _currentMenuName = panelPlay2NameOption + "2";
                         _currentMenu = MenuRect[_currentMenuName];
 
+                        // only one change per frame
                         uniqueMenuSwitchUsed = true;
                     }
                 }
@@ -270,6 +373,7 @@ namespace BRS.Scripts.Managers {
                 }
             }
 
+            // Start Game if all players are ready
             if (allPlayersReady) {
                 ScenesCommunicationManager.loadOnlyPauseMenu = true;
                 GameManager.state = GameManager.State.Playing;
@@ -277,51 +381,56 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        /// <summary>
+        /// Load menu
+        /// </summary>
         public void LoadMenuFunction(object sender, EventArgs e) {
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
         }
 
+        /// <summary>
+        /// Update the game mode
+        /// </summary>
         public void SetMode(object sender, EventArgs e) {
             Button button = (Button)sender;
             GameMode.currentGameMode = ScenesCommunicationManager.ModesName[button.Index];
         }
 
+        /// <summary>
+        /// Update the game map
+        /// </summary>
         public void SetMap(object sender, EventArgs e) {
             Button button = (Button)sender;
         }
 
+        /// <summary>
+        /// Resume game
+        /// </summary>
         public void ResumeGame(object sender, EventArgs e) {
             MenuRect["pause"].active = false;
             GameManager.state = GameManager.State.Playing;
         }
 
-        /*public void SwitchRankingDisplay(object sender, EventArgs e) {
-            Button button = (Button)sender;
-
-            foreach (var elem in MenuRect["ranking"].components) {
-                if (elem is ListComponents listComp) {
-                    if (listComp.NameIdentifier == "rankings_game") {
-                        foreach (var lC in listComp.Components)
-                            lC.Active = false;
-                        listComp.Components[button.Index].Active = true;
-                    }
-                }
-            }
-        }*/
-
+        /// <summary>
+        /// Update temporary player's name. 
+        /// ! Not saved yet
+        /// </summary>
         public void UpdateTemporaryNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
+            // find object which store his name (in the right panel)
             if (!uniqueMenuSwitchUsed) {
                 foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                     if (elem is Button bu) {
                         if (bu.nameIdentifier == "NamePlayer") {
+                            // if first change => overwrite
                             if (!NamePlayersChanged[button.IndexAssociatedPlayerScreen]) {
                                 bu.Text = "";
                                 NamePlayersChanged[button.IndexAssociatedPlayerScreen] = true;
                             }
 
+                            // Add or remove letter
                             if (button.nameIdentifier == "delete") {
                                 if (bu.Text.Length > 0)
                                     bu.Text = bu.Text.Substring(0, bu.Text.Length - 1);
@@ -334,27 +443,34 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        /// <summary>
+        /// Save temporary player's name 
+        /// </summary>
         public void ChangeNamePlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
+            // Get key name of the player
             if (panelPlay2NameOption == "play2Shared")
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
+            // Find temporary name in the correct panel
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Button bu) {
                     if (bu.nameIdentifier == "NamePlayer") {
+
+                        // Save it 
                         if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                             ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(bu.Text, ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item2, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
                         else
                             ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(bu.Text, 0, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
-
-                        //bu.Text = "";
                     }
                 }
             }
-
         }
 
+        /// <summary>
+        /// Update the statistic for the current
+        /// </summary>
         public void SwitchModelStat(object sender, EventArgs e) {
             Button button = (Button)sender;
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
@@ -520,11 +636,6 @@ namespace BRS.Scripts.Managers {
                     ScenesCommunicationManager.Instance.PlayersInfo.Add(playerName, new Tuple<string, int, Color>(playerName, 0, ScenesCommunicationManager.ColorModel[_idColor]));
             }
         }
-        
-        /*public void UpdatePlayersNameInfosToChange(object sender, EventArgs e) {
-            Button button = (Button)sender;
-            NamePlayerInfosToChange = "player_" + button.Index.ToString();
-        }*/
 
         public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -617,4 +728,5 @@ namespace BRS.Scripts.Managers {
                     SetPixelColor(x, y, color, texture);
         }
     }
+    #endregion
 }
