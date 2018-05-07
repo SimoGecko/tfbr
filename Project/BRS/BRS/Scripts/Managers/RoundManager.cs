@@ -164,7 +164,7 @@ namespace BRS.Scripts.Managers {
             //save scores
             //UpdateRanking();
             //return to menu
-            SceneManager.LoadScene("Level2");
+            SceneManager.LoadScene("LevelMenu");
         }
 
 
