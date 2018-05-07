@@ -127,7 +127,10 @@ namespace BRS.Scripts.Managers {
                 }
                 else {
                     Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
-                    if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                    if (bu != default(Button)) {
+                        Audio.Play("button_press_B", transform.position);
+                        bu.Click?.Invoke(bu, new EventArgs());
+                    }
                 }
                 
             }
@@ -193,6 +196,8 @@ namespace BRS.Scripts.Managers {
 
         public void SwitchToMenu(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            Audio.Play("menu_change", transform.position);
 
             _changeToMenu = button.NameMenuToSwitchTo;
             _moveCam = true;
@@ -364,6 +369,8 @@ namespace BRS.Scripts.Managers {
 
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
+
+            Audio.Play("characters_popup", transform.position);
 
             // Change color used
             if (button.nameIdentifier == "ModelChangeRight") {
