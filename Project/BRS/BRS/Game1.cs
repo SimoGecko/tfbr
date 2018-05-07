@@ -25,7 +25,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true};
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
