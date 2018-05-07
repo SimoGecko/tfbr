@@ -208,9 +208,6 @@ namespace BRS.Scripts.Elements {
                 follower.Orientation = local *
                     Quaternion.CreateFromAxisAngle(Vector3.Up, factor * MathHelper.ToRadians(Collider.LastRotation));
             }
-            if (_model == "wheelPolice") {
-                Debug.Log(Collider.LastRotation);
-            }
             //foreach (Offset offset in _toUpdate) {
             //    int i = (int)offset;
             //    int index = _wheelMeshPartIndex[i];

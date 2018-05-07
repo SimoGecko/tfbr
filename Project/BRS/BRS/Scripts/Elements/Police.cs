@@ -95,11 +95,11 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnd(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
-            if (isPlayer) {
+            if (isPlayer && Time.CurrentTime > endStunTime) {
                 state = State.Chasing;
             }
 
-            if (c.GameObject.tag == ObjectTag.Police) {
+            if (c.GameObject.tag == ObjectTag.Police && Time.CurrentTime > endStunTime) {
                 state = State.Chasing;
             }
         }
