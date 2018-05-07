@@ -25,7 +25,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = false};
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true};
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -80,7 +80,7 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("LevelMenu");
 
             Audio.Start();
 
