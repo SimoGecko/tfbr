@@ -67,6 +67,10 @@ namespace BRS.Engine {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
+        public void OnCollisionEnd(Collider col) {
+            if (active) foreach (IComponent c in components) c.OnCollisionEnd(col);
+        }
+
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && active) {
@@ -91,8 +95,7 @@ namespace BRS.Engine {
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
 
         public static void SortAll() {
-            // Todo: Have to rethink the draw order again
-            //allGameObjects = allGameObjects.OrderBy(x => x.name).ToList();
+            allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
         }
 
 
@@ -146,7 +149,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = this.material;
+            newObject.material = material?.Clone();
             return newObject;
         }
 

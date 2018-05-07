@@ -28,6 +28,7 @@ namespace BRS.Scripts {
         Transform[] targets;
         List<Vector3>[] recordedWaypoints;
         List<Vector3>[] staticWaypoints;
+        private List<Vector3> _startPositions;
 
         private bool recordingInitialized;
 
@@ -35,7 +36,8 @@ namespace BRS.Scripts {
 
 
         // --------------------- BASE METHODS ------------------
-        public PoliceManager() {
+        public PoliceManager(List<Vector3> startPositions) {
+            _startPositions = startPositions;
             Instance = this;
         }
 
@@ -78,7 +80,7 @@ namespace BRS.Scripts {
             numTargets = targets.Length;
             recordedWaypoints = new List<Vector3>[numTargets];
             for (int i = 0; i < numTargets; i++)
-                recordedWaypoints[i] = new List<Vector3>();
+                recordedWaypoints[i] = new List<Vector3> { _startPositions[i] };
 
             RecordWaypointsCoroutine();
         }
@@ -142,8 +144,8 @@ namespace BRS.Scripts {
                 for (int i = 0; i < numTargets; i++) {
                     if (targets[i] != null) {
                         if (recordedWaypoints[i].Count < 2 || Vector3.DistanceSquared(targets[i].position, recordedWaypoints[i][recordedWaypoints[i].Count - 1]) > distThreshold * distThreshold) {
-                            //  Vector3 pos = new Vector3(targets[i].position.X, 0.25f, targets[i].position.Z);
-                            recordedWaypoints[i].Add(targets[i].position);
+                            Vector3 pos = new Vector3(targets[i].position.X, 0.01f, targets[i].position.Z);
+                            recordedWaypoints[i].Add(pos);
                         }
                     }
                 }
@@ -151,6 +153,6 @@ namespace BRS.Scripts {
             }
         }
 
-        
+
     }
 }

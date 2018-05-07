@@ -104,7 +104,7 @@ Position: 814 565
 </Text>
 
 <Text>
-Text: Autofollow Camera:
+Text: Auto Camera:
 Position: 814 655
 </Text>
 

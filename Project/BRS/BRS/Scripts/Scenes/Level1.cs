@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
@@ -16,12 +17,15 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Threading.Tasks;
+using BRS.Engine.PostProcessing;
+using BRS.Scripts.Elements.Lighting;
 
 namespace BRS.Scripts.Scenes {
     class Level1 : Scene {
         ////////// first game level, loads all the things //////////
 
         public List<Vector3> StartPositions;
+        public List<Vector3> PoliceStartPositions;
 
 
         public override int GetNumCameras() { return GameManager.NumPlayers; }
@@ -35,6 +39,7 @@ namespace BRS.Scripts.Scenes {
             CreateCameraControllers();
             CreateBases();
             CreateSpecialObjects();
+            SetMenuShaderEffects();
         }
 
 
@@ -65,9 +70,15 @@ namespace BRS.Scripts.Scenes {
 
         void SetStartPositions() {
             StartPositions = new List<Vector3>();
+            PoliceStartPositions = new List<Vector3>();
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 int offset = i > 1 ? 1 : 0;
-                StartPositions.Add(new Vector3(-5 + 10 * (i % 2 == 0 ? 0 : 1) + offset, 0, 10));
+                int x = -5 + 10 * (i % 2 == 0 ? 0 : 1) + offset;
+                int zPolice = 10 + offset;
+
+                StartPositions.Add(new Vector3(x, 0, 10));
+                PoliceStartPositions.Add(new Vector3(5 * x, 0, zPolice));
             }
         }
 
@@ -92,7 +103,7 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new AudioTest());
-            Manager.AddComponent(new PoliceManager());
+            Manager.AddComponent(new PoliceManager(PoliceStartPositions));
 
 
             Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
@@ -113,7 +124,7 @@ namespace BRS.Scripts.Scenes {
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
 
-                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i+1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
+                player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i + 1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
@@ -130,8 +141,16 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new DynamicShadow());
 
                 // Modify player's name and model and color(choosen by user during menu)
-                if (MenuManager.Instance != null)
+                if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
+
+                    int modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, modelIndex));
+                    player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, modelIndex));
+                } else {
+                    player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, 0));
+                    player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, 0));
+                }
 
 
                 //Add(player);
@@ -193,6 +212,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
+                playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
             }
         }
@@ -214,6 +234,16 @@ namespace BRS.Scripts.Scenes {
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);
             speedpad.transform.eulerAngles = Vector3.Up * 90;
+
+        }
+
+        void SetMenuShaderEffects() {
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+            }
 
         }
     }
