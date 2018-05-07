@@ -55,6 +55,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("durationFadeOut", 1.9f);
                         ppEffect.SetParameter("max", 1.0f);
                         ppEffect.SetParameter("min", 0.1f);
+                        
                         break;
 
                     case PostprocessingType.GaussianBlur:
@@ -72,6 +73,17 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Far", farClip);
                         break;
 
+                    case PostprocessingType.Chromatic:
+                        for (var i = 0; i < GameManager.NumPlayers; i++) {
+                            ppEffect.Activate(i, true);
+                        }
+                        break;
+                    case PostprocessingType.Vignette:
+                        for (var i = 0; i < GameManager.NumPlayers; i++) {
+                            ppEffect.Activate(i, true);
+                        }
+                        break;
+
                     case PostprocessingType.ColorGrading:
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
@@ -79,9 +91,11 @@ namespace BRS.Engine.PostProcessing {
                             _lut.Add(File.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
                         }
                         ppEffect.SetParameter("LUT", _lut[0]);
-                        
-
+                        for (var i = 0; i < GameManager.NumPlayers; i++) {
+                            ppEffect.Activate(i, true);
+                        }
                         break;
+
 
                     case PostprocessingType.ShockWave:
                         _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
@@ -188,11 +202,13 @@ namespace BRS.Engine.PostProcessing {
         public void ActivateWave(int playerId, Vector3 position, float animationLength = 5.0f, bool deactivate = true, float deactivateAfter = 5.0f) {
             _wavePosition = position;
             Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+            float distance = (position - Screen.Cameras[playerId].transform.position).Length();
 
             _effects[(int)PostprocessingType.Wave].Activate(playerId, true);
             _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
             _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "centerCoord", screenPosition);
             _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "animationLength", animationLength);
+            _effects[(int)PostprocessingType.Wave].SetParameterForPlayer(playerId, "cameraDistance", distance);
 
             if (deactivate) {
                 new Timer(deactivateAfter, () => DectivateShader(PostprocessingType.Wave, playerId));
@@ -212,6 +228,12 @@ namespace BRS.Engine.PostProcessing {
                 Vector2 centerCoord = new Vector2((float)mouseState.X / (float)Screen.Width, (float)mouseState.Y / (float)Screen.Height);
                 _effects[6].SetParameter("centerCoord", centerCoord);
                 _effects[6].SetParameterForPlayer(0, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+            }
+
+            for (var i = 0; i < GameManager.NumPlayers; i++) {
+                _effects[1].Activate(i, true);
+                _effects[2].Activate(i, true);
+                _effects[5].Activate(i, true);
             }
 
             if (Input.GetKeyDown(Keys.F1)) {
@@ -288,7 +310,9 @@ namespace BRS.Engine.PostProcessing {
                     if(ppShader.Type == PostprocessingType.Wave) {
                         for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
                             Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+                            float distance = (_wavePosition - Screen.Cameras[playerId].transform.position).Length();
                             ppShader.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                            ppShader.SetParameterForPlayer(playerId, "cameraDistance", distance);
                         }                 
                     }
 
