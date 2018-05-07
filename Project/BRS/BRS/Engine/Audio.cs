@@ -39,6 +39,9 @@ namespace BRS.Engine {
         public static void Update() {
             Apply3DPositionToPlayingSounds();
             RemoveFinishedEffects();
+
+
+            if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.R)) TansitionToRandomSong();
         }
 
         static void Apply3DPositionToPlayingSounds() {
@@ -164,7 +167,11 @@ namespace BRS.Engine {
             return listener;
         }
 
-
+        public static void TansitionToRandomSong() {
+            StopSong();
+            PlayRandomSong();
+            SetSongLoop(true);
+        }
 
 
         //=============================================================================================================

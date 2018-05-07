@@ -25,7 +25,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true};
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -72,6 +72,8 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
+            //start other big components
+            Input.Start();
 
             //load prefabs and scene
             Prefabs.Start();
@@ -80,10 +82,9 @@ namespace BRS {
             SceneManager.Start();
             SceneManager.LoadScene("LevelMenu");
 
-
-            //start other big components
-            Input.Start();
             Audio.Start();
+
+
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader

@@ -28,6 +28,7 @@ namespace BRS.Scripts.Managers {
 
         public Action OnRoundStartAction;
         public Action OnRoundAlmostEndAction;
+        public Action OnPoliceComingAction;
         public Action OnRoundEndAction;
 
         public int Winner { get; private set; }
@@ -81,6 +82,8 @@ namespace BRS.Scripts.Managers {
 
 
         // commands
+
+
         async void CountDown() {
             for (int i = 3; i >= 0; i--) {
                 await Time.WaitForSeconds(1f);
@@ -95,13 +98,18 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Playing;
             roundStarted = true;
             OnRoundStartAction?.Invoke();
-            PoliceManager.Instance.StartRound(); // WHY NOT USE START? => (please be aware of the meaning of all capital.. we all have different ways of solving problems). to answer your question: because since start is called automatically when the level is loaded and also with this call we have startet the police timer twice => not very cool! So that's why I put it in a StartRound to avoid the messing arround with if-startet-flags and I didn't want to remove it from the scene-managers.
-            new Timer(RoundTime - TimeBeforePolice, () => OnPoliceComing());
+            PoliceManager.Instance.StartRound();
+            new Timer(RoundTime- 60, () => OnRoundAlmostEnd());
+            new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
+        }
+
+        void OnRoundAlmostEnd() {
+            OnRoundAlmostEndAction?.Invoke();
         }
 
         void OnPoliceComing() {
             calledPolice = true;
-            OnRoundAlmostEndAction?.Invoke();
+            OnPoliceComingAction?.Invoke();
             //Audio.SetLoop("police", true);
             Audio.Play("police", Vector3.Zero);
             GameUI.Instance.UpdatePoliceComing();
