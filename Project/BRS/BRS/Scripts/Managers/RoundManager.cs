@@ -96,7 +96,7 @@ namespace BRS.Scripts.Managers {
             roundStarted = true;
             OnRoundStartAction?.Invoke();
             PoliceManager.Instance.StartRound(); // WHY NOT USE START? => (please be aware of the meaning of all capital.. we all have different ways of solving problems). to answer your question: because since start is called automatically when the level is loaded and also with this call we have startet the police timer twice => not very cool! So that's why I put it in a StartRound to avoid the messing arround with if-startet-flags and I didn't want to remove it from the scene-managers.
-            new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
+            new Timer(RoundTime - TimeBeforePolice, () => OnPoliceComing());
         }
 
         void OnPoliceComing() {
@@ -115,8 +115,12 @@ namespace BRS.Scripts.Managers {
 
             //FIND WINNER
             //reset // TODO reorganize
-            for (int i=0; i<GameManager.NumPlayers; i++)
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.BlackAndWhite, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ShockWave, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Wave, i, false);
+            }
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 
@@ -126,14 +130,14 @@ namespace BRS.Scripts.Managers {
             BaseUI.Instance.UpdateBaseUIWins(Winner);
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                if(ElementManager.Instance.Player(i).TeamIndex==Winner)
-                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+                if (ElementManager.Instance.Player(i).TeamIndex == Winner)
+                    RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
             }
 
 
             //ready to restart
             OnRoundEndAction?.Invoke();
-            new Timer(TimeBetweenRounds, ()=>TryRestartRound(), true);
+            new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
         }
 
         void TryRestartRound() {
@@ -146,7 +150,7 @@ namespace BRS.Scripts.Managers {
                 OnGameEnd();
             }
         }
-        
+
 
         void OnGameEnd() {
             //save scores
@@ -162,7 +166,7 @@ namespace BRS.Scripts.Managers {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
-            rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
+            rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
             File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
 
@@ -175,7 +179,7 @@ namespace BRS.Scripts.Managers {
             for (int i = 1; i < bases.Length; i++) {
                 int totmoney = bases[i].TotalMoney;
 
-                if (totmoney > maxCash) { 
+                if (totmoney > maxCash) {
                     winner = i;
                     maxCash = totmoney;
                 }
