@@ -52,15 +52,16 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public void Collect(Powerup powerup) {
+            int playerIndex = gameObject.GetComponent<Player>().PlayerIndex;
             if (_carryingPowerup.Count == MaxNumberPowerups) {
                 _carryingPowerup.RemoveAt(0);
             }
-            Input.Vibrate(.03f, .04f, gameObject.GetComponent<Player>().PlayerIndex);
+            Input.Vibrate(.03f, .04f, playerIndex);
 
             OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
-            PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor);
+            PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor, playerIndex);
         }
 
         public bool CanPickUp(Powerup powerup) {

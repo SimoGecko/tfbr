@@ -7,6 +7,7 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using BRS.Scripts.PlayerScripts;
 
 namespace BRS.Scripts.UI {
     class PlayerUI : Component {
@@ -76,12 +77,16 @@ namespace BRS.Scripts.UI {
             UserInterface.DrawString(staminaString, new Rectangle(275, 107, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //small bars
-            //TODO works only with player one
             Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
-            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-25, -80), new Point(50, 5));
+            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-37, -68), new Point(75, 7));
             UserInterface.DrawBarStriped(capacityPercent, smallBar, Graphics.Green);
-            smallBar.Y += 6;
+            smallBar.Y += 8;
             UserInterface.DrawBarStriped(staminaPercent, smallBar, Graphics.Blue);
+
+            Player p = ElementManager.Instance.Player(index);
+            string attentionNotification = p.Empty() ? "no fuel" : p.Full() ? "full" : " ";
+            Rectangle notificationRect = new Rectangle(screenPosition.ToPoint() + new Point(0, -78), new Point(75, 20));
+            UserInterface.DrawString(attentionNotification, notificationRect, Align.TopLeft, Align.Center, Align.Bottom, scale:.7f);
 
 
             //suggestions

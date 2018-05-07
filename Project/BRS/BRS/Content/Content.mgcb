@@ -3495,3 +3495,10 @@
 /processorParam:SwapWindingOrder=False
 /processorParam:TextureFormat=Compressed
 /build:Models/vehicles/wheel_fl.dae
+
+#begin Audio/effects/menu/characters_popup.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Audio/effects/menu/characters_popup.wav
+

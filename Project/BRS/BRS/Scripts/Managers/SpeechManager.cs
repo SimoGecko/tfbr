@@ -7,6 +7,7 @@ using BRS.Engine;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.Elements;
+using System.Linq;
 using System;
 
 namespace BRS.Scripts {
@@ -14,16 +15,20 @@ namespace BRS.Scripts {
         ////////// provides strings to say in speech bubbles //////////
         //there must be one per player
 
+
+        const int maxCharsPerLine = 11;
+        const int maxLines = 4;
+
         public enum EventType {
-            Begin, AlmostEnd, Win, Lose, Random,
+            Begin, AlmostEnd, PoliceComing, Win, Lose, Random,
             Powerup, Diamond, EnemyClose, Attack,
             OpenCrate, OpenVault, HitEnemy, Damage, Full,
             BringBase, Tutorial }
         float[] SpeechProbability = new float[] {
-            .6f, .6f, 1f, 1f, .5f,
+            .6f, .8f, .8f, 1f, 1f, .1f,
             .2f, .9f, .3f, .1f,
-            .2f, .8f, .6f, .5f, .6f,
-            .6f, .3f };
+            .2f, .9f, .6f, .5f, .6f,
+            .6f, .2f };
 
         // --------------------- VARIABLES ---------------------
 
@@ -52,8 +57,11 @@ namespace BRS.Scripts {
 
         public override void Start() {
             //nextTalkTime = Time.CurrentTime;
+
             FillSpeechStrings();
             PlugEvents();
+            RandomEvents();
+            RandomTutorial();
         }
 
         public override void Update() {
@@ -73,6 +81,13 @@ namespace BRS.Scripts {
             speechString = new List<string>[numEvents];
             for (int i = 0; i < numEvents; i++) speechString[i] = new List<string>();
             FillActualSpeech();
+            //FillTestSpeech();
+        }
+
+        void FillTestSpeech() {
+            for(int i=0; i<numEvents; i++) {
+                for (int j = 0; j < 3; j++) AddString(i, "speech_" + j);
+            }
         }
 
         void FillActualSpeech() {
@@ -82,9 +97,42 @@ namespace BRS.Scripts {
                 string line = allSpeechLines[i];
                 if (line.Length < 1) continue; // empty line
                 if (line[0] == '-') { eventIndex++; continue; } // line with event type
-                string lineEscaped = line.Replace('|', '\n'); // newline
+                string lineEscaped = EscapeLineAutomatically(11, line);
+                //string lineEscaped = line.Replace('|', '\n'); // newline
                 AddString(eventIndex, lineEscaped);
             }
+        }
+
+        string EscapeLineAutomatically(int maxStringLength, string input) {
+            string result = "";
+            string[] splitstring = input.Split(' ');
+            List<string> lines = new List<string>();
+            lines.Add(splitstring[0]);
+            for(int i=1; i<splitstring.Length; i++) {
+                bool newWordFits = lines[lines.Count - 1].Length + splitstring[i].Length <= maxStringLength;
+                if (newWordFits) {
+                    lines[lines.Count - 1] += " " + splitstring[i];
+                } else {
+                    lines.Add(splitstring[i]);
+                }
+            }
+            //center
+            for(int i=0; i<lines.Count; i++) {
+                lines[i] = SpacePad((maxStringLength - lines[i].Length) / 2) + lines[i];
+                if (i < lines.Count - 1) lines[i] += '\n';
+            }
+            Debug.Assert(lines.Count <= maxLines, "text too long: " + input);
+            //merge
+            for(int i=0; i<lines.Count; i++) {
+                result += lines[i];
+            }
+            return result;
+        }
+
+        string SpacePad(int num) {
+            string result = "";
+            for (int i = 0; i < num; i++) result += " ";
+            return result;
         }
 
         public void AddString(int index, string speech) {
@@ -94,6 +142,7 @@ namespace BRS.Scripts {
         void PlugEvents() {
             RoundManager.Instance.OnRoundStartAction += (() => OnEvent(EventType.Begin));
             RoundManager.Instance.OnRoundAlmostEndAction += (() => OnEvent(EventType.AlmostEnd));
+            RoundManager.Instance.OnPoliceComingAction += (() => OnEvent(EventType.PoliceComing));
             RoundManager.Instance.OnRoundEndAction += (() => OnRoundEnd());
 
             Player p = ElementManager.Instance.Player(index);
@@ -111,7 +160,7 @@ namespace BRS.Scripts {
                 GameObject.FindGameObjectWithName("base_"+index%2).GetComponent<Base>().OnBringBase += (() => OnEvent(EventType.BringBase));
             }
             //still not plugged
-            /* Random, Diamond, EnemyClose, OpenCrate, Tutorial }*/
+            /*Diamond, EnemyClose, OpenCrate }*/
 
     }
 
@@ -160,6 +209,26 @@ namespace BRS.Scripts {
         // queries
         bool ReadyToTalk() {
             return !isTalking && (Time.CurrentTime > nextTalkTime);
+        }
+
+
+
+        async void RandomEvents() {
+            while (true) {
+                if (GameManager.GameActive) {
+                    OnEvent(EventType.Random);
+                }
+                await Time.WaitForSeconds(MyRandom.Value * 10);
+            }
+        }
+
+        async void RandomTutorial() {
+            while (true) {
+                if (GameManager.GameActive) {
+                    OnEvent(EventType.Tutorial);
+                }
+                await Time.WaitForSeconds(MyRandom.Value * 100);
+            }
         }
 
 
