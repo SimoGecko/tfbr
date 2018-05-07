@@ -30,7 +30,7 @@ namespace BRS.Scripts.UI {
 
         // const
         const int AtlasWidth = 128;
-        Color backgroundColor;
+        Color[] backgroundColor;
 
         //reference
         public static PowerupUI Instance;
@@ -40,6 +40,7 @@ namespace BRS.Scripts.UI {
         public override void Start() {
             Instance = this;
             _powerupUi = new PowerupUIStruct[GameManager.NumPlayers];
+            backgroundColor = new Color[GameManager.NumPlayers];
             for (int i = 0; i < GameManager.NumPlayers; i++) _powerupUi[i].CurrentPowerups = new int[0];
 
             //load pngs
@@ -82,7 +83,7 @@ namespace BRS.Scripts.UI {
                 foreach (int powerup in _powerupUi[index].CurrentPowerups) {
                     //UserInterface.instance.DrawPicture(destRect, powerupsPng[powerup]);
                     //Color backgroundColor = Powerup.PowerupColor(powerup);//Color.Orange;
-                    UserInterface.DrawPicture(smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 64, 64, 64), Align.Top, col:backgroundColor);
+                    UserInterface.DrawPicture(smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 64, 64, 64), Align.Top, col:backgroundColor[index]);
                     UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 65, 55, 55), _powerupsRectangle[powerup], Align.Top);
                     string powerupName = ((PowerupType)powerup).ToString();
                     UserInterface.DrawString(powerupName, new Rectangle(0, 127, 125, 25), Align.Top, Align.Top, Align.Top);
@@ -99,8 +100,8 @@ namespace BRS.Scripts.UI {
 
 
         // queries
-        public void SetBackgroundColor(Color c) {
-            backgroundColor = c;
+        public void SetBackgroundColor(Color c, int index) {
+            backgroundColor[index] = c;
         }
 
 

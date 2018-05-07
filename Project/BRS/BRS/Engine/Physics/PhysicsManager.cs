@@ -145,8 +145,8 @@ namespace BRS.Engine.Physics {
             Collider body1 = arg1 as Collider;
             Collider body2 = arg2 as Collider;
 
-            if (body2 != null) body1?.GameObject?.OnCollisionEnd(body2);
-            if (body1 != null) body2?.GameObject?.OnCollisionEnd(body1);
+            if (body2?.GameObject != null) body1?.GameObject?.OnCollisionEnd(body2);
+            if (body1?.GameObject != null) body2?.GameObject?.OnCollisionEnd(body1);
         }
 
         /// <summary>

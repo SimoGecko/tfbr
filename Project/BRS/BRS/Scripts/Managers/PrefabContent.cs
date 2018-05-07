@@ -19,11 +19,14 @@ using BRS.Scripts.Elements.Lighting;
 namespace BRS.Engine {
     static class PrefabContent {
         ////////// builds all the prefabs and gives them to Prefabs //////////
+        static bool builtAlready = false;
 
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
         public static void BuildPrefabs() {
-
+            Debug.Assert(!builtAlready, "Calling buildprefab a second time");
+            if (builtAlready) return;
+            builtAlready = true;
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
@@ -206,6 +209,9 @@ namespace BRS.Engine {
             GameObject wheelType2 = new GameObject("wheelType2", File.Load<Model>("Models/vehicles/wheel_bz"));
             wheelType2.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Prefabs.AddPrefab(wheelType2);
+
+            //builtAlready = true;
+
         }
     }
 }

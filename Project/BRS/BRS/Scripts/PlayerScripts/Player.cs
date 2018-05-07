@@ -111,7 +111,7 @@ namespace BRS.Scripts.PlayerScripts {
 
             //only if game is running
             if (State == PlayerState.Normal) {
-                bool boosting = BoostInput() && _pS.HasStaminaForBoost();
+                bool boosting = BoostInput() ? _pS.HasStaminaForBoost() : false;
                 _pM.Boosting = boosting;
                 if (boosting) {
                     _pS.UseStaminaForBoost();
@@ -125,7 +125,8 @@ namespace BRS.Scripts.PlayerScripts {
                 if (PowerupInput()) _pP.UsePowerup(this);
                 if (DropCashInput()) _pI.DropMoney();
 
-                if (AttackInput() && _pS.HasStaminaForAttack()) {
+                bool attack = AttackInput() ? _pS.HasStaminaForAttack() : false;
+                if (attack) {
                     State = PlayerState.Attack;
                     _pS.UseStaminaForAttack();
                     _pA.BeginAttack();
@@ -161,7 +162,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
-            //base.TakeDamage(damage); // don't override state
+            base.TakeDamage(0); // don't override state => it's needed for effects
 
             if (!Dead) {
                 if (Time.CurrentTime > nextStunTime) {
@@ -200,7 +201,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (_other != null) {
                 playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(_pA.AttackDistance, 2);
             }
-            bool canAttack = _pS.HasStaminaForAttack() && playerInRange;
+            bool canAttack = /*_pS.HasStaminaForAttack() &&*/ playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
                 Health, StartingHealth,
                 _pS.Stamina, _pS.MaxStamina,
@@ -222,6 +223,8 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         public bool IsAttacking() { return State == PlayerState.Attack; }
+        public bool Full() { return gameObject.GetComponent<PlayerInventory>().IsFullCompletely(); }
+        public bool Empty() { return gameObject.GetComponent<PlayerStamina>().TriedToUseUnsuccessfully; }
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries

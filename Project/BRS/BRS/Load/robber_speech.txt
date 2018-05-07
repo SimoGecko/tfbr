@@ -1,91 +1,176 @@
 -Begin
-Let's go|pick up|some cash!
+Let's go pick up some cash!
 Let's go!
 I'm coming!
-I'll|surely win|this round!
-The robbery|started!
+I'll surely win this round!
+The robbery started!
+I'm ready to make some noise
+I've never felt sooo good!
+Let's have fun!
+I bet I'll win!
+You ready to lose?
 
 -AlmostEnd
 Hurry up!
-Time is|almost up!
-The police|is coming!
+Time is almost up!
 Let's finish up!
 Let's go back!
+Only one minute left!
+60 seconds to go!
+The round is almost over!
+Get out in 60 seconds!
+One minute!
+Almost done!
+Let's get out of here!
+
+-PoliceComing
+The police is coming!
+Watch out for the police!
+I heard a police siren!
+Warn a brother!
+They are here!
+Police on their way!
+We are about to be busted!
+You will never catch me police!
+Damn police!
+Let's go back to the base!
 
 -Win
 I won!
 Yes!! I won!
-I am the|best robber!
-Yes! Sweet|victory!
+I am the best robber!
+Yes! Sweet victory!
+I knew it from the start!
+Just like I tought!
+I'm feeling just awesome!
+I will win everything!
+Another point for me!
+Let's go!!
 
 -Lose
-Damn. Maybe|next time...
-I didn't|collect enough|cash...
+Damn. Maybe next time...
+I didn't collect enough cash...
+Oh no!
+I lost...
+Another lost point for me...
+:(
+Damn...
+I should have put more effort...
+I lost also this round...
 
 -Random
-Best robbery|ever!
+Best robbery ever!
 Sorry Escher!
-I'm getting|all of this|cash...
+I'm getting all of this cash...
+I'm unstoppable!
+This is a random unhelpful tip!
+More random stuff to say!
+I have no words...
+I can't think of anything witty.
+Did you know: Escher was swiss?
+Escher founded the Bank Of Switzerland!
+Let's try not to get hit...
 
 -Powerup
-I've got a|powerup!
-Mhh I wonder|what it does..
-Let's use|this powerup!
-I hope it|does|something|useful..
+I've got a powerup!
+Mhh I wonder what it does..
+Let's use this powerup!
+I hope it does something useful..
+What this is for?
+Let's try this powerup.
+Maybe it explodes?
+Maybe is this a trap?
+I bet I can use this to cause mayhem!
+I hope it won't miss!
+Let's see what this does!
 
--Diamond
-There is a|diamond! Let's go|get it!
-A wild|diamond|appeared!
-Let's steal|that diamond!
+-Diamond X
+There is a diamond! Let's go get it!
+A wild diamond appeared!
+Let's steal that diamond!
+How shiny is it?
+Isn't this amazing?
 
--EnemyClose
+-EnemyClose X
 I see him!
-They are|close!
+They are close!
+I can see the enemy!
 
 -Attack
-Let's see if|it breaks...
+Let's see if it breaks...
 Attack!
 Attaaaack!!
+Guess who  is coming?
+Why not attack him?
+A-A-Attack!
+Yay! I have enough fuel to attack!
+I hope I hit something...
 
--OpenCrate
-Let's see|what's inside...
-I cracked|a crate!
-I expected|better...
-Let's go crack|other crates!
+-OpenCrate X
+Let's see what's inside...
+I cracked a crate!
+I expected better...
+Let's go crack other crates!
 
 -OpenVault
-The vault|is opened!
-I opened|the vault!
-We can go in|the vault now!
+The vault is opened!
+I opened the vault!
+We can go in the vault now!
+Let's go in the vault!
+Look at all of that gold!
+Sweet sweet gold, here I come!
+Ready to empty the vault!
+Vault, get ready, as I am coming!
 
 -HitEnemy
 Take this!
-Haha take|that!
-You're not|laughing now!
+Haha take that!
+You're not laughing now!
+Another hit for me!
+I never miss!
+Get ready to try out this!
+You won't be needing all that cash!
+..and this!
+Here payback is served!
 
 -Damage
 Ouch!
-Why would you|do that?
+Why would you do that?
 Damn!
 Take it easy!
-You will|regret it!
+You will regret it!
+Stop hitting me!
+That hurt!
+Aaah!
+Leave me alone!
+Ufff...
 
 -Full
 I'm full!
-Let's go back|to the base!
-I cannot|carry any|more cash!
-Let's go|back!
+Let's go back to the base!
+I cannot carry any more cash!
+Let's go back!
+Full capacity!
+Let's go back!
+Base, here I come!
+Quick, let's go back!
+Imagine all of this cash in my base!
+I hope I can reach my base!
 
 -BringBase
 Sweet!
-Some more|cash!
-Let's go|again!
-I stole all|this cash by|myself!
-Another bucket|of francs|for me!
+Some more cash!
+Let's go again!
+I stole all this cash by myself!
+Another bucket of francs for me!
 Home sweet home!
+All of this cash in my base!
+I can already smell the victory!
 
 -Tutorial
-Press A|to attack!
-Press X|to use the powerup!
-Press RT|to go faster!
-Stamina is|too low...
+Press A to attack!
+Press X to use the powerup!
+Press RT to go faster!
+Go crack a crate!
+Try to open the vault!
+Mhh, maybe the vault can be opened...
