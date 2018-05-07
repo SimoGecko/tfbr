@@ -72,18 +72,19 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
+            //start other big components
+            Input.Start();
 
             //load prefabs and scene
             Prefabs.Start();
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("LevelMenu");
 
-
-            //start other big components
-            Input.Start();
             Audio.Start();
+
+
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader

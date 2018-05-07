@@ -160,7 +160,7 @@ namespace BRS.Scripts.Scenes {
                 //TODO add correct materials
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
                 arrow.material = new Material(Graphics.Green);
-                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsFull));
+                arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
                 //arrow.transform.Scale(.2f);
 
                 //arrow for enemy
@@ -211,6 +211,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());

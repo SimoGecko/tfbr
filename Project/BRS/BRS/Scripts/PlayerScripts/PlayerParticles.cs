@@ -43,7 +43,7 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Update() {
             _particleComponents[(int)PlayerParticleType.Dust].IsEmitting = _playerMovement.Speed > 3.0f;
             _particleComponents[(int)PlayerParticleType.Boost].IsEmitting = _playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerMovement.SpeedPad;
-            _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsFull();
+            _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsAlmostFull();
             _particleComponents[(int)PlayerParticleType.Tracks].IsEmitting = _playerMovement.OilTracks;
 
             foreach (ParticleComponent pc in _particleComponents) {
