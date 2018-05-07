@@ -127,8 +127,8 @@ namespace BRS.Engine.Physics {
                     Instance._colliders.Add(body2);
                 }
             } else {
-                if (body2 != null) body1?.GameObject.OnCollisionEnter(body2);
-                if (body1 != null) body2?.GameObject.OnCollisionEnter(body1);
+                if (body2 != null) body1?.GameObject?.OnCollisionEnter(body2);
+                if (body1 != null) body2?.GameObject?.OnCollisionEnter(body1);
             }
         }
 
@@ -145,9 +145,8 @@ namespace BRS.Engine.Physics {
             Collider body1 = arg1 as Collider;
             Collider body2 = arg2 as Collider;
 
-            
-            body1?.GameObject?.OnCollisionEnd(body2);
-            body2?.GameObject?.OnCollisionEnd(body1);
+            if (body2 != null) body1?.GameObject?.OnCollisionEnd(body2);
+            if (body1 != null) body2?.GameObject?.OnCollisionEnd(body1);
         }
 
         /// <summary>
