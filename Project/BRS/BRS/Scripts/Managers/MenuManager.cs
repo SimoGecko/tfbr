@@ -1,20 +1,15 @@
 ﻿// (c) Nicolas Huart 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Scripts;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using BRS.Engine;
-using BRS.Engine.Utilities;
-using BRS.Scripts.Managers;
-using System.Threading.Tasks;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using BRS.Engine.Menu;
 using Microsoft.Xna.Framework.Input;
-using BRS.Engine.PostProcessing;
 
 namespace BRS.Scripts.Managers {
 
@@ -269,9 +264,68 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        /// <summary>
+        /// Change player's name, model and color according to the saved infos
+        /// </summary>
+        /// <param name="player">Player</param> 
+        /// <param name="i">Player's Index</param> 
+        public void ChangeModelNameColorPlayer(GameObject player, int i) {
+            if (ScenesCommunicationManager.Instance != null) {
+                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                    // Get infos
+                    string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
+                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    Model userModel = ScenesCommunicationManager.Instance.ModelCharacter[currIdModel];
+                    Color colorPlayer = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
+
+                    // Set infos
+                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
+                    if (userModel != null) player.Model = userModel;
+                    if (colorPlayer != null) {
+                        Rectangle areaChange = new Rectangle(4, 8, 4, 4);
+                        SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
+                    }
+
+                    // Set corresponding statistic for the model
+                    player.GetComponent<PlayerInventory>().SetCapacity(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity);
+                    player.GetComponent<PlayerAttack>().AttackDistance = ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance;
+                    player.GetComponent<PlayerMovement>().SetMaxSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed);
+                    player.GetComponent<PlayerMovement>().SetMinSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the given pixel of a texture to a color
+        /// </summary>
+        /// <param name="x">X coordinate of pixel</param> 
+        /// <param name="y">Y coordinate of pixel</param>
+        /// <param name="color">Color to set to</param>
+        /// <param name="texture">Texture whose pixel color to change</param>
+        public void SetPixelColor(int x, int y, Color color, Texture2D texture) {
+            Color[] colorData = new Color[texture.Width * texture.Height];
+            texture.GetData<Color>(colorData);
+            colorData[x + y * texture.Width] = color;
+            texture.SetData<Color>(colorData);
+        }
+
+        /// <summary>
+        /// Set the given area of pixels of a texture to a color
+        /// </summary>
+        /// <param name="rec">Area of pixels</param> 
+        /// <param name="color">Color to set to</param>
+        /// <param name="texture">Texture whose pixels color to change</param>
+        public void SetRectanglePixelColor(Rectangle rec, Color color, Texture2D texture) {
+            for (int x = rec.X; x < rec.X + rec.Width; ++x)
+                for (int y = rec.Y; y < rec.Y + rec.Height; ++y)
+                    SetPixelColor(x, y, color, texture);
+        }
+
         #endregion
 
         #region Callbacks method when button are pressed
+
+        #region Changes between menu panels
 
         /// <summary>
         /// Set information of the new menu panel to switch to
@@ -299,32 +353,6 @@ namespace BRS.Scripts.Managers {
                 // only one change per frame
                 uniqueMenuSwitchUsed = true;
             }
-        }
-
-        /// <summary>
-        /// Set default the parameters of the game
-        /// </summary>
-        public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
-                GameManager.NumPlayers = 2;
-            if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
-                RoundManager.RoundTime = 2*60;
-        }
-
-        /// <summary>
-        /// Update the duration of a round 
-        /// </summary>
-        public void UpdateRoundDuration(object sender, EventArgs e) {
-            Button button = (Button)sender;
-            RoundManager.RoundTime = Int32.Parse(button.Text) * 60;
-        }
-
-        /// <summary>
-        /// Update the number of players
-        /// </summary>
-        public void UpdateNoPlayers(object sender, EventArgs e) {
-            Button button = (Button)sender;
-            GameManager.NumPlayers = Int32.Parse(button.Text);
         }
 
         /// <summary>
@@ -390,6 +418,44 @@ namespace BRS.Scripts.Managers {
         }
 
         /// <summary>
+        /// Resume game
+        /// </summary>
+        public void ResumeGame(object sender, EventArgs e) {
+            MenuRect["pause"].active = false;
+            GameManager.state = GameManager.State.Playing;
+        }
+
+        #endregion
+
+        #region Change game settings
+
+        /// <summary>
+        /// Set default the parameters of the game
+        /// </summary>
+        public void SetDefaultParametersGame(object sender, EventArgs e) {
+            if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
+                GameManager.NumPlayers = 2;
+            if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
+                RoundManager.RoundTime = 2 * 60;
+        }
+
+        /// <summary>
+        /// Update the duration of a round 
+        /// </summary>
+        public void UpdateRoundDuration(object sender, EventArgs e) {
+            Button button = (Button)sender;
+            RoundManager.RoundTime = Int32.Parse(button.Text) * 60;
+        }
+
+        /// <summary>
+        /// Update the number of players
+        /// </summary>
+        public void UpdateNoPlayers(object sender, EventArgs e) {
+            Button button = (Button)sender;
+            GameManager.NumPlayers = Int32.Parse(button.Text);
+        }
+
+        /// <summary>
         /// Update the game mode
         /// </summary>
         public void SetMode(object sender, EventArgs e) {
@@ -402,15 +468,53 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public void SetMap(object sender, EventArgs e) {
             Button button = (Button)sender;
+
         }
 
         /// <summary>
-        /// Resume game
+        /// Update volume of in game effects
         /// </summary>
-        public void ResumeGame(object sender, EventArgs e) {
-            MenuRect["pause"].active = false;
-            GameManager.state = GameManager.State.Playing;
+        public void UpdateVolume(object sender, EventArgs e) {
+            Slider slider = (Slider)sender;
+            Audio.SetSoundVolume(slider.percentPosButon);
         }
+
+        /// <summary>
+        /// Mute or not the background music
+        /// </summary>
+        public void SetMusic(object sender, EventArgs e) {
+            TickBox tickbox = (TickBox)sender;
+            if (tickbox.IsClicked)
+                Audio.SetMusicVolume(.005f);
+            else
+                Audio.SetMusicVolume(0);
+        }
+
+        /// <summary>
+        /// Set camera option (auto or manual)
+        /// </summary>
+        public void SetCamera(object sender, EventArgs e) {
+            TickBox tickbox = (TickBox)sender;
+            if (tickbox.IsClicked)
+                CameraController.autoFollow = true;
+            else
+                CameraController.autoFollow = false;
+        }
+
+        /// <summary>
+        /// Set difficulty of the level 
+        /// </summary>
+        public void SetLevelDiffculty(object sender, EventArgs e) {
+            Button bu = (Button)sender;
+            if (bu.Text == "Easy") GameManager.lvlDifficulty = 0;
+            else if (bu.Text == "Normal") GameManager.lvlDifficulty = 1;
+            else if (bu.Text == "Hard") GameManager.lvlDifficulty = 2;
+            else Debug.Log("Wrong level difficulty");
+        }
+        
+        #endregion
+
+        #region Change player's information
 
         /// <summary>
         /// Update temporary player's name. 
@@ -469,7 +573,7 @@ namespace BRS.Scripts.Managers {
         }
 
         /// <summary>
-        /// Update the statistic for the current
+        /// Activate the correct statistics for the current model
         /// </summary>
         public void SwitchModelStat(object sender, EventArgs e) {
             Button button = (Button)sender;
@@ -483,12 +587,16 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        /// <summary>
+        /// Save model choice
+        /// </summary>
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
 
+            // Audio feedback
             Audio.Play("characters_popup", transform.position);
 
-            // Change color used
+            // Change model used
             if (button.nameIdentifier == "ModelChangeRight") {
                 ++_idModel;
                 if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = 0; //_idModel = 0;
@@ -500,14 +608,17 @@ namespace BRS.Scripts.Managers {
             else
                 Debug.Log("Model was not Changed. NameIdentifier of current button not recognized!");
 
+            // Get key name of the player
             if (panelPlay2NameOption == "play2Shared")
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
+            // Save new model Choice
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
                 ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
             else
                 ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
+            // Activate correct image in the menu
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
                     if (img.NameIdentifier == "pictureModel" + (_idModel + 1).ToString())
@@ -520,78 +631,41 @@ namespace BRS.Scripts.Managers {
             }
         }
 
-        public void UpdateRanking(object sender, EventArgs e) {
-            Button button = (Button)sender;
-
-            if (button.nameIdentifier == "PlayersChangeRight") {
-                ++_idRankingPlayerText;
-                if (_idRankingPlayerText >= RankingPlayersText.Length) _idRankingPlayerText = 0;
-            }
-            else if (button.nameIdentifier == "PlayersChangeLeft") {
-                --_idRankingPlayerText;
-                if (_idRankingPlayerText < 0) _idRankingPlayerText = RankingPlayersText.Length - 1;
-            }
-            else if (button.nameIdentifier == "TimeChangeRight") {
-                ++_idRankingDurationText;
-                if (_idRankingDurationText >= RankingDurationText.Length) _idRankingDurationText = 0;
-            }
-            else if (button.nameIdentifier == "TimeChangeLeft") {
-                --_idRankingDurationText;
-                if (_idRankingDurationText < 0) _idRankingDurationText = RankingDurationText.Length - 1;
-            }
-            else
-                Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
-
-            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingTime", _currentMenuName)).Text = RankingDurationText[_idRankingDurationText];
-            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingPlayers", _currentMenuName)).Text = RankingPlayersText[_idRankingPlayerText];
-
-            foreach (var elem in MenuRect[_currentMenuName].components) {
-                if (elem is ListComponents listComp) {
-                    if (listComp.NameIdentifier == "rankings_game") {
-                        foreach (var lC in listComp.Components) {
-                            if (((ListComponents)lC).NameIdentifier == "ranking" + RankingDurationText[_idRankingDurationText] + RankingPlayersText[_idRankingPlayerText])
-                                lC.Active = true;
-                            else
-                                lC.Active = false;
-                        }
-                    }
-                }
-            }
-
-        }
-
+        /// <summary>
+        /// Save team and model color choice
+        /// </summary>
         public void UpdateChosenColor(object sender, EventArgs e) {
             Button button = (Button)sender;
-                
+
             // Change color used
             if (button.nameIdentifier == "ColorChangeRight") {
                 ++_idColor;
+
                 if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
                     _idColor = 0;
                 if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
                     ++_idColor;
-
                 if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
                     _idColor = 0;
-                    
             }
             else if (button.nameIdentifier == "ColorChangeLeft") {
                 --_idColor;
-                if (_idColor < 0) _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
+                if (_idColor < 0)
+                    _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
                 if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
                     --_idColor;
-
                 if (_idColor < 0) _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
             }
             else
                 Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
 
+            // Save color
             if (button.IndexAssociatedPlayerScreen % 2 == 0)
                 ScenesCommunicationManager.TeamAColor = ScenesCommunicationManager.ColorModel[_idColor];
             else
                 ScenesCommunicationManager.TeamBColor = ScenesCommunicationManager.ColorModel[_idColor];
 
-            // update color for model pictures
+            // Update color for model pictures
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
                     for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
@@ -602,8 +676,9 @@ namespace BRS.Scripts.Managers {
                 if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
                     bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor];
             }
+
             if (GameManager.NumPlayers == 4) {
-                foreach (var elem in MenuRect[panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen+2) % 4).ToString()].components) {
+                foreach (var elem in MenuRect[panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 2) % 4).ToString()].components) {
                     if (elem is Image img) {
                         for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                             if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
@@ -616,7 +691,7 @@ namespace BRS.Scripts.Managers {
             }
 
 
-            // update color for 3d model
+            // Save color for the 3d model
             if (panelPlay2NameOption == "play2Shared")
                 NamePlayerInfosToChange = "player_" + button.IndexAssociatedPlayerScreen.ToString();
 
@@ -637,6 +712,58 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        #endregion
+
+        #region Others
+
+        /// <summary>
+        /// Activate the chosen ranking display
+        /// </summary>
+        public void UpdateRanking(object sender, EventArgs e) {
+            Button button = (Button)sender;
+
+            // Change chosen ranking
+            if (button.nameIdentifier == "PlayersChangeRight") {
+                ++_idRankingPlayerText;
+                if (_idRankingPlayerText >= RankingPlayersText.Length) _idRankingPlayerText = 0;
+            }
+            else if (button.nameIdentifier == "PlayersChangeLeft") {
+                --_idRankingPlayerText;
+                if (_idRankingPlayerText < 0) _idRankingPlayerText = RankingPlayersText.Length - 1;
+            }
+            else if (button.nameIdentifier == "TimeChangeRight") {
+                ++_idRankingDurationText;
+                if (_idRankingDurationText >= RankingDurationText.Length) _idRankingDurationText = 0;
+            }
+            else if (button.nameIdentifier == "TimeChangeLeft") {
+                --_idRankingDurationText;
+                if (_idRankingDurationText < 0) _idRankingDurationText = RankingDurationText.Length - 1;
+            }
+            else
+                Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
+
+            // Update text display in menu for the current ranking
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingTime", _currentMenuName)).Text = RankingDurationText[_idRankingDurationText];
+            ((Button)Menu.Instance.FindMenuComponentinPanelWithName("RankingPlayers", _currentMenuName)).Text = RankingPlayersText[_idRankingPlayerText];
+
+            // Activate correct rankings list
+            foreach (var elem in MenuRect[_currentMenuName].components) {
+                if (elem is ListComponents listComp) {
+                    if (listComp.NameIdentifier == "rankings_game") {
+                        foreach (var lC in listComp.Components) {
+                            if (((ListComponents)lC).NameIdentifier == "ranking" + RankingDurationText[_idRankingDurationText] + RankingPlayersText[_idRankingPlayerText])
+                                lC.Active = true;
+                            else
+                                lC.Active = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Change highlighted (=clicked) button among the list where unique button can be clicked
+        /// </summary>
         public void HighlightBorders(object sender, EventArgs e) {
             Button button = (Button)sender;
             foreach (Button bu in button.neighbors) {
@@ -645,6 +772,9 @@ namespace BRS.Scripts.Managers {
             button.IsClicked = true;
         }
 
+        /// <summary>
+        /// Update current selection to neighborDown
+        /// </summary>
         public void GoDown(object sender, EventArgs e) {
             Button button = (Button)sender;
             
@@ -654,6 +784,9 @@ namespace BRS.Scripts.Managers {
             }
         }
 
+        /// <summary>
+        /// Update current selection to neighborRight
+        /// </summary>
         public void GoRight(object sender, EventArgs e) {
             Button button = (Button)sender;
 
@@ -663,70 +796,8 @@ namespace BRS.Scripts.Managers {
             }
         }
 
-        public void UpdateVolume(object sender, EventArgs e) {
-            Slider slider = (Slider)sender;
-            Audio.SetSoundVolume(slider.percentPosButon);
-        }
-
-        public void SetMusic(object sender, EventArgs e) {
-            TickBox tickbox = (TickBox)sender;
-            if (tickbox.IsClicked)
-                Audio.SetMusicVolume(.005f);
-            else
-                Audio.SetMusicVolume(0);
-        }
-
-        public void SetCamera(object sender, EventArgs e) {
-            TickBox tickbox = (TickBox)sender;
-            if (tickbox.IsClicked)
-                CameraController.autoFollow = true;
-            else
-                CameraController.autoFollow = false;
-        }
-
-        public void SetLevelDiffculty(object sender, EventArgs e) {
-            Button bu = (Button)sender;
-            if (bu.Text == "Easy") GameManager.lvlDifficulty = 0;
-            else if (bu.Text == "Normal") GameManager.lvlDifficulty = 1;
-            else if (bu.Text == "Hard") GameManager.lvlDifficulty = 2;
-            else Debug.Log("Wrong level difficulty");
-        }
-
-        public void ChangeModelNameColorPlayer(GameObject player, int i) {
-            if (ScenesCommunicationManager.Instance != null) {
-                if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
-                    string userName = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item1;
-                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
-                    Model userModel = ScenesCommunicationManager.Instance.ModelCharacter[currIdModel];
-                    Color colorPlayer = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
-
-                    if (userName != null) player.GetComponent<Player>().PlayerName = userName;
-                    if (userModel != null) player.Model = userModel;
-                    if (colorPlayer != null) {
-                        Rectangle areaChange = new Rectangle(4, 8, 4, 4);
-                        SetRectanglePixelColor(areaChange, colorPlayer, ScenesCommunicationManager.Instance.textureColorPlayers["player_" + i]);
-                    }
-
-                    player.GetComponent<PlayerInventory>().SetCapacity(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity);
-                    player.GetComponent<PlayerAttack>().AttackDistance = ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance;
-                    player.GetComponent<PlayerMovement>().SetMaxSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed);
-                    player.GetComponent<PlayerMovement>().SetMinSpeed(ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed);
-                }
-            }
-        }
-
-        public void SetPixelColor(int x, int y, Color color, Texture2D texture) {
-            Color[] colorData = new Color[texture.Width * texture.Height];
-            texture.GetData<Color>(colorData);
-            colorData[x + y * texture.Width] = color;
-            texture.SetData<Color>(colorData);
-        }
-
-        public void SetRectanglePixelColor(Rectangle rec, Color color, Texture2D texture) {
-            for (int x = rec.X; x < rec.X + rec.Width; ++x)
-                for (int y = rec.Y; y < rec.Y + rec.Height; ++y)
-                    SetPixelColor(x, y, color, texture);
-        }
+        #endregion
     }
+
     #endregion
 }
