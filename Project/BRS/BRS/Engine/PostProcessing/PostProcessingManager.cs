@@ -20,7 +20,8 @@ namespace BRS.Engine.PostProcessing {
         DepthOfField,
         ColorGrading,
         ShockWave,
-        Wave
+        Wave,
+        TwoPassBlur
     }
 
 
@@ -30,6 +31,7 @@ namespace BRS.Engine.PostProcessing {
         private List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private RenderTarget2D[] _renderTargets;
         private RenderTarget2D _blurTarget;
+        private RenderTarget2D _firstPassTarget;
         private Texture2D _testGrid;
         private Vector3 _wavePosition;
         private bool DEBUG = false;
@@ -59,6 +61,9 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.GaussianBlur:
+                        ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
+                        break;
+                    case PostprocessingType.TwoPassBlur:
                         ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
                         break;
 
@@ -237,7 +242,8 @@ namespace BRS.Engine.PostProcessing {
             }
 
             if (Input.GetKeyDown(Keys.F1)) {
-                ActivateBlackAndWhite(0);
+                // active two pass blur
+                _effects[8].Activate(1, !_effects[8].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F2)) {
                 _effects[1].Activate(1, !_effects[1].IsActive(1));
@@ -307,6 +313,8 @@ namespace BRS.Engine.PostProcessing {
                         ppShader.SetParameter("D1M", depth1Texture);
                     }
 
+                    
+
                     if(ppShader.Type == PostprocessingType.Wave) {
                         for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
                             Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
@@ -328,6 +336,9 @@ namespace BRS.Engine.PostProcessing {
                             DepthStencilState.Default,
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
+                        if(PostprocessingType.TwoPassBlur == ppShader.Type) {
+                            ppShader.Effect.CurrentTechnique.Passes[1].Apply();
+                        }
                         if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
                             spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         } else {

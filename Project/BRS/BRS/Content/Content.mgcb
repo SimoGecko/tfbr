@@ -3522,3 +3522,9 @@
 /processorParam:TextureFormat=Compressed
 /build:Models/vehicles/wheel_police.dae
 
+#begin Effects/TwoPassBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/TwoPassBlur.fx
+
