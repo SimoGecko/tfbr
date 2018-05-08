@@ -170,9 +170,10 @@ namespace BRS.Scripts.PlayerScripts {
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);
-                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun, 1.2f);
                     PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
                     _pI.LoseMoney();
+                    ParticleUI.Instance.GiveOrder(transform.position+Vector3.Up*2, ParticleType.RotatingStars, .7f);
                     Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
                 }
 

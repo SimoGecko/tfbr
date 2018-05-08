@@ -77,8 +77,10 @@ namespace BRS.Scripts {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
-                if(state == State.Chasing && !p.IsAttacking())
+                if (state == State.Chasing && !p.IsAttacking()) {
                     p.TakeDamage(20);
+                }
+
             }
         }
 
@@ -108,6 +110,8 @@ namespace BRS.Scripts {
         public void TakeDamage(float damage) {
             state = State.Stun;
             endStunTime = Time.CurrentTime + stunTime;
+            ParticleUI.Instance.GiveOrder(transform.position + Vector3.Up * 2, ParticleType.RotatingStars, .7f);
+
         }
 
 

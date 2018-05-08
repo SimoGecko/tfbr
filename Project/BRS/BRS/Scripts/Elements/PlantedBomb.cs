@@ -49,7 +49,7 @@ namespace BRS.Scripts.Elements {
             if (exploded) return;
             exploded = true;
             Audio.Play("bomb_explosion", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion, 1.5f);
 
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
