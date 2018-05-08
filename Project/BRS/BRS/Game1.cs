@@ -80,7 +80,12 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
+
+#if DEBUG
+            SceneManager.LoadScene("Level1");
+#else
             SceneManager.LoadScene("LevelMenu");
+#endif
 
             Audio.Start();
 
