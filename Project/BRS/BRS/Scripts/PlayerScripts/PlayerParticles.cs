@@ -8,7 +8,7 @@ namespace BRS.Scripts.PlayerScripts {
     class PlayerParticles : Component {
 
         private enum PlayerParticleType { Dust, Boost, Cash, Tracks }
-        List<Type> _effects = new List<Type>() { typeof(Dust), typeof(Boost), typeof(Cash), typeof(Tracks) };
+        private readonly List<Type> _effects = new List<Type> { typeof(Dust), typeof(Boost), typeof(Cash), typeof(Tracks) };
         private ParticleComponent[] _particleComponents;
 
         private PlayerAttack _playerAttack;

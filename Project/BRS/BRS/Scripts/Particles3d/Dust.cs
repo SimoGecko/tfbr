@@ -33,7 +33,7 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "smoke",
                     MaxParticles = 10000,
-                    ParticlesPerRound = 5,
+                    ParticlesPerRound = 1,
                     Duration = TimeSpan.FromSeconds(2),
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.01f,
