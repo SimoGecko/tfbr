@@ -37,10 +37,10 @@ namespace BRS.Scripts.PowerUps {
             Player randomEnemyPlayer = ElementManager.Instance.Enemy(Owner.TeamIndex);
             Vector3 spawnPos = randomEnemyPlayer.transform.position + Vector3.Up * WeightSpawnHeight;
 
+            // Initialize the weight with a linear velocity which matches the player
             Vector3 velocity = Conversion.ToXnaVector(randomEnemyPlayer.gameObject.GetComponent<MovingRigidBody>().RigidBody.LinearVelocity);
             velocity.Normalize();
-            velocity = 3 * velocity;
-            //velocity = 2.0f * Vector3.Down;
+            velocity = 3 * velocity + Vector3.Down;
 
             GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", spawnPos, MyRandom.YRotation(), velocity);
             ElementManager.Instance.Add(fallingWeight);
