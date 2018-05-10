@@ -177,20 +177,22 @@ namespace BRS.Engine.PostProcessing {
         /// Activate the shockwave filter for a given player.
         /// Important: parameters about duration are set in the shader-initialization.
         /// </summary>
-        /// <param name="playerId">Id of the player to apply the shader</param>
         /// <param name="position">3D-space coordinate of the position for the shockwave</param>
         /// <param name="animationLength">Length  of the animation for the shockwave to go over the whole screen</param>
         /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
         /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
-        public void ActivateShockWave(int playerId, Vector3 position, float animationLength = 0.6f, bool deactivate = true, float deactivateAfter = 5.0f) {
-            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
-
+        public void ActivateShockWave(Vector3 position, float animationLength = 0.6f, bool deactivate = true, float deactivateAfter = 5.0f) {
             PostProcessingEffect ppEffect = new PostProcessingEffect(PostprocessingType.ShockWave, 1, false, _loadedEffects[PostprocessingType.ShockWave], position);
-            ppEffect.Activate(playerId, true);
-            ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
-            ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
-            ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
-            ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
+
+            for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
+                Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
+
+                ppEffect.Activate(playerId, true);
+                ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+                ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
+                ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
+            }
 
             _effects.Add(ppEffect);
 
@@ -203,21 +205,23 @@ namespace BRS.Engine.PostProcessing {
         /// Activate the shockwave filter for a given player.
         /// Important: parameters about duration are set in the shader-initialization.
         /// </summary>
-        /// <param name="playerId">Id of the player to apply the shader</param>
         /// <param name="position">3D-space coordinate of the position for the shockwave</param>
         /// <param name="animationLength">Length  of the animation for the shockwave to go over the whole screen</param>
         /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
         /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
-        public void ActivateWave(int playerId, Vector3 position, float animationLength = 5.0f, bool deactivate = true, float deactivateAfter = 5.0f) {
-            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
-            float distance = (position - Screen.Cameras[playerId].transform.position).Length();
-
+        public void ActivateWave(Vector3 position, float animationLength = 5.0f, bool deactivate = true, float deactivateAfter = 5.0f) {
             PostProcessingEffect ppEffect = new PostProcessingEffect(PostprocessingType.Wave, 1, false, _loadedEffects[PostprocessingType.Wave], position);
-            ppEffect.Activate(playerId, true);
-            ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
-            ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
-            ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
-            ppEffect.SetParameterForPlayer(playerId, "cameraDistance", distance);
+
+            for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
+                Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
+                float distance = (position - Screen.Cameras[playerId].transform.position).Length();
+
+                ppEffect.Activate(playerId, true);
+                ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+                ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
+                ppEffect.SetParameterForPlayer(playerId, "cameraDistance", distance);
+            }
 
             _effects.Add(ppEffect);
 

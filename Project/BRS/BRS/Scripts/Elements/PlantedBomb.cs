@@ -58,9 +58,7 @@ namespace BRS.Scripts.Elements {
                 }
             }
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
-            }
+            PostProcessingManager.Instance.ActivateShockWave(transform.position);
             ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject);
         }
