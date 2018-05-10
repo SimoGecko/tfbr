@@ -37,12 +37,12 @@ namespace BRS.Engine.PostProcessing {
         private int _currentLuT = 0;
         private int _maxLuT = 20;
 
-        public static void Initialize(ContentManager content) {
-            Instance = new PostProcessingManager();
+        public static void Initialize(List<PostprocessingType> initialized) {
+            Instance = new PostProcessingManager(initialized);
         }
 
-        private PostProcessingManager() {
-            foreach (PostprocessingType pType in Enum.GetValues(typeof(PostprocessingType))) {
+        private PostProcessingManager(List<PostprocessingType> initialized) {
+            foreach (PostprocessingType pType in initialized) {
                 string fileName = pType.ToString();
                 Effect ppShader = File.Load<Effect>("Effects/" + fileName);
                 PostProcessingEffect ppEffect = new PostProcessingEffect(pType, 1, false, ppShader);
@@ -55,7 +55,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("durationFadeOut", 1.9f);
                         ppEffect.SetParameter("max", 1.0f);
                         ppEffect.SetParameter("min", 0.1f);
-                        
+
                         break;
 
                     case PostprocessingType.GaussianBlur:

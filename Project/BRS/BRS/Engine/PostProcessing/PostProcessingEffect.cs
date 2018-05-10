@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.PostProcessing {
     class PostProcessingEffect {
+        public static int Counter;
+        public int ID { get; set; }
         // type of the effect
         public PostprocessingType Type { get; }
         // how many time should this effect be applied
@@ -24,6 +26,7 @@ namespace BRS.Engine.PostProcessing {
 
 
         public PostProcessingEffect(PostprocessingType type, int passes, bool active, Effect effect) {
+            ID = Counter++;
             Type = type;
             Passes = passes;
             Active = new bool[] { active, active, active, active };
