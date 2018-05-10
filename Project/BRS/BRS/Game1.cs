@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using System.Threading.Tasks;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -23,9 +24,12 @@ namespace BRS {
         Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
 
+        // Todo: Andy: remove
+        private int _frames = 0;
+
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true};
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -63,6 +67,8 @@ namespace BRS {
             PoliceManager.IsActive = true;
             LenseFlareManager.IsActive = true;
             ParticleSystem3D.IsActive = true;
+            PostProcessingManager.IsActive = true;
+            Skybox.IsActive = true;
 
             base.Initialize();
         }
@@ -130,6 +136,8 @@ namespace BRS {
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
             PostProcessingManager.Instance.Update();
+
+            //Debug.Log("FPS U: " + 1.0f / gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -145,9 +153,9 @@ namespace BRS {
             _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             base.Draw(gameTime);
-
+            
             //-----3D-----
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default; // activates z buffer
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -208,6 +216,8 @@ namespace BRS {
             _spriteBatch.Begin();
             foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
+
+            Debug.Log("FPS D: " + (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("F") + "/" + (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("F") + " #GameObjects: " + GameObject.All.Length);
         }
     }
 

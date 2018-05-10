@@ -37,6 +37,8 @@ namespace BRS.Engine.PostProcessing {
         private int _currentLuT = 0;
         private int _maxLuT = 20;
 
+        public static bool IsActive = true;
+
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager();
         }
@@ -55,7 +57,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("durationFadeOut", 1.9f);
                         ppEffect.SetParameter("max", 1.0f);
                         ppEffect.SetParameter("min", 0.1f);
-                        
+
                         break;
 
                     case PostprocessingType.GaussianBlur:
@@ -88,7 +90,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
                         for (var i = 0; i < _maxLuT; i++) {
-                            _lut.Add(File.Load<Texture2D>("Images/lut/lut (" + i.ToString()+ ")"));
+                            _lut.Add(File.Load<Texture2D>("Images/lut/lut (" + i.ToString() + ")"));
                         }
                         ppEffect.SetParameter("LUT", _lut[0]);
                         for (var i = 0; i < GameManager.NumPlayers; i++) {
@@ -145,7 +147,7 @@ namespace BRS.Engine.PostProcessing {
             }
             return false;
         }
-        
+
         public void SetShaderStatus(PostprocessingType shader, int playerId, bool active) {
             _effects[(int)shader].Activate(playerId, active);
         }
@@ -273,72 +275,77 @@ namespace BRS.Engine.PostProcessing {
             RenderTarget2D curTarget = renderTarget;
 
             // if dynamic props are needed
-            foreach (var ppShader in _effects) {
-                if (ppShader.IsActive()) {
-                    ppShader.SetParameter("active", ppShader.ActiveParameter);
-                    ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
+            if (IsActive) {
+                foreach (var ppShader in _effects) {
+                    if (ppShader.IsActive()) {
+                        ppShader.SetParameter("active", ppShader.ActiveParameter);
+                        ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
 
-                    if (ppShader.Type == PostprocessingType.DepthOfField) {
+                        if (ppShader.Type == PostprocessingType.DepthOfField) {
 
-                        // set the target to the blur target
-                        graphicsDevice.SetRenderTarget(_blurTarget);
+                            // set the target to the blur target
+                            graphicsDevice.SetRenderTarget(_blurTarget);
 
-                        // get the gaussian blur shader
-                        PostProcessingEffect blurShader = _effects[(int)PostprocessingType.GaussianBlur];
+                            // get the gaussian blur shader
+                            PostProcessingEffect blurShader = _effects[(int)PostprocessingType.GaussianBlur];
 
-                        // apply 2 blur passes
-                        for (int i = 0; i < 2; i++) {
+                            // apply 2 blur passes
+                            for (int i = 0; i < 2; i++) {
+                                spriteBatch.Begin(SpriteSortMode.Immediate,
+                                    BlendState.AlphaBlend,
+                                    SamplerState.LinearClamp,
+                                    DepthStencilState.Default,
+                                    RasterizerState.CullNone);
+
+                                blurShader.Effect.CurrentTechnique.Passes[0].Apply();
+                                spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height),
+                                    Color.White);
+                                curTarget = _blurTarget;
+
+                                spriteBatch.End();
+                            }
+
+                            graphicsDevice.SetRenderTarget(null);
+                            // set the blurred scene and the depth map as parameter
+                            ppShader.SetParameter("BlurScene", _blurTarget);
+                            ppShader.SetParameter("D1M", depth1Texture);
+                        }
+
+                        if (ppShader.Type == PostprocessingType.Wave) {
+                            for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
+                                Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
+                                float distance = (_wavePosition - Screen.Cameras[playerId].transform.position).Length();
+                                ppShader.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
+                                ppShader.SetParameterForPlayer(playerId, "cameraDistance", distance);
+                            }
+                        }
+
+                        // Setup next render-target to apply next filter
+                        RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
+                        graphicsDevice.SetRenderTarget(nextTarget);
+
+                        for (int i = 0; i < ppShader.Passes; i++) {
+                            // apply post processing shader
                             spriteBatch.Begin(SpriteSortMode.Immediate,
                                 BlendState.AlphaBlend,
                                 SamplerState.LinearClamp,
                                 DepthStencilState.Default,
                                 RasterizerState.CullNone);
-
-                            blurShader.Effect.CurrentTechnique.Passes[0].Apply();
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                            curTarget = _blurTarget;
+                            ppShader.Effect.CurrentTechnique.Passes[0].Apply();
+                            if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
+                                spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height),
+                                    Color.White);
+                            } else {
+                                spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height),
+                                    Color.White);
+                            }
 
                             spriteBatch.End();
                         }
 
                         graphicsDevice.SetRenderTarget(null);
-                        // set the blurred scene and the depth map as parameter
-                        ppShader.SetParameter("BlurScene", _blurTarget);
-                        ppShader.SetParameter("D1M", depth1Texture);
+                        curTarget = nextTarget;
                     }
-
-                    if(ppShader.Type == PostprocessingType.Wave) {
-                        for (int playerId = 0; playerId < GameManager.NumPlayers; ++playerId) {
-                            Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(_wavePosition);
-                            float distance = (_wavePosition - Screen.Cameras[playerId].transform.position).Length();
-                            ppShader.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
-                            ppShader.SetParameterForPlayer(playerId, "cameraDistance", distance);
-                        }                 
-                    }
-
-                    // Setup next render-target to apply next filter
-                    RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
-                    graphicsDevice.SetRenderTarget(nextTarget);
-
-                    for (int i = 0; i < ppShader.Passes; i++) {
-                        // apply post processing shader
-                        spriteBatch.Begin(SpriteSortMode.Immediate,
-                            BlendState.AlphaBlend,
-                            SamplerState.LinearClamp,
-                            DepthStencilState.Default,
-                            RasterizerState.CullNone);
-                        ppShader.Effect.CurrentTechnique.Passes[0].Apply();
-                        if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
-                            spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        } else {
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        }
-
-                        spriteBatch.End();
-                    }
-
-                    graphicsDevice.SetRenderTarget(null);
-                    curTarget = nextTarget;
                 }
             }
 

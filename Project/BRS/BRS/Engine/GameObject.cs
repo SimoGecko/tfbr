@@ -73,7 +73,7 @@ namespace BRS.Engine {
 
         public void Draw3D(Camera cam) {
             if (active) {
-                if (Model != null && active) {
+                if (Model != null) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
