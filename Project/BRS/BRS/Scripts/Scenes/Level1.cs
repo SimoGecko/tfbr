@@ -243,7 +243,7 @@ namespace BRS.Scripts.Scenes {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
                 //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, false);
             }
 
         }

@@ -54,7 +54,7 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            List<PostprocessingType> defaultEffects = new List<PostprocessingType> { PostprocessingType.Chromatic, PostprocessingType.ColorGrading, PostprocessingType.Vignette };
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType> { PostprocessingType.Chromatic, PostprocessingType.ColorGrading, PostprocessingType.Vignette, PostprocessingType.TwoPassBlur};
             PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
@@ -131,7 +131,6 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update();
         }
 
         protected override void Draw(GameTime gameTime) {

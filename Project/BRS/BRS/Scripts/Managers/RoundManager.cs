@@ -125,10 +125,12 @@ namespace BRS.Scripts.Managers {
             //reset // TODO reorganize
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.BlackAndWhite, i, false);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ShockWave, i, false);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Wave, i, false);
             }
+
+            // Remove all dynamic shaders
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.BlackAndWhite);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.ShockWave);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.Wave);
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 
