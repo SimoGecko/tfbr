@@ -64,7 +64,7 @@ namespace BRS.Scripts.UI {
             public int Index;
             public Color Color, ColorInside;
             public List<string> Functions;
-            public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
+            public bool Active, CurrentSelection, IsClicked, deSelectOnMove, UseBigFont;
             public List<string> UniqueChoiceButtonWith;
             public int transparency;
         }
@@ -228,6 +228,9 @@ namespace BRS.Scripts.UI {
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
+
+                        if (MS.UseBigFont)
+                            button.Font = UserInterface.menuBigFont;
 
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }

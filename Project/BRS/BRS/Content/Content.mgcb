@@ -1,3 +1,4 @@
+
 #----------------------------- Global Properties ----------------------------#
 
 /outputDir:bin/$(Platform)
@@ -3421,3 +3422,11 @@
 /processor:SongProcessor
 /processorParam:Quality=Best
 /build:Audio/songs/lively.mp3
+
+#begin Other/font/menuBig.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Other/font/menuBig.spritefont
+
