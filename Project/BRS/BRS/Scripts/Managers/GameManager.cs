@@ -46,7 +46,8 @@ namespace BRS.Scripts.Managers {
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
 
-                MenuManager.Instance.MenuRect["pause"].active = GamePaused;
+                if (MenuManager.Instance.MenuRect.ContainsKey("pause"))
+                    MenuManager.Instance.MenuRect["pause"].active = GamePaused;
             }
         }
 

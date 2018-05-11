@@ -80,7 +80,7 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("LevelMenu");
 
             Audio.Start();
 
@@ -99,7 +99,7 @@ namespace BRS {
 
         protected override void UnloadContent() {
             // TODO: Unload any non ContentManager content here
-            Heatmap.instance.SaveHeatMap();
+            //Heatmap.instance.SaveHeatMap();
         }
 
         protected override void Update(GameTime gameTime) {

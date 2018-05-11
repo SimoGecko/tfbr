@@ -226,6 +226,7 @@ namespace BRS.Scripts.UI {
                         button.IsCurrentSelection = MS.CurrentSelection;
                         button.IsClicked = MS.IsClicked;
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
+                        button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
 
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
@@ -408,39 +409,7 @@ namespace BRS.Scripts.UI {
                     listStats.AddComponent(nameCapacity);
                     ++count;
                 }
-
-                // Values of the stats
-
-                /*// Capacity
-                var statCapacity = new TextBox() {
-                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 0 * offsetHeight),
-                    Text = ScenesCommunicationManager.ValuesStats[i].Capacity.ToString(),
-                };
-                statCapacity.Font = UserInterface.menuSmallFont;
-                statCapacity.Colour = new Color(148, 148, 148);
-
-                // Distance of attack
-                var statAttackDistance = new TextBox() {
-                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 1 * offsetHeight),
-                    Text = ScenesCommunicationManager.ValuesStats[i].AttackDistance.ToString(),
-                };
-                statAttackDistance.Font = UserInterface.menuSmallFont;
-                statAttackDistance.Colour = new Color(148, 148, 148);
-
-                // Speed
-                var statSpeed = new TextBox() {
-                    InitPos = offsetStart[1] + new Vector2(offsetWidth, 2 * offsetHeight),
-                    Text = ScenesCommunicationManager.ValuesStats[i].MinSpeed.ToString() + "-" +
-                           ScenesCommunicationManager.ValuesStats[i].MaxSpeed.ToString(),
-                };
-                statSpeed.Font = UserInterface.menuSmallFont;
-                statSpeed.Colour = new Color(148, 148, 148);
-
-                // Add to list of stat for the current model
-                listStats.AddComponent(statCapacity);
-                listStats.AddComponent(statAttackDistance);
-                listStats.AddComponent(statSpeed);*/
-
+                
                 // Capacity
                 var statCapacity = new Slider(offsetStart[1] + new Vector2(offsetWidth, 0 * offsetHeight), TexturesButtons["slider"]) { };
                 statCapacity.lengthSlider = 175;
@@ -528,7 +497,8 @@ namespace BRS.Scripts.UI {
                     var letterButton = new Button(TexturesButtons["button"], startoffset[i] + new Vector2(offsetWidth, i * scaleAlphabet * TexturesButtons["button"].Height) + count * new Vector2(scaleAlphabet * TexturesButtons["button"].Width, 0)) {
                         //Text = "del",
                         ScaleWidth = scaleAlphabet,
-                        ScaleHeight = scaleAlphabet
+                        ScaleHeight = scaleAlphabet,
+                        nameIdentifier = "delete"
                     };
                     letterButton.InsideImage = TexturesButtons["deleteLetter"];
                     letterButton.Font = UserInterface.menuSmallFont;
@@ -578,9 +548,6 @@ namespace BRS.Scripts.UI {
             // Create list of components for each combinaison of (#players <-> duration of a round)
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
-                    // load ranking
-                    if (durationRound == "3 min" && noPlayers == "2P")
-                        ;
                     List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);

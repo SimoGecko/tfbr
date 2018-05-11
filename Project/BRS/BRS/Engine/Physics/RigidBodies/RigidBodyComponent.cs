@@ -1,9 +1,9 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine.Physics.Colliders;
 using Jitter.Collision.Shapes;
-using Jitter.Dynamics;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -78,14 +78,9 @@ namespace BRS.Engine.Physics.RigidBodies {
         protected JMatrix StartOrientation;
 
         /// <summary>
-        /// Stores the objects to sync the position and orientation
+        /// Stores the list of synced objects which need the same spacial updates as this rigid-body
         /// </summary>
-        protected GameObject SyncedObject = null;
-
-        /// <summary>
-        /// Stores the offset of the synced object
-        /// </summary>
-        protected Vector3 SyncedOffset = Vector3.Zero;
+        protected List<Follower> SyncedObjects = new List<Follower>();
 
         #endregion
 
@@ -107,8 +102,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = Tag,
                 PureCollider = PureCollider,
                 GameObject = gameObject,
-                SyncedObject = SyncedObject,
-                SyncedOffset = SyncedOffset,
+                SyncedObjects = new List<Follower>(),
                 Material = new Jitter.Dynamics.Material { KineticFriction = 10.0f, Restitution = 0.0f, StaticFriction = 10.0f },
                 Mass = 20.0f
             };
@@ -184,11 +178,9 @@ namespace BRS.Engine.Physics.RigidBodies {
             }
         }
 
-        public void SetSyncedObject(GameObject synced, Vector3 offset) {
-            if (RigidBody != null) {
-                RigidBody.SyncedObject = synced;
-                RigidBody.SyncedOffset = offset;
-            }
+        public void AddSyncedObject(Follower follower) {
+            SyncedObjects.Add(follower);
+            RigidBody?.SyncedObjects.Add(follower);
         }
     }
 }

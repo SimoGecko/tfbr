@@ -22,7 +22,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public static void Start() {
-            //Audio.PlaySong("Happy Happy Game Show");
+            Audio.PlaySong("Happy Happy Game Show");
             Audio.SetMusicVolume(.005f);
             Audio.SetSoundVolume(1f);
             Audio.TansitionToRandomSong();

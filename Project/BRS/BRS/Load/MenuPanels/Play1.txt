@@ -128,11 +128,12 @@ Texture: button
 Position: 900 540
 Text: N
 Functions: SetMode HighlightBorders GoDown
-NeighborsUpDownLeftRight: RoundDuration2min MapA ModeDynamic ModeBombs
-UniqueChoiceWith: ModeBombs ModeCrates ModeDynamic
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeSurvival ModeBombs
+UniqueChoiceWith: ModeBombs ModeCrates ModeSurvival
 IsClicked: yes
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 0
 </Button>
 
 <Button>
@@ -142,9 +143,10 @@ Position: 1020 540
 Text: B
 Functions: SetMode HighlightBorders GoDown
 NeighborsUpDownLeftRight: RoundDuration3min MapA ModeNormal ModeCrates
-UniqueChoiceWith: ModeNormal ModeCrates ModeDynamic
+UniqueChoiceWith: ModeNormal ModeCrates ModeSurvival
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 1
 </Button>
 
 <Button>
@@ -153,14 +155,15 @@ Texture: button
 Position: 1140 540
 Text: C
 Functions: SetMode HighlightBorders GoDown
-NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeDynamic
-UniqueChoiceWith: ModeNormal ModeBombs ModeDynamic
+NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeSurvival
+UniqueChoiceWith: ModeNormal ModeBombs ModeSurvival
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 2
 </Button>
 
 <Button>
-NameIdentifier: ModeDynamic
+NameIdentifier: ModeSurvival
 Texture: button
 Position: 1260 540
 Text: D
@@ -169,6 +172,7 @@ NeighborsUpDownLeftRight: RoundDuration10min MapB ModeCrates ModeNormal
 UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
 ScaleWidth: 0.75
 ScaleHeight: 0.75
+Index: 3
 </Button>
 
 <Button>
@@ -221,7 +225,7 @@ ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
 Functions: SetDefaultParametersGame SwitchToMenu
-NeighborsUpDownLeftRight: RoundDuration2min null Back Back
+NeighborsUpDownLeftRight: MapA null Back Back
 NameSwitchTo: play2Shared
 ColorInside: 148 148 148
 </Button>

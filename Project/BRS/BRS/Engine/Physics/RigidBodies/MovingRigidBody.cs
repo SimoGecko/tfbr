@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System.Collections.Generic;
 using BRS.Engine.Physics.Colliders;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
@@ -29,9 +30,9 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// <param name="isActive">Active in physical simulation</param>
         /// <param name="shapeType">Type of the collider-shape</param>
         /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
-        /// <param name="synchedObject">The object which it's location and orientation is syned</param>
-        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, GameObject synchedObject = null)
-            : this(new Vector3(size), isActive, shapeType, pureCollider, synchedObject) {
+        /// <param name="synchedObjects">The objects which it's location and orientation are syned</param>
+        public MovingRigidBody(float size = 1.0f, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, List<Follower> synchedObjects = null)
+            : this(new Vector3(size), isActive, shapeType, pureCollider, synchedObjects) {
         }
 
 
@@ -42,8 +43,8 @@ namespace BRS.Engine.Physics.RigidBodies {
         /// <param name="isActive">Active in physical simulation</param>
         /// <param name="shapeType">Type of the collider-shape</param>
         /// <param name="pureCollider">True if it's only for collision -> simulation only adjusted by static-objects</param>
-        /// <param name="synchedObject">The object which it's location and orientation is syned</param>
-        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, GameObject synchedObject = null) {
+        /// <param name="synchedObjects">The objects which it's location and orientation are syned</param>
+        public MovingRigidBody(Vector3 size, bool isActive = true, ShapeType shapeType = ShapeType.Box, bool pureCollider = false, List<Follower> synchedObjects = null) {
             IsStatic = false;
             IsAnimated = false;
             IsActive = isActive;
@@ -51,7 +52,7 @@ namespace BRS.Engine.Physics.RigidBodies {
             PureCollider = pureCollider;
             Tag = BodyTag.DrawMe;
             Size = Conversion.ToJitterVector(size);
-            SyncedObject = synchedObject;
+            SyncedObjects = synchedObjects ?? new List<Follower>();
         }
 
         #endregion
@@ -73,6 +74,7 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Tag = BodyTag.DrawMe,
                 Mass = 20.0f,
                 GameObject = gameObject,
+                SyncedObjects = SyncedObjects,
                 Material = new Jitter.Dynamics.Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
