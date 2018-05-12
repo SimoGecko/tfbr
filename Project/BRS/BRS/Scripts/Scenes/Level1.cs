@@ -171,13 +171,13 @@ namespace BRS.Scripts.Scenes {
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
                 //arrow.material = arrowMat;//new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
-                arrow.transform.Scale(.2f);
+                arrow.transform.Scale(2f);
 
                 //arrow for enemy
                 GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_green"));
                 //arrow2.material = arrowMat;// new Material(Graphics.Red);
                 arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                arrow2.transform.Scale(.08f);
+                arrow2.transform.Scale(2f);
             }
         }
 

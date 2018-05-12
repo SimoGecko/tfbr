@@ -17,7 +17,7 @@ namespace BRS.Scripts.Elements {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float Margin = .4f;
+        const float Margin = 1.4f;
         const float SmoothTime = .1f;
         //const float smallSize = .05f;
         //const float bigSize = .2f;
