@@ -22,6 +22,7 @@ namespace BRS {
         RenderTarget2D _ZBuffer;
         Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
+        const string startScene = "Level1";//LevelMenu
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -80,7 +81,7 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene(startScene);
 
             Audio.Start();
 
@@ -92,7 +93,7 @@ namespace BRS {
             _ZBufferTexture = File.Load<Texture2D>("Images/textures/zbuffer");
 
             // add skybox
-            Skybox.Start();
+            //Skybox.Start();
 
         }
 
@@ -132,19 +133,16 @@ namespace BRS {
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
-            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
-            Skybox.Draw(Camera.Main); // TODO move it for every camera
-            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
-
             base.Draw(gameTime);
 
             //-----3D-----
             GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
+
+                GraphicsDevice.RasterizerState = Screen._nocullRasterizer;
+                //Skybox.Draw(cam);
+                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world

@@ -12,20 +12,26 @@ namespace BRS.Scripts.Elements {
     /// </summary>
     class PlantedBomb : Component {
 
-        private const float TimeBeforeExplosion = 3f;
+        private const float TimeBeforeExplosion = 4f;
+        private const float TimeBeforeProximityCheck = 1;
         private const float ExplosionRadius = 5f; // also proximity explosion
         private const float ExplosionDamage = 60;
+        const bool doProximityCheck = false;
 
         int teamIndex;
-        bool exploded = false;
+
+        bool exploded;
+        bool checkProximity;
 
         public override void Start() {
-
+            exploded = false;
+            checkProximity = false;
         }
 
         public override void Update() {
             base.Update();
-            CheckProximity();
+            if(checkProximity)
+                CheckProximity();
         }
 
         public void Plant(int teamIndex) {
@@ -34,11 +40,12 @@ namespace BRS.Scripts.Elements {
             for (float i = 0; i < TimeBeforeExplosion; i += .5f) {
                 new Timer(i, () => ParticleUI.Instance.GiveOrder(FusePosition(), ParticleType.Sparks));
             }
+            if(doProximityCheck)
+                new Timer(TimeBeforeProximityCheck, () => checkProximity = true);
             new Timer(TimeBeforeExplosion, Explode);
         }
 
         void CheckProximity() {
-            //
             foreach(var p in ElementManager.Instance.Players()) {
                 if (p.TeamIndex != teamIndex && InExplosionRange(p.gameObject))
                     Explode();

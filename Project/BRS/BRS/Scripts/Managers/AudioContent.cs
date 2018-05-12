@@ -22,8 +22,7 @@ namespace BRS.Scripts {
 
         // --------------------- BASE METHODS ------------------
         public static void Start() {
-            Audio.PlaySong("Happy Happy Game Show");
-            Audio.SetMusicVolume(.005f);
+            Audio.SetMusicVolume(.2f);
             Audio.SetSoundVolume(1f);
             Audio.TansitionToRandomSong();
         }
@@ -45,7 +44,7 @@ namespace BRS.Scripts {
                 "attack/dash", "attack/enemy_hit", "attack/stun",
                 "collisions/bomb_explosion", "collisions/bomb_timer", "collisions/wall_hit",
                 "elements/active_magnet", "elements/catched_trap", "elements/falling_weight", "elements/speedpad",
-                "game/end_lose", "game/end_win", "game/police",
+                "game/end_lose", "game/end_win", "game/police","game/start321","game/start0",
                 "menu/button_press_A", "menu/button_press_B", "menu/characters_popup","menu/menu_change",
                 "movement/braking_tires", "movement/damaged_car", "movement/full_car", "movement/vehicle_engine_normal",//none used
                 "other/crate_cracking", "other/leaving_cash_base", "other/vault_opening",

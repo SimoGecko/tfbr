@@ -33,6 +33,7 @@ namespace BRS.Scripts.Scenes {
         public override void Load() {
             LoadBlenderBakedScene();
             LoadUnityScene();
+            CreateSkybox();
             SetStartPositions();
             CreateManagers();
             CreatePlayers();
@@ -113,6 +114,12 @@ namespace BRS.Scripts.Scenes {
             //new MenuManager().LoadContent(); // TODO add as component to manager
         }
 
+        void CreateSkybox() {
+            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
+            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/midday"));
+            skybox.material = skyboxMat;
+        }
+
         void CreatePlayers() {
 
             //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
@@ -156,18 +163,21 @@ namespace BRS.Scripts.Scenes {
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
+
+                Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));//, File.Load<Texture2D>("Images/lightmaps/elements"));
+
                 //arrow for base
                 //TODO add correct materials
-                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.material = new Material(Graphics.Green);
+                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
+                //arrow.material = arrowMat;//new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
-                //arrow.transform.Scale(.2f);
+                arrow.transform.Scale(.2f);
 
                 //arrow for enemy
-                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow2.material = new Material(Graphics.Red);
+                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_green"));
+                //arrow2.material = arrowMat;// new Material(Graphics.Red);
                 arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                //arrow2.transform.Scale(.08f);
+                arrow2.transform.Scale(.08f);
             }
         }
 

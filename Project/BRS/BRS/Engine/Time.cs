@@ -50,6 +50,11 @@ namespace BRS.Engine {
 
         // Todo: Think about this one in more detail
         public static void ClearTimers() {
+            for (int i = 0; i < timers.Count; ++i) {
+                if (!timers[i].AlwaysRun) {
+                    timers.RemoveAt(i--);
+                }
+            }
             //lock (new object())
             //{
             //    for (int i = 0; i < timers.Count; ++i)

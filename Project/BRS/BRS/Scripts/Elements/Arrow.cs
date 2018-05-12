@@ -56,7 +56,7 @@ namespace BRS.Scripts.Elements {
 
         public override void Update() {
             CheckIfDisplay();
-            //LookAtPoi();
+            LookAtPoi();
         }
 
 

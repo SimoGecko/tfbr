@@ -16,7 +16,8 @@ namespace BRS.Engine {
         static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, Song> songs;
         const float pitchRange = .2f;
-        //const float volumeBoost = 2f;
+        const float volumeBoost = 100f;
+        const bool Use3DSoundEffects = false;
 
         static List<SoundEmit> currentlyPlayingEffects = new List<SoundEmit>();
 
@@ -37,11 +38,11 @@ namespace BRS.Engine {
 
 
         public static void Update() {
-            Apply3DPositionToPlayingSounds();
+            if(Use3DSoundEffects)
+                Apply3DPositionToPlayingSounds();
             RemoveFinishedEffects();
 
-
-            if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.R)) TansitionToRandomSong();
+            //if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.R)) TansitionToRandomSong();
         }
 
         static void Apply3DPositionToPlayingSounds() {
@@ -49,7 +50,7 @@ namespace BRS.Engine {
             foreach (SoundEmit se in currentlyPlayingEffects) {
                 se.soundInstance.Apply3D(listener, se.emitter);
                 se.soundInstance.Pitch = se.pitch;
-                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * 2);
+                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost);
             }
         }
 
@@ -103,12 +104,10 @@ namespace BRS.Engine {
             if (changePitch) {
                 newSoundEmit.pitch = MyRandom.Range(-pitchRange, pitchRange);
             }
-            //soundInstance.Volume = volume;
-            //soundInstance.Pan = -sounds[name].Pan;
-            //soundInstance.Pitch = -1;
-            soundInstance.Apply3D(Listener(), em);
+            if(Use3DSoundEffects)
+                soundInstance.Apply3D(Listener(), em);
             soundInstance.Pitch = newSoundEmit.pitch;
-            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*2);
+            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*volumeBoost);
             soundInstance.Play();
         }
 

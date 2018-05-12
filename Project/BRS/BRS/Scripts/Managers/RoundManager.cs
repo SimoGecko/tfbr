@@ -62,7 +62,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void RestartRound() { // done at beginning of every round
-            roundTimer = new Timer(0, RoundTime, OnRoundEnd);
+            roundTimer = new Timer(RoundTime, OnRoundEnd);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
             RoundUI.instance.ShowEndRound(false);
@@ -88,6 +88,8 @@ namespace BRS.Scripts.Managers {
             for (int i = 3; i >= 0; i--) {
                 await Time.WaitForSeconds(1f);
                 RoundUI.instance.ShowCountDown(i);
+                if(i>0) Audio.Play("start321", Vector3.Zero);
+                else Audio.Play("start0", Vector3.Zero);
                 if (i == 0) OnRoundStart();
             }
             await Time.WaitForSeconds(1f);
