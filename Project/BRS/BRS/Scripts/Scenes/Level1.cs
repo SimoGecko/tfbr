@@ -53,7 +53,7 @@ namespace BRS.Scripts.Scenes {
             GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             outsideScene.material = outsideMat;
 
-            
+
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
             GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
             infinitePlane.material = groundMat;
@@ -103,7 +103,6 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
-            Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager(PoliceStartPositions));
 
 
@@ -115,8 +114,12 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateSkybox() {
+            bool useRandomSkybox = true;
+            string[] skyboxTextures = new string[]{"daybreak", "midday", "evening", "sunset", "midnight", };
+            string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
             GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
-            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/midday"));
+            skybox.transform.Scale(2); // not more than this or it will be culled
+            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/"+ skyTexture));
             skybox.material = skyboxMat;
         }
 

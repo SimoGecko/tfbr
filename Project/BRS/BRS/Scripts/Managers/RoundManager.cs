@@ -20,7 +20,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 120;
+        public static int RoundTime = 12;
         public const int TimeBeforePolice = 5;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
@@ -135,9 +135,11 @@ namespace BRS.Scripts.Managers {
             teamWins[Winner]++;
             BaseUI.Instance.UpdateBaseUIWins(Winner);
 
+            bool finalRound = roundNumber == NumRounds;
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                if(ElementManager.Instance.Player(i).TeamIndex==Winner)
-                RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+                if (ElementManager.Instance.Player(i).TeamIndex == Winner)
+                RoundUI.instance.ShowEndRound(i, finalRound ? RoundUI.EndRoundCondition.Youwon : RoundUI.EndRoundCondition.Success);
             }
 
 

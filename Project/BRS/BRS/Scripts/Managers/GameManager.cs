@@ -15,7 +15,7 @@ namespace BRS.Scripts.Managers {
         public static State state; // CONTROLS STATE OF THE GAME
 
         //public
-        public static int NumPlayers = 1; // TODO always check it works with 1, 2, and 4 players
+        public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 4;
         public static int lvlDifficulty = 2; // 0 for Easy, 1 for Normal, 2 for Hard
 
@@ -55,7 +55,7 @@ namespace BRS.Scripts.Managers {
 
         public static void RestartCustom() { // TODO refactor
             ElementManager.Instance.Restart();
-            Time.ClearTimers();
+            //Time.ClearTimers();
             Spawner.Instance.Start();
             //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();

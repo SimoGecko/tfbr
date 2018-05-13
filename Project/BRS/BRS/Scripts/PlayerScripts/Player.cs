@@ -118,8 +118,11 @@ namespace BRS.Scripts.PlayerScripts {
                     //Input.Vibrate(.001f, .001f, PlayerIndex);
                 }
 
-                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                Vector2 moveInput;
+                if(true)//!CameraController.autoFollow)
+                    moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                else
+                    moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
