@@ -14,7 +14,7 @@ namespace BRS.Scripts.Elements {
 
         private const float TimeBeforeExplosion = 4f;
         private const float TimeBeforeProximityCheck = 1;
-        private const float ExplosionRadius = 5f; // also proximity explosion
+        private const float ExplosionRadius = 7f; // also proximity explosion
         private const float ExplosionDamage = 60;
         const bool doProximityCheck = false;
 

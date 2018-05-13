@@ -17,7 +17,7 @@ namespace BRS.Scripts.Elements {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float Margin = 1.4f;
+        const float Margin = .6f;
         const float SmoothTime = .1f;
         //const float smallSize = .05f;
         //const float bigSize = .2f;
@@ -66,7 +66,7 @@ namespace BRS.Scripts.Elements {
 
         // commands
         void LookAtPoi() {
-            transform.position = _follow.transform.position+Vector3.Up*.05f;
+            transform.position = _follow.transform.position+Vector3.Up*.1f;
             Vector3 direction = _target.position - transform.position;
             float angle = MathHelper.ToDegrees((float) Math.Atan2(direction.Z, direction.X));
             _smoothAngle = Utility.SmoothDampAngle(_smoothAngle, angle, ref _smoothRefAngle, SmoothTime);

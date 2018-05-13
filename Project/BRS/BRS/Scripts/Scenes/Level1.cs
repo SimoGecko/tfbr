@@ -164,20 +164,19 @@ namespace BRS.Scripts.Scenes {
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
 
-                Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));//, File.Load<Texture2D>("Images/lightmaps/elements"));
+                Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 //arrow for base
-                //TODO add correct materials
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
-                //arrow.material = arrowMat;//new Material(Graphics.Green);
+                arrow.material = arrowMat;//new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
-                arrow.transform.Scale(2f);
+                arrow.transform.Scale(.6f);
 
                 //arrow for enemy
-                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_green"));
-                //arrow2.material = arrowMat;// new Material(Graphics.Red);
+                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
+                arrow2.material = arrowMat;// new Material(Graphics.Red);
                 arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                arrow2.transform.Scale(2f);
+                arrow2.transform.Scale(.3f);
             }
         }
 

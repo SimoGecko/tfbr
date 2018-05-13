@@ -150,7 +150,6 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
-
                 //gizmos
                 GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 Gizmos.DrawWire(cam);

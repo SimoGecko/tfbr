@@ -96,7 +96,7 @@ namespace BRS.Scripts {
             gm.SetBaseParams(150, 20000, WinCondition.Time);
             gm.SetAmount(80, 30, 50, .5f);
             gm.SetMoneyDistrib(.8f, .2f, .05f);
-            gm.SetPowerupDistribution(1.1f, .1f, .1f, .1f, .1f, .1f, .1f);
+            gm.SetPowerupDistribution(.1f, .1f, .1f, .1f, .1f, .1f, .1f);
         }
 
         static void CreateSurvivalMode() {
