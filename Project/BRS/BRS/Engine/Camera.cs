@@ -13,7 +13,7 @@ namespace BRS.Engine {
 
         //public
         private const float Near = 0.3f;
-        private const float Far = 1000f;
+        private const float Far = 100f;
 
         //private
         Projection projectiontype = Projection.Perspective;

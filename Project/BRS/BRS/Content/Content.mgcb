@@ -3663,3 +3663,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/end_round_text.png
 
+#begin Effects/TwoPassBlur.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/TwoPassBlur.fx
+

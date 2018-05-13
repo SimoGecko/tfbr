@@ -20,7 +20,8 @@ namespace BRS.Engine.PostProcessing {
         DepthOfField,
         ColorGrading,
         ShockWave,
-        Wave
+        Wave,
+        TwoPassBlur
     }
 
 
@@ -32,7 +33,7 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D _blurTarget;
         private Texture2D _testGrid;
         private Vector3 _wavePosition;
-        private bool DEBUG = false;
+        private bool DEBUG = true;
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
         private int _maxLuT = 20;
@@ -60,14 +61,17 @@ namespace BRS.Engine.PostProcessing {
                     case PostprocessingType.GaussianBlur:
                         ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
                         break;
+                    case PostprocessingType.TwoPassBlur:
+                        ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
+                        break;
 
                     case PostprocessingType.DepthOfField:
                         float nearClip = 0.3f;
-                        float farClip = 1000.0f;
+                        float farClip = 100.0f;
                         farClip = farClip / (farClip - nearClip);
 
-                        ppEffect.SetParameter("Distance", 70.0f);
-                        ppEffect.SetParameter("Range", 30.0f);
+                        ppEffect.SetParameter("Distance", 10.0f);
+                        ppEffect.SetParameter("Range", 15.0f);
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
                         break;
@@ -213,9 +217,16 @@ namespace BRS.Engine.PostProcessing {
                 _effects[6].SetParameter("centerCoord", centerCoord);
                 _effects[6].SetParameterForPlayer(0, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
             }
+            for(var i = 0; i < GameManager.NumPlayers; i++) {
+                for (var j = 0; j < 8; j++) {
+                    if(j != 4) {
+                        _effects[j].Activate(i, false);
+                    }                 
+                }
+            }
 
             if (Input.GetKeyDown(Keys.F1)) {
-                ActivateBlackAndWhite(0);
+                _effects[8].Activate(1, !_effects[8].IsActive(1));
             }
             if (Input.GetKeyDown(Keys.F2)) {
                 _effects[1].Activate(1, !_effects[1].IsActive(1));
@@ -262,27 +273,24 @@ namespace BRS.Engine.PostProcessing {
                         graphicsDevice.SetRenderTarget(_blurTarget);
 
                         // get the gaussian blur shader
-                        PostProcessingEffect blurShader = _effects[(int)PostprocessingType.GaussianBlur];
+                        PostProcessingEffect blurShader = _effects[(int)PostprocessingType.TwoPassBlur];
+                        blurShader.SetParameter("active", new Vector4(1, 1, 1, 1));
 
-                        // apply 2 blur passes
-                        for (int i = 0; i < 2; i++) {
-                            spriteBatch.Begin(SpriteSortMode.Immediate,
-                                BlendState.AlphaBlend,
-                                SamplerState.LinearClamp,
-                                DepthStencilState.Default,
-                                RasterizerState.CullNone);
+                        // apply 2 blur passes      
+                        spriteBatch.Begin(SpriteSortMode.Immediate,
+                            BlendState.AlphaBlend,
+                            SamplerState.LinearClamp,
+                            DepthStencilState.Default,
+                            RasterizerState.CullNone);
+                        blurShader.Effect.CurrentTechnique.Passes[0].Apply();
+                        blurShader.Effect.CurrentTechnique.Passes[1].Apply();
+                        spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
 
-                            blurShader.Effect.CurrentTechnique.Passes[0].Apply();
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                            curTarget = _blurTarget;
-
-                            spriteBatch.End();
-                        }
-
-                        graphicsDevice.SetRenderTarget(null);
+                        spriteBatch.End();
+                        
                         // set the blurred scene and the depth map as parameter
                         ppShader.SetParameter("BlurScene", _blurTarget);
-                        ppShader.SetParameter("D1M", depth1Texture);
+                        ppShader.SetParameter("DepthTexture", depth1Texture);
                     }
 
                     if(ppShader.Type == PostprocessingType.Wave) {
@@ -295,6 +303,7 @@ namespace BRS.Engine.PostProcessing {
                     // Setup next render-target to apply next filter
                     RenderTarget2D nextTarget = _renderTargets[(int)ppShader.Type];
                     graphicsDevice.SetRenderTarget(nextTarget);
+                    
 
                     for (int i = 0; i < ppShader.Passes; i++) {
                         // apply post processing shader
@@ -304,12 +313,11 @@ namespace BRS.Engine.PostProcessing {
                             DepthStencilState.Default,
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
-                        if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
-                            spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        } else {
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                        if (PostprocessingType.TwoPassBlur == ppShader.Type) {
+                            ppShader.Effect.CurrentTechnique.Passes[1].Apply();
                         }
-
+                    
+                        spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         spriteBatch.End();
                     }
 
@@ -318,7 +326,7 @@ namespace BRS.Engine.PostProcessing {
                 }
             }
 
-            // draw to screen
+                // draw to screen
             graphicsDevice.SetRenderTarget(null);
             spriteBatch.Begin(SpriteSortMode.Immediate,
                 BlendState.AlphaBlend,

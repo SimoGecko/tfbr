@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -149,6 +150,10 @@ namespace BRS.Engine {
                 }
                 mesh.Draw();
             }
+        }
+
+        internal static void DrawModelDepth(Model model, Matrix view, Matrix proj, Matrix world, Effect depthShader) {
+            DrawModelWithEffect(model, view, proj, world, depthShader);
         }
 
         //----------------------------------------------------------------------------------------------
