@@ -62,30 +62,36 @@ namespace BRS.Engine.Physics {
             return vertexBuffer;
         }
 
-        public static void ModelData(Model model, out VertexBuffer vertices, out IndexBuffer indices) {
+
+        public static void ModelData(Model model, out VertexBuffer vertices, out IndexBuffer indices, out VertexPositionColorTexture[] v, out short[] i) {
             try
             {
                 ModelMeshPart part = model.Meshes[0].MeshParts[0];
 
-                VertexPositionColorNormal[] modelVertices =
-                    new VertexPositionColorNormal[part.VertexBuffer.VertexCount];
-                part.VertexBuffer.GetData<VertexPositionColorNormal>(modelVertices);
+                VertexPositionColorTexture[] modelVertices =
+                    new VertexPositionColorTexture[part.VertexBuffer.VertexCount];
+                part.VertexBuffer.GetData(modelVertices);
 
-                vertices = new VertexBuffer(Graphics.gD, typeof(VertexPositionNormalColor),
-                    part.VertexBuffer.VertexCount, BufferUsage.WriteOnly);
+                vertices = new VertexBuffer(Graphics.gD, typeof(VertexPositionColorTexture),
+                    part.VertexBuffer.VertexCount, BufferUsage.None);
                 vertices.SetData(modelVertices);
 
-                ushort[] modelIndices = new ushort[part.IndexBuffer.IndexCount];
-                part.IndexBuffer.GetData<ushort>(modelIndices);
+                short[] modelIndices = new short[part.IndexBuffer.IndexCount];
+                part.IndexBuffer.GetData<short>(modelIndices);
 
                 indices = new IndexBuffer(Graphics.gD, typeof(ushort), part.IndexBuffer.IndexCount,
-                    BufferUsage.WriteOnly);
+                    BufferUsage.None);
                 indices.SetData(modelIndices);
+
+                v = modelVertices;
+                i = modelIndices;
             }
             catch
             {
                 vertices = null;
                 indices = null;
+                v = new VertexPositionColorTexture[0];
+                i = new short[0];
             }
         }
     }

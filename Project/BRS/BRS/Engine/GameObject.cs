@@ -23,7 +23,7 @@ namespace BRS.Engine {
         public List<IComponent> components;
         public Model Model { get; set; }
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
-        public BoundingBox BoundingBox { get; }
+        public BoundingBox BoundingBox { get; private set; }
         public bool active { get; set; } = true;
         public string name { private set; get; }
 
@@ -32,6 +32,8 @@ namespace BRS.Engine {
         public Material material = null;
 
         public VertexBuffer VertexBuf { get; private set; }
+        public VertexPositionColorTexture[] Vertices { get; private set; }
+        public short[] Indices { get; private set; }
         public IndexBuffer IndexBuf { get; private set; }
 
         static int InstanceCount = 0;
@@ -46,19 +48,27 @@ namespace BRS.Engine {
             Model = model;
             allGameObjects.Add(this);
             SortAll();
+            InitModel();
+        }
 
-            if (model != null) {
-                BoundingBox = BoundingBoxHelper.Calculate(model);
+        private void InitModel()
+        {
+            if (Model != null) {
+                BoundingBox = BoundingBoxHelper.Calculate(Model);
                 //_vertexBuffer = ModelExtractor.ExtractVertexBuffer(model);
                 VertexBuffer vb;
+                VertexPositionColorTexture[] v;
                 IndexBuffer ib;
-                ModelExtractor.ModelData(model, out vb, out ib);
+                short[] i;
+                ModelExtractor.ModelData(Model, out vb, out ib, out v, out i);
 
                 VertexBuf = vb;
                 IndexBuf = ib;
+                Vertices = v;
+                Indices = i;
             }
-        }
 
+        }
 
         // ---------- CALLBACKS ----------
         public void Awake() {
@@ -164,7 +174,8 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = material; //material?.Clone();
+            newObject.material = material?.Clone();
+            newObject.InitModel();
             return newObject;
         }
 
