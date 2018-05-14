@@ -14,6 +14,7 @@ namespace BRS.Engine {
         //public
         private const float Near = 0.3f;
         private const float Far = 1000f;
+        const float defaultFOV = 40;
 
         //private
         Projection projectiontype = Projection.Perspective;
@@ -28,7 +29,7 @@ namespace BRS.Engine {
         public Matrix View { get { return Matrix.Invert(transform.World); } }
         //public int Index { get { return _index; } }
 
-        public Camera(Viewport vp, float fov = 60)  {
+        public Camera(Viewport vp, float fov = defaultFOV)  {
             //_index = index;
             _fov = fov;
             _aspectRatio = vp.AspectRatio;

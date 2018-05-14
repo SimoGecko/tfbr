@@ -20,8 +20,8 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 12;
-        public const int TimeBeforePolice = 5;
+        public static int RoundTime = 120;
+        public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
@@ -164,7 +164,7 @@ namespace BRS.Scripts.Managers {
             //save scores
             //UpdateRanking();
             //return to menu
-            SceneManager.LoadScene("Level2");
+            SceneManager.LoadScene("LevelMenu");
         }
 
 

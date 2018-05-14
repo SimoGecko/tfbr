@@ -3663,3 +3663,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/UI/end_round_text.png
 
+#begin Other/shaders/lightmap.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Other/shaders/lightmap.fx
+

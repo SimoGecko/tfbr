@@ -114,7 +114,7 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateSkybox() {
-            bool useRandomSkybox = true;
+            bool useRandomSkybox = false;
             string[] skyboxTextures = new string[]{"daybreak", "midday", "evening", "sunset", "midnight", };
             string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
             GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));

@@ -22,7 +22,8 @@ namespace BRS {
         RenderTarget2D _ZBuffer;
         Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
-        const string startScene = "Level1";//LevelMenu
+        const string startScene = "Level1";
+        bool showUI = true;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -191,14 +192,16 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                foreach (GameObject go in GameObject.All) go.Draw2D(i);
+                if(showUI)
+                    foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
                 i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            foreach (GameObject go in GameObject.All) go.Draw2D(0);
+            if(showUI)
+                foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
         }
     }
