@@ -35,7 +35,7 @@ namespace BRS.Engine.PostProcessing {
         private bool DEBUG = false;
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
-        private int _maxLuT = 20;
+        private int _maxLuT = 54;
 
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager();
