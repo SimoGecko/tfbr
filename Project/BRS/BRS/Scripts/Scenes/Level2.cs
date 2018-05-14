@@ -36,7 +36,7 @@ namespace BRS.Scripts.Scenes {
 
             GameObject cube = new GameObject("cube1", File.Load<Model>("models/primitives/cube"));
             //cube.material = new Material(Color.Green);
-            cube.AddComponent(new MaterialTest(cube.material));
+            //cube.AddComponent(new MaterialTest(cube.material));
 
             cyl.transform.position = new Vector3(1.5f, 2, 3);
             cyl.transform.eulerAngles = new Vector3(-10, -20, 30);

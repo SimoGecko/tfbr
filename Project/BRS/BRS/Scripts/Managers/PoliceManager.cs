@@ -47,7 +47,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            DrawPoints();
+            //DrawPoints();
         }
 
         public override void Reset() {
@@ -97,6 +97,7 @@ namespace BRS.Scripts {
         async void SpawnFollowPoliceCoroutine() {
             int numFollowPolice = followPolicePerDifficulty[GameManager.lvlDifficulty];
             float spawnDelay = ((float)RoundManager.RoundTime - startDelay) / numFollowPolice;
+            spawnDelay = MathHelper.Max(spawnDelay, 1f);
 
             await Time.WaitForSeconds(startDelay);
 

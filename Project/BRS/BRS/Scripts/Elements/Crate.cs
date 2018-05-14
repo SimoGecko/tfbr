@@ -59,7 +59,7 @@ namespace BRS.Scripts.Elements {
         void CrackCrate() {
             _cracked = true;
             Audio.Play("crate_cracking", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Drill);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Drill, 1.5f);
             if (_explosionRigged) Explode();
             else SpawnValuables();
 
@@ -81,7 +81,7 @@ namespace BRS.Scripts.Elements {
         void Explode() {
             //same code as in bomb
             Audio.Play("bomb_explosion", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion, 1.5f);
 
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {

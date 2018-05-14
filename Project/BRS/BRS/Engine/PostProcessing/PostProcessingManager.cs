@@ -29,13 +29,14 @@ namespace BRS.Engine.PostProcessing {
         private readonly List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
         private readonly Dictionary<PostprocessingType, bool> _fixEffects = new Dictionary<PostprocessingType, bool>();
+        private PostProcessingEffect _twoPassEffect;
         private RenderTarget2D _blurTarget;
-        private readonly Texture2D _testGrid;
-        //private Vector3 _wavePosition;
         private bool DEBUG = false;
         private readonly List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
         private int _maxLuT = 20;
+        private float _distance = 6f;
+        private float _range = 16.5f;
 
         public static void Initialize(List<PostprocessingType> initialized) {
             Instance = new PostProcessingManager(initialized);
@@ -72,14 +73,26 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.DepthOfField:
-                        float nearClip = 0.3f;
-                        float farClip = 1000.0f;
+                        float nearClip = Camera.Near;
+                        float farClip = Camera.Far;
                         farClip = farClip / (farClip - nearClip);
 
-                        ppEffect.SetParameter("Distance", 70.0f);
-                        ppEffect.SetParameter("Range", 30.0f);
+                        ppEffect.SetParameter("Distance", _distance);
+                        ppEffect.SetParameter("Range", _range);
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
+
+                        PostProcessingEffect ppBlur = new PostProcessingEffect(PostprocessingType.TwoPassBlur, 1, false, _loadedEffects[PostprocessingType.TwoPassBlur]);
+                        ppBlur.SetParameter("players", (float)GameManager.NumPlayers);
+                        ppBlur.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
+                        ppBlur.SetParameter("active", new Vector4(1, 1, 1, 1));
+
+                        for (var i = 0; i < GameManager.NumPlayers; i++) {
+                            ppEffect.Activate(i, true);
+                            ppBlur.Activate(i, true);
+                        }
+                        _twoPassEffect = ppBlur;
+
                         break;
 
                     case PostprocessingType.Chromatic:
@@ -110,13 +123,11 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.ShockWave:
-                        _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;
 
                     case PostprocessingType.Wave:
-                        _testGrid = File.Load<Texture2D>("Images/textures/Pixel_grid");
                         ppEffect.SetParameter("centerCoord", new Vector2(0.5f, 0.5f));
                         ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
                         break;
@@ -254,28 +265,24 @@ namespace BRS.Engine.PostProcessing {
                         graphicsDevice.SetRenderTarget(_blurTarget);
 
                         // get the gaussian blur shader
-                        PostProcessingEffect blurShader = _effects[(int)PostprocessingType.GaussianBlur];
+                        PostProcessingEffect blurShader = _twoPassEffect;
+                        blurShader.SetParameter("active", new Vector4(1, 1, 1, 1));
 
-                        // apply 2 blur passes
-                        for (int i = 0; i < 2; i++) {
-                            spriteBatch.Begin(SpriteSortMode.Immediate,
-                                BlendState.AlphaBlend,
-                                SamplerState.LinearClamp,
-                                DepthStencilState.Default,
-                                RasterizerState.CullNone);
+                        // apply 2 blur passes      
+                        spriteBatch.Begin(SpriteSortMode.Immediate,
+                            BlendState.AlphaBlend,
+                            SamplerState.LinearClamp,
+                            DepthStencilState.Default,
+                            RasterizerState.CullNone);
+                        blurShader.Effect.CurrentTechnique.Passes[0].Apply();
+                        blurShader.Effect.CurrentTechnique.Passes[1].Apply();
+                        spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
 
-                            blurShader.Effect.CurrentTechnique.Passes[0].Apply();
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                            curTarget = _blurTarget;
-
-                            spriteBatch.End();
-                        }
-
-                        graphicsDevice.SetRenderTarget(null);
+                        spriteBatch.End();
 
                         // set the blurred scene and the depth map as parameter
                         ppShader.SetParameter("BlurScene", _blurTarget);
-                        ppShader.SetParameter("D1M", depth1Texture);
+                        ppShader.SetParameter("DepthTexture", depth1Texture);
                     }
 
                     if (ppShader.Type == PostprocessingType.ShockWave) {
@@ -298,6 +305,7 @@ namespace BRS.Engine.PostProcessing {
                     RenderTarget2D nextTarget = ppShader.RenderTarget;
                     graphicsDevice.SetRenderTarget(nextTarget);
 
+
                     for (int i = 0; i < ppShader.Passes; i++) {
                         // apply post processing shader
                         spriteBatch.Begin(SpriteSortMode.Immediate,
@@ -306,17 +314,11 @@ namespace BRS.Engine.PostProcessing {
                             DepthStencilState.Default,
                             RasterizerState.CullNone);
                         ppShader.Effect.CurrentTechnique.Passes[0].Apply();
-
                         if (PostprocessingType.TwoPassBlur == ppShader.Type) {
                             ppShader.Effect.CurrentTechnique.Passes[1].Apply();
                         }
 
-                        if (PostprocessingType.ShockWave == ppShader.Type && DEBUG) {
-                            spriteBatch.Draw(_testGrid, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        } else {
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
-                        }
-
+                        spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         spriteBatch.End();
                     }
 

@@ -16,8 +16,8 @@ namespace BRS.Scripts {
 
         //public
         const int countdownSize = 256;
-        const int roundEndWidth = 500;
-        const int roundEndHeight = 200;
+        const int roundEndWidth = 600;
+        const int roundEndHeight = 256;
 
         //private
         Texture2D countdownTex, endroundTex;
@@ -38,7 +38,7 @@ namespace BRS.Scripts {
         public override void Start() {
             endRoundPlayerText = new int[GameManager.NumPlayers];
             countdownTex = File.Load<Texture2D>("Images/UI/countdown");
-            endroundTex = File.Load<Texture2D>("Images/UI/end_round");
+            endroundTex = File.Load<Texture2D>("Images/UI/end_round_text");
         }
 
         public override void Update() {
@@ -55,6 +55,12 @@ namespace BRS.Scripts {
             if (showEndRound) {
                 Rectangle source = TextFromNumber(endRoundPlayerText[i]);
                 UserInterface.DrawPicture(endroundTex, Vector2.Zero, source, Align.Center);
+                string finalCash = Utility.IntToMoneyString( ElementManager.Instance.Base(i%2).TotalMoney);
+                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 151), Align.Center, bold:true, scale:.6f, col:Color.Black);
+                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 149), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                UserInterface.DrawString("you collected " + finalCash, new Vector2(-1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                UserInterface.DrawString("you collected " + finalCash, new Vector2(1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 150), Align.Center, bold:true, scale:.6f);
             }
         }
 

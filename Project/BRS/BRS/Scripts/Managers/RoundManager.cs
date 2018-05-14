@@ -21,7 +21,7 @@ namespace BRS.Scripts.Managers {
 
         //public
         public static int RoundTime = 120;
-        public const int TimeBeforePolice = 5;
+        public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
@@ -62,7 +62,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void RestartRound() { // done at beginning of every round
-            roundTimer = new Timer(0, RoundTime, OnRoundEnd);
+            roundTimer = new Timer(RoundTime, OnRoundEnd);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
             RoundUI.instance.ShowEndRound(false);
@@ -88,6 +88,8 @@ namespace BRS.Scripts.Managers {
             for (int i = 3; i >= 0; i--) {
                 await Time.WaitForSeconds(1f);
                 RoundUI.instance.ShowCountDown(i);
+                if(i>0) Audio.Play("start321", Vector3.Zero);
+                else Audio.Play("start0", Vector3.Zero);
                 if (i == 0) OnRoundStart();
             }
             await Time.WaitForSeconds(1f);
@@ -139,9 +141,11 @@ namespace BRS.Scripts.Managers {
             teamWins[Winner]++;
             BaseUI.Instance.UpdateBaseUIWins(Winner);
 
+            bool finalRound = roundNumber == NumRounds;
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 if (ElementManager.Instance.Player(i).TeamIndex == Winner)
-                    RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+                RoundUI.instance.ShowEndRound(i, finalRound ? RoundUI.EndRoundCondition.Youwon : RoundUI.EndRoundCondition.Success);
             }
 
 

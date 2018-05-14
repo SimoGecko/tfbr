@@ -8,6 +8,7 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -118,10 +119,10 @@ namespace BRS.Scripts.Elements {
         }
 
         public void NotifyRoundEnd() {
-            foreach (var p in TeamPlayers()) {
+            foreach (var p in ElementManager.Instance.Team(_baseIndex)) {
                 PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
 
-                if (!pi.CanDeload) {
+                if (!pi.CanDeload) { // PROXIMITY CHECK
                     Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     TotalMoney -= (int)(TotalMoney * MoneyPenalty);

@@ -11,6 +11,11 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
+        public enum ShaderType { Simple, Textured, Baked};
+        //simple = basic effect without anything
+        //textured = one single texture
+        //baked = texture for color and for lightmap
+
         //public
         //public bool Lit;
         public Color Diffuse;
@@ -40,10 +45,12 @@ namespace BRS.Engine {
         public Material() {
             Diffuse = Color.White;
             baked = false;
+            textured = false;
             //Lit = false;
         }
         public Material(Texture2D color, Texture2D light) {
             baked = true;
+            textured = false;
             colorTex = color;
             lightTex = light;
         }

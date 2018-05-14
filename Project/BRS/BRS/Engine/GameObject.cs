@@ -8,6 +8,7 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -174,6 +175,19 @@ namespace BRS.Engine {
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
             new Timer(lifetime, () => Destroy(o));
+        }
+
+        internal void Draw3DDepth(Camera cam, Effect depthShader) {
+            if (active) {
+                if (Model != null && active) {
+                    Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
+                }
+
+                foreach (IComponent c in components) {
+                    c.Draw3D(cam);
+                }
+            }
+
         }
 
         public static void ConsiderPrefab(GameObject o) {
