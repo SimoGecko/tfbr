@@ -12,8 +12,8 @@ namespace BRS.Engine {
         public enum Projection { Orthographic, Perspective};
 
         //public
-        private const float Near = 0.3f;
-        private const float Far = 1000f;
+        public const float Near = 0.3f;
+        public const float Far = 100f;
         const float defaultFOV = 40;
 
         //private

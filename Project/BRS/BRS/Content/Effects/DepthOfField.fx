@@ -1,6 +1,4 @@
 // This will use the texture bound to the object( like from the sprite batch ).
-
-
 float Distance;
 float Range;
 float Near;
@@ -44,15 +42,7 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 	
 	// Get the depth texel
 	float  fDepth = tex2D(DepthSampler, textureCoordinate).r;
-	return tex2D(DepthSampler, textureCoordinate);
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	// Invert the depth texel so the background is white and the nearest objects are black
 	fDepth = 1 - fDepth;
@@ -63,12 +53,11 @@ float4 PixelShaderFunction(float4 pos : SV_POSITION, float4 color1 : COLOR0, flo
 	
 	// Based on how far the texel is from "distance" in Distance, stored in blurFactor, mix the scene
 	return lerp(NormalScene, BlurScene, blurFactor);
-	
 }
 
 technique PostProcess
 {
-	pass P0
+	pass Pass1
 	{
 		PixelShader = compile ps_4_0 PixelShaderFunction();
 	}
