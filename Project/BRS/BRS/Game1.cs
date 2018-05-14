@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using BRS.Scripts.Managers;
 
@@ -33,6 +35,8 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
+
+            IsFixedTimeStep = false;
         }
 
         protected override void Initialize() {
@@ -145,19 +149,30 @@ namespace BRS {
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
-            RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.None;
-            _graphics.GraphicsDevice.RasterizerState = rasterizerState;
-            Skybox.Draw(Camera.Main); // TODO move it for every camera
-            _graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
+            //RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
+            //RasterizerState rasterizerState = new RasterizerState();
+            //rasterizerState.CullMode = CullMode.None;
+            //_graphics.GraphicsDevice.RasterizerState = rasterizerState;
+            //Skybox.Draw(Camera.Main); // TODO move it for every camera
+            //_graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
 
             base.Draw(gameTime);
-            
+
             //-----3D-----
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // activates z buffer
+            var options = new ParallelOptions();
+            options.MaxDegreeOfParallelism = Environment.ProcessorCount;
+
+            //Parallel.ForEach(Screen.Cameras, options, cam =>
+            //{
+            //    GraphicsDevice.Viewport = cam.Viewport;
+            //    foreach (GameObject go in GameObject.All) go.Draw3D(cam);
+            //});
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
+                //BoundingFrustum frustum = new BoundingFrustum(cam.View * cam.Proj);
+                //IEnumerable<GameObject> toDraw = GameObject.All.Where(m => frustum.Contains(m.BoundingBox) != ContainmentType.Disjoint);
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
@@ -165,14 +180,13 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
-
-                //gizmos
-                GraphicsDevice.RasterizerState = Screen._wireRasterizer;
-                Gizmos.DrawWire(cam);
-                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                Gizmos.DrawFull(cam);
+                ////gizmos
+                //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
+                //Gizmos.DrawWire(cam);
+                //GraphicsDevice.RasterizerState = Screen._fullRasterizer;
+                //Gizmos.DrawFull(cam);
             }
-            Gizmos.ClearOrders();
+            //Gizmos.ClearOrders();
 
             // draw everything 3 D to get the depth info 
 

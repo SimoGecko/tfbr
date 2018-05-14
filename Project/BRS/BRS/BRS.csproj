@@ -130,6 +130,7 @@
     <Compile Include="Engine\Physics\Display.cs" />
     <Compile Include="Engine\Physics\Colliders\Collider.cs" />
     <Compile Include="Engine\Physics\Follower.cs" />
+    <Compile Include="Engine\Physics\ModelExtractor.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />

@@ -60,11 +60,11 @@ namespace BRS.Engine {
 
         // commands
         //GRAPHICS METHODS
-        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+        public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null, GameObject go = null) {
             //selects which effect to use based on material
             //if (mat == null) DrawModelSimple(model, view, proj, world);
             if (mat == null) DrawModelWithEffect(model, view, proj, world, skyboxEffect);
-            else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
+            else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world, go);
             else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated, mat.Alpha);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
@@ -101,7 +101,7 @@ namespace BRS.Engine {
             }
         }
 
-        static void DrawModelBaked(Model model, Texture2D colorTex, Texture2D lightTex, Matrix view, Matrix proj, Matrix world) {
+        static void DrawModelBaked(Model model, Texture2D colorTex, Texture2D lightTex, Matrix view, Matrix proj, Matrix world, GameObject go = null) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     part.Effect = texlightEffect;
@@ -112,7 +112,19 @@ namespace BRS.Engine {
                     texlightEffect.Parameters["ColorTexture"].SetValue(colorTex);
                     texlightEffect.Parameters["LightmapTexture"].SetValue(lightTex);
                 }
-                mesh.Draw();
+                //mesh.Draw();
+                foreach (EffectPass effect in texlightEffect.CurrentTechnique.Passes)
+                {
+                    if (go.IndexBuf != null)
+                    {
+                        effect.Apply();
+                        Graphics.gD.Indices = go.IndexBuf;
+                        Graphics.gD.SetVertexBuffer(go.VertexBuf);
+                        Graphics.gD.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, go.VertexBuf.VertexCount, 0,
+                            go.IndexBuf.IndexCount / 3);
+                        gD.DrawUserIndexedPrimitives<VertexPositionColorNormal>(PrimitiveType.TriangleList, go.VertexBuf, 0, go.VertexBuf.VertexCount, go.IndexBuf, 0, go.IndexBuf.IndexCount, new VertexDeclaration());
+                    }
+                }
             }
         }
         static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
@@ -228,6 +240,19 @@ namespace BRS.Engine {
             return result;
         }
 
+    }
+
+    public struct VertexPositionColorNormal {
+        public Vector3 Position;
+        public Color Color;
+        public Vector3 Normal;
+
+        public readonly static VertexDeclaration VertexDeclaration = new VertexDeclaration
+        (
+            new VertexElement(0, VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+            new VertexElement(sizeof(float) * 3, VertexElementFormat.Color, VertexElementUsage.Color, 0),
+            new VertexElement(sizeof(float) * 3 + 4, VertexElementFormat.Vector3, VertexElementUsage.Normal, 0)
+        );
     }
 
 }

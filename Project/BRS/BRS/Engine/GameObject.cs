@@ -23,12 +23,16 @@ namespace BRS.Engine {
         public List<IComponent> components;
         public Model Model { get; set; }
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
+        public BoundingBox BoundingBox { get; }
         public bool active { get; set; } = true;
         public string name { private set; get; }
 
         public int DrawOrder { set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
+
+        public VertexBuffer VertexBuf { get; private set; }
+        public IndexBuffer IndexBuf { get; private set; }
 
         static int InstanceCount = 0;
 
@@ -42,6 +46,17 @@ namespace BRS.Engine {
             Model = model;
             allGameObjects.Add(this);
             SortAll();
+
+            if (model != null) {
+                BoundingBox = BoundingBoxHelper.Calculate(model);
+                //_vertexBuffer = ModelExtractor.ExtractVertexBuffer(model);
+                VertexBuffer vb;
+                IndexBuffer ib;
+                ModelExtractor.ModelData(model, out vb, out ib);
+
+                VertexBuf = vb;
+                IndexBuf = ib;
+            }
         }
 
 
@@ -74,7 +89,7 @@ namespace BRS.Engine {
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null) {
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material, this);
                 }
 
                 foreach (IComponent c in components) c.Draw3D(cam);
@@ -149,7 +164,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = material?.Clone();
+            newObject.material = material; //material?.Clone();
             return newObject;
         }
 
