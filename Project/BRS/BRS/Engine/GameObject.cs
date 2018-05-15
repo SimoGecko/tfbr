@@ -30,13 +30,6 @@ namespace BRS.Engine {
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
-        #region Todo: First tries to speed up drawing
-        public VertexBuffer VertexBuf { get; private set; }
-        public VertexPositionColorTexture[] Vertices { get; private set; }
-        public short[] Indices { get; private set; }
-        public IndexBuffer IndexBuf { get; private set; }
-        public BoundingBox BoundingBox { get; private set; }
-        #endregion
 
         static int InstanceCount = 0;
 
@@ -50,7 +43,6 @@ namespace BRS.Engine {
             Model = model;
             allGameObjects.Add(this);
             SortAll();
-            InitModel();
         }
 
         // ---------- CALLBACKS ----------
@@ -158,7 +150,6 @@ namespace BRS.Engine {
             }
             newObject.Model = this.Model;
             newObject.material = material?.Clone();
-            newObject.InitModel();
             return newObject;
         }
 
@@ -217,27 +208,6 @@ namespace BRS.Engine {
                 return null;
             }
             return result.ToArray();
-        }
-
-        /// <summary>
-        /// Initialize the vertex buffers.
-        /// Todo: Can maybe removed! Just started to try out to use vertex-buffers
-        /// </summary>
-        private void InitModel() {
-            if (Model != null) {
-                BoundingBox = BoundingBoxHelper.Calculate(Model);
-                //_vertexBuffer = ModelExtractor.ExtractVertexBuffer(model);
-                VertexBuffer vb;
-                VertexPositionColorTexture[] v;
-                IndexBuffer ib;
-                short[] i;
-                ModelExtractor.ModelData(Model, out vb, out ib, out v, out i);
-
-                VertexBuf = vb;
-                IndexBuf = ib;
-                Vertices = v;
-                Indices = i;
-            }
         }
 
         // ---------- COMPONENTS ----------

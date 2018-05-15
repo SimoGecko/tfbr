@@ -78,17 +78,6 @@ namespace BRS.Engine {
                     effect.World = world;
                     effect.View = view;
                     effect.Projection = proj;
-
-                    //GraphicsDevice graphicsDevice = effect.GraphicsDevice;
-                    //effect.CurrentTechnique.Passes[0].Apply();
-                    //graphicsDevice.SetVertexBuffer(go.VertexBuf);
-                    //graphicsDevice.Indices = go.IndexBuf;
-                    //graphicsDevice.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0,
-                    //    go.VertexBuf.VertexCount, 0,
-                    //    go.IndexBuf.IndexCount / 3);
-                    ////gD.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList,
-                    ////    go.Vertices, 0, go.VertexBuf.VertexCount, go.Indices, 0, go.IndexBuf.IndexCount / 3,
-                    ////    VertexPositionColorTexture.VertexDeclaration);
                 }
                 mesh.Draw(); // outside, not inside
             }
