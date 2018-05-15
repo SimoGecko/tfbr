@@ -75,7 +75,7 @@ namespace BRS.Scripts.PowerUps {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
                 Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, powerupColor);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, 1f, powerupColor);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
                 else pp.Collect(this);

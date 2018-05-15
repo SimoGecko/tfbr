@@ -33,6 +33,7 @@ namespace BRS.Scripts.Scenes {
         public override void Load() {
             LoadBlenderBakedScene();
             LoadUnityScene();
+            CreateSkybox();
             SetStartPositions();
             CreateManagers();
             CreatePlayers();
@@ -52,7 +53,7 @@ namespace BRS.Scripts.Scenes {
             GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
             outsideScene.material = outsideMat;
 
-            
+
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
             GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
             infinitePlane.material = groundMat;
@@ -97,12 +98,10 @@ namespace BRS.Scripts.Scenes {
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
-            //Manager.AddComponent(new GameManager());
             Manager.AddComponent(new RoundManager());
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
-            Manager.AddComponent(new AudioTest());
             Manager.AddComponent(new PoliceManager(PoliceStartPositions));
 
 
@@ -111,6 +110,16 @@ namespace BRS.Scripts.Scenes {
             //Add(Manager);         
 
             //new MenuManager().LoadContent(); // TODO add as component to manager
+        }
+
+        void CreateSkybox() {
+            bool useRandomSkybox = false;
+            string[] skyboxTextures = new string[]{"daybreak", "midday", "evening", "sunset", "midnight", };
+            string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
+            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
+            skybox.transform.Scale(2); // not more than this or it will be culled
+            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/"+ skyTexture));
+            skybox.material = skyboxMat;
         }
 
         void CreatePlayers() {
@@ -156,18 +165,22 @@ namespace BRS.Scripts.Scenes {
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
+
+                Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
                 //arrow for base
-                //TODO add correct materials
-                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow.material = new Material(Graphics.Green);
+                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
+                arrow.material = arrowMat;//new Material(Graphics.Green);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
-                //arrow.transform.Scale(.2f);
+                arrow.transform.Scale(.6f);
 
                 //arrow for enemy
-                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow"));
-                arrow2.material = new Material(Graphics.Red);
-                arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                //arrow2.transform.Scale(.08f);
+                if (GameManager.NumPlayers > 1) {
+                    GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
+                    arrow2.material = arrowMat;// new Material(Graphics.Red);
+                    arrow2.AddComponent(new Arrow(player, true, i, () => true));
+                    arrow2.transform.Scale(.3f);
+                }
             }
         }
 
@@ -211,6 +224,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
@@ -242,7 +256,7 @@ namespace BRS.Scripts.Scenes {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
                 //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, false);
             }
 
         }

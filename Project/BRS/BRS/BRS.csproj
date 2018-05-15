@@ -130,6 +130,7 @@
     <Compile Include="Engine\Physics\Display.cs" />
     <Compile Include="Engine\Physics\Colliders\Collider.cs" />
     <Compile Include="Engine\Physics\Follower.cs" />
+    <Compile Include="Engine\Physics\ModelExtractor.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
@@ -197,14 +198,12 @@
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
     <Compile Include="Engine\Menu\Image.cs" />
-    <Compile Include="Scripts\Test\MaterialTest.cs" />
     <Compile Include="Scripts\UI\Menu.cs" />
     <Compile Include="Scripts\Managers\MenuManager.cs" />
     <Compile Include="Engine\Menu\Slider.cs" />
     <Compile Include="Engine\Menu\TextBox.cs" />
     <Compile Include="Engine\Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\Test\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\FallingWeight.cs" />
@@ -335,7 +334,9 @@
       <Name>Jitter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\Test\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

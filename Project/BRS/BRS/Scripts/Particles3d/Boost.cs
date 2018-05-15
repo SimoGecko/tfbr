@@ -32,7 +32,7 @@ namespace BRS.Scripts.Particles3D {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "CFX_T_Flame1_ABP",
-                    MaxParticles = 10000,
+                    MaxParticles = 200,
                     ParticlesPerRound = 10,
                     Duration = TimeSpan.FromSeconds(.35f),
                     DurationRandomness = 1.5f,

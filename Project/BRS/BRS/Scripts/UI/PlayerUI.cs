@@ -35,6 +35,7 @@ namespace BRS.Scripts.UI {
 
         public override void Start() {
             _playerUi = new PlayerUIStruct[GameManager.NumPlayers];
+            SetPlayerUIModel();
 
             _forkliftIcon = File.Load<Texture2D>("Images/UI/forklift_icon");
             _barIcons = File.Load<Texture2D>("Images/UI/bar_icons");
@@ -57,7 +58,9 @@ namespace BRS.Scripts.UI {
             bool flip = false;// index % 2 != 0;
 
             UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true, flip: flip);
-            UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
+            //UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
+            UserInterface.DrawPicture(_playerUi[index].modelBack, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
+            UserInterface.DrawPicture(_playerUi[index].modelPartColor, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, col: _playerUi[index].modelColor, flip: flip);
 
             //capacity
             UserInterface.DrawPicture(_barIcons, new Rectangle(120, 57, 25, 25), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);
@@ -116,7 +119,31 @@ namespace BRS.Scripts.UI {
             _playerUi[index].CanAttack = canAttack;
         }
 
+        // Set default Player Model Image and color (UI)
+        public void SetPlayerUIModel() { 
+            Texture2D defaultModelImage = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
+            Texture2D defaultModelImagePartColor = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
 
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                Color modelColor = i % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor;
+
+                if (ScenesCommunicationManager.Instance != null) {
+                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    modelColor = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
+                    defaultModelImage = ScenesCommunicationManager.Instance.ModelImages[currIdModel];
+                    defaultModelImagePartColor = ScenesCommunicationManager.Instance.ModelImagesColorPart[currIdModel];
+                }
+
+                PlayerUI.Instance.SetPlayerUIModelImage(i, defaultModelImage, defaultModelImagePartColor, modelColor);
+            }
+
+        }
+
+        public void SetPlayerUIModelImage(int index, Texture2D model, Texture2D modelPartcol, Color col) {
+            _playerUi[index].modelBack = model;
+            _playerUi[index].modelPartColor = modelPartcol;
+            _playerUi[index].modelColor = col;
+        }
 
         // queries
         public string GetPlayerName(int index) {
@@ -144,6 +171,11 @@ namespace BRS.Scripts.UI {
 
         // helper
         public bool CanAttack;
+
+        // UI model
+        public Texture2D modelBack;
+        public Texture2D modelPartColor;
+        public Color modelColor;
     }
 
 }

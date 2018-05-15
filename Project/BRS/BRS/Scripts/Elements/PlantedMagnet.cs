@@ -31,12 +31,10 @@ namespace BRS.Scripts.Elements {
             _pMAffected = new List<PlayerMovement>();
             Invoke(StartDelay, () => _active = true);
             Audio.Play("active_magnet", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy, 1.5f);
             new Timer(Duration, () => RemoveMagnet());
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateWave(i, transform.position, deactivate: true, deactivateAfter: Duration);
-            }
+            PostProcessingManager.Instance.ActivateWave(transform.position, deactivate: true, deactivateAfter: Duration);
         }
 
         public override void Update() {
@@ -68,7 +66,7 @@ namespace BRS.Scripts.Elements {
             }
             if (playSound && canPlaySound) {
                 Audio.Play("active_magnet", transform.position);
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
+                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy, 1.5f);
                 canPlaySound = false;
                 new Timer(soundDuration, () => canPlaySound = true);
             }

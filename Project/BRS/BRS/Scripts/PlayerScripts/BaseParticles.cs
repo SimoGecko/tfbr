@@ -6,7 +6,7 @@ using BRS.Scripts.Elements;
 using BRS.Scripts.Particles3D;
 
 namespace BRS.Scripts.PlayerScripts {
-    class BaseParticles : Component {
+    class BaseParticles : Component { // why is this under player scripts?
 
         private enum PlayerParticleType { CashDrop };
         List<Type> _effects = new List<Type>() { typeof(CashDrop)};

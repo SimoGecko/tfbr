@@ -12,6 +12,7 @@ Position: 960 162
 Text: Paused
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Button>
@@ -20,7 +21,7 @@ Texture: buttonCircle
 TextureInside: arrowRight
 Position: 860 315
 Functions: ResumeGame
-NeighborsUpDownLeftRight: null SliderAudio Restart Menu
+NeighborsUpDownLeftRight: null SliderAudio Menu Restart
 ColorInside: 148 148 148
 CurrentSelection: yes
 </Button>
@@ -31,7 +32,7 @@ Texture: buttonCircle
 TextureInside: menu
 Position: 1060 315
 Functions: LoadMenu
-NeighborsUpDownLeftRight: null SliderAudio Resume Restart
+NeighborsUpDownLeftRight: null SliderAudio Restart Resume
 ColorInside: 148 148 148
 </Button>
 
@@ -41,7 +42,7 @@ Texture: buttonCircle
 TextureInside: restart
 Position: 960 315
 Functions: StartGameFunction
-NeighborsUpDownLeftRight: null SliderAudio Menu Resume
+NeighborsUpDownLeftRight: null SliderAudio Resume Menu
 ColorInside: 148 148 148
 </Button>
 

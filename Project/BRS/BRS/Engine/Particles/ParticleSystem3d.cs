@@ -128,6 +128,9 @@ namespace BRS.Engine.Particles {
         // Store the current time, in seconds.
         private float _currentTime;
 
+        // Store the time when the last particle has been emitted.
+        private float _lastEmittingTime;
+
 
         // Count how many times Draw has been called. This is used to know
         // when it is safe to retire old particles back into the free list.
@@ -322,7 +325,7 @@ namespace BRS.Engine.Particles {
             _effectViewParameter.SetValue(camera.View);
             _effectProjectionParameter.SetValue(camera.Proj);
             GraphicsDevice device = Graphics.gD;
-            
+
 
             // Restore the vertex buffer contents if the graphics device was lost.
             if (_vertexBuffer.IsContentLost) {
@@ -425,8 +428,14 @@ namespace BRS.Engine.Particles {
         #region Public Methods
 
         public void AddParticles(Vector3 position, Vector3 velocity) {
-            for (int i = 0; i < Settings.ParticlesPerRound; ++i) {
-                AddSingleParticle(position, velocity);
+            float currentTime = (float)Time.Gt.TotalGameTime.TotalSeconds;
+
+            if (currentTime > _lastEmittingTime + Settings.TimeBetweenRounds) {
+                for (int i = 0; i < Settings.ParticlesPerRound; ++i) {
+                    AddSingleParticle(position, velocity);
+                }
+
+                _lastEmittingTime = currentTime;
             }
         }
 

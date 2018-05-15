@@ -17,7 +17,8 @@ namespace BRS.Engine.Menu {
         /// Positon of the textbox
         /// </summary>
         public Vector2 InitPos { get; set; }
-        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f); } }
+        private Vector2 offset = new Vector2(0, 5f * Screen.Height / 1080f);
+        public Vector2 Position { get { return InitPos * new Vector2(Screen.Width / 1920f, Screen.Height / 1080f) + offset; } }
 
         /// Content of the textbox
         /// </summary>

@@ -13,6 +13,7 @@ Position: 960 90
 Text: Rankings
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Button>

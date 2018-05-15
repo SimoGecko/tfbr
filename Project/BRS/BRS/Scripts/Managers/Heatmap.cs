@@ -18,11 +18,13 @@ namespace BRS.Scripts {
 
         //public
         bool showHeatMapOnScreen = false;
+        public static bool IsActive = false;
 
         //private
         CDFdistrib green, yellow, white; // stores yellow distribution
 
         float pixelSize;
+        int refreshFps = 40;
 
         int[,] playerHeatmap;
         int distribWidth, distribHeight;
@@ -91,10 +93,9 @@ namespace BRS.Scripts {
 
 
         async void StartComputingHeatmap() {
-            int refreshFps = 40;
             //checks continuously to see where the players are and increases a counter to get a heatmap in the end
             playerHeatmap = new int[distribWidth, distribHeight];
-            while (true) {
+            while (true && IsActive) {
                 foreach (Player p in ElementManager.Instance.Players()) {
                     Vector2 normCoord = PlayArea.Pos3DNormalized(p.transform.position);
                     Point coord = new Point((int)(distribWidth * normCoord.X), (int)(distribHeight * normCoord.Y));

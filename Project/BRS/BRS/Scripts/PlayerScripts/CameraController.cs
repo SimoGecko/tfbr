@@ -19,6 +19,7 @@ namespace BRS.Scripts.PlayerScripts {
         //public
 
         // const
+        public static bool autoFollow = false;
         private const float SmoothTime = .2f;
         private const float AutoFollowSmoothTime = .4f;
         private const int AngleVariation = 40;
@@ -33,7 +34,6 @@ namespace BRS.Scripts.PlayerScripts {
         static Vector2 _gamepadSensitivity = new Vector2(-2f, -2f);
 
         public int CamIndex;
-        public static bool autoFollow = false;
 
         float _xAngle, _xAngleSmooth;
         float _yAngle, _yAngleSmooth;
