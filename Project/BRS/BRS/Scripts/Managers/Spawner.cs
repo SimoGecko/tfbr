@@ -156,26 +156,62 @@ namespace BRS.Scripts.Managers {
 
 
         // OTHER
+        async void SpawnStuffCoroutine(Action action, float timeInterval) {
+            const float coroutineWaitTime = 3f; // since time between rounds is 5, so we are sure to hit somewhere in there
+
+            while (GameManager.GameEnded) await Time.WaitForSeconds(1); // intial countdown
+
+            float remainingTime = timeInterval * TimeVariance;
+            while (!GameManager.GameEnded) {
+                if (remainingTime > coroutineWaitTime) {
+                    await Time.WaitForSeconds(coroutineWaitTime);
+                    remainingTime -= coroutineWaitTime;
+                } else {
+                    await Time.WaitForSeconds(remainingTime);
+                    action();
+                    remainingTime = timeInterval * TimeVariance;
+                }
+            }
+        }
+
+        void SpawnValuableContinuous() {
+            SpawnStuffCoroutine(SpawnOneValuableRandom, _currentMode.TimeBetweenValuables);
+        }
+        void SpawnCrateContinuous() {
+            SpawnStuffCoroutine(SpawnOneCrateRandom, _currentMode.TimeBetweenCrates);
+        }
+        void SpawnPowerupContinuous() {
+            SpawnStuffCoroutine(SpawnOnePowerupRandom, _currentMode.TimeBetweenPowerups);
+        }
+
+        /*
         async void SpawnValuableContinuous() {
-            while (true) {
-                await Time.WaitForSeconds(_currentMode.TimeBetweenValuables * TimeVariance);
-                SpawnOneValuableRandom();
+            float remainingTime = _currentMode.TimeBetweenValuables * TimeVariance;
+            while (!GameManager.GameEnded) {
+                if (remainingTime > coroutineWaitTime) {
+                    await Time.WaitForSeconds(coroutineWaitTime);
+                    remainingTime -= coroutineWaitTime;
+                } else {
+                    await Time.WaitForSeconds(remainingTime);
+                    SpawnOneValuableRandom();
+                    remainingTime = _currentMode.TimeBetweenValuables * TimeVariance;
+                }
             }
         }
 
         async void SpawnCrateContinuous() {
-            while (true) {
+            while (!GameManager.GameEnded) {
                 await Time.WaitForSeconds(_currentMode.TimeBetweenCrates * TimeVariance);
                 SpawnOneCrateRandom();
             }
         }
 
         async void SpawnPowerupContinuous() {
-            while (true) {
+            while (!GameManager.GameEnded) {
                 await Time.WaitForSeconds(_currentMode.TimeBetweenPowerups * TimeVariance);
                 SpawnOnePowerupRandom();
             }
-        }
+        }*/
 
         /*
         async void SpawnDiamondCasual() {

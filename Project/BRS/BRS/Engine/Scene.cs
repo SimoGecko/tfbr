@@ -47,11 +47,12 @@ namespace BRS.Engine {
             //if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
 
             // For chris to load the different levels
+            /*
             if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1", 1);
             if (Input.GetKeyDown(Keys.D2)) LoadScene("Level1", 2);
             if (Input.GetKeyDown(Keys.D3)) LoadScene("Level1", 3);
             if (Input.GetKeyDown(Keys.D4)) LoadScene("Level1", 4);
-            if (Input.GetKeyDown(Keys.D5)) LoadScene("Level1", 5);
+            if (Input.GetKeyDown(Keys.D5)) LoadScene("Level1", 5);*/
         }
 
         static void Add(string sceneName, Scene scene) {
@@ -64,6 +65,7 @@ namespace BRS.Engine {
 
             GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
+            Time.ClearTimers();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();

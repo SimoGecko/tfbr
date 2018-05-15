@@ -1,33 +1,45 @@
 ﻿// (c) Alexander Lelidis 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.Collections.Generic;
-using Windows.Foundation.Metadata;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace BRS.Engine.PostProcessing {
     class PostProcessingEffect {
+        private static int _counter;
+        public int Id { get; }
         // type of the effect
         public PostprocessingType Type { get; }
         // how many time should this effect be applied
         public int Passes;
         // is this effect active
-        private bool[] Active;
-        public Vector4 ActiveParameter => new Vector4(Active[0] ? 1.0f : 0.0f, Active[1] ? 1.0f : 0.0f, Active[2] ? 1.0f : 0.0f, Active[3] ? 1.0f : 0.0f);
+        private bool[] _active;
+        public Vector4 ActiveParameter => new Vector4(_active[0] ? 1.0f : 0.0f, _active[1] ? 1.0f : 0.0f, _active[2] ? 1.0f : 0.0f, _active[3] ? 1.0f : 0.0f);
+        public Vector3 Position;
+
+        public RenderTarget2D RenderTarget { get; }
 
         // mg effect
         public Effect Effect { get; }
-        // the name of the effect
-        public string Name => Type.ToString();
 
 
-        public PostProcessingEffect(PostprocessingType type, int passes, bool active, Effect effect) {
+        public PostProcessingEffect(PostprocessingType type, int passes, bool active, Effect effect, Vector3 position = default(Vector3)) {
+            Id = _counter++;
             Type = type;
             Passes = passes;
-            Active = new bool[] { active, active, active, active };
+            _active = new [] { active, active, active, active };
             Effect = effect;
+            Position = position;
+
+            RenderTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
         }
 
 
@@ -140,7 +152,7 @@ namespace BRS.Engine.PostProcessing {
         /// <param name="active">New shader-state</param>
         private void Activate(List<int> cameraIds, bool active) {
             foreach (int cameraId in cameraIds) {
-                Active[cameraId] = active;
+                _active[cameraId] = active;
             }
         }
 
@@ -160,17 +172,7 @@ namespace BRS.Engine.PostProcessing {
         /// </summary>
         /// <returns>True  if the shader is active for any player; false if for no player.</returns>
         public bool IsActive() {
-            return Active[0] || Active[1] || Active[2] || Active[3];
-        }
-
-
-        /// <summary>
-        /// Returns if the shader is active for the player <paramref name="playerId"/>
-        /// </summary>
-        /// <param name="playerId">Player-id</param>
-        /// <returns>True if the shader is active for the player; false otherwise.</returns>
-        public bool IsActive([Range(0, 3)] int playerId) {
-            return Active[playerId];
+            return _active[0] || _active[1] || _active[2] || _active[3];
         }
 
 
