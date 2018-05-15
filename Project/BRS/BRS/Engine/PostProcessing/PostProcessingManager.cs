@@ -37,6 +37,8 @@ namespace BRS.Engine.PostProcessing {
         private List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
         private int _maxLuT = 20;
+        private float _distance = 6f;
+        private float _range = 16.5f;
 
         public static void Initialize(ContentManager content) {
             Instance = new PostProcessingManager();
@@ -66,12 +68,12 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.DepthOfField:
-                        float nearClip = 0.3f;
-                        float farClip = 100.0f;
+                        float nearClip = Camera.Near;
+                        float farClip = Camera.Far;
                         farClip = farClip / (farClip - nearClip);
 
-                        ppEffect.SetParameter("Distance", 10.0f);
-                        ppEffect.SetParameter("Range", 15.0f);
+                        ppEffect.SetParameter("Distance", _distance);
+                        ppEffect.SetParameter("Range", _range);
                         ppEffect.SetParameter("Near", nearClip);
                         ppEffect.SetParameter("Far", farClip);
                         break;
