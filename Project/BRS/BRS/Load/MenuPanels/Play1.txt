@@ -111,7 +111,7 @@ Texture: button
 Position: 1140 380
 Text: 5
 Functions: UpdateRoundDuration HighlightBorders
-NeighborsUpDownLeftRight: PlayerAmount2 ModeBombs RoundDuration3min RoundDuration10min
+NeighborsUpDownLeftRight: PlayerAmount2 ModeCrates RoundDuration3min RoundDuration10min
 UniqueChoiceWith: RoundDuration2min RoundDuration3min RoundDuration10min
 ScaleWidth: 0.75
 ScaleHeight: 0.85

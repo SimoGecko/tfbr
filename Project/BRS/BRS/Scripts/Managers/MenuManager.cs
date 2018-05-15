@@ -568,7 +568,7 @@ namespace BRS.Scripts.Managers {
         public void SetMusic(object sender, EventArgs e) {
             TickBox tickbox = (TickBox)sender;
             if (tickbox.IsClicked)
-                Audio.SetMusicVolume(.005f);
+                Audio.SetMusicVolume(.1f);
             else
                 Audio.SetMusicVolume(0);
         }
