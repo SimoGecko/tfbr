@@ -23,7 +23,6 @@ namespace BRS.Engine {
         public List<IComponent> components;
         public Model Model { get; set; }
         public ModelMesh mesh { get { return Model?.Meshes[0]; } } // assumes just 1 mesh per model
-        public BoundingBox BoundingBox { get; private set; }
         public bool active { get; set; } = true;
         public string name { private set; get; }
 
@@ -31,10 +30,13 @@ namespace BRS.Engine {
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
+        #region Todo: First tries to speed up drawing
         public VertexBuffer VertexBuf { get; private set; }
         public VertexPositionColorTexture[] Vertices { get; private set; }
         public short[] Indices { get; private set; }
         public IndexBuffer IndexBuf { get; private set; }
+        public BoundingBox BoundingBox { get; private set; }
+        #endregion
 
         static int InstanceCount = 0;
 
@@ -49,25 +51,6 @@ namespace BRS.Engine {
             allGameObjects.Add(this);
             SortAll();
             InitModel();
-        }
-
-        private void InitModel()
-        {
-            if (Model != null) {
-                BoundingBox = BoundingBoxHelper.Calculate(Model);
-                //_vertexBuffer = ModelExtractor.ExtractVertexBuffer(model);
-                VertexBuffer vb;
-                VertexPositionColorTexture[] v;
-                IndexBuffer ib;
-                short[] i;
-                ModelExtractor.ModelData(Model, out vb, out ib, out v, out i);
-
-                VertexBuf = vb;
-                IndexBuf = ib;
-                Vertices = v;
-                Indices = i;
-            }
-
         }
 
         // ---------- CALLBACKS ----------
@@ -99,7 +82,7 @@ namespace BRS.Engine {
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null) {
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material, this);
+                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
                 foreach (IComponent c in components) c.Draw3D(cam);
@@ -234,6 +217,27 @@ namespace BRS.Engine {
                 return null;
             }
             return result.ToArray();
+        }
+
+        /// <summary>
+        /// Initialize the vertex buffers.
+        /// Todo: Can maybe removed! Just started to try out to use vertex-buffers
+        /// </summary>
+        private void InitModel() {
+            if (Model != null) {
+                BoundingBox = BoundingBoxHelper.Calculate(Model);
+                //_vertexBuffer = ModelExtractor.ExtractVertexBuffer(model);
+                VertexBuffer vb;
+                VertexPositionColorTexture[] v;
+                IndexBuffer ib;
+                short[] i;
+                ModelExtractor.ModelData(Model, out vb, out ib, out v, out i);
+
+                VertexBuf = vb;
+                IndexBuf = ib;
+                Vertices = v;
+                Indices = i;
+            }
         }
 
         // ---------- COMPONENTS ----------

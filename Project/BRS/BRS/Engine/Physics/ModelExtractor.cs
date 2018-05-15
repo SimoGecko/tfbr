@@ -1,44 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BRS.Engine.Physics.Primitives3D;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Physics {
     public class ModelExtractor {
-        private ModelMeshPart mmpModel;
-        public  Vector3[] ArrVectors;
-        public short[] ArrIndices;
-        public VertexPositionColor[] VpcVertices;
+        private readonly ModelMeshPart _mmpModel;
+        private readonly Vector3[] _arrVectors;
+        private readonly VertexPositionColor[] _vpcVertices;
 
-        public ModelExtractor(ModelMeshPart mmp, Vector3[] av, VertexPositionColor[] vv)
-        {
-            mmpModel = mmp;
-            ArrVectors = av;
-            VpcVertices = vv;
+        public ModelExtractor(ModelMeshPart mmp, Vector3[] av, VertexPositionColor[] vv) {
+            _mmpModel = mmp;
+            _arrVectors = av;
+            _vpcVertices = vv;
         }
 
         public void ExtractVertices() {
-            this.mmpModel.VertexBuffer.GetData<Vector3>(this.ArrVectors);
-            for (int a = 0; a < VpcVertices.Length; a += 2) {
-                this.VpcVertices[a].Position.X = ArrVectors[a].X;
-                this.VpcVertices[a].Position.Y = ArrVectors[a].Y;
-                this.VpcVertices[a].Position.Z = ArrVectors[a].Z;
+            _mmpModel.VertexBuffer.GetData(_arrVectors);
+            for (int a = 0; a < _vpcVertices.Length; a += 2) {
+                _vpcVertices[a].Position.X = _arrVectors[a].X;
+                _vpcVertices[a].Position.Y = _arrVectors[a].Y;
+                _vpcVertices[a].Position.Z = _arrVectors[a].Z;
             }
         }
 
-        public void ExtractIndices()
-        {
-            this.mmpModel.IndexBuffer.GetData<short>(this.ArrIndices);
 
-        }
-
-
-        public static VertexBuffer ExtractVertexBuffer(Model modModel)
-        {
+        public static VertexBuffer ExtractVertexBuffer(Model modModel) {
             ModelExtractor modelExtractor = null;
 
             foreach (ModelMesh modmModel in modModel.Meshes) {
@@ -48,24 +33,22 @@ namespace BRS.Engine.Physics {
                 }
             }
 
-            if (modelExtractor == null)
-            {
+            if (modelExtractor == null) {
                 return null;
             }
 
-            for (int a = 0; a < modelExtractor.ArrVectors.Length; a++) {
-                Debug.Log(modelExtractor.ArrVectors[a]);
+            for (int a = 0; a < modelExtractor._arrVectors.Length; a++) {
+                Debug.Log(modelExtractor._arrVectors[a]);
             }
-            VertexBuffer vertexBuffer = new VertexBuffer(Graphics.gD, typeof(VertexPositionColor), modelExtractor.VpcVertices.Length, BufferUsage.None);
-            vertexBuffer.SetData(modelExtractor.VpcVertices);
+            VertexBuffer vertexBuffer = new VertexBuffer(Graphics.gD, typeof(VertexPositionColor), modelExtractor._vpcVertices.Length, BufferUsage.None);
+            vertexBuffer.SetData(modelExtractor._vpcVertices);
 
             return vertexBuffer;
         }
 
 
         public static void ModelData(Model model, out VertexBuffer vertices, out IndexBuffer indices, out VertexPositionColorTexture[] v, out short[] i) {
-            try
-            {
+            try {
                 ModelMeshPart part = model.Meshes[0].MeshParts[0];
 
                 VertexPositionColorTexture[] modelVertices =
@@ -77,7 +60,7 @@ namespace BRS.Engine.Physics {
                 vertices.SetData(modelVertices);
 
                 short[] modelIndices = new short[part.IndexBuffer.IndexCount];
-                part.IndexBuffer.GetData<short>(modelIndices);
+                part.IndexBuffer.GetData(modelIndices);
 
                 indices = new IndexBuffer(Graphics.gD, typeof(ushort), part.IndexBuffer.IndexCount,
                     BufferUsage.None);
@@ -85,9 +68,7 @@ namespace BRS.Engine.Physics {
 
                 v = modelVertices;
                 i = modelIndices;
-            }
-            catch
-            {
+            } catch {
                 vertices = null;
                 indices = null;
                 v = new VertexPositionColorTexture[0];
