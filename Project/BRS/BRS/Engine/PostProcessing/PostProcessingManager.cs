@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.PostProcessing {
 
@@ -34,7 +35,7 @@ namespace BRS.Engine.PostProcessing {
         private bool DEBUG = false;
         private readonly List<Texture2D> _lut = new List<Texture2D>();
         private int _currentLuT = 0;
-        private int _maxLuT = 20;
+        private int _maxLuT = 54;
         private float _distance = 6f;
         private float _range = 16.5f;
 
@@ -155,6 +156,16 @@ namespace BRS.Engine.PostProcessing {
             }
         }
 
+        private bool GetShaderState(PostprocessingType shader) {
+            foreach (PostProcessingEffect postProcessingEffect in _effects) {
+                if (postProcessingEffect.Type == shader) {
+                    return postProcessingEffect.IsActive();
+                }
+            }
+
+            return false;
+        }
+
         public void RemoveShader(PostprocessingType shader) {
             if (_fixEffects.ContainsKey(shader) && _fixEffects[shader]) {
                 return;
@@ -247,6 +258,22 @@ namespace BRS.Engine.PostProcessing {
                     _effects.RemoveAt(i);
                     break;
                 }
+            }
+        }
+
+        // Todo: To be removed
+        public void Update(GameTime gameTime) {
+            if (Input.GetKeyDown(Keys.F1)) {
+                SetShaderStatus(PostprocessingType.ColorGrading, 0, GetShaderState(PostprocessingType.ColorGrading));
+            }
+
+            if (Input.GetKeyDown(Keys.F2)) {
+                _currentLuT = (_currentLuT - 1 + _maxLuT) % _maxLuT;
+                _effects[5].SetParameter("LUT", _lut[_currentLuT]); ;
+            }
+            if (Input.GetKeyDown(Keys.F3)) {
+                _currentLuT = (_currentLuT + 1) % _maxLuT;
+                _effects[5].SetParameter("LUT", _lut[_currentLuT]); ;
             }
         }
 

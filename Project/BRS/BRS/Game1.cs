@@ -133,6 +133,7 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
+            PostProcessingManager.Instance.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
