@@ -118,8 +118,11 @@ namespace BRS.Scripts.PlayerScripts {
                     //Input.Vibrate(.001f, .001f, PlayerIndex);
                 }
 
-                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                Vector2 moveInput;
+                if(true)//!CameraController.autoFollow)
+                    moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                else
+                    moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
@@ -171,9 +174,10 @@ namespace BRS.Scripts.PlayerScripts {
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);
-                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun, 1.2f);
                     PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
                     _pI.LoseMoney();
+                    ParticleUI.Instance.GiveOrder(transform.position+Vector3.Up*2, ParticleType.RotatingStars, .7f);
                     Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
                 }
 

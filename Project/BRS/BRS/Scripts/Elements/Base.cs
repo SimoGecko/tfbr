@@ -8,6 +8,7 @@ using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -25,6 +26,7 @@ namespace BRS.Scripts.Elements {
         private const float DeloadDistanceThreshold = 4f;
         private const float TimeBetweenUnloads = .03f;
         private const float MoneyPenalty = .5f; // percent
+        private const int MoneyPenaltyAmount = 1000;
         private readonly int _baseIndex = 0;
 
         private int _shownMoneyStacks = 0;
@@ -118,13 +120,14 @@ namespace BRS.Scripts.Elements {
         }
 
         public void NotifyRoundEnd() {
-            foreach (var p in TeamPlayers()) {
+            foreach (var p in ElementManager.Instance.Team(_baseIndex)) {
                 PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
 
-                if (!pi.CanDeload) {
-                    Debug.Log("BUSTED!!!");
+                if (!pi.CanDeload) { // PROXIMITY CHECK
+                    //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
-                    TotalMoney -= (int)(TotalMoney * MoneyPenalty);
+                    //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
+                    TotalMoney -= MoneyPenaltyAmount;
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }

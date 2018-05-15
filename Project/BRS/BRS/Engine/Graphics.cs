@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -49,6 +50,7 @@ namespace BRS.Engine {
 
         public static void Start() {
             texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
+            //texlightEffect = File.Load<Effect>("Other/shaders/lightmap");
             textureEffect = File.Load<Effect>("Other/shaders/textured");
             skyboxEffect = File.Load<Effect>("Effects/Skybox");
         }
@@ -61,29 +63,33 @@ namespace BRS.Engine {
         // commands
         //GRAPHICS METHODS
         public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
-            //DrawModelSimple(model, view, proj, world, go);
-            //return;
             //selects which effect to use based on material
-            //if (mat == null) DrawModelSimple(model, view, proj, world);
-            if (mat == null) DrawModelWithEffect(model, view, proj, world, skyboxEffect);
+            if (mat == null) DrawModelSimple(model, view, proj, world);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
             else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated, mat.Alpha);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
 
-        static void DrawModelSimple(Model model, Matrix view, Matrix proj, Matrix world, GameObject go = null) {
+
+        //if there is no material attached
+        static void DrawModelSimple(Model model, Matrix view, Matrix proj, Matrix world) {
             foreach (ModelMesh mesh in model.Meshes) {
-                foreach (BasicEffect effect in mesh.Effects) {
-                    effect.EnableDefaultLighting();
-                    effect.World = world;
-                    effect.View = view;
-                    effect.Projection = proj;
+                foreach (Effect effect in mesh.Effects) {
+                    if(effect is BasicEffect) {
+                        BasicEffect beff = (BasicEffect)effect;
+                        beff.EnableDefaultLighting();
+
+                        beff.World = world;
+                        beff.View = view;
+                        beff.Projection = proj;
+                    }
+                    
                 }
                 mesh.Draw(); // outside, not inside
             }
         }
 
-        static void DrawModelMaterial(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+        static void DrawModelMaterial(Model model, Matrix view, Matrix proj, Matrix world, Material mat) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (BasicEffect effect in mesh.Effects) {
                     //use base effect with diffuse color and alpha (and ev texture)
@@ -92,7 +98,6 @@ namespace BRS.Engine {
                     effect.DiffuseColor = mat.DiffuseColor;
                     //effect.Alpha = mat.Diffuse.A;
                     //effect.CurrentTechnique = EffectTechnique
-                    //effect.Texture
 
                     //effects
                     effect.World = world;
@@ -100,6 +105,23 @@ namespace BRS.Engine {
                     effect.Projection = proj;
                 }
                 mesh.Draw(); // outside, not inside
+            }
+        }
+
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    part.Effect = textureEffect;
+                    textureEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
+                    textureEffect.Parameters["View"].SetValue(view);
+                    textureEffect.Parameters["Projection"].SetValue(proj);
+
+                    textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
+                    textureEffect.Parameters["IsTransparent"].SetValue(isTransparent); // why the fuck would you modify this
+                    textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
+                    textureEffect.Parameters["Alpha"].SetValue(alpha);
+                }
+                mesh.Draw();
             }
         }
 
@@ -117,22 +139,7 @@ namespace BRS.Engine {
                 mesh.Draw();
             }
         }
-        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
-            foreach (ModelMesh mesh in model.Meshes) {
-                foreach (ModelMeshPart part in mesh.MeshParts) {
-                    part.Effect = textureEffect;
-                    textureEffect.Parameters["World"].SetValue(world * mesh.ParentBone.Transform);
-                    textureEffect.Parameters["View"].SetValue(view);
-                    textureEffect.Parameters["Projection"].SetValue(proj);
-
-                    textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
-                    textureEffect.Parameters["IsTransparent"].SetValue(isTransparent);
-                    textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
-                    textureEffect.Parameters["Alpha"].SetValue(alpha);
-                }
-                mesh.Draw();
-            }
-        }
+        
 
         static void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection, Effect effect) {
             foreach (ModelMesh mesh in model.Meshes) {
@@ -144,6 +151,10 @@ namespace BRS.Engine {
                 }
                 mesh.Draw();
             }
+        }
+
+        internal static void DrawModelDepth(Model model, Matrix view, Matrix proj, Matrix world, Effect depthShader) {
+            DrawModelWithEffect(model, view, proj, world, depthShader);
         }
 
         //----------------------------------------------------------------------------------------------

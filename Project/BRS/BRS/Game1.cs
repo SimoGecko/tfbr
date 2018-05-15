@@ -8,8 +8,6 @@ using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -23,11 +21,9 @@ namespace BRS {
         RenderTarget2D _renderTarget;
         // depth info
         RenderTarget2D _ZBuffer;
-        Texture2D _ZBufferTexture;
         Effect _ZBufferShader;
-
-        // Todo: Andy: remove
-        private int _frames = 0;
+        const string startScene = "Level1";
+        bool showUI = true;
 
         public Game1() {
             //NOTE: don't add anything into constructor
@@ -35,8 +31,6 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
-
-            IsFixedTimeStep = false;
         }
 
         protected override void Initialize() {
@@ -61,7 +55,8 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            PostProcessingManager.Initialize(Content);
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType> {  PostprocessingType.DepthOfField};
+            PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
@@ -71,8 +66,7 @@ namespace BRS {
             PoliceManager.IsActive = true;
             LenseFlareManager.IsActive = true;
             ParticleSystem3D.IsActive = true;
-            PostProcessingManager.IsActive = true;
-            Skybox.IsActive = true;
+            Skybox.IsActive = false;
 
             base.Initialize();
         }
@@ -104,10 +98,9 @@ namespace BRS {
 
             // load the z buffer shader
             _ZBufferShader = File.Load<Effect>("Effects/Depth");
-            _ZBufferTexture = File.Load<Texture2D>("Images/textures/zbuffer");
 
             // add skybox
-            Skybox.Start();
+            //Skybox.Start();
 
         }
 
@@ -139,9 +132,6 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update();
-
-            //Debug.Log("FPS U: " + 1.0f / gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -149,30 +139,16 @@ namespace BRS {
             GraphicsDevice.SetRenderTarget(_renderTarget);
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
-            //RasterizerState originalRasterizerState = _graphics.GraphicsDevice.RasterizerState;
-            //RasterizerState rasterizerState = new RasterizerState();
-            //rasterizerState.CullMode = CullMode.None;
-            //_graphics.GraphicsDevice.RasterizerState = rasterizerState;
-            //Skybox.Draw(Camera.Main); // TODO move it for every camera
-            //_graphics.GraphicsDevice.RasterizerState = originalRasterizerState;
-
             base.Draw(gameTime);
 
             //-----3D-----
-            GraphicsDevice.DepthStencilState = DepthStencilState.Default; // activates z buffer
-            var options = new ParallelOptions();
-            options.MaxDegreeOfParallelism = Environment.ProcessorCount;
-
-            //Parallel.ForEach(Screen.Cameras, options, cam =>
-            //{
-            //    GraphicsDevice.Viewport = cam.Viewport;
-            //    foreach (GameObject go in GameObject.All) go.Draw3D(cam);
-            //});
-
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
-                //BoundingFrustum frustum = new BoundingFrustum(cam.View * cam.Proj);
-                //IEnumerable<GameObject> toDraw = GameObject.All.Where(m => frustum.Contains(m.BoundingBox) != ContainmentType.Disjoint);
+
+                GraphicsDevice.RasterizerState = Screen._nocullRasterizer;
+                //Skybox.Draw(cam);
+                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
@@ -180,37 +156,31 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
-                ////gizmos
-                //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
-                //Gizmos.DrawWire(cam);
-                //GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                //Gizmos.DrawFull(cam);
+                //gizmos
+                GraphicsDevice.RasterizerState = Screen._wireRasterizer;
+                Gizmos.DrawWire(cam);
+                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
+                Gizmos.DrawFull(cam);
             }
-            //Gizmos.ClearOrders();
+            Gizmos.ClearOrders();
 
             // draw everything 3 D to get the depth info 
 
-            // render to z buffer
-            // GraphicsDevice.Render = CompareFunction.LessEqual;
-            // GraphicsDevice.SetRenderTarget(_ZBuffer);
-            // GraphicsDevice.Clear(Color.Black);
+            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            _graphics.GraphicsDevice.Clear(Color.Black);
 
-            // pass the matWorldViewProj matrix
-            // effect.Parameters["matWorldViewProj"].SetValue(worldMatrix * viewMatrix * projMatrix);
-            // _ZBufferShader.Parameters
-            // apply the depth buffer shader
-            // _ZBufferShader.CurrentTechnique.Passes[0].Apply();
-            // draw all 3d objects
-            // Draw3D(gameTime);
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            foreach (Camera cam in Screen.Cameras) {
+                GraphicsDevice.Viewport = cam.Viewport;
 
-
-            //// draw everyting 3D
-            //Draw3D(gameTime);
+                foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
+            }
+            
 
 
             // apply post processing
             // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBufferTexture, gameTime);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer, gameTime);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
@@ -221,17 +191,17 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                foreach (GameObject go in GameObject.All) go.Draw2D(i);
+                if(showUI)
+                    foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
                 i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
             _spriteBatch.Begin();
-            foreach (GameObject go in GameObject.All) go.Draw2D(0);
+            if(showUI)
+                foreach (GameObject go in GameObject.All) go.Draw2D(0);
             _spriteBatch.End();
-
-            Debug.Log("FPS D: " + (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("F") + "/" + (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("F") + " #GameObjects: " + GameObject.All.Length);
         }
     }
 

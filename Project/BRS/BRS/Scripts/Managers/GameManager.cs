@@ -10,7 +10,7 @@ namespace BRS.Scripts.Managers {
         ////////// controls the game state ... //////////
 
         // --------------------- VARIABLES ---------------------
-        public enum State { Menu, Playing, Paused, Finished };
+        public enum State { Menu, Playing, Paused, Ended };
 
         public static State state; // CONTROLS STATE OF THE GAME
 
@@ -54,7 +54,8 @@ namespace BRS.Scripts.Managers {
 
 
         public static void RestartCustom() { // TODO refactor
-            ElementManager.Instance.Restart(); 
+            ElementManager.Instance.Restart();
+            //Time.ClearTimers();
             Spawner.Instance.Start();
             //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
@@ -74,6 +75,7 @@ namespace BRS.Scripts.Managers {
         // queries
         public static bool GameActive { get { return state == State.Playing; } }
         public static bool GamePaused { get { return state == State.Paused; } }
+        public static bool GameEnded { get { return state == State.Ended || state==State.Menu; } }
         public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
 
 

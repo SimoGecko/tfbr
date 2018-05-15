@@ -9,6 +9,7 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Input;
 
 
@@ -20,8 +21,8 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 120;
-        public const int TimeBeforePolice = 5;
+        public static int RoundTime = 20;
+        public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
         public const int TimeBetweenRounds = 3;
@@ -62,13 +63,13 @@ namespace BRS.Scripts.Managers {
         }
 
         void RestartRound() { // done at beginning of every round
-            roundTimer = new Timer(0, RoundTime, OnRoundEnd);
+            roundTimer = new Timer(RoundTime, OnRoundEnd);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
             RoundUI.instance.ShowEndRound(false);
 
             GameUI.Instance.StartMatch(roundTimer);
-            GameManager.state = GameManager.State.Finished;
+            GameManager.state = GameManager.State.Ended;
 
             CountDown();
         }
@@ -88,6 +89,8 @@ namespace BRS.Scripts.Managers {
             for (int i = 3; i >= 0; i--) {
                 await Time.WaitForSeconds(1f);
                 RoundUI.instance.ShowCountDown(i);
+                if(i>0) Audio.Play("start321", Vector3.Zero);
+                else Audio.Play("start0", Vector3.Zero);
                 if (i == 0) OnRoundStart();
             }
             await Time.WaitForSeconds(1f);
@@ -111,24 +114,38 @@ namespace BRS.Scripts.Managers {
             calledPolice = true;
             OnPoliceComingAction?.Invoke();
             //Audio.SetLoop("police", true);
-            Audio.Play("police", Vector3.Zero);
+            PlayPoliceSoundLoop();
             GameUI.Instance.UpdatePoliceComing();
         }
+
+        async void PlayPoliceSoundLoop() {
+            float duration = Audio.GetDuration("police")-.2f;
+            int numRep = (int)System.Math.Round(TimeBeforePolice / duration);
+
+            for(int i=0; i<numRep; i++) {
+                Audio.Play("police", Vector3.Zero, .0005f);
+                await Time.WaitForSeconds(duration);
+            }
+        }
+
+        
 
         void OnRoundEnd() {
             //Audio.Stop("police");
             //Audio.SetLoop("police", false);
             roundEnded = true;
-            GameManager.state = GameManager.State.Finished;
+            GameManager.state = GameManager.State.Ended;
 
             //FIND WINNER
             //reset // TODO reorganize
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.BlackAndWhite, i, false);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ShockWave, i, false);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Wave, i, false);
             }
+
+            // Remove all dynamic shaders
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.BlackAndWhite);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.ShockWave);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.Wave);
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 
@@ -137,9 +154,14 @@ namespace BRS.Scripts.Managers {
             teamWins[Winner]++;
             BaseUI.Instance.UpdateBaseUIWins(Winner);
 
+            bool finalRound = roundNumber == NumRounds;
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                if (ElementManager.Instance.Player(i).TeamIndex == Winner)
-                    RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+                bool busted = RoundUI.instance.Busted(i);
+                if (!busted) {
+                    if (ElementManager.Instance.Player(i).TeamIndex == Winner)
+                        RoundUI.instance.ShowEndRound(i, finalRound ? RoundUI.EndRoundCondition.Youwon : RoundUI.EndRoundCondition.Success);
+                }
             }
 
 

@@ -14,6 +14,7 @@ namespace BRS.Engine {
 
         public static GameTime Gt = new GameTime();
         public static int Frame = 0;
+        static bool needClearTimers = false;
 
         public static List<Timer> timers = new List<Timer>();
 
@@ -29,6 +30,7 @@ namespace BRS.Engine {
 
             //Debug.Log("Start with " + timers.Count + " timers");
             //process timers
+            //if (myownLock) return;
             for (int i = 0; i < timers.Count; i++) {
                 if (!GameManager.GameActive && !timers[i].AlwaysRun) continue; // knows about gamemanager
                 timers[i].Span = timers[i].Span.Subtract(Gt.ElapsedGameTime);
@@ -37,11 +39,13 @@ namespace BRS.Engine {
                     timers.RemoveAt(i--);
                 }
             }
+            //if (needClearTimers) ActualClearTimers();
             //Debug.Log("End with " + timers.Count + " timers");
         }
 
         public static Task WaitForSeconds(float s) { // used in coroutines
-            return Task.Delay((int)(s * 1000));
+            int millisec = MathHelper.Max(1, (int)(s * 1000));
+            return Task.Delay(millisec);
         }
         public static Task WaitForFrame() { // used in coroutines
             //THIS doesn't work, isn't smooth
@@ -50,6 +54,8 @@ namespace BRS.Engine {
 
         // Todo: Think about this one in more detail
         public static void ClearTimers() {
+            needClearTimers = true;
+            
             //lock (new object())
             //{
             //    for (int i = 0; i < timers.Count; ++i)
@@ -73,6 +79,15 @@ namespace BRS.Engine {
 
             //timers = newList;
 
+        }
+
+        static void ActualClearTimers() {
+            for (int i = 0; i < timers.Count; ++i) {
+                if (!timers[i].AlwaysRun) {
+                    timers.RemoveAt(i--);
+                }
+            }
+            needClearTimers = false;
         }
 
     }

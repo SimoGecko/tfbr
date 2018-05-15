@@ -56,7 +56,7 @@ namespace BRS.Scripts.UI {
 
             bool flip = false;// index % 2 != 0;
 
-            UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true, flip: flip);
+            UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, Align.TopLeft, Align.Left, scale: .5f, bold: true, flip: flip);
             UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
 
             //capacity

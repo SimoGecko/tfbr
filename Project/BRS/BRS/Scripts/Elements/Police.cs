@@ -129,6 +129,8 @@ namespace BRS.Scripts {
         public void TakeDamage(float damage) {
             state = State.Stun;
             endStunTime = Time.CurrentTime + stunTime;
+            ParticleUI.Instance.GiveOrder(transform.position + Vector3.Up * 2, ParticleType.RotatingStars, .7f);
+
         }
 
 

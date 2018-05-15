@@ -6,12 +6,12 @@ namespace BRS.Engine.PostProcessing {
         static Model skyBox; // cube with normals inwards
         static TextureCube skyBoxTexture;
         static Effect skyBoxEffect; // skybox shader
-        static float size = 50f; // size of cube
+        static float size = 500f; // size of cube
 
         public static bool IsActive = true;
 
         public static void Start() {
-            skyBox = File.Load<Model>("Models/primitives/cube");
+            skyBox = File.Load<Model>("Models/primitives/cube"); // normals should be inward!
             skyBoxTexture = File.Load<TextureCube>("Images/skyboxes/Skybox");
             skyBoxEffect = File.Load<Effect>("Effects/Skybox");
         }
