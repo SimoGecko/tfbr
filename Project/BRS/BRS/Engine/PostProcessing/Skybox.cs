@@ -8,7 +8,7 @@ namespace BRS.Engine.PostProcessing {
         static Effect skyBoxEffect; // skybox shader
         static float size = 500f; // size of cube
 
-        public static bool IsActive = true;
+        public static bool IsActive = false;
 
         public static void Start() {
             skyBox = File.Load<Model>("Models/primitives/cube"); // normals should be inward!
