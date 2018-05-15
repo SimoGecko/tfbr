@@ -30,6 +30,8 @@ namespace BRS.Scripts.Managers {
         public static string[] ModesDescription = { "Normal", "Bomber", "Crate Only", "Gold Only" };
 
         public List<Model> ModelCharacter;
+        public List<Texture2D> ModelImages;
+        public List<Texture2D> ModelImagesColorPart;
 
         public override void Start() {
             Instance = this;
@@ -52,7 +54,15 @@ namespace BRS.Scripts.Managers {
             textureColorPlayers.Add("player_2", player2Color);
             textureColorPlayers.Add("player_3", player3Color);
 
-            Color test = GetPixelColor(5, 10, player0Color);
+            ModelImages = new List<Texture2D>();
+            ModelImagesColorPart = new List<Texture2D>();
+
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back"));
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back"));
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color"));
         }
 
         public override void Update() {
