@@ -26,8 +26,8 @@ namespace BRS.Scripts {
             Audio.PlaySong("Happy Happy Game Show");
 #endif
 
-            Audio.SetMusicVolume(.005f);
-            Audio.SetSoundVolume(1f);
+            Audio.SetMusicVolume(.1f);
+            Audio.SetSoundVolume(2f);
             Audio.TansitionToRandomSong();
         }
 

@@ -185,20 +185,24 @@ namespace BRS.Engine {
 
             // dynamic shadow
             GameObject dynamicShadow = new GameObject(FollowerType.DynamicShadow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            dynamicShadow.tag = ObjectTag.Lighting;
             dynamicShadow.material = shadowMat;
             Prefabs.AddPrefab(dynamicShadow);
 
 
             // dynamic lights
             GameObject lightPlayer = new GameObject(FollowerType.LightYellow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightPlayer.tag = ObjectTag.Lighting;
             lightPlayer.material = lightPlayerMat;
             Prefabs.AddPrefab(lightPlayer);
 
             GameObject lightBlue = new GameObject(FollowerType.LightBlue.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightBlue.tag = ObjectTag.Lighting;
             lightBlue.material = lightBlueMat;
             Prefabs.AddPrefab(lightBlue);
 
             GameObject lightRed = new GameObject(FollowerType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightRed.tag = ObjectTag.Lighting;
             lightRed.material = lightRedMat;
             Prefabs.AddPrefab(lightRed);
 

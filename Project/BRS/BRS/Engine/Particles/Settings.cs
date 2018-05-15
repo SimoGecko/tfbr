@@ -27,6 +27,8 @@ namespace BRS.Engine.Particles {
         // Number of particles generated in each round
         public float ParticlesPerRound = 1;
 
+        public float TimeBetweenRounds = 0.0f;
+
 
         // How long these particles will last.
         public TimeSpan Duration = TimeSpan.FromSeconds(1);

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
 
 
     /// <summary>
@@ -31,6 +31,7 @@ namespace BRS.Engine {
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
+
         static int InstanceCount = 0;
 
         public GameObject(string name, Model model = null) {
@@ -44,7 +45,6 @@ namespace BRS.Engine {
             allGameObjects.Add(this);
             SortAll();
         }
-
 
         // ---------- CALLBACKS ----------
         public void Awake() {
@@ -74,11 +74,24 @@ namespace BRS.Engine {
 
         public void Draw3D(Camera cam) {
             if (active) {
-                if (Model != null && active) {
+                if (Model != null) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
                 foreach (IComponent c in components) c.Draw3D(cam);
+            }
+        }
+
+        internal void Draw3DDepth(Camera cam, Effect depthShader) {
+            if (tag == ObjectTag.Police) { Debug.Log("HHHH");}
+            if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
+                if (Model != null) {
+                    Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
+                }
+
+                foreach (IComponent c in components) {
+                    c.Draw3D(cam);
+                }
             }
         }
 
@@ -175,19 +188,6 @@ namespace BRS.Engine {
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
             new Timer(lifetime, () => Destroy(o));
-        }
-
-        internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (active) {
-                if (Model != null && active) {
-                    Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
-                }
-
-                foreach (IComponent c in components) {
-                    c.Draw3D(cam);
-                }
-            }
-
         }
 
         public static void ConsiderPrefab(GameObject o) {

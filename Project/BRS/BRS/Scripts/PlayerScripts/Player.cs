@@ -157,6 +157,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (c.GameObject.tag == ObjectTag.StaticObstacle) {
                 _pM.SetSpeedPad(false);
                 // CamController.Shake(.3f);
+                    Input.Vibrate(.05f, .1f, PlayerIndex);
             }
         }
 
