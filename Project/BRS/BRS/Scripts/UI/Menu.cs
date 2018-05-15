@@ -228,6 +228,7 @@ namespace BRS.Scripts.UI {
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
+                        button.Active = MS.Active;
 
                         if (MS.UseBigFont)
                             button.Font = UserInterface.menuBigFont;

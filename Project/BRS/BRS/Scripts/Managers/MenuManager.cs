@@ -118,7 +118,7 @@ namespace BRS.Scripts.Managers {
                 uniqueFrameInputUsed[i] = false;
 
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
-                if (_currentMenuName == "play2Shared2") {
+                if (_currentMenuName == "tutorial2") {
                     MenuRect["play2Shared0"].active = true;
                     MenuRect["play2Shared1"].active = true;
                     MenuRect["play2Shared2"].active = false;
@@ -128,8 +128,15 @@ namespace BRS.Scripts.Managers {
                 else {
                     Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
                     if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                } 
+            }
+
+            if (Input.GetKeyUp(Keys.A) || Input.GetButtonUp(Buttons.A)) {
+                if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
+                    Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Next", _currentMenuName);
+                    if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
                 }
-                
+
             }
 
 
