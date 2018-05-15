@@ -64,7 +64,7 @@ namespace BRS.Scripts.UI {
             public int Index;
             public Color Color, ColorInside;
             public List<string> Functions;
-            public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
+            public bool Active, CurrentSelection, IsClicked, deSelectOnMove, UseBigFont;
             public List<string> UniqueChoiceButtonWith;
             public int transparency;
         }
@@ -102,6 +102,10 @@ namespace BRS.Scripts.UI {
             Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
             Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Ui/ArrowDelete");
+            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Ui/Trash");
+            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
+            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
+            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -128,7 +132,11 @@ namespace BRS.Scripts.UI {
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
                 { "tickBoxCliqued", textureTickBoxCliqued },
-                { "tickBoxNotCliqued", textureTickBoxNotCliqued }
+                { "tickBoxNotCliqued", textureTickBoxNotCliqued },
+                { "trash", textureIconTrash },
+                { "thunder", textureIconThunder },
+                { "decline", textureIconDecline },
+                { "dollar", textureIconDollar }
             };
 
             // Set mapping name - functions
@@ -228,6 +236,10 @@ namespace BRS.Scripts.UI {
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
+                        button.Active = MS.Active;
+
+                        if (MS.UseBigFont)
+                            button.Font = UserInterface.menuBigFont;
 
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }
