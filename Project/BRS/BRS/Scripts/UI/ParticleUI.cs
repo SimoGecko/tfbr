@@ -16,6 +16,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        const float defaultDistance = 14f; // at this distance the particle is drawn to original size
 
 
         //private
@@ -70,7 +71,10 @@ namespace BRS.Scripts {
 
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
-                SpriteSheetFromType(p.effect).Draw(position, p.frame, p.colorTint, p.scale);
+
+                float dist = (p.position - Camera.GetCamera(index).transform.position).Length();
+                float scaling = defaultDistance / dist;
+                SpriteSheetFromType(p.effect).Draw(position, p.frame, p.colorTint, p.scale*scaling);
             }
         }
 

@@ -99,6 +99,10 @@ namespace BRS.Scripts {
             return new Rectangle(0, num * roundEndHeight, roundEndWidth, roundEndHeight);
         }
 
+        public bool Busted(int i) {
+            return endRoundPlayerText[i] == (int)EndRoundCondition.Busted;
+        }
+
 
         // other
 

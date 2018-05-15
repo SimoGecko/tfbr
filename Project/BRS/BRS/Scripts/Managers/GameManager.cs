@@ -10,12 +10,12 @@ namespace BRS.Scripts.Managers {
         ////////// controls the game state ... //////////
 
         // --------------------- VARIABLES ---------------------
-        public enum State { Menu, Playing, Paused, Finished };
+        public enum State { Menu, Playing, Paused, Ended };
 
         public static State state; // CONTROLS STATE OF THE GAME
 
         //public
-        public static int NumPlayers = 1; // TODO always check it works with 1, 2, and 4 players
+        public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 4;
         public static int lvlDifficulty = 2; // 0 for Easy, 1 for Normal, 2 for Hard
 
@@ -75,6 +75,7 @@ namespace BRS.Scripts.Managers {
         // queries
         public static bool GameActive { get { return state == State.Playing; } }
         public static bool GamePaused { get { return state == State.Paused; } }
+        public static bool GameEnded { get { return state == State.Ended || state==State.Menu; } }
         public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
 
 

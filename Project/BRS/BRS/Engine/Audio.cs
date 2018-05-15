@@ -50,7 +50,9 @@ namespace BRS.Engine {
             foreach (SoundEmit se in currentlyPlayingEffects) {
                 se.soundInstance.Apply3D(listener, se.emitter);
                 se.soundInstance.Pitch = se.pitch;
-                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost);
+                //se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost);
+                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost * se.volume);
+
             }
         }
 
@@ -99,7 +101,7 @@ namespace BRS.Engine {
 
             SoundEffectInstance soundInstance = sounds[name].CreateInstance();
             float duration = (float)sounds[name].Duration.TotalSeconds;
-            SoundEmit newSoundEmit = new SoundEmit(soundInstance, em, duration);
+            SoundEmit newSoundEmit = new SoundEmit(soundInstance, em, duration, volume);
             currentlyPlayingEffects.Add(newSoundEmit);
             if (changePitch) {
                 newSoundEmit.pitch = MyRandom.Range(-pitchRange, pitchRange);
@@ -107,12 +109,16 @@ namespace BRS.Engine {
             if(Use3DSoundEffects)
                 soundInstance.Apply3D(Listener(), em);
             soundInstance.Pitch = newSoundEmit.pitch;
-            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*volumeBoost);
+            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*volumeBoost* newSoundEmit.volume);
             soundInstance.Play();
         }
 
         public static bool Contains(string name) {
             return sounds.ContainsKey(name);
+        }
+
+        public static float GetDuration(string name) {
+            return (float)sounds[name].Duration.TotalSeconds;
         }
 
         /*
@@ -195,9 +201,11 @@ namespace BRS.Engine {
             public AudioEmitter emitter;
             public float endTime;
             public float pitch;
-            public SoundEmit(SoundEffectInstance _si, AudioEmitter _em, float duration) {
+            public float volume;
+            public SoundEmit(SoundEffectInstance _si, AudioEmitter _em, float duration, float vol = 1) {
                 soundInstance = _si;
                 emitter = _em;
+                volume = vol;
                 endTime = Time.CurrentTime + duration;
             }
         }

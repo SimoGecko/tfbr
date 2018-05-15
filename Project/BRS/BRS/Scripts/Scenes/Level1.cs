@@ -98,7 +98,6 @@ namespace BRS.Scripts.Scenes {
 
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
-            //Manager.AddComponent(new GameManager());
             Manager.AddComponent(new RoundManager());
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
@@ -176,10 +175,12 @@ namespace BRS.Scripts.Scenes {
                 arrow.transform.Scale(.6f);
 
                 //arrow for enemy
-                GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
-                arrow2.material = arrowMat;// new Material(Graphics.Red);
-                arrow2.AddComponent(new Arrow(player, true, i, () => true));
-                arrow2.transform.Scale(.3f);
+                if (GameManager.NumPlayers > 1) {
+                    GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
+                    arrow2.material = arrowMat;// new Material(Graphics.Red);
+                    arrow2.AddComponent(new Arrow(player, true, i, () => true));
+                    arrow2.transform.Scale(.3f);
+                }
             }
         }
 

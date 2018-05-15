@@ -20,7 +20,7 @@ namespace BRS.Scripts.Scenes {
             MenuScene();
             SetMenuShaderEffects();
             CreateManagers();
-
+            CreateSkybox();
             //Audio.PlayRandomSong();
         }
 
@@ -57,6 +57,16 @@ namespace BRS.Scripts.Scenes {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, true);
                 //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
             }
+        }
+
+        void CreateSkybox() {
+            bool useRandomSkybox = false;
+            string[] skyboxTextures = new string[] { "daybreak", "midday", "evening", "sunset", "midnight", };
+            string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
+            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
+            skybox.transform.Scale(2); // not more than this or it will be culled
+            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/" + skyTexture));
+            skybox.material = skyboxMat;
         }
 
         /// <summary>
