@@ -153,7 +153,10 @@ namespace BRS.Scripts.Scenes {
                 if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 
-                    int modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    int modelIndex = 0;
+                    if (ScenesCommunicationManager.Instance != null && ScenesCommunicationManager.Instance.PlayersInfo != null && ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i))
+                        modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+
                     player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, modelIndex));
                     player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, modelIndex));
                 } else {

@@ -19,35 +19,14 @@ namespace BRS.Scripts.UI {
         #region Properties and attributes
 
         /// <summary>
-        /// Store the different textures used for the menu
-        /// </summary>
-        public Dictionary<string, Texture2D> TexturesButtons;
-
-        /// <summary>
-        /// Store the different action to be be performed for specific events
-        /// </summary>
-        public Dictionary<string, EventHandler> FunctionsMenu;
-
-        /// <summary>
         /// Instance of the class
         /// </summary>
         public static Menu Instance;
 
         /// <summary>
-        /// Specification of the screen
-        /// </summary>
-        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
-        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
-
-        /// <summary>
-        /// Circular list of button where each element is connected to his two neighbors
-        /// </summary>
-        public List<Button> linkedButtonLeftRight = new List<Button>();
-
-        /// <summary>
         /// Defines the possible components types of the menu
         /// </summary>
-        public enum MenuType { Button, Text, Slider, Image, TickBox, none};
+        public enum MenuType { Button, Text, Slider, Image, TickBox, none };
 
         /// <summary>
         /// Describes the attributes of a component of the menu
@@ -69,10 +48,34 @@ namespace BRS.Scripts.UI {
             public int transparency;
         }
 
+        /// <summary>
+        /// Store the different textures used for the menu
+        /// </summary>
+        public Dictionary<string, Texture2D> TexturesButtons;
+
+        /// <summary>
+        /// Store the different action to be be performed for specific events
+        /// </summary>
+        public Dictionary<string, EventHandler> FunctionsMenu;
+
+        /// <summary>
+        /// Specification of the screen
+        /// </summary>
+        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
+        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
+
+        /// <summary>
+        /// Circular list of button where each element is connected to his two neighbors
+        /// </summary>
+        public List<Button> linkedButtonLeftRight = new List<Button>();
+
         #endregion
 
         #region Monogame-methods
 
+        /// <summary>
+        /// Monogame loadConent()
+        /// </summary>
         public void LoadContent() {
             Instance = this;
 
@@ -145,11 +148,9 @@ namespace BRS.Scripts.UI {
                 { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
-                //{ "SwitchRankingDisplay", MenuManager.Instance.SwitchRankingDisplay },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
                 { "ChangeNamePlayer", MenuManager.Instance.ChangeNamePlayer },
                 { "ChangeModelPlayer", MenuManager.Instance.ChangeModelPlayer },
-                //{ "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
