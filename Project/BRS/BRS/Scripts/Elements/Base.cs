@@ -26,7 +26,7 @@ namespace BRS.Scripts.Elements {
         private const float DeloadDistanceThreshold = 4f;
         private const float TimeBetweenUnloads = .03f;
         private const float MoneyPenalty = .5f; // percent
-        private const float MoneyPenaltyAmount = 1000;
+        private const int MoneyPenaltyAmount = 1000;
         private readonly int _baseIndex = 0;
 
         private int _shownMoneyStacks = 0;
