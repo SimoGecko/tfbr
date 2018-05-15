@@ -66,8 +66,8 @@ namespace BRS.Engine {
             }
             float result = SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed);
             //return WrapAngle(result);
-            while (result < 0  ) result += 360;
-            while (result > 360) result -= 360;
+            //while (result < 0  ) result += 360;
+            //while (result > 360) result -= 360;
 
             return result;
         }

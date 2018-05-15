@@ -7,18 +7,6 @@ rot: 0 0 0
 sca: 8 1 5
 </Ground>
 
-<Bases>
-tag: Base
-prefabName: cube
-amount: 2
-pos: 10 0 -5
-rot: 0 0 0
-sca: 1 1 1
-pos: 10 0 5
-rot: 0 0 0
-sca: 1 1 1
-</Bases>
-
 <StaticObstacles>
 tag: StaticObstacle
 prefabName: cube

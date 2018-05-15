@@ -1,6 +1,7 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
@@ -127,7 +128,7 @@ namespace BRS.Scripts.Elements {
                     //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
-                    TotalMoney -= MoneyPenaltyAmount;
+                    TotalMoney = Math.Max(TotalMoney - MoneyPenaltyAmount, 0);
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }
