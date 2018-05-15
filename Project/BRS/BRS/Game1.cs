@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using System.Collections.Generic;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -26,7 +27,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -54,7 +55,8 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            PostProcessingManager.Initialize(Content);
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType> {  PostprocessingType.DepthOfField};
+            PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
@@ -81,7 +83,12 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene(startScene);
+
+#if DEBUG
+            SceneManager.LoadScene("Level1");
+#else
+            SceneManager.LoadScene("LevelMenu");
+#endif
 
             Audio.Start();
 
@@ -124,7 +131,6 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update();
         }
 
         protected override void Draw(GameTime gameTime) {

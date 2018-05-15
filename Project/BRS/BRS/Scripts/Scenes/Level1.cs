@@ -224,6 +224,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
@@ -255,7 +256,7 @@ namespace BRS.Scripts.Scenes {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
                 //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, false);
             }
 
         }

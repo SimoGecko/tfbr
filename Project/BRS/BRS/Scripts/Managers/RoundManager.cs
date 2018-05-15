@@ -138,8 +138,14 @@ namespace BRS.Scripts.Managers {
 
             //FIND WINNER
             //reset // TODO reorganize
-            for (int i=0; i<GameManager.NumPlayers; i++)
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
                 RoundUI.instance.ShowEndRound(i, RoundUI.EndRoundCondition.Timesup);
+            }
+
+            // Remove all dynamic shaders
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.BlackAndWhite);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.ShockWave);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.Wave);
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 
@@ -161,7 +167,7 @@ namespace BRS.Scripts.Managers {
 
             //ready to restart
             OnRoundEndAction?.Invoke();
-            new Timer(TimeBetweenRounds, ()=>TryRestartRound(), true);
+            new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
         }
 
         void TryRestartRound() {
@@ -174,7 +180,7 @@ namespace BRS.Scripts.Managers {
                 OnGameEnd();
             }
         }
-        
+
 
         void OnGameEnd() {
             //save scores
@@ -190,7 +196,7 @@ namespace BRS.Scripts.Managers {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
-            rankinglist.Sort((x,y) => -1* Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
+            rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
             File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
 
@@ -203,7 +209,7 @@ namespace BRS.Scripts.Managers {
             for (int i = 1; i < bases.Length; i++) {
                 int totmoney = bases[i].TotalMoney;
 
-                if (totmoney > maxCash) { 
+                if (totmoney > maxCash) {
                     winner = i;
                     maxCash = totmoney;
                 }

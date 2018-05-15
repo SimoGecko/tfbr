@@ -34,9 +34,7 @@ namespace BRS.Scripts.Elements {
             ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy, 1.5f);
             new Timer(Duration, () => RemoveMagnet());
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateWave(i, transform.position, deactivate: true, deactivateAfter: Duration);
-            }
+            PostProcessingManager.Instance.ActivateWave(transform.position, deactivate: true, deactivateAfter: Duration);
         }
 
         public override void Update() {

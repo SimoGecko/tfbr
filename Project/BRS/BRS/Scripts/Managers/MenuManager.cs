@@ -221,7 +221,7 @@ namespace BRS.Scripts.Managers {
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
             Button button = (Button)sender;
-            RoundManager.RoundTime = Int32.Parse(button.Text[0].ToString()) * 60;
+            RoundManager.RoundTime = Int32.Parse(button.Text) * 60;
         }
 
         public void UpdateNoPlayers(object sender, EventArgs e) {
