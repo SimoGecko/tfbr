@@ -129,6 +129,8 @@
     <Compile Include="Engine\Physics\DebugDrawer.cs" />
     <Compile Include="Engine\Physics\Display.cs" />
     <Compile Include="Engine\Physics\Colliders\Collider.cs" />
+    <Compile Include="Engine\Physics\Follower.cs" />
+    <Compile Include="Engine\Physics\ModelExtractor.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
@@ -157,13 +159,18 @@
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
     <Compile Include="Engine\Utilities\Distribution.cs" />
+    <Compile Include="Engine\Utilities\EnumExtensions.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Game1.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerComponent.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FollowerType.cs" />
+    <Compile Include="Scripts\Elements\Lighting\AlarmLight.cs" />
     <Compile Include="Scripts\Elements\Police.cs" />
+    <Compile Include="Scripts\Elements\AnimatedWheels.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\LenseFlareManager.cs" />
@@ -177,10 +184,11 @@
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
+    <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\PlayerScripts\BaseParticles.cs" />
-    <Compile Include="Scripts\PlayerScripts\DynamicShadow.cs" />
+    <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
     <Compile Include="Scripts\Scenes\Level1.cs" />
@@ -190,14 +198,12 @@
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
     <Compile Include="Engine\Menu\Image.cs" />
-    <Compile Include="Scripts\Test\MaterialTest.cs" />
     <Compile Include="Scripts\UI\Menu.cs" />
     <Compile Include="Scripts\Managers\MenuManager.cs" />
     <Compile Include="Engine\Menu\Slider.cs" />
     <Compile Include="Engine\Menu\TextBox.cs" />
     <Compile Include="Engine\Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\Test\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\FallingWeight.cs" />
@@ -328,7 +334,9 @@
       <Name>Jitter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\Test\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

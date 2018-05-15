@@ -16,7 +16,8 @@ namespace BRS.Engine {
         static Dictionary<string, SoundEffect> sounds;
         static Dictionary<string, Song> songs;
         const float pitchRange = .2f;
-        //const float volumeBoost = 2f;
+        const float volumeBoost = 100f;
+        const bool Use3DSoundEffects = false;
 
         static List<SoundEmit> currentlyPlayingEffects = new List<SoundEmit>();
 
@@ -37,8 +38,11 @@ namespace BRS.Engine {
 
 
         public static void Update() {
-            Apply3DPositionToPlayingSounds();
+            if(Use3DSoundEffects)
+                Apply3DPositionToPlayingSounds();
             RemoveFinishedEffects();
+
+            //if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.R)) TansitionToRandomSong();
         }
 
         static void Apply3DPositionToPlayingSounds() {
@@ -46,7 +50,9 @@ namespace BRS.Engine {
             foreach (SoundEmit se in currentlyPlayingEffects) {
                 se.soundInstance.Apply3D(listener, se.emitter);
                 se.soundInstance.Pitch = se.pitch;
-                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * 2);
+                //se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost);
+                se.soundInstance.Volume = Utility.Clamp01(se.soundInstance.Volume * volumeBoost * se.volume);
+
             }
         }
 
@@ -95,22 +101,24 @@ namespace BRS.Engine {
 
             SoundEffectInstance soundInstance = sounds[name].CreateInstance();
             float duration = (float)sounds[name].Duration.TotalSeconds;
-            SoundEmit newSoundEmit = new SoundEmit(soundInstance, em, duration);
+            SoundEmit newSoundEmit = new SoundEmit(soundInstance, em, duration, volume);
             currentlyPlayingEffects.Add(newSoundEmit);
             if (changePitch) {
                 newSoundEmit.pitch = MyRandom.Range(-pitchRange, pitchRange);
             }
-            //soundInstance.Volume = volume;
-            //soundInstance.Pan = -sounds[name].Pan;
-            //soundInstance.Pitch = -1;
-            soundInstance.Apply3D(Listener(), em);
+            if(Use3DSoundEffects)
+                soundInstance.Apply3D(Listener(), em);
             soundInstance.Pitch = newSoundEmit.pitch;
-            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*2);
+            soundInstance.Volume  = Utility.Clamp01(soundInstance.Volume*volumeBoost* newSoundEmit.volume);
             soundInstance.Play();
         }
 
         public static bool Contains(string name) {
             return sounds.ContainsKey(name);
+        }
+
+        public static float GetDuration(string name) {
+            return (float)sounds[name].Duration.TotalSeconds;
         }
 
         /*
@@ -164,7 +172,11 @@ namespace BRS.Engine {
             return listener;
         }
 
-
+        public static void TansitionToRandomSong() {
+            StopSong();
+            PlayRandomSong();
+            SetSongLoop(true);
+        }
 
 
         //=============================================================================================================
@@ -189,9 +201,11 @@ namespace BRS.Engine {
             public AudioEmitter emitter;
             public float endTime;
             public float pitch;
-            public SoundEmit(SoundEffectInstance _si, AudioEmitter _em, float duration) {
+            public float volume;
+            public SoundEmit(SoundEffectInstance _si, AudioEmitter _em, float duration, float vol = 1) {
                 soundInstance = _si;
                 emitter = _em;
+                volume = vol;
                 endTime = Time.CurrentTime + duration;
             }
         }

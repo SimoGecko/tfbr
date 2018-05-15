@@ -14,6 +14,7 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public bool CanDeload = false;
 
         //private
         private int _capacity = 20;
@@ -57,7 +58,7 @@ namespace BRS.Scripts.PlayerScripts {
                 _carryingWeight += money.Weight;
                 _carryingValue += money.Value;
                 _carryingMoney.Push(money);
-                if (IsFull()) {
+                if (IsAlmostFull()) {
                     OnInventoryFull?.Invoke();
                 }
             }
@@ -116,8 +117,11 @@ namespace BRS.Scripts.PlayerScripts {
             return _carryingWeight + money.Weight <= _capacity;
         }
 
-        public bool IsFull() {
+        public bool IsAlmostFull() {
             return _carryingWeight >= _capacity - 3;
+        }
+        public bool IsFullCompletely() {
+            return _carryingWeight >= _capacity;
         }
 
         /*

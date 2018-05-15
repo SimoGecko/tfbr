@@ -48,7 +48,7 @@ NeighborsUpDownLeftRight: null SliderAudio DifficultyHard DifficultyMedium
 UniqueChoiceWith: DifficultyMedium DifficultyHard
 ScaleWidth: 1.3
 ScaleHeight: 0.75
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
 </Button>
 
 <Button>
@@ -62,7 +62,7 @@ IsClicked: yes
 ScaleWidth: 1.3
 ScaleHeight: 0.75
 CurrentSelection: yes
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
 </Button>
 
 <Button>
@@ -74,7 +74,7 @@ NeighborsUpDownLeftRight: null SliderAudio DifficultyMedium DifficultyEasy
 UniqueChoiceWith: DifficultyEasy DifficultyMedium
 ScaleWidth: 1.3
 ScaleHeight: 0.75
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
 </Button>
 
 <TickBox>

@@ -51,10 +51,11 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
+            /*
             if (Input.GetKeyDown(Keys.T)) StartShowBubble("Let's get\nthis robbery\nstarted!", 0);
             if (Input.GetKeyDown(Keys.Z)) EndShowBubble(0);
             if (Input.GetKeyDown(Keys.U)) StartShowBubble("Let's go\npick up cash!", 1);
-            if (Input.GetKeyDown(Keys.I)) EndShowBubble(1);
+            if (Input.GetKeyDown(Keys.I)) EndShowBubble(1);*/
         }
 
         public override void Draw2D(int index) {
@@ -79,6 +80,7 @@ namespace BRS.Scripts {
         // commands
         public async void StartShowBubble(string _bubbleString, int index) {
             bubbleString[index] = _bubbleString;
+            Audio.Play("characters_popup", ElementManager.Instance.Player(index).transform.position);
             //showBubble[index] = false;
             //showCharacterPercent[index] = 0;
             if (inTransition[index]) return;

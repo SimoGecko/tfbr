@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using BRS.Engine.Physics.Colliders;
 using BRS.Scripts.PlayerScripts;
 using Jitter;
@@ -67,6 +68,7 @@ namespace BRS.Engine.Physics {
 
             // Event-handling
             World.Events.BodiesBeginCollide += Events_BodiesBeginCollide;
+            World.Events.BodiesEndCollide += Events_BodiesEndCollide;
             World.Events.ContactCreated += Events_ContactCreated;
         }
 
@@ -125,9 +127,26 @@ namespace BRS.Engine.Physics {
                     Instance._colliders.Add(body2);
                 }
             } else {
-                body1?.GameObject.OnCollisionEnter(body2);
-                body2?.GameObject.OnCollisionEnter(body1);
+                if (body2 != null) body1?.GameObject?.OnCollisionEnter(body2);
+                if (body1 != null) body2?.GameObject?.OnCollisionEnter(body1);
             }
+        }
+
+        /// <summary>
+        /// Event as soon as two objects started the collision.
+        /// </summary>
+        /// <param name="arg1">Rigidbody 1</param>
+        /// <param name="arg2">Rigidbody 2</param>
+        private void Events_BodiesEndCollide(RigidBody arg1, RigidBody arg2) {
+            if (!IsActive || !GameManager.GameActive) {
+                return;
+            }
+
+            Collider body1 = arg1 as Collider;
+            Collider body2 = arg2 as Collider;
+
+            if (body2?.GameObject != null) body1?.GameObject?.OnCollisionEnd(body2);
+            if (body1?.GameObject != null) body2?.GameObject?.OnCollisionEnd(body1);
         }
 
         /// <summary>
@@ -249,18 +268,23 @@ namespace BRS.Engine.Physics {
             JVector hitNormal;
             float fraction;
 
-            bool result = World.CollisionSystem.Raycast(p,
-                p + d5, RaycastCallback, out resBody,
-                out hitNormal, out fraction);
+            bool result = World.CollisionSystem.Raycast(p, d5, RaycastCallback,
+                out resBody, out hitNormal, out fraction);
 
             if (result && resBody != rigidBody) {
                 float maxLength = d.LengthSquared();
                 JVector collisionAt = p + fraction * d5;
                 JVector position = GetPosition(collider, collisionAt, hitNormal);
-                Debug.Log(fraction);
-                Debug.Log((resBody as Collider).GameObject.name);
 
                 float ncLength = (position - p).LengthSquared();
+
+                //resBody.Tag = BodyTag.DrawMe;
+                //Debug.Log(fraction);
+                //Debug.Log((resBody as Collider).GameObject.name);
+                //World.AddBody(new RigidBody(new CylinderShape(1.0f, .25f)) { Position = p, IsStatic = true, PureCollider = true });
+                //World.AddBody(new RigidBody(new CylinderShape(2.5f, 0.5f)) { Position = end, IsStatic = true, PureCollider = true });
+                ////World.AddBody(new RigidBody(new CylinderShape(1.0f, 1.0f)) { Position = p + d5, IsStatic = true, PureCollider = true });
+                //World.AddBody(new RigidBody(new CylinderShape(1.0f, 1.0f)) { Position = collisionAt, IsStatic = true, PureCollider = true });
 
                 return maxLength < ncLength ? end : position;
             }
@@ -325,10 +349,10 @@ namespace BRS.Engine.Physics {
                 endPosition = collisionPoint + margin;
             }
 
-            // Todo: Visual debuggin might be removed in the end
-            PhysicsDrawer.Instance.ClearPointsToDraw();
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint));
-            PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(endPosition));
+            //// Todo: Visual debuggin might be removed in the end
+            //PhysicsDrawer.Instance.ClearPointsToDraw();
+            //PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(collisionPoint));
+            //PhysicsDrawer.Instance.AddPointToDraw(Conversion.ToXnaVector(endPosition));
 
             //return collider.Position;
             return endPosition;
@@ -403,8 +427,6 @@ namespace BRS.Engine.Physics {
 
             player.GameObject.GetComponent<Player>().SetCollisionState(other, Conversion.ToXnaVector(newPosition), angle);
             player.Position = newPosition;
-            //player.RotationY = MathHelper.ToRadians(angle);
-            //player.Orientation = JMatrix.CreateRotationY(MathHelper.ToRadians(angle));
         }
 
         #endregion
@@ -473,7 +495,7 @@ namespace BRS.Engine.Physics {
             float det = a1 * b2 - a2 * b1;
 
             // If 0 => parallel => no intersection
-            if (det == 0.0f) {
+            if (Math.Abs(det) < JMath.Epsilon) {
                 intersection = JVector.Zero;
                 return false;
             }

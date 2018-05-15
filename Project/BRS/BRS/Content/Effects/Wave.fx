@@ -14,6 +14,7 @@ float3 shockParams;				// 10.0, 0.8, 0.1
 float4 animationLength = float4(1.0, 1.0, 1.0, 1.0);
 float4 active;
 float players;
+float4 cameraDistance;
 static const float PI = 3.14159265f;
 
 // Our sampler for the texture, which is just going to be pretty simple
@@ -26,12 +27,26 @@ sampler TextureSampler = sampler_state {
 float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor, int playerId, float animationLength) {
 	// First get the correct center of the shockwave
 	float2 centerCoord;
+	float playerCameraDist;
+	
 
 	switch (playerId) {
-	case 0: centerCoord = centerCoord0; break;
-	case 1: centerCoord = centerCoord1; break;
-	case 2: centerCoord = centerCoord2; break;
-	case 3: centerCoord = centerCoord3; break;
+	case 0: 
+		centerCoord = centerCoord0; 
+		playerCameraDist = cameraDistance.x;
+		break;
+	case 1: 
+		centerCoord = centerCoord1;
+		playerCameraDist = cameraDistance.y;		
+		break;
+	case 2: 
+		centerCoord = centerCoord2; 
+		playerCameraDist = cameraDistance.z;	
+		break;
+	case 3: 
+		centerCoord = centerCoord3; 
+		playerCameraDist = cameraDistance.w;	
+		break;
 	}
 
 	float2 distVec = textureCoordinate.xy - centerCoord;
@@ -47,9 +62,11 @@ float4 CalculateShockWave(float2 textureCoordinate : TEXCOORD0, float4 defColor,
 	
 	
 	float4 origColor = tex2D(TextureSampler, textureCoordinate.xy);
+	float distScale = lerp(0.0, 1.0, playerCameraDist / 50.0);
+	float scaleFactor = lerp(0.1, 0.01, distScale);
 	
-	if(distance < 0.1) {
-		return lerp(color, origColor, distance / 0.1);
+	if(distance < scaleFactor) {
+		return lerp(color, origColor, distance / scaleFactor);
 	}
 	return origColor;
 }

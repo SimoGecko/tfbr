@@ -228,7 +228,7 @@ namespace BRS.Scripts.Managers {
 
         public void UpdateRoundDuration(object sender, EventArgs e) {
             Button button = (Button)sender;
-            RoundManager.RoundTime = Int32.Parse(button.Text[0].ToString()) * 60;
+            RoundManager.RoundTime = Int32.Parse(button.Text) * 60;
         }
 
         public void UpdateNoPlayers(object sender, EventArgs e) {
@@ -248,12 +248,12 @@ namespace BRS.Scripts.Managers {
 
             if (GameManager.NumPlayers == 1)
                 allPlayersReady = true;
-            else if (GameManager.NumPlayers == 2 && Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
+            else if (GameManager.NumPlayers == 2 && ((Button)Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString())).IsClicked) {
                 allPlayersReady = true;
             }
             else if (GameManager.NumPlayers == 4) {
                 if (button.IndexAssociatedPlayerScreen == 0 || button.IndexAssociatedPlayerScreen == 1) {
-                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString()).IsCurrentSelection) {
+                    if (((Button)Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2).ToString())).IsClicked) {
                         MenuRect[panelPlay2NameOption + "0"].active = false;
                         MenuRect[panelPlay2NameOption + "1"].active = false;
                         MenuRect[panelPlay2NameOption + "2"].active = true;
@@ -266,7 +266,7 @@ namespace BRS.Scripts.Managers {
                     }
                 }
                 else if (button.IndexAssociatedPlayerScreen == 2 || button.IndexAssociatedPlayerScreen == 3) {
-                    if (Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2 + 2).ToString()).IsCurrentSelection) {
+                    if (((Button)Menu.Instance.FindMenuComponentinPanelWithName("Ready", panelPlay2NameOption + ((button.IndexAssociatedPlayerScreen + 1) % 2 + 2).ToString())).IsClicked) {
                         allPlayersReady = true;
                     }
                 }

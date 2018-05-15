@@ -112,21 +112,25 @@ namespace BRS.Scripts.PlayerScripts {
 
             //only if game is running
             if (State == PlayerState.Normal) {
-                bool boosting = BoostInput() && _pS.HasStaminaForBoost();
+                bool boosting = BoostInput() ? _pS.HasStaminaForBoost() : false;
                 _pM.Boosting = boosting;
                 if (boosting) {
                     _pS.UseStaminaForBoost();
                     //Input.Vibrate(.001f, .001f, PlayerIndex);
                 }
 
-                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                Vector2 moveInput;
+                if(true)//!CameraController.autoFollow)
+                    moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                else
+                    moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
                 if (DropCashInput()) _pI.DropMoney();
 
-                if (AttackInput() && _pS.HasStaminaForAttack()) {
+                bool attack = AttackInput() ? _pS.HasStaminaForAttack() : false;
+                if (attack) {
                     State = PlayerState.Attack;
                     _pS.UseStaminaForAttack();
                     _pA.BeginAttack();
@@ -154,6 +158,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (c.GameObject.tag == ObjectTag.StaticObstacle) {
                 _pM.SetSpeedPad(false);
                 // CamController.Shake(.3f);
+                    Input.Vibrate(.05f, .1f, PlayerIndex);
             }
         }
 
@@ -162,7 +167,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // LIVING STUFF
         public override void TakeDamage(float damage) { // for bombs aswell
-            //base.TakeDamage(damage); // don't override state
+            base.TakeDamage(0); // don't override state => it's needed for effects
 
             if (!Dead) {
                 if (Time.CurrentTime > nextStunTime) {
@@ -170,9 +175,10 @@ namespace BRS.Scripts.PlayerScripts {
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);
-                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun, 1.2f);
                     PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
                     _pI.LoseMoney();
+                    ParticleUI.Instance.GiveOrder(transform.position+Vector3.Up*2, ParticleType.RotatingStars, .7f);
                     Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
                 }
 
@@ -201,7 +207,7 @@ namespace BRS.Scripts.PlayerScripts {
             if (_other != null) {
                 playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(_pA.AttackDistance, 2);
             }
-            bool canAttack = _pS.HasStaminaForAttack() && playerInRange;
+            bool canAttack = /*_pS.HasStaminaForAttack() &&*/ playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
                 Health, StartingHealth,
                 _pS.Stamina, _pS.MaxStamina,
@@ -223,6 +229,8 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         public bool IsAttacking() { return State == PlayerState.Attack; }
+        public bool Full() { return gameObject.GetComponent<PlayerInventory>().IsFullCompletely(); }
+        public bool Empty() { return gameObject.GetComponent<PlayerStamina>().TriedToUseUnsuccessfully; }
 
         //-------------------------------------------------------------------------------------------
         // INPUT queries

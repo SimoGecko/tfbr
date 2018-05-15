@@ -63,11 +63,11 @@ namespace BRS.Scripts.UI {
 
             //police bar
             float policePercent = (float)(1 - _roundtime.Span.TotalSeconds / RoundManager.RoundTime);
-            UserInterface.DrawBarStriped(policePercent, new Rectangle(-320, 107, 175, 25), Color.LightGray, Align.TopRight);
+            UserInterface.DrawBarStriped(policePercent, new Rectangle(-270, -310, 250, 25), Color.LightGray, Align.BotRight);
             //police car and blinking
-            int fgRectWidth = (int)(175 * policePercent);
-            Rectangle policeRect = new Rectangle(-320 + fgRectWidth, 120, 64, 64);
-            UserInterface.DrawPicture(_policeCar, policeRect, null, Align.TopRight, Align.Center);
+            int fgRectWidth = (int)(250 * policePercent);
+            Rectangle policeRect = new Rectangle(-270 + fgRectWidth, -298, 64, 64);
+            UserInterface.DrawPicture(_policeCar, policeRect, null, Align.BotRight, Align.Center);
 
             if (_showPolice) {
                 //UserInterface.DrawString("Get back to your base!", new Vector2(0, 50), Align.Bottom, bold:true);
@@ -79,7 +79,8 @@ namespace BRS.Scripts.UI {
 
             //time
             string roundTimeString = _roundtime.Span.ToReadableString();
-            UserInterface.DrawString(roundTimeString, new Rectangle(-320 + fgRectWidth, 144, 75, 25), Align.TopRight, Align.Center, Align.Center);
+            UserInterface.DrawString(roundTimeString, new Rectangle(-20, -310, 75, 25), Align.BotRight, Align.BotRight, Align.Right);
+            UserInterface.DrawString("time left:", new Rectangle(-145, -310, 125, 25), Align.BotRight, Align.BotRight, Align.Left, scale:.7f);
         }
         
 

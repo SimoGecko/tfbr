@@ -153,8 +153,6 @@ namespace BRS.Engine {
                     string lineNoObj = reader.ReadLine();
                     int n = int.Parse(lineNoObj.Split(' ')[1]);
 
-                    Debug.Log(string.Format("{0}: {1}", tagName, n));
-
                     for (int i = 0; i < n; i++) {
                         string p = reader.ReadLine();
                         string r = reader.ReadLine();

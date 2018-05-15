@@ -8,11 +8,12 @@ using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace BRS.Engine {
-    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police }
+    public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
 
 
     /// <summary>
@@ -30,6 +31,7 @@ namespace BRS.Engine {
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
+
         static int InstanceCount = 0;
 
         public GameObject(string name, Model model = null) {
@@ -43,7 +45,6 @@ namespace BRS.Engine {
             allGameObjects.Add(this);
             SortAll();
         }
-
 
         // ---------- CALLBACKS ----------
         public void Awake() {
@@ -67,13 +68,30 @@ namespace BRS.Engine {
             if (active) foreach (IComponent c in components) c.OnCollisionEnter(col);
         }
 
+        public void OnCollisionEnd(Collider col) {
+            if (active) foreach (IComponent c in components) c.OnCollisionEnd(col);
+        }
+
         public void Draw3D(Camera cam) {
             if (active) {
-                if (Model != null && active) {
+                if (Model != null) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
                 foreach (IComponent c in components) c.Draw3D(cam);
+            }
+        }
+
+        internal void Draw3DDepth(Camera cam, Effect depthShader) {
+            if (tag == ObjectTag.Police) { Debug.Log("HHHH");}
+            if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
+                if (Model != null) {
+                    Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
+                }
+
+                foreach (IComponent c in components) {
+                    c.Draw3D(cam);
+                }
             }
         }
 
@@ -91,8 +109,7 @@ namespace BRS.Engine {
         public static GameObject[] All { get { return allGameObjects.ToArray(); } }
 
         public static void SortAll() {
-            // Todo: Have to rethink the draw order again
-            //allGameObjects = allGameObjects.OrderBy(x => x.name).ToList();
+            allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
         }
 
 
@@ -146,7 +163,7 @@ namespace BRS.Engine {
                 newObject.AddComponent((IComponent)c.Clone());
             }
             newObject.Model = this.Model;
-            newObject.material = this.material;
+            newObject.material = material?.Clone();
             return newObject;
         }
 

@@ -16,8 +16,8 @@ namespace BRS.Engine {
 
         //public
         // Todo: Verify if this holds for everybody
-        public static readonly int Width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // 1920x1080, 2560x1440
-        public static readonly int Height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
+        public static readonly int Width = 1920;// LEAVE at 1920x1080 as this is the standard resolution //GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width; // 1920x1080, 2560x1440
+        public static readonly int Height = 1080;// GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         public const string Title = "THAT FAILED BANK ROBBERY";
 
         static bool verticalSplit = true;
@@ -30,7 +30,7 @@ namespace BRS.Engine {
 
         //reference
         public static Camera[] Cameras;
-        public static RasterizerState _fullRasterizer, _wireRasterizer;
+        public static RasterizerState _fullRasterizer, _wireRasterizer, _nocullRasterizer;
 
 
         // --------------------- BASE METHODS ------------------
@@ -65,6 +65,8 @@ namespace BRS.Engine {
             _fullRasterizer = graphicsDevice.RasterizerState;
             _wireRasterizer = new RasterizerState();
             _wireRasterizer.FillMode = FillMode.WireFrame;
+            _nocullRasterizer = new RasterizerState();
+            _nocullRasterizer.CullMode = CullMode.None;
         }
 
         //----------------------

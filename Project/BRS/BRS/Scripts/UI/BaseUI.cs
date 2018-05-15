@@ -55,21 +55,21 @@ namespace BRS.Scripts.UI {
             bool flip = false;// index % 2 != 0;
             int baseIndex = index % 2;
 
-            UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, scale: .5f, bold: true, flip: flip);
+            UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, Align.TopRight, Align.Right, scale: .5f, bold: true, flip: flip);
             UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 100, 100), null, Align.TopRight, flip: flip);
 
             int rank = RoundManager.GetRank(baseIndex);
             //if(rank==1)
-                UserInterface.DrawPicture(_ribbon, new Rectangle(-3, 32, 80, 80), null, Align.TopRight, flip: flip);
+                UserInterface.DrawPicture(_ribbon, new Rectangle(-138, 15, 80, 80), null, Align.TopRight, flip: flip);
             string rankString = RoundManager.RankToString(rank);
-            UserInterface.DrawString(rankString, new Rectangle(-23, 45, 40, 40), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, bold: true, flip: flip);
+            UserInterface.DrawString(rankString, new Rectangle(-157, 33, 40, 40), Align.TopRight, Align.TopRight, Align.Center, scale: .7f, bold: true, flip: flip);
 
-            UserInterface.DrawString("base", new Rectangle(-145, 32, 175, 25), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
+            UserInterface.DrawString("base", new Rectangle(-145, 82, 175, 25), Align.TopRight, Align.TopRight, Align.Bottom, scale: .7f, flip: flip);
             float capacityPercent = (float)_baseUi[baseIndex].TotalMoneyInBase / RoundManager.MoneyToWinRound;
-            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-320, 57, 175, 25), Graphics.Yellow, Align.TopRight, flip: flip);
+            UserInterface.DrawBarStriped(capacityPercent, new Rectangle(-320, 107, 175, 25), Graphics.Yellow, Align.TopRight, flip: flip);
             string baseValueString = Utility.IntToMoneyString(_baseUi[baseIndex].TotalMoneyInBase);
-            UserInterface.DrawString(baseValueString, new Rectangle(-145, 82, 175, 25), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
-            UserInterface.DrawPicture(_barIcons, new Rectangle(-120, 57, 25, 25), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
+            UserInterface.DrawString(baseValueString, new Rectangle(-145, 132, 175, 25), Align.TopRight, Align.TopRight, Align.Top, flip: flip);
+            UserInterface.DrawPicture(_barIcons, new Rectangle(-120, 107, 25, 25), new Rectangle(200, 0, 200, 200), Align.TopRight, flip: flip);
 
             //wins
             string winsString = "wins: " + _baseUIwins[baseIndex];
