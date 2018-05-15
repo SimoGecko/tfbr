@@ -287,6 +287,14 @@ namespace BRS.Scripts.Managers {
         public void SetMode(object sender, EventArgs e) {
             Button button = (Button)sender;
             GameMode.currentGameMode = ScenesCommunicationManager.ModesName[button.Index];
+
+            foreach (var elem in MenuRect[_currentMenuName].components) {
+                if (elem is TextBox tb) {
+                    if (tb.NameIdentifier == "ModeName") {
+                        tb.Text = ScenesCommunicationManager.ModesDescription[button.Index];
+                    }
+                }
+            }
         }
 
         public void SetMap(object sender, EventArgs e) {

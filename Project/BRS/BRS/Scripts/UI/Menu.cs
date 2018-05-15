@@ -102,6 +102,10 @@ namespace BRS.Scripts.UI {
             Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
             Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Ui/ArrowDelete");
+            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Ui/Trash");
+            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
+            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
+            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -128,7 +132,11 @@ namespace BRS.Scripts.UI {
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
                 { "tickBoxCliqued", textureTickBoxCliqued },
-                { "tickBoxNotCliqued", textureTickBoxNotCliqued }
+                { "tickBoxNotCliqued", textureTickBoxNotCliqued },
+                { "trash", textureIconTrash },
+                { "thunder", textureIconThunder },
+                { "decline", textureIconDecline },
+                { "dollar", textureIconDollar }
             };
 
             // Set mapping name - functions

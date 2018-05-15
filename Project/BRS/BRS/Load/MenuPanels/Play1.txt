@@ -36,6 +36,12 @@ Text: Map
 Position: 725 710
 </Text>
 
+<Text>
+Text: Normal
+Position: 1080 600
+NameIdentifier: ModeName
+</Text>
+
 <Button>
 NameIdentifier: PlayerAmount1
 Texture: button
@@ -126,54 +132,54 @@ ScaleHeight: 0.85
 <Button>
 NameIdentifier: ModeNormal
 Texture: button
-Position: 960 490
-Text: NORMAL
+Position: 900 490
 Functions: SetMode HighlightBorders
-NeighborsUpDownLeftRight: RoundDuration2min ModeCrates ModeBombs ModeBombs
+NeighborsUpDownLeftRight: RoundDuration2min MapA ModeSurvival ModeBombs
 UniqueChoiceWith: ModeBombs ModeCrates ModeSurvival
 IsClicked: yes
-ScaleWidth: 1.8
+ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 0
+TextureInside: dollar
 </Button>
 
 <Button>
 NameIdentifier: ModeBombs
 Texture: button
-Position: 1200 490
-Text: BOMBER
+Position: 1020 490
 Functions: SetMode HighlightBorders
-NeighborsUpDownLeftRight: RoundDuration5min ModeSurvival ModeNormal ModeNormal
+NeighborsUpDownLeftRight: RoundDuration3min MapA ModeNormal ModeCrates
 UniqueChoiceWith: ModeNormal ModeCrates ModeSurvival
-ScaleWidth: 1.8
+ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 1
+TextureInside: thunder
 </Button>
 
 <Button>
 NameIdentifier: ModeCrates
 Texture: button
-Position: 960 600
-Text: CRATES
+Position: 1140 490
 Functions: SetMode HighlightBorders
-NeighborsUpDownLeftRight: ModeNormal MapA ModeSurvival ModeSurvival
+NeighborsUpDownLeftRight: RoundDuration5min MapB ModeBombs ModeSurvival
 UniqueChoiceWith: ModeNormal ModeBombs ModeSurvival
-ScaleWidth: 1.8
+ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 2
+TextureInside: trash
 </Button>
 
 <Button>
 NameIdentifier: ModeSurvival
 Texture: button
-Position: 1200 600
-Text: GOLD ONLY
+Position: 1260 490
 Functions: SetMode HighlightBorders
-NeighborsUpDownLeftRight: ModeBombs MapB ModeCrates ModeCrates
+NeighborsUpDownLeftRight: RoundDuration10min MapB ModeCrates ModeNormal
 UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
-ScaleWidth: 1.8
+ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 3
+TextureInside: decline
 </Button>
 
 <Button>
