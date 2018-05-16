@@ -45,7 +45,7 @@ namespace BRS.Scripts.Scenes {
 
 
         void LoadBlenderBakedScene() {
-            string level = "level2";// +GameManager.LvlScene;
+            string level = "level" + GameManager.LvlScene;
             Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/"+level+"_inside"));
             GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/" + level + "_inside"));
             insideScene.material = insideMat;
