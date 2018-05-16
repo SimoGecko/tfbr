@@ -63,7 +63,7 @@ namespace BRS.Engine {
             // Disable the physics-manager when loading the scene to avoid inconsistency between collision-handlings and loading
             PhysicsManager.Instance.IsActive = false;
 
-            GameManager.LvlScene = sceneId;
+            //GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
             Time.ClearTimers();
             currentScene = scenes[sceneName];

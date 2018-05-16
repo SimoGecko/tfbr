@@ -284,6 +284,7 @@ namespace BRS.Scripts.Managers {
 
         public void SetMap(object sender, EventArgs e) {
             Button button = (Button)sender;
+            GameManager.LvlScene = button.Index;
         }
 
         public void ResumeGame(object sender, EventArgs e) {
