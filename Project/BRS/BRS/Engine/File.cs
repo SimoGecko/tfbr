@@ -123,7 +123,7 @@ namespace BRS.Engine {
                                 go.AddComponent(new DynamicRigidBody());
                                 break;
                             default:
-                                go.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxInvisible));
+                                //go.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxInvisible));
                                 break;
                         }
                     }
