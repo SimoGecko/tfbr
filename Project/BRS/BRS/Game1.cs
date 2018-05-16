@@ -21,7 +21,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         Effect _ZBufferShader;
-        const string startScene = "Level1";
+        const string startScene = "LevelMenu";
         bool showUI = true;
 
         public Game1() {
