@@ -13,16 +13,18 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- VARIABLES ---------------------
 
+        // const
+        const float TimeBetweenDrops = .1f;
+        const float DropcashRadius = .5f;
+        const float LosecashRadius = 3f;
+
         //public
         public bool CanDeload = false;
 
         //private
         private int _capacity = 20;
 
-        // const
-        const float TimeBetweenDrops = .1f;
-        const float DropcashRadius = .5f;
-        const float LosecashRadius = 3f;
+        
 
         //MONEY
         int _carryingWeight = 0;

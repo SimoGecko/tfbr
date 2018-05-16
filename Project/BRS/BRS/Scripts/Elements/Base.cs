@@ -18,6 +18,7 @@ namespace BRS.Scripts.Elements {
 
         //public
         public int TotalMoney { get; private set; }
+        public int TotalMoneyPenalty { get; private set; }
         public Color BaseColor { get; private set; }
         // deload done
         public bool FullDeloadDone = false;
@@ -26,7 +27,7 @@ namespace BRS.Scripts.Elements {
         private const float DeloadDistanceThreshold = 4f;
         private const float TimeBetweenUnloads = .03f;
         private const float MoneyPenalty = .5f; // percent
-        private const float MoneyPenaltyAmount = 1000;
+        private const int MoneyPenaltyAmount = 1000;
         private readonly int _baseIndex = 0;
 
         private int _shownMoneyStacks = 0;
@@ -49,6 +50,7 @@ namespace BRS.Scripts.Elements {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
+            TotalMoneyPenalty = 0;
 
             _shownMoneyStacks = 0;
 
@@ -66,6 +68,7 @@ namespace BRS.Scripts.Elements {
             }
 
             _moneyGameObjects.Clear();
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, 100, 100, 0);
 
             Start();
         }
@@ -127,7 +130,7 @@ namespace BRS.Scripts.Elements {
                     //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
-                    TotalMoney -= MoneyPenaltyAmount;
+                    TotalMoneyPenalty += MoneyPenaltyAmount;
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }

@@ -12,7 +12,7 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- VARIABLES ---------------------
 
         //public
-        private const float ValuePotion = .2f;
+        private const float ValuePotion = 1f;
 
         public StaminaPotion() {
             PowerupType = PowerupType.Stamina;

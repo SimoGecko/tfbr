@@ -76,6 +76,7 @@ namespace BRS.Scripts.Elements {
         }
 
         void RemoveMagnet() {
+            foreach (var pm in _pMAffected) pm.SetSlowdown(false);
             ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject);
 

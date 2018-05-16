@@ -43,7 +43,7 @@ namespace BRS.Scripts.UI {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
-            _mapSprite = File.Load<Texture2D>("Images/minimap/level1");
+            _mapSprite = File.Load<Texture2D>("Images/minimap/level" + GameManager.LvlScene);
             _mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
             
             _pivot = new Vector2(IconSize / 2, IconSize / 2);
