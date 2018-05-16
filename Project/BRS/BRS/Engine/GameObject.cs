@@ -30,6 +30,7 @@ namespace BRS.Engine {
         public int DrawOrder { set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
+        public bool Instanciate = false;
 
 
         static int InstanceCount = 0;
@@ -74,7 +75,7 @@ namespace BRS.Engine {
 
         public void Draw3D(Camera cam) {
             if (active) {
-                if (Model != null) {
+                if (Model != null && !Instanciate) {
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
@@ -83,7 +84,7 @@ namespace BRS.Engine {
         }
 
         internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (tag == ObjectTag.Police) { Debug.Log("HHHH");}
+            if (tag == ObjectTag.Police) { Debug.Log("HHHH"); }
             if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
                 if (Model != null) {
                     Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
@@ -156,6 +157,7 @@ namespace BRS.Engine {
         public virtual object Clone() {
             GameObject newObject = new GameObject(name + "_clone_" + InstanceCount);// (((GameObject)Activator.CreateInstance(type);
             InstanceCount++;
+            newObject.Instanciate = Instanciate;
             newObject.transform.CopyFrom(this.transform);
             newObject.tag = tag;
             newObject.active = true;
@@ -164,6 +166,13 @@ namespace BRS.Engine {
             }
             newObject.Model = this.Model;
             newObject.material = material?.Clone();
+
+
+            // Instanciating
+            if (Model != null && Instanciate) {
+                Graphics.AddInstance(Model, newObject);
+            }
+
             return newObject;
         }
 
@@ -184,6 +193,11 @@ namespace BRS.Engine {
             allGameObjects.Remove(o);
             //TODO free up memory
             foreach (Component c in o.components) c.Destroy();
+
+            // Instanciating
+            if (o.Model != null) {
+                Graphics.RemoveInstance(o.Model, o);
+            }
         }
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time

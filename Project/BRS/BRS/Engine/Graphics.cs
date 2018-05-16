@@ -2,6 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
+using System.Collections.Generic;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -44,15 +46,21 @@ namespace BRS.Engine {
         public static Effect texlightEffect;
         public static Effect textureEffect;
         public static Effect skyboxEffect;
+        private static Effect _instanceEffect;
         //public static Texture2D lightMap;
         //public static Texture2D textureCol;
+
         //reference
+        private static readonly Dictionary<Model, ModelInstance> ModelTransformations = new Dictionary<Model, ModelInstance>();
+        public static readonly Dictionary<Model, Material> ModelMaterials = new Dictionary<Model, Material>();
+
 
         public static void Start() {
             texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
             //texlightEffect = File.Load<Effect>("Other/shaders/lightmap");
             textureEffect = File.Load<Effect>("Other/shaders/textured");
             skyboxEffect = File.Load<Effect>("Effects/Skybox");
+            _instanceEffect = File.Load<Effect>("Other/shaders/instancedModel");
         }
 
 
@@ -63,6 +71,7 @@ namespace BRS.Engine {
         // commands
         //GRAPHICS METHODS
         public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+            //DrawModelInstanciated(model, world, view, proj, instances);
             //selects which effect to use based on material
             if (mat == null) DrawModelSimple(model, view, proj, world);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
@@ -75,7 +84,7 @@ namespace BRS.Engine {
         static void DrawModelSimple(Model model, Matrix view, Matrix proj, Matrix world) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (Effect effect in mesh.Effects) {
-                    if(effect is BasicEffect) {
+                    if (effect is BasicEffect) {
                         BasicEffect beff = (BasicEffect)effect;
                         beff.EnableDefaultLighting();
 
@@ -83,7 +92,7 @@ namespace BRS.Engine {
                         beff.View = view;
                         beff.Projection = proj;
                     }
-                    
+
                 }
                 mesh.Draw(); // outside, not inside
             }
@@ -139,7 +148,7 @@ namespace BRS.Engine {
                 mesh.Draw();
             }
         }
-        
+
 
         static void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection, Effect effect) {
             foreach (ModelMesh mesh in model.Meshes) {
@@ -153,8 +162,74 @@ namespace BRS.Engine {
             }
         }
 
+        public static void DrawModelInstances(Camera camera) {
+            foreach (var keyValue in ModelTransformations)
+            {
+                Model modelName = keyValue.Key;
+                
+
+                DrawModelInstanciated(modelName, camera.View, camera.Proj, keyValue.Value);
+            }
+        }
+
+        static void DrawModelInstanciated(Model model, Matrix view, Matrix projection, ModelInstance modelInstance) {
+            modelInstance.Update();
+
+            if (!ModelMaterials.ContainsKey(model) || modelInstance.GameObjects.Count == 0)
+            {
+
+                return;
+            }
+
+            Texture2D texture = ModelMaterials[model].colorTex;
+
+            foreach (ModelMesh mesh in model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    // Tell the GPU to read from both the model vertex buffer plus our instanceVertexBuffer.
+                    gD.SetVertexBuffers(
+                        new VertexBufferBinding(part.VertexBuffer, part.VertexOffset, 0),
+                        new VertexBufferBinding(modelInstance.VertexBuffer, 0, 1)
+                    );
+
+                    gD.Indices = part.IndexBuffer;
+
+                    part.Effect = _instanceEffect;
+
+                    _instanceEffect.CurrentTechnique = _instanceEffect.Techniques["HardwareInstancing"];
+
+                    _instanceEffect.Parameters["World"].SetValue(mesh.ParentBone.Transform);
+                    _instanceEffect.Parameters["View"].SetValue(view);
+                    _instanceEffect.Parameters["Projection"].SetValue(projection);
+                    _instanceEffect.Parameters["Texture"].SetValue(texture);
+
+                    // Draw all the instance copies in a single call.
+                    foreach (EffectPass pass in _instanceEffect.CurrentTechnique.Passes) {
+                        pass.Apply();
+
+                        gD.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,
+                            part.NumVertices, part.StartIndex,
+                            part.PrimitiveCount, modelInstance.Matrices.Length);
+                    }
+                }
+            }
+        }
+
         internal static void DrawModelDepth(Model model, Matrix view, Matrix proj, Matrix world, Effect depthShader) {
             DrawModelWithEffect(model, view, proj, world, depthShader);
+        }
+
+        public static void AddInstance(Model modelName, GameObject transform) {
+            if (ModelTransformations.ContainsKey(modelName)) {
+                ModelTransformations[modelName].Add(transform);
+            } else {
+                ModelTransformations[modelName] = new ModelInstance(new List<GameObject> { transform });
+            }
+        }
+
+        public static void RemoveInstance(Model modelName, GameObject transform) {
+            if (ModelTransformations.ContainsKey(modelName)) {
+                ModelTransformations[modelName].Remove(transform);
+            }
         }
 
         //----------------------------------------------------------------------------------------------

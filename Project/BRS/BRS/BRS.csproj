@@ -156,6 +156,7 @@
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Engine\UserInterface.cs" />
+    <Compile Include="Engine\Utilities\ModelInstance.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
     <Compile Include="Engine\Utilities\Distribution.cs" />

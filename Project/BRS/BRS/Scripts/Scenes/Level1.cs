@@ -47,11 +47,18 @@ namespace BRS.Scripts.Scenes {
         void LoadBlenderBakedScene() {
             Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
             GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
+            insideScene.Instanciate = true;
+            insideScene.tag = ObjectTag.Ground;
             insideScene.material = insideMat;
+            Graphics.AddInstance(insideScene.Model, insideScene);
+            Graphics.ModelMaterials.Add(insideScene.Model, insideMat);
 
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
             GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
+            outsideScene.tag = ObjectTag.Ground;
             outsideScene.material = outsideMat;
+            Graphics.AddInstance(outsideScene.Model, outsideScene);
+            Graphics.ModelMaterials.Add(outsideScene.Model, outsideMat);
 
 
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
@@ -60,6 +67,8 @@ namespace BRS.Scripts.Scenes {
             //infinitePlane.transform.position = new;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, 0, -.1f);
+            Graphics.AddInstance(infinitePlane.Model, infinitePlane);
+            Graphics.ModelMaterials.Add(infinitePlane.Model, groundMat);
         }
 
         void LoadUnityScene() {
