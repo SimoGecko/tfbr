@@ -11,9 +11,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BRS.Engine.Rendering;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
+
 
 
     /// <summary>
@@ -29,6 +31,7 @@ namespace BRS.Engine {
 
         public int DrawOrder { set; get; }
         public ObjectTag tag { set; get; } = ObjectTag.Default;
+        public ModelType ModelType { get; set; }
         public Material material = null;
         public bool Instanciate = false;
 
@@ -84,7 +87,6 @@ namespace BRS.Engine {
         }
 
         internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (tag == ObjectTag.Police) { Debug.Log("HHHH"); }
             if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
                 if (Model != null) {
                     Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
@@ -158,6 +160,7 @@ namespace BRS.Engine {
             GameObject newObject = new GameObject(name + "_clone_" + InstanceCount);// (((GameObject)Activator.CreateInstance(type);
             InstanceCount++;
             newObject.Instanciate = Instanciate;
+            newObject.ModelType = ModelType;
             newObject.transform.CopyFrom(this.transform);
             newObject.tag = tag;
             newObject.active = true;
@@ -170,7 +173,7 @@ namespace BRS.Engine {
 
             // Instanciating
             if (Model != null && Instanciate) {
-                Graphics.AddInstance(Model, newObject);
+                Graphics.AddInstance(ModelType, newObject);
             }
 
             return newObject;
@@ -196,7 +199,7 @@ namespace BRS.Engine {
 
             // Instanciating
             if (o.Model != null) {
-                Graphics.RemoveInstance(o.Model, o);
+                Graphics.RemoveInstance(o.ModelType, o);
             }
         }
 

@@ -18,102 +18,154 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-
-// This sample uses a simple Lambert lighting model.
-float3 LightDirection = normalize(float3(-1, -1, -1));
-float3 DiffuseLight = 1.25;
-float3 AmbientLight = 0.25;
+float Alpha = 1.0f;
 
 
-texture Texture;
+texture ColorTexture;
+sampler2D colorTextureSampler = sampler_state {
+	Texture = (ColorTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	AddressU = Clamp;
+	AddressV = Clamp;
+};
 
-sampler Sampler = sampler_state
-{
-    Texture = (Texture);
+texture LightmapTexture;
+sampler2D lightTextureSampler = sampler_state {
+	Texture = (LightmapTexture);
+	MinFilter = Linear;
+	MagFilter = Linear;
+	AddressU = Clamp;
+	AddressV = Clamp;
 };
 
 
-struct VertexShaderInput
-{
-    float4 Position : POSITION0;
-    float3 Normal : NORMAL0;
-    float2 TextureCoordinate : TEXCOORD0;
+struct VertexShaderInputBaked {
+	float4 Position : POSITION0;
+	float3 Normal : NORMAL0;
+	float2 ColorUV : TEXCOORD0;
+	float2 LightUV : TEXCOORD1;
 };
 
+struct VertexShaderInputTexture {
+	float4 Position : POSITION0;
+	float3 Normal : NORMAL0;
+	float2 ColorUV : TEXCOORD0;
+};
 
-struct VertexShaderOutput
-{
-    float4 Position : POSITION0;
-    float4 Color : COLOR0;
-    float2 TextureCoordinate : TEXCOORD0;
+struct VertexShaderOutput {
+	float4 Position : POSITION0;
+	float4 Color : COLOR0;
+	float2 ColorUV : TEXCOORD0;
+	float2 LightUV : TEXCOORD1;
 };
 
 
 // Vertex shader helper function shared between the two techniques.
-VertexShaderOutput VertexShaderCommon(VertexShaderInput input, float4x4 instanceTransform)
-{
-    VertexShaderOutput output;
+VertexShaderOutput VertexShaderBaked(VertexShaderInputBaked input, float4x4 instanceTransform) {
+	VertexShaderOutput output;
 
-    // Apply the world and camera matrices to compute the output position.
-    float4 worldPosition = mul(input.Position, instanceTransform);
-    float4 viewPosition = mul(worldPosition, View);
-    output.Position = mul(viewPosition, Projection);
+	// Apply the world and camera matrices to compute the output position.
+	float4 worldPosition = mul(input.Position, instanceTransform);
+	float4 viewPosition = mul(worldPosition, View);
+	output.Position = mul(viewPosition, Projection);
 
-    // Compute lighting, using a simple Lambert model.
-    float3 worldNormal = mul(input.Normal, instanceTransform);
-    
-    float diffuseAmount = max(-dot(worldNormal, LightDirection), 0);
-    
-    float3 lightingResult = saturate(diffuseAmount * DiffuseLight + AmbientLight);
-    
-    output.Color = float4(lightingResult, 1);
+	// Copy across the input texture coordinate.
+	output.ColorUV = input.ColorUV;
+	output.LightUV = input.LightUV;
 
-    // Copy across the input texture coordinate.
-    output.TextureCoordinate = input.TextureCoordinate;
+	return output;
+}
 
-    return output;
+VertexShaderOutput VertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform) {
+	VertexShaderOutput output;
+
+	// Apply the world and camera matrices to compute the output position.
+	float4 worldPosition = mul(input.Position, instanceTransform);
+	float4 viewPosition = mul(worldPosition, View);
+	output.Position = mul(viewPosition, Projection);
+
+	// Copy across the input texture coordinate.
+	output.ColorUV = input.ColorUV;
+
+	return output;
 }
 
 
 // Hardware instancing reads the per-instance world transform from a secondary vertex stream.
-VertexShaderOutput HardwareInstancingVertexShader(VertexShaderInput input,
-                                                  float4x4 instanceTransform : BLENDWEIGHT)
-{
-    return VertexShaderCommon(input, mul(World, transpose(instanceTransform)));
+VertexShaderOutput HardwareInstancingVertexShaderBaked(VertexShaderInputBaked input, float4x4 instanceTransform : BLENDWEIGHT) {
+	return VertexShaderBaked(input, mul(World, transpose(instanceTransform)));
 }
 
-
-// When instancing is disabled we take the world transform from an effect parameter.
-VertexShaderOutput NoInstancingVertexShader(VertexShaderInput input)
-{
-    return VertexShaderCommon(input, World);
+VertexShaderOutput HardwareInstancingVertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform : BLENDWEIGHT) {
+	return VertexShaderTexture(input, mul(World, transpose(instanceTransform)));
 }
 
 
 // Both techniques share this same pixel shader.
-float4 PixelShaderFunction(VertexShaderOutput input) : COLOR0
+float4 PixelShaderFunctionBaked(VertexShaderOutput input) : COLOR0
 {
-    return tex2D(Sampler, input.TextureCoordinate) * input.Color;
+	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+	textureColor.a = 1;
+
+	float4 lightColor = tex2D(lightTextureSampler, input.LightUV);
+	lightColor.a = 1;
+
+	return saturate(textureColor * lightColor);
+}
+
+float4 PixelShaderFunctionTextured(VertexShaderOutput input) : COLOR0
+{
+	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+	textureColor.a = 1;
+
+	return saturate(textureColor);
+}
+
+float4 PixelShaderFunctionTexturedAlpha(VertexShaderOutput input) : COLOR0
+{
+	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+
+	return saturate(textureColor);
+}
+
+float4 PixelShaderFunctionTexturedAlphaAnimated(VertexShaderOutput input) : COLOR0
+{
+	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+	textureColor.a = lerp(textureColor.a, 0, Alpha);
+
+	return saturate(textureColor);
+}
+
+// Hardware instancing technique with baked light maps.
+technique HIBaked {
+	pass Pass1 {
+		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderBaked();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionBaked();
+	}
 }
 
 
-// Hardware instancing technique.
-technique HardwareInstancing
-{
-    pass Pass1
-    {
-        VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShader();
-        PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
-    }
+// Hardware instancing technique with only texture.
+technique HITexture {
+	pass Pass1 {
+		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTextured();
+	}
 }
 
+// Hardware instancing technique with only texture.
+technique HITextureAlpha {
+	pass Pass1 {
+		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlpha();
+	}
+}
 
-// For rendering without instancing.
-technique NoInstancing
-{
-    pass Pass1
-    {
-        VertexShader = compile VS_SHADERMODEL NoInstancingVertexShader();
-        PixelShader = compile PS_SHADERMODEL PixelShaderFunction();
-    }
+// Hardware instancing technique with only texture.
+technique HITextureAlphaAnimated {
+	pass Pass1 {
+		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlphaAnimated();
+	}
 }

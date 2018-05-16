@@ -25,12 +25,18 @@ namespace BRS {
         const string startScene = "Level1";
         bool showUI = true;
 
+        // todo: for andy for debugging framerate => to be removed soon
+        private SpriteFont _font;
+        private int _frames = 0;
+
         public Game1() {
             //NOTE: don't add anything into constructor
             _graphics = new GraphicsDeviceManager(this) { IsFullScreen = false };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
+
+            IsFixedTimeStep = false;
         }
 
         protected override void Initialize() {
@@ -100,6 +106,8 @@ namespace BRS {
             // load the z buffer shader
             _ZBufferShader = File.Load<Effect>("Effects/Depth");
 
+            _font = File.Load<SpriteFont>("Other/font/debugFont");
+
             // add skybox
             //Skybox.Start();
 
@@ -142,9 +150,11 @@ namespace BRS {
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
             base.Draw(gameTime);
+            _graphics.PreferMultiSampling = true;
 
             //-----3D-----
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -169,7 +179,7 @@ namespace BRS {
             //Gizmos.ClearOrders();
 
 
-            // Todo: For now disabled because it screwed up all shadows and lights etc...
+            //// Todo: For now disabled because it screwed up all shadows and lights etc...
             //// draw everything 3 D to get the depth info 
             //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
             //_graphics.GraphicsDevice.Clear(Color.Black);
@@ -180,7 +190,7 @@ namespace BRS {
 
             //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
             //}
-            
+
 
 
             // apply post processing
@@ -203,12 +213,25 @@ namespace BRS {
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
-            _spriteBatch.Begin();
-            if(showUI)
+            if (showUI) {
+                _spriteBatch.Begin();
                 foreach (GameObject go in GameObject.All) go.Draw2D(0);
-            _spriteBatch.End();
+                _spriteBatch.End();
+            }
 
-            Debug.Log(1.0f / gameTime.ElapsedGameTime.TotalSeconds);
+            string text = string.Format(
+                "Frames per second: {0}/{1}\n" +
+                "Instances: {2}\n",
+                (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+                (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+                GameObject.All.Length);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+            _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+
+            _spriteBatch.End();
         }
     }
 
