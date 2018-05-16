@@ -39,9 +39,10 @@ namespace BRS.Scripts {
 
         public override void Start() {
             //DISTRIB   
-            Texture2D moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_green");
-            Texture2D goldPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_yellow");
-            Texture2D uniformPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_white");
+            int idx = GameManager.LvlScene;
+            Texture2D moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_green");
+            Texture2D goldPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_yellow");
+            Texture2D uniformPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_white");
 
             green = new CDFdistrib(moneyPic, 1);
             yellow = new CDFdistrib(goldPic, 1);
