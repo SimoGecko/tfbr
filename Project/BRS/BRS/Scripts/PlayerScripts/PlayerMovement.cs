@@ -116,7 +116,7 @@ namespace BRS.Scripts.PlayerScripts {
             // If physics is available apply the forces/changes to it, otherwise to the gameobject itself
             if (_collider != null) {
                 _collider.RotationY = MathHelper.ToRadians(_rotation);
-                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3,
+                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 200,
                     _collider.Orientation);
             } else {
                 transform.Translate(linearVelocity * Time.DeltaTime);

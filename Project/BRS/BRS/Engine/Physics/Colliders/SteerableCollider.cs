@@ -45,7 +45,7 @@ namespace BRS.Engine.Physics.Colliders {
         public override void PreStep(float timestep) {
             AddForce(Speed);
             LinearVelocity = Speed;
-            Position += Speed;
+            //Position += Speed;
 
             Position = new JVector(Position.X, HeightHalf + 0.01f, Position.Z);
             Orientation = JMatrix.CreateRotationY(RotationY);
