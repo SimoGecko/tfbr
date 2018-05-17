@@ -11,6 +11,7 @@ Functions: SwitchToMenu
 NameSwitchTo: main
 ColorInside: 148 148 148
 CurrentSelection: yes
+Active: no
 </Button>
 
 <Image>

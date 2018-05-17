@@ -11,26 +11,38 @@ namespace BRS.Engine.Menu {
 
     /// <summary>
     /// Class to create and display a tickBox
-    /// !!!! STILL OLD VERSION WITH MOUSE CLICK!!!
     /// </summary>
     class TickBox : MenuComponent {
+
+        #region Properties and attributes
 
         /// <summary>
         /// Store the actions to perform when pressed
         /// </summary>
         public EventHandler Click;
 
-        public bool IsHovering;
+        /// <summary>
+        /// Positon of the tickbox
+        /// </summary>
+        public Vector2 Position { get; set; }
+
+        /// <summary>
+        /// Content of the tickbox
+        /// </summary>
         private readonly Texture2D _textureNotClicked;
         private readonly Texture2D _textureClicked;
 
-        public bool IsClicked;
-
-        //Color colour = new Color(247, 239, 223);
+        /// <summary>
+        /// Visual Aspect of the content of the tickbox
+        /// </summary>
         Color colour = new Color(250, 203, 104);
         Color colourClicked = Color.White;
 
-        public Vector2 Position { get; set; }
+        /// <summary>
+        /// States of the tickbox
+        /// </summary>
+        public bool IsHovering;
+        public bool IsClicked;
 
         /// <summary>
         /// Index of the associate playerScreen for split screen menu
@@ -45,17 +57,27 @@ namespace BRS.Engine.Menu {
         public float ScaleWidthClicked { get; set; } = 1;
         public float ScaleHeightClicked { get; set; } = 1;
 
+        /// <summary>
+        /// tickbox texture area when in state notClicked
+        /// </summary>
         public Rectangle Rectangle {
             get {
                 return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_textureNotClicked.Width * ScaleWidth / 1920f * Screen.Width), (int)(_textureNotClicked.Height * ScaleHeight/ 1080f * Screen.Height));
             }
         }
 
+        /// <summary>
+        /// tickbox texture area when in state clicked
+        /// </summary>
         public Rectangle RectangleClicked {
             get {
                 return new Rectangle((int)(Position.X / 1920f * Screen.Width), (int)(Position.Y / 1080f * Screen.Height), (int)(_textureClicked.Width * ScaleWidthClicked / 1920f * Screen.Width), (int)(_textureClicked.Height * ScaleHeightClicked / 1080f * Screen.Height));
             }
         }
+
+        #endregion
+
+        #region Constructors
 
         public TickBox(Vector2 pos, Texture2D tnotC, Texture2D tC) {
             Position = pos;
@@ -64,6 +86,10 @@ namespace BRS.Engine.Menu {
             IsClicked = false;
             Active = true;
         }
+
+        #endregion
+
+        #region Monogame-methods
 
         public override void Update() {
             base.Update();
@@ -117,6 +143,8 @@ namespace BRS.Engine.Menu {
 
             }
         }
+
+#endregion
 
         #region Custom updates
 

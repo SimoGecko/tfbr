@@ -13,6 +13,7 @@ Position: 960 162
 Text: Game Settings
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Slider>
@@ -47,7 +48,9 @@ NeighborsUpDownLeftRight: null SliderAudio DifficultyHard DifficultyMedium
 UniqueChoiceWith: DifficultyMedium DifficultyHard
 ScaleWidth: 1.3
 ScaleHeight: 0.75
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
+CurrentSelection: yes
+IsClicked: yes
 </Button>
 
 <Button>
@@ -57,11 +60,9 @@ Position: 960 365
 Text: Normal
 NeighborsUpDownLeftRight: null SliderAudio DifficultyEasy DifficultyHard
 UniqueChoiceWith: DifficultyEasy DifficultyHard
-IsClicked: yes
 ScaleWidth: 1.3
 ScaleHeight: 0.75
-CurrentSelection: yes
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
 </Button>
 
 <Button>
@@ -73,7 +74,7 @@ NeighborsUpDownLeftRight: null SliderAudio DifficultyMedium DifficultyEasy
 UniqueChoiceWith: DifficultyEasy DifficultyMedium
 ScaleWidth: 1.3
 ScaleHeight: 0.75
-Functions: SetLevelDiffculty
+Functions: SetLevelDiffculty HighlightBorders
 </Button>
 
 <TickBox>
@@ -85,7 +86,7 @@ ScaleHeight: 0.75
 ScaleWidthInside: 0.4
 ScaleHeightInside: 0.4
 Functions: SetCamera
-IsClicked: yes
+IsClicked: no
 </TickBox>
 
 <Text>

@@ -65,9 +65,9 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Model model = gameObject.Model;
                 BoundingBox bb = BoundingBoxHelper.Calculate(model);
                 JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-                bbSize = new JVector(bbSize.X * gameObject.transform.scale.X,
+                bbSize = new JVector(10 * bbSize.X * gameObject.transform.scale.X,
                     10,
-                    bbSize.Z * gameObject.transform.scale.Z);
+                    10 * bbSize.Z * gameObject.transform.scale.Z);
 
                 CenterOfMass = new JVector(0, -5, 0);
                 CollisionShape = new BoxShape(bbSize);

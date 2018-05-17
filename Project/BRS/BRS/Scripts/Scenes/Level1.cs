@@ -154,7 +154,10 @@ namespace BRS.Scripts.Scenes {
                 if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 
-                    int modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    int modelIndex = 0;
+                    if (ScenesCommunicationManager.Instance != null && ScenesCommunicationManager.Instance.PlayersInfo != null && ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i))
+                        modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+
                     player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, modelIndex));
                     player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, modelIndex));
                 } else {
@@ -225,6 +228,7 @@ namespace BRS.Scripts.Scenes {
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(colored, true);
                 playerBase.AddComponent(new Base(i));
+                playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
@@ -256,7 +260,7 @@ namespace BRS.Scripts.Scenes {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
                 //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
-                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.GaussianBlur, i, false);
+                PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, false);
             }
 
         }

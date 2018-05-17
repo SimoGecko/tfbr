@@ -28,8 +28,8 @@ namespace BRS.Scripts.Particles3D {
             _smokePlumeParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "CFX4Smoke",
-                    MaxParticles = 1800,
-                    ParticlesPerRound = 10,
+                    MaxParticles = 1500,
+                    ParticlesPerRound = 1,
                     Duration = TimeSpan.FromSeconds(3),
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(-5, -2.5f, 0),
@@ -39,7 +39,7 @@ namespace BRS.Scripts.Particles3D {
                     MaxHorizontalVelocity = 5,
 
                     MinVerticalVelocity = 2.5f,
-                    MaxVerticalVelocity = 25,
+                    MaxVerticalVelocity = 15,
 
                     MinColor = new Color(0, 0, 0, 255),
                     MaxColor = new Color(128, 128, 128, 128),

@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
+using System.Collections.Generic;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -26,7 +27,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -45,6 +46,7 @@ namespace BRS {
                 GraphicsDevice.PresentationParameters.BackBufferFormat,
                 DepthFormat.Depth24);
 
+
             _ZBuffer = new RenderTarget2D(
                 GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
@@ -54,7 +56,8 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            PostProcessingManager.Initialize(Content);
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType> { PostprocessingType.Chromatic, PostprocessingType.ColorGrading, PostprocessingType.Vignette, PostprocessingType.TwoPassBlur };
+            PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
@@ -64,6 +67,7 @@ namespace BRS {
             PoliceManager.IsActive = true;
             LenseFlareManager.IsActive = true;
             ParticleSystem3D.IsActive = true;
+            Skybox.IsActive = false;
 
             base.Initialize();
         }
@@ -81,7 +85,12 @@ namespace BRS {
             UserInterface.Start();
             GameMode.Start();
             SceneManager.Start();
-            SceneManager.LoadScene(startScene);
+
+#if DEBUG
+            SceneManager.LoadScene("LevelMenu");
+#else
+            SceneManager.LoadScene("LevelMenu");
+#endif
 
             Audio.Start();
 
@@ -124,7 +133,7 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update();
+            PostProcessingManager.Instance.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -157,17 +166,18 @@ namespace BRS {
             }
             Gizmos.ClearOrders();
 
-            // draw everything 3 D to get the depth info 
 
-            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
-            _graphics.GraphicsDevice.Clear(Color.Black);
+            // Todo: For now disabled because it screwed up all shadows and lights etc...
+            //// draw everything 3 D to get the depth info 
+            //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            //_graphics.GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-            foreach (Camera cam in Screen.Cameras) {
-                GraphicsDevice.Viewport = cam.Viewport;
+            //GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            //foreach (Camera cam in Screen.Cameras) {
+            //    GraphicsDevice.Viewport = cam.Viewport;
 
-                foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
-            }
+            //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
+            //}
             
 
 

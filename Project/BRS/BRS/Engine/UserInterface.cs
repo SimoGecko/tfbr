@@ -33,6 +33,7 @@ namespace BRS.Engine {
         public static SpriteFont menuFont { get; private set; }
         public static SpriteFont menuHoveringFont { get; private set; }
         public static SpriteFont menuSmallFont { get; private set; }
+        public static SpriteFont menuBigFont { get; private set; }
 
         private static Texture2D barStriped;
 
@@ -49,6 +50,7 @@ namespace BRS.Engine {
             menuFont = File.Load<SpriteFont>("Other/font/menu");
             menuHoveringFont = File.Load<SpriteFont>("Other/font/menuHovering");
             menuSmallFont = File.Load<SpriteFont>("Other/font/menuSmall");
+            menuBigFont = File.Load<SpriteFont>("Other/font/menuBig");
 
             barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
 

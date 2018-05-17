@@ -19,35 +19,14 @@ namespace BRS.Scripts.UI {
         #region Properties and attributes
 
         /// <summary>
-        /// Store the different textures used for the menu
-        /// </summary>
-        public Dictionary<string, Texture2D> TexturesButtons;
-
-        /// <summary>
-        /// Store the different action to be be performed for specific events
-        /// </summary>
-        public Dictionary<string, EventHandler> FunctionsMenu;
-
-        /// <summary>
         /// Instance of the class
         /// </summary>
         public static Menu Instance;
 
         /// <summary>
-        /// Specification of the screen
-        /// </summary>
-        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
-        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
-
-        /// <summary>
-        /// Circular list of button where each element is connected to his two neighbors
-        /// </summary>
-        public List<Button> linkedButtonLeftRight = new List<Button>();
-
-        /// <summary>
         /// Defines the possible components types of the menu
         /// </summary>
-        public enum MenuType { Button, Text, Slider, Image, TickBox, none};
+        public enum MenuType { Button, Text, Slider, Image, TickBox, none };
 
         /// <summary>
         /// Describes the attributes of a component of the menu
@@ -64,15 +43,39 @@ namespace BRS.Scripts.UI {
             public int Index;
             public Color Color, ColorInside;
             public List<string> Functions;
-            public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
+            public bool Active, CurrentSelection, IsClicked, deSelectOnMove, UseBigFont;
             public List<string> UniqueChoiceButtonWith;
             public int transparency;
         }
+
+        /// <summary>
+        /// Store the different textures used for the menu
+        /// </summary>
+        public Dictionary<string, Texture2D> TexturesButtons;
+
+        /// <summary>
+        /// Store the different action to be be performed for specific events
+        /// </summary>
+        public Dictionary<string, EventHandler> FunctionsMenu;
+
+        /// <summary>
+        /// Specification of the screen
+        /// </summary>
+        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
+        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
+
+        /// <summary>
+        /// Circular list of button where each element is connected to his two neighbors
+        /// </summary>
+        public List<Button> linkedButtonLeftRight = new List<Button>();
 
         #endregion
 
         #region Monogame-methods
 
+        /// <summary>
+        /// Monogame loadConent()
+        /// </summary>
         public void LoadContent() {
             Instance = this;
 
@@ -102,6 +105,10 @@ namespace BRS.Scripts.UI {
             Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
             Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Ui/ArrowDelete");
+            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Ui/Trash");
+            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
+            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
+            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -128,7 +135,11 @@ namespace BRS.Scripts.UI {
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
                 { "tickBoxCliqued", textureTickBoxCliqued },
-                { "tickBoxNotCliqued", textureTickBoxNotCliqued }
+                { "tickBoxNotCliqued", textureTickBoxNotCliqued },
+                { "trash", textureIconTrash },
+                { "thunder", textureIconThunder },
+                { "decline", textureIconDecline },
+                { "dollar", textureIconDollar }
             };
 
             // Set mapping name - functions
@@ -137,11 +148,9 @@ namespace BRS.Scripts.UI {
                 { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
-                //{ "SwitchRankingDisplay", MenuManager.Instance.SwitchRankingDisplay },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
                 { "ChangeNamePlayer", MenuManager.Instance.ChangeNamePlayer },
                 { "ChangeModelPlayer", MenuManager.Instance.ChangeModelPlayer },
-                //{ "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
@@ -229,6 +238,10 @@ namespace BRS.Scripts.UI {
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
+                        button.Active = MS.Active;
+
+                        if (MS.UseBigFont)
+                            button.Font = UserInterface.menuBigFont;
 
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }

@@ -35,6 +35,7 @@ namespace BRS.Engine {
             Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             float powerupScale = 2.2f;
 
@@ -108,7 +109,7 @@ namespace BRS.Engine {
             police.AddComponent(new AlarmLight(FollowerType.LightRed, new Vector3(-0.2f, 0.850f, 0.035f),
                 FollowerType.LightBlue, new Vector3(0.2f, 0.851f, 0.035f)));
             police.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, new Vector3(0.27f, 0.35f, -0.97f), new Vector3(-0.27f, 0.35f, 0.93f)));
-            //police.AddComponent(new AnimatedWheels(AnimatedWheels.Type.FrontAndBack, 20, 3, "wheel_fl"));
+            police.AddComponent(new AnimatedWheels(AnimatedWheels.Type.FrontOnly, 20, 3));
             Prefabs.AddPrefab(police);
 
             //crate
@@ -184,34 +185,39 @@ namespace BRS.Engine {
 
             // dynamic shadow
             GameObject dynamicShadow = new GameObject(FollowerType.DynamicShadow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            dynamicShadow.tag = ObjectTag.Lighting;
             dynamicShadow.material = shadowMat;
             Prefabs.AddPrefab(dynamicShadow);
 
 
             // dynamic lights
             GameObject lightPlayer = new GameObject(FollowerType.LightYellow.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightPlayer.tag = ObjectTag.Lighting;
             lightPlayer.material = lightPlayerMat;
             Prefabs.AddPrefab(lightPlayer);
 
             GameObject lightBlue = new GameObject(FollowerType.LightBlue.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightBlue.tag = ObjectTag.Lighting;
             lightBlue.material = lightBlueMat;
             Prefabs.AddPrefab(lightBlue);
 
             GameObject lightRed = new GameObject(FollowerType.LightRed.GetDescription(), File.Load<Model>("Models/primitives/plane"));
+            lightRed.tag = ObjectTag.Lighting;
             lightRed.material = lightRedMat;
             Prefabs.AddPrefab(lightRed);
 
             // Wheels for the player-models
             GameObject wheelType1 = new GameObject("wheelType1", File.Load<Model>("Models/vehicles/wheel_fl"));
-            wheelType1.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            wheelType1.material = playerMat;
             Prefabs.AddPrefab(wheelType1);
 
             GameObject wheelType2 = new GameObject("wheelType2", File.Load<Model>("Models/vehicles/wheel_bz"));
-            wheelType2.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            wheelType2.material = playerMat;
             Prefabs.AddPrefab(wheelType2);
 
-            //builtAlready = true;
-
+            GameObject wheelPolice = new GameObject("wheelPolice", File.Load<Model>("Models/vehicles/wheel_police"));
+            police.material = policeMat;
+            Prefabs.AddPrefab(wheelPolice);
         }
     }
 }

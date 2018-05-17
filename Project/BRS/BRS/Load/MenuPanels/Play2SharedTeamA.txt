@@ -14,6 +14,7 @@ Position: 960 90
 Text: Player
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Image>

@@ -153,8 +153,6 @@ namespace BRS.Engine {
                     string lineNoObj = reader.ReadLine();
                     int n = int.Parse(lineNoObj.Split(' ')[1]);
 
-                    Debug.Log(string.Format("{0}: {1}", tagName, n));
-
                     for (int i = 0; i < n; i++) {
                         string p = reader.ReadLine();
                         string r = reader.ReadLine();
@@ -357,6 +355,8 @@ namespace BRS.Engine {
                     else if (nameContent == "<TickBox>")
                         menuObject.menuType = MenuType.TickBox;
 
+                    menuObject.Active = true;
+
                     while ((!(line = reader.ReadLine()).Contains("</"))) {
                         key = line.Split(':')[0];
                         string[] values = line.Split(':')[1].Substring(1).Split(' ');
@@ -425,11 +425,14 @@ namespace BRS.Engine {
                             case "IsClicked":
                                 menuObject.IsClicked = values[0] == "yes" ? true : false;
                                 break;
+                            case "UseBigFont":
+                                menuObject.UseBigFont = values[0] == "yes" ? true : false;
+                                break;
                             case "DeSelectOnMove":
                                 menuObject.deSelectOnMove = values[0] == "yes" ? true : false;
                                 break;
                             case "Active":
-                                menuObject.Active = values[0] == "yes" ? true : false;
+                                menuObject.Active = values[0] == "no" ? false : true;
                                 break;
                             default:
                                     Debug.LogError("key: " + key + "  Menu Panel not found !");
