@@ -111,7 +111,7 @@ namespace BRS.Scripts.PlayerScripts {
                 Speed = CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
 
-            Vector3 linearVelocity = Vector3.Forward * Speed;
+            Vector3 linearVelocity = Vector3.Forward * Speed * Time.DeltaTime;
 
             // If physics is available apply the forces/changes to it, otherwise to the gameobject itself
             if (_collider != null) {
