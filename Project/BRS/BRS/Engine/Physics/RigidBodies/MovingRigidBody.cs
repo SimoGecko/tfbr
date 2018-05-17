@@ -78,17 +78,27 @@ namespace BRS.Engine.Physics.RigidBodies {
                 Material = new Jitter.Dynamics.Material { KineticFriction = 1.0f, Restitution = 1.0f, StaticFriction = 1.0f }
             };
 
-            StartPosition = RigidBody.Position;
             StartOrientation = RigidBody.Orientation;
+            StartPosition = RigidBody.Position;
 
             PhysicsManager.Instance.World.AddBody(RigidBody);
         }
 
         /// <summary>
-        /// Start of the object => correct the possition
+        /// Start of the object => correct the position
         /// </summary>
         public override void Start() {
             SteerableCollider.CorrectPosition();
+        }
+
+        /// <summary>
+        /// Reset the rigid-body as well the gameobject to the start position
+        /// </summary>
+        public override void Reset() {
+            RigidBody.Position = StartPosition;
+            RigidBody.Orientation = StartOrientation;
+            gameObject.transform.position = Conversion.ToXnaVector(StartPosition);
+            gameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(StartOrientation));
         }
 
         #endregion

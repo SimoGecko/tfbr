@@ -119,13 +119,14 @@ namespace BRS.Engine.Physics.RigidBodies {
             base.Awake();
         }
 
+        /// <summary>
+        /// Reset the rigid-body as well the gameobject to the start position
+        /// </summary>
         public override void Reset() {
             RigidBody.Position = StartPosition;
             RigidBody.Orientation = StartOrientation;
             gameObject.transform.position = Conversion.ToXnaVector(StartPosition - JVector.Transform(CenterOfMass, StartOrientation));
             gameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(StartOrientation));
-
-            base.Reset();
         }
 
 

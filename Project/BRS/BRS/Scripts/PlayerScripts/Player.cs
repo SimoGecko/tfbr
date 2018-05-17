@@ -64,9 +64,8 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerColor = Graphics.ColorIndex(playerIndex);
 
             startPosition = startPos;
-
-            // TODO make mesh have this color
         }
+
         public override void Start() {
             base.Start();
 
@@ -158,6 +157,7 @@ namespace BRS.Scripts.PlayerScripts {
             _pL.Reset();
             _pC.Reset();
             UpdateUI();
+            _steerableCollider.PostStep(0.0f);
         }
 
         public override void OnCollisionEnter(Collider c) {
@@ -201,9 +201,9 @@ namespace BRS.Scripts.PlayerScripts {
         }*/
 
         protected override void Respawn() {
-            base.Respawn();
-            State = PlayerState.Normal;
-            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
+            //base.Respawn();
+            //State = PlayerState.Normal;
+            //transform.position = startPosition; // store base position
         }
 
         void UpdateUI() {

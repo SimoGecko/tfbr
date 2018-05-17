@@ -57,7 +57,7 @@ namespace BRS.Engine {
         }
 
         static void DisplayInfo() {
-            Debug.Log("timescale: " + TimeScale);
+            //Debug.Log("timescale: " + TimeScale);
         }
 
         public static Task WaitForSeconds(float s) { // used in coroutines
