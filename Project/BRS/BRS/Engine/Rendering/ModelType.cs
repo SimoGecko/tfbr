@@ -7,6 +7,7 @@
     /// This becomes crucial for the transparent-elements, for the other elements it doesn't matter since there is the z-buffer activated.
     /// </remarks>
     public enum ModelType {
+        NoHardwareInstanciation,
         Cash,
         Gold,
         Diamond,

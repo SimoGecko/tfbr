@@ -63,6 +63,9 @@ namespace BRS.Scripts.Elements {
 
         // commands
         public void Open() {
+            if (_open) {
+                return;
+            }
             Audio.Play("vault_opening", transform.position);
             OnVaultOpen?.Invoke();
             _opening = true;

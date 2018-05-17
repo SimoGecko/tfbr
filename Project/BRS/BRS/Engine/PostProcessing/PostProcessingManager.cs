@@ -34,8 +34,6 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D _blurTarget;
         private bool DEBUG = false;
         private readonly List<Texture2D> _lut = new List<Texture2D>();
-        private int _currentLuT = 0;
-        private int _maxLuT = 54;
         private float _distance = 6f;
         private float _range = 16.5f;
 
@@ -70,12 +68,13 @@ namespace BRS.Engine.PostProcessing {
                         break;
 
                     case PostprocessingType.TwoPassBlur:
+                        ppEffect.Passes = 10;
                         ppEffect.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
                         break;
 
                     case PostprocessingType.DepthOfField:
                         float nearClip = Camera.Near;
-                        float farClip = Camera.Far;
+                        float farClip = Camera.FarDepth;
                         farClip = farClip / (farClip - nearClip);
 
                         ppEffect.SetParameter("Distance", _distance);
@@ -111,12 +110,8 @@ namespace BRS.Engine.PostProcessing {
                     case PostprocessingType.ColorGrading:
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
-
-                        for (var i = 0; i < _maxLuT; i++) {
-                            _lut.Add(File.Load<Texture2D>("Images/lut/lut (" + i.ToString() + ")"));
-                        }
-
-                        ppEffect.SetParameter("LUT", _lut[0]);
+                        
+                        ppEffect.SetParameter("LUT", File.Load<Texture2D>("Images/lut/lut (1)"));
 
                         for (var i = 0; i < GameManager.NumPlayers; i++) {
                             ppEffect.Activate(i, true);
@@ -258,22 +253,6 @@ namespace BRS.Engine.PostProcessing {
                     _effects.RemoveAt(i);
                     break;
                 }
-            }
-        }
-
-        // Todo: To be removed
-        public void Update(GameTime gameTime) {
-            if (Input.GetKeyDown(Keys.F1)) {
-                SetShaderStatus(PostprocessingType.ColorGrading, 0, GetShaderState(PostprocessingType.ColorGrading));
-            }
-
-            if (Input.GetKeyDown(Keys.F2)) {
-                _currentLuT = (_currentLuT - 1 + _maxLuT) % _maxLuT;
-                _effects[5].SetParameter("LUT", _lut[_currentLuT]); ;
-            }
-            if (Input.GetKeyDown(Keys.F3)) {
-                _currentLuT = (_currentLuT + 1) % _maxLuT;
-                _effects[5].SetParameter("LUT", _lut[_currentLuT]); ;
             }
         }
 

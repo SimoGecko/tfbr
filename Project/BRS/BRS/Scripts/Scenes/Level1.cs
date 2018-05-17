@@ -47,36 +47,25 @@ namespace BRS.Scripts.Scenes {
 
         void LoadBlenderBakedScene() {
             Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
-            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
-            insideScene.Instanciate = true;
-            insideScene.ModelType = ModelType.InsideScene;
-            insideScene.tag = ObjectTag.Ground;
-            insideScene.material = insideMat;
-
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
-            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
-            outsideScene.Instanciate = true;
-            outsideScene.ModelType = ModelType.OutsideScene;
-            outsideScene.tag = ObjectTag.Ground;
-            outsideScene.material = outsideMat;
-
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
-            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
-            infinitePlane.Instanciate = true;
-            infinitePlane.ModelType = ModelType.Ground;
-            infinitePlane.material = groundMat;
+
+            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/inside"), insideMat);
+            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/outside"), outsideMat);
+            Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
+
+
+            GameObject insideScene = new GameObject("insideScene", ModelType.InsideScene, true);
+            insideScene.tag = ObjectTag.Ground;
+
+            GameObject outsideScene = new GameObject("outside", ModelType.OutsideScene, true);
+            outsideScene.tag = ObjectTag.Ground;
+
+            GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -.1f, 0);
 
             // Model instanciation
-            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/inside"), insideMat);
-            Graphics.AddInstance(ModelType.InsideScene, insideScene);
-
-            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/outside"), outsideMat);
-            Graphics.AddInstance(ModelType.OutsideScene, outsideScene);
-
-            Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
-            Graphics.AddInstance(ModelType.Ground, infinitePlane);
         }
 
         void LoadUnityScene() {
@@ -146,7 +135,7 @@ namespace BRS.Scripts.Scenes {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 Vector3 startPos = StartPositions[i];
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
-                player.Instanciate = true;
+                player.UseHardwareInstanciation = true;
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
@@ -255,22 +244,21 @@ namespace BRS.Scripts.Scenes {
 
         void CreateSpecialObjects() {
             //VAULT
-            Material vaultMaterial = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
-            GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
-            vault.Instanciate = true;
-            vault.ModelType = ModelType.Vault;
-            vault.material = vaultMaterial;
-            vault.DrawOrder = 1;
-            vault.AddComponent(new Vault());
-
+            GameObject vault = new GameObject("vault", ModelType.Vault, true);
             vault.transform.position = new Vector3(1.2f, 1.39f, -64.5f);
+            vault.DrawOrder = 1;
+
+            vault.AddComponent(new Vault());
             vault.AddComponent(new AnimatedRigidBody());
             vault.AddComponent(new Smoke());
-
             vault.AddComponent(new FlyingCash());
+
+            // Model instanciation
 
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);
+            //GameObject speedpad = new GameObject("speedpad", ModelType.Speedpad, true);
+            //speedpad.transform.position = new Vector3(0, 0, -18);
             speedpad.transform.eulerAngles = Vector3.Up * 90;
 
         }

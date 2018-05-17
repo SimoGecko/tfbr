@@ -72,7 +72,7 @@ namespace BRS {
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = true;
             LenseFlareManager.IsActive = true;
-            ParticleSystem3D.IsActive = false;
+            ParticleSystem3D.IsActive = true;
             Skybox.IsActive = false;
 
             base.Initialize();
@@ -93,7 +93,7 @@ namespace BRS {
             SceneManager.Start();
 
 #if DEBUG
-            SceneManager.LoadScene("Level1");
+            SceneManager.LoadScene("LevelMenu");
 #else
             SceneManager.LoadScene("LevelMenu");
 #endif
@@ -141,7 +141,6 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -180,16 +179,16 @@ namespace BRS {
 
 
             //// Todo: For now disabled because it screwed up all shadows and lights etc...
-            //// draw everything 3 D to get the depth info 
-            //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
-            //_graphics.GraphicsDevice.Clear(Color.Black);
+            // draw everything 3 D to get the depth info 
+            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            _graphics.GraphicsDevice.Clear(Color.Black);
 
-            //GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-            //foreach (Camera cam in Screen.Cameras) {
-            //    GraphicsDevice.Viewport = cam.Viewport;
+            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            foreach (Camera cam in Screen.Cameras) {
+                GraphicsDevice.Viewport = cam.Viewport;
 
-            //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
-            //}
+                foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
+            }
 
 
 

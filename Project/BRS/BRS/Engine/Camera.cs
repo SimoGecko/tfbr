@@ -13,7 +13,8 @@ namespace BRS.Engine {
 
         //public
         public const float Near = 0.3f;
-        public const float Far = 100f;
+        public const float Far = 1000f;
+        public const float FarDepth = 100f;
         const float defaultFOV = 40;
 
         //private
@@ -26,6 +27,7 @@ namespace BRS.Engine {
         public Viewport Viewport { get; }
 
         public Matrix Proj; // precomputed
+        public Matrix ProjDepth; // precomputed
         public Matrix View { get { return Matrix.Invert(transform.World); } }
         //public int Index { get { return _index; } }
 
@@ -41,8 +43,10 @@ namespace BRS.Engine {
         void ComputeProj(Projection projectionType) {
             if (projectionType == Projection.Perspective) {
                 Proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(_fov), _aspectRatio, Near, Far);
+                ProjDepth = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(_fov), _aspectRatio, Near, FarDepth);
             } else {
                 Proj = Matrix.CreateOrthographic(20, 20 / _aspectRatio, Near, Far);
+                ProjDepth = Matrix.CreateOrthographic(20, 20 / _aspectRatio, Near, FarDepth);
             }
         }
 

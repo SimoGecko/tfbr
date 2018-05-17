@@ -164,7 +164,7 @@ namespace BRS.Engine {
         public static void DrawModelInstances(Camera camera) {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
                 if (ModelTransformations.ContainsKey(mt))
-                DrawModelInstanciated(camera.View, camera.Proj, ModelTransformations[mt]);
+                    DrawModelInstanciated(camera.View, camera.Proj, ModelTransformations[mt]);
             }
             //foreach (var keyValue in ModelTransformations) {
             //    //Model modelName = keyValue.Key;
@@ -229,7 +229,12 @@ namespace BRS.Engine {
 
         public static void AddInstance(ModelType modelType, GameObject gameObject) {
             if (ModelTransformations.ContainsKey(modelType)) {
-                ModelTransformations[modelType].Add(gameObject);
+                ModelInstance modelInstance = ModelTransformations[modelType];
+                modelInstance.Add(gameObject);
+
+                // Store reference to the model and material on the gameobject so that there is an instant access
+                gameObject.Model = modelInstance.Model;
+                gameObject.material = modelInstance.Material;
             } else {
                 throw new Exception("Should not be here");
             }

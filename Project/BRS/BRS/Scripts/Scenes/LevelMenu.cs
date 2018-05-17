@@ -34,36 +34,33 @@ namespace BRS.Scripts.Scenes {
         /// </summary>
         void MenuScene() {
             Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/menu_inside"));
-            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
-            //insideScene.Instanciate = true;
-            insideScene.ModelType = ModelType.InsideScene;
-            insideScene.tag = ObjectTag.Ground;
-            insideScene.material = insideMat;
-
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/menu_outside"));
-            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
-            //outsideScene.Instanciate = true;
-            outsideScene.ModelType = ModelType.OutsideScene;
-            outsideScene.tag = ObjectTag.Ground;
-            outsideScene.material = outsideMat;
-
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
-            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
-            infinitePlane.Instanciate = true;
-            infinitePlane.ModelType = ModelType.Ground;
-            infinitePlane.material = groundMat;
-            infinitePlane.transform.Scale(1000);
-            infinitePlane.transform.position = new Vector3(0, -10.1f, 0);
 
             // Model instanciation
-            //Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
-            //Graphics.AddInstance(ModelType.InsideScene, insideScene);
+            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
 
-            //Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
-            //Graphics.AddInstance(ModelType.OutsideScene, outsideScene);
+            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
 
             Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
-            Graphics.AddInstance(ModelType.Ground, infinitePlane);
+
+
+            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
+            insideScene.DrawOrder = 1;
+            insideScene.material = insideMat;
+            insideScene.tag = ObjectTag.Ground;
+
+            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
+            outsideScene.DrawOrder = 2;
+            outsideScene.material = outsideMat;
+            outsideScene.tag = ObjectTag.Ground;
+
+            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
+            infinitePlane.DrawOrder = 200;
+            infinitePlane.material = groundMat;
+            infinitePlane.transform.Scale(1000);
+            infinitePlane.transform.position = new Vector3(0, -5.0f, 0);
+
         }
 
         /// <summary>
