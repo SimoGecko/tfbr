@@ -127,7 +127,8 @@ namespace BRS.Scripts.Elements {
             foreach (var p in ElementManager.Instance.Team(_baseIndex)) {
                 PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
 
-                if (!pi.CanDeload) { // PROXIMITY CHECK
+                //if (!pi.CanDeload) { // PROXIMITY CHECK
+                if (PlayArea.IsInsidePlayArea(p.transform.position)) { // PROXIMITY CHECK
                     //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
