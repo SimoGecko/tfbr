@@ -17,7 +17,7 @@ namespace BRS.Scripts.Managers {
         //public
         public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 1;
-        public static int lvlDifficulty = 2; // 0 for Easy, 1 for Normal, 2 for Hard
+        public static int lvlDifficulty = 0; // 0 for Easy, 1 for Normal, 2 for Hard
 
 
         //private
