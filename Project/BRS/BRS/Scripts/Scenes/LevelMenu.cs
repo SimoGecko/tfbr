@@ -55,6 +55,7 @@ namespace BRS.Scripts.Scenes {
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -10.1f, 0);
 
+            // Model instanciation
             //Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
             //Graphics.AddInstance(ModelType.InsideScene, insideScene);
 

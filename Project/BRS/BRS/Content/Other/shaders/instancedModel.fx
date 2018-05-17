@@ -18,8 +18,6 @@ float4x4 World;
 float4x4 View;
 float4x4 Projection;
 
-float Alpha = 1.0f;
-
 
 texture ColorTexture;
 sampler2D colorTextureSampler = sampler_state {
@@ -51,6 +49,7 @@ struct VertexShaderInputTexture {
 	float4 Position : POSITION0;
 	float3 Normal : NORMAL0;
 	float2 ColorUV : TEXCOORD0;
+	float Alpha: BLENDWEIGHT4;
 };
 
 struct VertexShaderOutput {
@@ -58,6 +57,7 @@ struct VertexShaderOutput {
 	float4 Color : COLOR0;
 	float2 ColorUV : TEXCOORD0;
 	float2 LightUV : TEXCOORD1;
+	float Alpha: BLENDWEIGHT0;
 };
 
 
@@ -77,7 +77,7 @@ VertexShaderOutput VertexShaderBaked(VertexShaderInputBaked input, float4x4 inst
 	return output;
 }
 
-VertexShaderOutput VertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform) {
+VertexShaderOutput VertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform, float alpha) {
 	VertexShaderOutput output;
 
 	// Apply the world and camera matrices to compute the output position.
@@ -87,18 +87,19 @@ VertexShaderOutput VertexShaderTexture(VertexShaderInputTexture input, float4x4 
 
 	// Copy across the input texture coordinate.
 	output.ColorUV = input.ColorUV;
+	output.Alpha = alpha;
 
 	return output;
 }
 
 
 // Hardware instancing reads the per-instance world transform from a secondary vertex stream.
-VertexShaderOutput HardwareInstancingVertexShaderBaked(VertexShaderInputBaked input, float4x4 instanceTransform : BLENDWEIGHT) {
+VertexShaderOutput HardwareInstancingVertexShaderBaked(VertexShaderInputBaked input, float4x4 instanceTransform : BLENDWEIGHT, float alpha : BLENDWEIGHT4) {
 	return VertexShaderBaked(input, mul(World, transpose(instanceTransform)));
 }
 
-VertexShaderOutput HardwareInstancingVertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform : BLENDWEIGHT) {
-	return VertexShaderTexture(input, mul(World, transpose(instanceTransform)));
+VertexShaderOutput HardwareInstancingVertexShaderTexture(VertexShaderInputTexture input, float4x4 instanceTransform : BLENDWEIGHT, float alpha : BLENDWEIGHT4) {
+	return VertexShaderTexture(input, mul(World, transpose(instanceTransform)), alpha);
 }
 
 
@@ -132,7 +133,7 @@ float4 PixelShaderFunctionTexturedAlpha(VertexShaderOutput input) : COLOR0
 float4 PixelShaderFunctionTexturedAlphaAnimated(VertexShaderOutput input) : COLOR0
 {
 	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
-	textureColor.a = lerp(textureColor.a, 0, Alpha);
+	textureColor.a = lerp(textureColor.a, 0, input.Alpha);
 
 	return saturate(textureColor);
 }

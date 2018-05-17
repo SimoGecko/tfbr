@@ -79,7 +79,8 @@ namespace BRS.Engine {
         public void Draw3D(Camera cam) {
             if (active) {
                 if (Model != null && !Instanciate) {
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
+                    //Debug.Log(name);
+                    //Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
                 foreach (IComponent c in components) c.Draw3D(cam);

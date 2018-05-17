@@ -205,7 +205,6 @@ namespace BRS.Engine {
 
                     _instanceEffect.Parameters["ColorTexture"].SetValue(texture);
                     _instanceEffect.Parameters["LightmapTexture"].SetValue(lightmap);
-                    _instanceEffect.Parameters["Alpha"].SetValue(material.Alpha);
 
 
                     // Draw all the instance copies in a single call.
@@ -214,7 +213,7 @@ namespace BRS.Engine {
 
                         gD.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,
                             part.NumVertices, part.StartIndex,
-                            part.PrimitiveCount, modelInstance.Matrices.Length);
+                            part.PrimitiveCount, modelInstance.VertexInformation.Length);
                     }
                 }
             }

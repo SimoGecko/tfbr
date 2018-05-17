@@ -72,7 +72,7 @@ namespace BRS {
             // Todo: can be removed for alpha-release
             PoliceManager.IsActive = true;
             LenseFlareManager.IsActive = true;
-            ParticleSystem3D.IsActive = true;
+            ParticleSystem3D.IsActive = false;
             Skybox.IsActive = false;
 
             base.Initialize();
@@ -167,7 +167,7 @@ namespace BRS {
                 PhysicsDrawer.Instance.Draw(cam);
 
                 Graphics.DrawModelInstances(cam);
-                //foreach (GameObject go in GameObject.All) go.Draw3D(cam);
+                foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
 
                 ////gizmos

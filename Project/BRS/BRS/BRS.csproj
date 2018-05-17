@@ -151,6 +151,7 @@
     <Compile Include="Engine\Prefabs.cs" />
     <Compile Include="Engine\Rendering\ModelType.cs" />
     <Compile Include="Engine\Rendering\RenderingType.cs" />
+    <Compile Include="Engine\Rendering\VertexPositionAlpha.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
     <Compile Include="Engine\SpriteSheet.cs" />

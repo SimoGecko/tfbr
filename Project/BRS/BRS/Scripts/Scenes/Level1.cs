@@ -68,6 +68,7 @@ namespace BRS.Scripts.Scenes {
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -.1f, 0);
 
+            // Model instanciation
             Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/inside"), insideMat);
             Graphics.AddInstance(ModelType.InsideScene, insideScene);
 
@@ -182,7 +183,7 @@ namespace BRS.Scripts.Scenes {
                 //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
-                
+                // Model instanciation
                 ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), "player" + i, true);
                 Graphics.InitializeModel(modelType, player.Model, player.material);
                 Graphics.AddInstance(modelType, player);
@@ -253,9 +254,12 @@ namespace BRS.Scripts.Scenes {
         }
 
         void CreateSpecialObjects() {
-            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             //VAULT
+            Material vaultMaterial = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             GameObject vault = new GameObject("vault", File.Load<Model>("Models/elements/vault"));
+            vault.Instanciate = true;
+            vault.ModelType = ModelType.Vault;
+            vault.material = vaultMaterial;
             vault.DrawOrder = 1;
             vault.AddComponent(new Vault());
 
@@ -264,7 +268,6 @@ namespace BRS.Scripts.Scenes {
             vault.AddComponent(new Smoke());
 
             vault.AddComponent(new FlyingCash());
-            vault.material = playerMat;
 
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);

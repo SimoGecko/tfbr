@@ -22,12 +22,20 @@ namespace BRS.Engine {
         ////////// builds all the prefabs and gives them to Prefabs //////////
         static bool builtAlready = false;
 
+        static string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
+        static Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet() };
+        static string[] dynamicElements = new string[] { "chair", "plant", "cart" };
+
+        static float powerupScale = 2.2f;
+
+
         //==============================================================================================
         // create all prefabs - PUT YOUR CODE HERE
         public static void BuildPrefabs() {
             Debug.Assert(!builtAlready, "Calling buildprefab a second time");
             if (builtAlready) return;
             builtAlready = true;
+
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
@@ -38,8 +46,8 @@ namespace BRS.Engine {
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
-            float powerupScale = 2.2f;
-
+            // Initialize the models for hardware instanciating
+            // Important: it doesn't matter when we load the modelds for the 
             Graphics.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
             Graphics.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
             Graphics.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
@@ -51,13 +59,23 @@ namespace BRS.Engine {
             Graphics.InitializeModel(ModelType.Magnet, File.Load<Model>("Models/powerups/magnet"), powerupMat);
             Graphics.InitializeModel(ModelType.Speedpad, File.Load<Model>("Models/elements/speedpad"), elementsMat);
             Graphics.InitializeModel(ModelType.Stack, File.Load<Model>("Models/elements/stack"), elementsMat);
-            Graphics.InitializeModel(ModelType.Shadow, File.Load<Model>("Models/lighting/shadow"), shadowMat);
-            Graphics.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/lighting/yellow_light"), lightPlayerMat);
-            Graphics.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/lighting/blue_light"), lightBlueMat);
-            Graphics.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/lighting/red_light"), lightRedMat);
+            Graphics.InitializeModel(ModelType.Shadow, File.Load<Model>("Models/primitives/plane"), shadowMat);
+            Graphics.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
+            Graphics.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/primitives/plane"), lightBlueMat);
+            Graphics.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/primitives/plane"), lightRedMat);
             Graphics.InitializeModel(ModelType.WheelFl, File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
             Graphics.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
             Graphics.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
+
+            for (int i = 0; i < powerupName.Length; i++) {
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);
+                Graphics.InitializeModel(modelType, File.Load<Model>("Models/powerups/" + powerupName[i]), powerupMat);
+            }
+
+            foreach (string s in dynamicElements) {
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
+                Graphics.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
+            }
 
             //-------------------VALUABLES-------------------
             //cash
@@ -94,8 +112,6 @@ namespace BRS.Engine {
 
             //-------------------POWERUPS-------------------
             //expand these two arrays to add new powerups with a particular name and a powerup script
-            string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
-            Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new  HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet()};
             /*var colorMapping = new Dictionary<string, Color>()
                 {
                     { "bomb", Color.Red},
@@ -111,17 +127,16 @@ namespace BRS.Engine {
                     { "magnet", Color.Purple},
                 };*/
 
-            for (int i=0; i<powerupName.Length; i++) {
-                ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), powerupName[i], true);
-                Graphics.InitializeModel(modelType, File.Load<Model>("Models/powerups/" + powerupName[i]), powerupMat);
+            for (int i = 0; i < powerupName.Length; i++) {
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);
 
-                GameObject powerupPrefab = new GameObject(powerupName[i]+"Prefab", File.Load<Model>("Models/powerups/"+powerupName[i]));
+                GameObject powerupPrefab = new GameObject(powerupName[i] + "Prefab", File.Load<Model>("Models/powerups/" + powerupName[i]));
                 powerupPrefab.Instanciate = true;
                 powerupPrefab.ModelType = modelType;
                 powerupPrefab.transform.Scale(powerupScale);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
-                
+
                 powerupPrefab.AddComponent(new PowerUpEffect(powerupcomponents[i].powerupColor));
                 powerupPrefab.material = powerupMat;
                 Prefabs.AddPrefab(powerupPrefab);
@@ -212,10 +227,8 @@ namespace BRS.Engine {
 
 
             //-------------------DYNAMIC OBJECTS-------------------
-            string[] dynamicElements = new string[] { "chair", "plant", "cart" };
             foreach (string s in dynamicElements) {
-                ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), s, true);
-                Graphics.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
 
                 GameObject dynamicElement = new GameObject(s, File.Load<Model>("Models/elements/" + s));
                 dynamicElement.Instanciate = true;
