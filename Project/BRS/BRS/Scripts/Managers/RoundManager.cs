@@ -7,6 +7,7 @@ using BRS.Engine;
 using BRS.Engine.PostProcessing;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
+using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -46,6 +47,16 @@ namespace BRS.Scripts.Managers {
 
         bool startingFirstTime = true;
 
+        // Cam transition parameters
+        public bool CamMoving;
+
+        Vector3[] _velocityPos = { Vector3.Zero, Vector3.Zero };
+        Vector3[] _velocityRot = { Vector3.Zero, Vector3.Zero };
+        float[] _newTransitionTime = { 1.4f, 1.4f };
+
+        Vector3[] _posCam;
+        Vector3[] _rotCam;
+
         //reference
         public static RoundManager Instance;
 
@@ -63,6 +74,8 @@ namespace BRS.Scripts.Managers {
         }
 
         void RestartRound() { // done at beginning of every round
+            SetUpStartCamTransition();
+
             roundTimer = new Timer(RoundTime, OnRoundEnd);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
@@ -75,15 +88,40 @@ namespace BRS.Scripts.Managers {
         }
 
         public override void Update() {
+            if (CamMoving)
+                CamTransitionForCountDown();
         }
-
-
 
         // --------------------- CUSTOM METHODS ---------b -------
 
+        void SetUpStartCamTransition() {
+            // Start position and rotation for the cameras
+            for (int i = 0; i < Screen.Cameras.Length; ++i) {
+                Screen.Cameras[i].transform.position = new Vector3(0, 90, 30) + ((i % 2) == 0 ? -1 : 1) * new Vector3(5, 0, 0);
+                Screen.Cameras[i].transform.eulerAngles = new Vector3(-85, 0, 0);
+            }
+
+            // Target of the transition
+            _posCam = new Vector3[Screen.Cameras.Length];
+            _rotCam = new Vector3[Screen.Cameras.Length];
+
+            for (int i = 0; i < Screen.Cameras.Length; ++i) {
+                _posCam[i] = Screen.Cameras[i].gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset /*+ ((i % 2) == 0 ? 1 : -1) *new Vector3(5, 0, 0)*/;
+                _rotCam[i] = CameraController.StartAngle;
+            }
+
+            // Start transition
+            CamMoving = true;
+        }
 
         // commands
-
+        void CamTransitionForCountDown() {
+            // Update camera position and rotation
+            for (int i = 0; i < Screen.Cameras.Length; ++i) {
+                Screen.Cameras[i].transform.position = Utility.SmoothDamp(Screen.Cameras[i].transform.position, _posCam[i],ref  _velocityPos[i%2], _newTransitionTime[i % 2]);
+                Screen.Cameras[i].transform.eulerAngles = Utility.SmoothDampAngle(Screen.Cameras[i].transform.eulerAngles, _rotCam[i], ref _velocityRot[i%2], _newTransitionTime[i % 2]);
+            }
+        }
 
         async void CountDown() {
             for (int i = 3; i >= 0; i--) {
@@ -95,6 +133,13 @@ namespace BRS.Scripts.Managers {
             }
             await Time.WaitForSeconds(1f);
             RoundUI.instance.ShowCountDown(-1);//disables it
+
+            foreach (Camera c in Screen.Cameras) {
+                c.transform.position = c.gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset;
+                c.transform.eulerAngles = CameraController.StartAngle;
+            }
+
+            CamMoving = false;
         }
 
         void OnRoundStart() {

@@ -25,8 +25,8 @@ namespace BRS.Scripts.PlayerScripts {
         private const int AngleVariation = 40;
         private const float ShakeAmount = .1f;
 
-        static readonly Vector3 Offset = new Vector3(0, 10, 10);
-        static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
+        public static readonly Vector3 Offset = new Vector3(0, 10, 10);
+        public static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
         static readonly Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation);
 
         //private
@@ -58,16 +58,20 @@ namespace BRS.Scripts.PlayerScripts {
                 Debug.LogError("player not found");
             }
 
-            transform.position = _player.position + Offset;
-            transform.eulerAngles = StartAngle;
+            // Nico: I comment that for the camera transition of the 3-2-1 countdown
+            //transform.position = _player.position + Offset;
+            //transform.eulerAngles = StartAngle;
         }
 
         public override void LateUpdate() { // after player has moved
-            if (GameManager.GameActive) ProcessInput();
+            if (!RoundManager.Instance.CamMoving) { // but only after the cam transition for the 3-2-1 count down
+                if (GameManager.GameActive) ProcessInput();
 
-            if (!autoFollow) FollowSmoothAndRotate();
-            else  SetBehindPlayer();
-            ProcessShake();
+                if (!autoFollow) FollowSmoothAndRotate();
+                else  SetBehindPlayer();
+                ProcessShake();
+            }
+            
         }
 
 
@@ -126,7 +130,9 @@ namespace BRS.Scripts.PlayerScripts {
         // queries
         public float YRotation { get { return transform.eulerAngles.Y; } }//_yAngleSmooth
 
-
+        public Vector3 GetPlayerPosition() {
+            return _player.position;
+        }
 
         // other
 

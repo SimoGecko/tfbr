@@ -231,7 +231,7 @@ ScaleWidth: 1.5
 ScaleHeight: 1.5
 ScaleWidthInside: 1.5
 ScaleHeightInside: 1.5
-Functions: SetDefaultParametersGame SwitchToMenu
+Functions: SwitchToMenu
 NeighborsUpDownLeftRight: MapA null Back Back
 NameSwitchTo: play2Shared
 ColorInside: 148 148 148

@@ -138,6 +138,7 @@ namespace BRS.Scripts.Managers {
             Instance = this;
 
             // Load menu content (texture,functions)
+            SetDefaultValues();
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
@@ -222,6 +223,17 @@ namespace BRS.Scripts.Managers {
         #endregion
 
         #region Custom methods
+
+        /// <summary>
+        /// Set default the parameters of the game
+        /// </summary>
+        public void SetDefaultValues() {
+            GameManager.NumPlayers = 2;
+            RoundManager.RoundTime = 2 * 60;
+            GameMode.currentGameMode = ScenesCommunicationManager.ModesName[0];
+            GameManager.LvlScene = 1;
+            GameManager.lvlDifficulty = 1;
+        }
 
         /// <summary>
         /// Updates Camera position and rotation for a smooth camera transition towards a goal
@@ -437,16 +449,6 @@ namespace BRS.Scripts.Managers {
         #endregion
 
         #region Change game settings
-
-        /// <summary>
-        /// Set default the parameters of the game
-        /// </summary>
-        public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
-                GameManager.NumPlayers = 2;
-            if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
-                RoundManager.RoundTime = 2 * 60;
-        }
 
         /// <summary>
         /// Update the duration of a round 

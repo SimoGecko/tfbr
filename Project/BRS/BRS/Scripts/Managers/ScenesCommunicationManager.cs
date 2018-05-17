@@ -71,7 +71,7 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 6, 4);
         public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 6, 4), new ModelsStatsStruct(27, 4.667f, 4, 2.667f), new ModelsStatsStruct(18, 7, 4, 2.667f) };
-        public static string[] NameStats = { "Capacity", "Distance of attack", "Speed (min-max)" };
+        public static string[] NameStats = { "Capacity", "Distance of attack", "Speed" };
 
         /// <summary>
         /// Define the possible game modes name

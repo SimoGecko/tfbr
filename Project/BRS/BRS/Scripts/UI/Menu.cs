@@ -145,7 +145,6 @@ namespace BRS.Scripts.UI {
             // Set mapping name - functions
             FunctionsMenu = new Dictionary<string, EventHandler> {
                 { "SwitchToMenu", MenuManager.Instance.SwitchToMenu },
-                { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
