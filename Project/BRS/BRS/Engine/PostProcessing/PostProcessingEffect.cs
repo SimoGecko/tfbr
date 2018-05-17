@@ -19,7 +19,7 @@ namespace BRS.Engine.PostProcessing {
         public Vector4 ActiveParameter => new Vector4(_active[0] ? 1.0f : 0.0f, _active[1] ? 1.0f : 0.0f, _active[2] ? 1.0f : 0.0f, _active[3] ? 1.0f : 0.0f);
         public Vector3 Position;
 
-        public RenderTarget2D RenderTarget { get; }
+        //private RenderTarget2D RenderTarget { get; }
 
         // mg effect
         public Effect Effect { get; }
@@ -33,13 +33,13 @@ namespace BRS.Engine.PostProcessing {
             Effect = effect;
             Position = position;
 
-            RenderTarget = new RenderTarget2D(
-                Graphics.gD,
-                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
-                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                Graphics.gD.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
+            //RenderTarget = new RenderTarget2D(
+            //    Graphics.gD,
+            //    Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+            //    Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+            //    false,
+            //    Graphics.gD.PresentationParameters.BackBufferFormat,
+            //    DepthFormat.Depth24);
         }
 
 

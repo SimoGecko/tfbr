@@ -27,13 +27,14 @@ namespace BRS.Engine.PostProcessing {
     class PostProcessingManager {
         public static PostProcessingManager Instance { get; private set; }
 
+        private static int MaxEffects = 20;
+
         private readonly List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
         private readonly Dictionary<PostprocessingType, bool> _fixEffects = new Dictionary<PostprocessingType, bool>();
-        private PostProcessingEffect _twoPassEffect;
+        private readonly PostProcessingEffect _twoPassEffect;
         private RenderTarget2D _blurTarget;
-        private bool DEBUG = false;
-        private readonly List<Texture2D> _lut = new List<Texture2D>();
+        private List<RenderTarget2D> _renderTargets = new List<RenderTarget2D>();
         private float _distance = 6f;
         private float _range = 16.5f;
 
@@ -134,6 +135,16 @@ namespace BRS.Engine.PostProcessing {
         }
 
         public void Start(SpriteBatch spriteBatch) {
+            for (int i = 0; i < MaxEffects; ++i) {
+                _renderTargets.Add(new RenderTarget2D(
+                    spriteBatch.GraphicsDevice,
+                    Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                    Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                    false,
+                    spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
+                    DepthFormat.Depth24));
+            }
+
             _blurTarget = new RenderTarget2D(
                 spriteBatch.GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
@@ -258,6 +269,7 @@ namespace BRS.Engine.PostProcessing {
 
         public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture, GameTime gameTime) {
             RenderTarget2D curTarget = renderTarget;
+            int targetI = 0;
 
             // if dynamic props are needed
             foreach (var ppShader in _effects) {
@@ -308,7 +320,7 @@ namespace BRS.Engine.PostProcessing {
                     }
 
                     // Setup next render-target to apply next filter
-                    RenderTarget2D nextTarget = ppShader.RenderTarget;
+                    RenderTarget2D nextTarget = _renderTargets[targetI];
                     graphicsDevice.SetRenderTarget(nextTarget);
 
 
@@ -330,6 +342,11 @@ namespace BRS.Engine.PostProcessing {
 
                     graphicsDevice.SetRenderTarget(null);
                     curTarget = nextTarget;
+                    ++targetI;
+
+                    if (targetI >= MaxEffects) {
+                        break;
+                    }
                 }
             }
 
