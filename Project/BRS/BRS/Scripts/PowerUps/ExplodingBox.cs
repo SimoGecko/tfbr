@@ -34,7 +34,7 @@ namespace BRS.Scripts.PowerUps {
             transform.position = Owner.transform.position;
             GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * .25f, Quaternion.Identity);
             Crate c = newCrate.GetComponent<Crate>();
-            c.SetExplosionRigged();
+            c.SetExplosionRigged(Owner.TeamIndex);
             ElementManager.Instance.Add(c);
         }
     }

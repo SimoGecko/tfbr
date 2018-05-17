@@ -77,7 +77,7 @@ namespace BRS.Scripts.Managers {
         public static bool GamePaused { get { return state == State.Paused; } }
         public static bool GameEnded { get { return state == State.Ended || state==State.Menu; } }
         public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
-
+        public static int TeamIndex(int playerIndex) { return playerIndex % 2; }
 
         // other
 

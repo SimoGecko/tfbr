@@ -76,7 +76,7 @@ namespace BRS.Scripts.UI {
 
 
         // queries
-        Rectangle SourceRectangle(XboxButtons button) {
+        public static Rectangle SourceRectangle(XboxButtons button) {
             int column = (int)button % 4;
             int row = (int)button / 4;
             return new Rectangle(column * AtlasWidth, row * AtlasWidth, AtlasWidth, AtlasWidth);
