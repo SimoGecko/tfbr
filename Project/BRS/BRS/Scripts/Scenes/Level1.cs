@@ -46,12 +46,14 @@ namespace BRS.Scripts.Scenes {
 
 
         void LoadBlenderBakedScene() {
-            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
-            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
+            string level = "level" + GameManager.LvlScene;
+
+            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/" + level + "_inside"));
+            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/" + level + "_outside"));
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
-            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/inside"), insideMat);
-            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/outside"), outsideMat);
+            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/" + level + "_inside"), insideMat);
+            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/" + level + "_outside"), outsideMat);
             Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
 
 
@@ -160,7 +162,10 @@ namespace BRS.Scripts.Scenes {
                 if (MenuManager.Instance != null) {
                     MenuManager.Instance.ChangeModelNameColorPlayer(player, i);
 
-                    int modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                    int modelIndex = 0;
+                    if (ScenesCommunicationManager.Instance != null && ScenesCommunicationManager.Instance.PlayersInfo != null && ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i))
+                        modelIndex = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+
                     player.AddComponent(new FrontLight(FrontLight.Type.FrontAndBack, modelIndex));
                     player.AddComponent(new AnimatedWheels(AnimatedWheels.Type.BackOnly, 5, modelIndex));
                 } else {

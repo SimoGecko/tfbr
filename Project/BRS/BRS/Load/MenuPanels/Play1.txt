@@ -187,12 +187,13 @@ NameIdentifier: MapA
 Texture: button
 Position: 1020 710
 Text: A
-Functions: HighlightBorders
-NeighborsUpDownLeftRight: ModeCrates Next MapB MapB
+Functions: HighlightBorders SetMap
+NeighborsUpDownLeftRight: ModeBombs Next MapB MapB
 UniqueChoiceWith: MapB
 IsClicked: yes
 ScaleWidth: 0.75
 ScaleHeight: 0.85
+Index: 1
 </Button>
 
 <Button>
@@ -200,11 +201,12 @@ NameIdentifier: MapB
 Texture: button
 Position: 1140 710
 Text: B
-Functions: HighlightBorders
-NeighborsUpDownLeftRight: ModeSurvival Next MapA MapA
+Functions: HighlightBorders SetMap
+NeighborsUpDownLeftRight: ModeCrates Next MapA MapA
 UniqueChoiceWith: MapA
 ScaleWidth: 0.75
 ScaleHeight: 0.85
+Index: 2
 </Button>
 
 <Button>

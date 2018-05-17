@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using System;
 
 namespace BRS.Engine.Menu {
+
     /// <summary>
     /// Class to create and display a slider object (with the bar texture => see UserInterface)
     /// </summary>

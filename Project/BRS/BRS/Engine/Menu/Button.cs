@@ -173,6 +173,7 @@ namespace BRS.Engine.Menu {
                         if ((IndexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Enter) : Input.GetKeyUp(Keys.Space))
                             || Input.GetButtonUp(Buttons.A, IndexAssociatedPlayerScreen)) {
                             MenuManager.uniqueFrameInputUsed[IndexAssociatedPlayerScreen] = true;
+                            Audio.Play("button_press_A", transform.position);
                             Click?.Invoke(this, new EventArgs());
                         }
                     }

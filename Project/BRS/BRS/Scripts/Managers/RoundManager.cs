@@ -37,7 +37,7 @@ namespace BRS.Scripts.Managers {
         //private
         Timer roundTimer;
 
-        int[] teamWins;
+        static int[] teamWins;
         static int roundNumber;
 
         bool roundStarted;
@@ -123,6 +123,7 @@ namespace BRS.Scripts.Managers {
             int numRep = (int)System.Math.Round(TimeBeforePolice / duration);
 
             for(int i=0; i<numRep; i++) {
+                if (GameManager.GameEnded) return;
                 Audio.Play("police", Vector3.Zero, .0005f);
                 await Time.WaitForSeconds(duration);
             }
@@ -173,7 +174,10 @@ namespace BRS.Scripts.Managers {
         void TryRestartRound() {
             UpdateRanking();
             Heatmap.instance.SaveHeatMap();
-            if (RoundNumber < NumRounds) {
+            bool oneAlreadyWon2Rounds = false;
+            for (int i = 0; i < GameManager.NumTeams; i++)
+                oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;
+            if (RoundNumber < NumRounds && !oneAlreadyWon2Rounds) {
                 GameManager.RestartCustom();
                 RestartRound();
             } else {
@@ -230,6 +234,8 @@ namespace BRS.Scripts.Managers {
         public static string RankToString(int rank) {
             return rank == 1 ? "1." : rank == 2 ? "2." : "-";
         }
+
+        public static int NumWins(int TeamIndex) { return teamWins[TeamIndex]; }
 
         // other
 

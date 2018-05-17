@@ -291,7 +291,8 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
-    <Content Include="Load\PolicePaths.txt" />
+    <Content Include="Load\PolicePaths_level1.txt" />
+    <Content Include="Load\PolicePaths_level2.txt" />
     <Content Include="Load\Rankings\ranking10 min1P.txt" />
     <Content Include="Load\Rankings\ranking10 min2P.txt" />
     <Content Include="Load\Rankings\ranking10 min4P.txt" />
@@ -311,6 +312,8 @@
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
     <Content Include="Load\UnitySceneData\export_scene_level1_dynamicObjects.txt" />
     <Content Include="Load\UnitySceneData\export_scene_level1_staticObjects.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level2_dynamicObjects.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level2_StaticObjects.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
     <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />

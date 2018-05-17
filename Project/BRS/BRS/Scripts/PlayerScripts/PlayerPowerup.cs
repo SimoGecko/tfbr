@@ -35,6 +35,12 @@ namespace BRS.Scripts.PlayerScripts {
         }
         public override void Update() { }
 
+        public override void Reset() {
+            _carryingPowerup = new List<Powerup>(); _carryingPowerup.Clear();
+            PowerupUI.Instance.UpdatePlayerPowerupUI(gameObject.GetComponent<Player>().PlayerIndex, CarryingPowerups());
+
+        }
+
 
 
         // --------------------- CUSTOM METHODS ----------------
