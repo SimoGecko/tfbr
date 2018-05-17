@@ -21,12 +21,12 @@ namespace BRS.Scripts {
 
         public enum EventType {
             Begin, AlmostEnd, PoliceComing, Win, Lose, Random,
-            Powerup, Diamond, EnemyClose, Attack,
+            CloseToVault, Powerup, Diamond, EnemyClose, Attack,
             OpenCrate, OpenVault, HitEnemy, Damage, Full,
             BringBase, Tutorial }
         float[] SpeechProbability = new float[] {
             .6f, .8f, .8f, 1f, 1f, .1f,
-            .2f, .9f, .3f, .1f,
+            1f, .2f, .9f, .3f, .1f,
             .2f, .9f, .6f, .5f, .6f,
             .6f, .2f };
 
@@ -154,13 +154,14 @@ namespace BRS.Scripts {
 
             if (GameObject.NameExists("vault")) {
                 GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultOpen += (() => OnEvent(EventType.OpenVault));
+                GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnClosedClose += (() => { if (Vault.OnClosedCloseIndex == index) OnEvent(EventType.CloseToVault); });
             }
 
             if (GameObject.NameExists("base_"+index%2)) {
                 GameObject.FindGameObjectWithName("base_"+index%2).GetComponent<Base>().OnBringBase += (() => OnEvent(EventType.BringBase));
             }
             //still not plugged
-            /*Diamond, EnemyClose, OpenCrate }*/
+            /*Diamond, EnemyClose, OpenCrate, CloseToVault }*/
 
     }
 
@@ -168,6 +169,8 @@ namespace BRS.Scripts {
             if (RoundManager.Instance.Winner == index) OnEvent(EventType.Win);
             else OnEvent(EventType.Lose);
         }
+
+        
 
         void OnEvent(EventType st) {
             int sti = (int)st;
