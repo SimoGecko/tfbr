@@ -484,7 +484,7 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public void SetMap(object sender, EventArgs e) {
             Button button = (Button)sender;
-
+            GameManager.LvlScene = button.Index;
         }
 
         /// <summary>

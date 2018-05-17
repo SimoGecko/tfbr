@@ -99,8 +99,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
             }
 
-            // Restart other components
-            _pM.Start();
         }
 
         public override void Update() {
@@ -120,10 +118,10 @@ namespace BRS.Scripts.PlayerScripts {
                 }
 
                 Vector2 moveInput;
-                if(true)//!CameraController.autoFollow)
-                    moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                else
-                    moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                //if(true)//!CameraController.autoFollow)
+                moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                //else
+                    //moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
@@ -152,6 +150,14 @@ namespace BRS.Scripts.PlayerScripts {
 
         public override void Reset() {
             Start();
+            _pA.Reset();
+            _pM.Reset();
+            _pI.Reset();
+            _pP.Reset();
+            _pS.Reset();
+            _pL.Reset();
+            _pC.Reset();
+            UpdateUI();
         }
 
         public override void OnCollisionEnter(Collider c) {

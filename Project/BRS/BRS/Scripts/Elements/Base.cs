@@ -19,6 +19,7 @@ namespace BRS.Scripts.Elements {
 
         //public
         public int TotalMoney { get; private set; }
+        public int TotalMoneyPenalty { get; private set; }
         public Color BaseColor { get; private set; }
         // deload done
         public bool FullDeloadDone = false;
@@ -50,6 +51,7 @@ namespace BRS.Scripts.Elements {
         public override void Start() {
             base.Start();
             TotalMoney = 0;
+            TotalMoneyPenalty = 0;
 
             _shownMoneyStacks = 0;
 
@@ -67,6 +69,7 @@ namespace BRS.Scripts.Elements {
             }
 
             _moneyGameObjects.Clear();
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, 100, 100, 0);
 
             Start();
         }
@@ -128,7 +131,7 @@ namespace BRS.Scripts.Elements {
                     //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
                     //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
-                    TotalMoney = Math.Max(TotalMoney - MoneyPenaltyAmount, 0);
+                    TotalMoneyPenalty += MoneyPenaltyAmount;
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }
