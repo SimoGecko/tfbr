@@ -178,7 +178,7 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(fallingWeight);
 
             //planted magnet
-            GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", ModelType.Weight, false);
+            GameObject plantedMagnet = new GameObject("plantedMagnetPrefab", ModelType.Magnet, false);
             plantedMagnet.transform.Scale(powerupScale);
             plantedMagnet.AddComponent(new PlantedMagnet());
             plantedMagnet.AddComponent(new DynamicRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
