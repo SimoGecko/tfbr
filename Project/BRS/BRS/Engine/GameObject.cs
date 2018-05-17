@@ -76,7 +76,7 @@ namespace BRS.Engine {
             ModelType = modelType;
 
             if (addToDrawings) {
-                Graphics.AddInstance(modelType, this);
+                HardwareRendering.AddInstance(modelType, this);
             }
 
             SortAll();
@@ -216,7 +216,7 @@ namespace BRS.Engine {
 
             // Instanciating
             if (Model != null && UseHardwareInstanciation) {
-                Graphics.AddInstance(ModelType, newObject);
+                HardwareRendering.AddInstance(ModelType, newObject);
             }
 
             return newObject;
@@ -242,7 +242,7 @@ namespace BRS.Engine {
 
             // Instanciating
             if (o.Model != null) {
-                Graphics.RemoveInstance(o.ModelType, o);
+                HardwareRendering.RemoveInstance(o.ModelType, o);
             }
         }
 

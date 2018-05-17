@@ -52,9 +52,9 @@ namespace BRS.Scripts.Scenes {
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/" + level + "_outside"));
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
-            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/" + level + "_inside"), insideMat);
-            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/" + level + "_outside"), outsideMat);
-            Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
+            HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/" + level + "_inside"), insideMat);
+            HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/" + level + "_outside"), outsideMat);
+            HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
 
 
             GameObject insideScene = new GameObject("insideScene", ModelType.InsideScene, true);
@@ -179,8 +179,8 @@ namespace BRS.Scripts.Scenes {
 
                 // Model instanciation
                 ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), "player" + i, true);
-                Graphics.InitializeModel(modelType, player.Model, player.material);
-                Graphics.AddInstance(modelType, player);
+                HardwareRendering.InitializeModel(modelType, player.Model, player.material);
+                HardwareRendering.AddInstance(modelType, player);
 
                 Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
 

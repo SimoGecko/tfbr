@@ -149,6 +149,7 @@
     <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
     <Compile Include="Engine\PostProcessing\Skybox.cs" />
     <Compile Include="Engine\Prefabs.cs" />
+    <Compile Include="Engine\Rendering\HardwareRendering.cs" />
     <Compile Include="Engine\Rendering\ModelType.cs" />
     <Compile Include="Engine\Rendering\RenderingType.cs" />
     <Compile Include="Engine\Rendering\VertexPositionAlpha.cs" />

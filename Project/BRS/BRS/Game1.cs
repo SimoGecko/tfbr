@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
 using System.Collections.Generic;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -35,8 +36,9 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
+            HardwareRendering.gDM = _graphics;
 
-            IsFixedTimeStep = false;
+            //IsFixedTimeStep = false;
         }
 
         protected override void Initialize() {
@@ -62,7 +64,13 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            List<PostprocessingType> defaultEffects = new List<PostprocessingType> { PostprocessingType.Chromatic, PostprocessingType.ColorGrading, PostprocessingType.Vignette, PostprocessingType.TwoPassBlur };
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType>
+            {
+                PostprocessingType.Chromatic,
+                PostprocessingType.ColorGrading,
+                PostprocessingType.Vignette,
+                PostprocessingType.TwoPassBlur
+            };
             PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
@@ -83,6 +91,7 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
+            HardwareRendering.Start();
             //start other big components
             Input.Start();
 
@@ -154,6 +163,9 @@ namespace BRS {
             //-----3D-----
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
+            // Instanciating
+            HardwareRendering.UpdateModelInstances();
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -165,7 +177,7 @@ namespace BRS {
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
-                Graphics.DrawModelInstances(cam);
+                HardwareRendering.DrawModelInstances(cam);
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
 
@@ -180,15 +192,15 @@ namespace BRS {
 
             //// Todo: For now disabled because it screwed up all shadows and lights etc...
             // draw everything 3 D to get the depth info 
-            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
-            _graphics.GraphicsDevice.Clear(Color.Black);
+            //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            //_graphics.GraphicsDevice.Clear(Color.Black);
 
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-            foreach (Camera cam in Screen.Cameras) {
-                GraphicsDevice.Viewport = cam.Viewport;
+            //GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            //foreach (Camera cam in Screen.Cameras) {
+            //    GraphicsDevice.Viewport = cam.Viewport;
 
-                foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
-            }
+            //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
+            //}
 
 
 
@@ -205,7 +217,7 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                if(showUI)
+                if (showUI)
                     foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
                 i++;

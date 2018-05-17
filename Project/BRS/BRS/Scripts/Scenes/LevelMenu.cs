@@ -38,11 +38,9 @@ namespace BRS.Scripts.Scenes {
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
             // Model instanciation
-            Graphics.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
-
-            Graphics.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
-
-            Graphics.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
+            HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
+            HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
+            HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
 
 
             GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
