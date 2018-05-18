@@ -98,6 +98,7 @@ namespace BRS.Scripts.UI {
             Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tut_2");
             Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tut_3");
             Texture2D textureTuto4 = File.Load<Texture2D>("Images/tutorial/tut_4");
+            Texture2D textureBlack = File.Load<Texture2D>("Images/tutorial/black_pic");
             Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
             Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
             Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
@@ -143,7 +144,8 @@ namespace BRS.Scripts.UI {
                 { "thunder", textureIconThunder },
                 { "decline", textureIconDecline },
                 { "dollar", textureIconDollar },
-                { "xboxButtons", xboxButtons }
+                { "xboxButtons", xboxButtons },
+                { "textureBlack", textureBlack }
             };
 
             // Set mapping name - functions
@@ -271,6 +273,8 @@ namespace BRS.Scripts.UI {
                     if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
                     if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
                     if (MS.Color != default(Color)) img.colour = MS.Color;
+                    if (MS.transparency != default(int))
+                        img.colour.A = (byte)MS.transparency;
 
                     img.Active = MS.Active;
 
