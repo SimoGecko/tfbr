@@ -3919,18 +3919,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/lut/lut (9).png
 
-#begin Images/tutorial/tutorial_3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/tutorial/tutorial_3.png
-
 #begin Images/tutorial/tut_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -4266,4 +4254,16 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Other/shaders/instancedModel.fx
+
+#begin images/tutorial/tut_5.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:images/tutorial/tut_5.png
 

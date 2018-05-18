@@ -294,6 +294,7 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
+    <Content Include="Load\MenuPanels\Tutorial5.txt" />
     <Content Include="Load\PolicePaths_level1.txt" />
     <Content Include="Load\PolicePaths_level2.txt" />
     <Content Include="Load\MenuPanels\Tutorial4.txt" />
