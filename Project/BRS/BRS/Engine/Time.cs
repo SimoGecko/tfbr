@@ -32,7 +32,7 @@ namespace BRS.Engine {
             Frame++;
 
             CheckTimescaleInput();
-            DisplayInfo();
+            //DisplayInfo();
             
 
             //Debug.Log("Start with " + timers.Count + " timers");

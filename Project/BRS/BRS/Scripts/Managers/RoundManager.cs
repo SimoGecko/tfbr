@@ -89,7 +89,7 @@ namespace BRS.Scripts.Managers {
         // commands
         bool InputRestart() {
             bool Apressed = false;
-            for (int i = 0; i < GameManager.NumPlayers; i++) Apressed = Apressed || Input.GetButtonDown(Buttons.A);
+            for (int i = 0; i < GameManager.NumPlayers; i++) Apressed = Apressed || Input.GetButtonDown(Buttons.A, i);
             return Input.GetKeyDown(Keys.Space) || Input.GetKeyDown(Keys.Space) || Apressed;
         }
 

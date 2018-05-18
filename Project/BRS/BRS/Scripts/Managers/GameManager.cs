@@ -42,7 +42,7 @@ namespace BRS.Scripts.Managers {
 
         // commands 
         static void CheckForPause() {
-            if (Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) {
+            if (Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) { // TODO all players can press start
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
 

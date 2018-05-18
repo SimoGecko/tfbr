@@ -16,6 +16,8 @@ namespace BRS.Engine {
     //public enum Align2 { M=0, L=1, R=2, T=4, B=8, TL=5, TR=6, BL=9, BR=10 }
     //public enum Align3 { TL, RM, TR, ML, MM, MR, BL, BM, BR} // (top, middle, bottom) x (left, middle, right)
 
+    public enum Font { debug, comic, super}
+    
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
 
@@ -27,6 +29,7 @@ namespace BRS.Engine {
 
 
         //private
+        //TODO reduce to debug, comic, super
         public static SpriteFont arialFont { get; private set; }
         public static SpriteFont comicFont { get; private set; }
         public static SpriteFont archerFont   { get; private set; }
@@ -122,6 +125,10 @@ namespace BRS.Engine {
                 pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
             }
             if (font == null) font = bold ? archerFont : comicFont;
+
+            //ERRROR
+
+
             Rectangle src = new Rectangle(Point.Zero, (font.MeasureString(text)*scale).ToPoint());
             Rectangle diff = new Rectangle(Point.Zero,  dst.Size - src.Size);
 
@@ -152,6 +159,24 @@ namespace BRS.Engine {
             return al;
         }
 
+        static SpriteFont SpriteFontFromFont(Font f) {
+            if (f == Font.debug) return arialFont;
+            if (f == Font.comic) return comicFont;
+            if (f == Font.super) return archerFont;
+            return arialFont;
+        }
+
+        public static bool FontSupportsString(string s, Font f) {
+            SpriteFont sf = SpriteFontFromFont(f);
+            for (int c=0; c<s.Length; c++) {
+                char character = s[c];
+                if (!sf.Characters.Contains(character) && character != '\r' && character != '\n') {
+                    Debug.Log("font doesn't support character " + character);
+                    return false;
+                }
+            }
+            return true;
+        }
 
 
         //OLD CODE

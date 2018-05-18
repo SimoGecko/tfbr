@@ -22,7 +22,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         Effect _ZBufferShader;
-        const string startScene = "LevelMenu";
+        const string startScene = "Level1";
         bool showUI = true;
 
         public Game1() {
@@ -86,11 +86,7 @@ namespace BRS {
             GameMode.Start();
             SceneManager.Start();
 
-#if DEBUG
-            SceneManager.LoadScene("Level1");
-#else
-            SceneManager.LoadScene("LevelMenu");
-#endif
+            SceneManager.LoadScene(startScene);
 
             Audio.Start();
 

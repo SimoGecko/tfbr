@@ -41,7 +41,6 @@ namespace BRS.Scripts.Scenes {
             CreateBases();
             CreateSpecialObjects();
             SetMenuShaderEffects();
-            GameObject testCube = new GameObject("testCube", File.Load<Model>("Models/primitives/cylinder"));
 
         }
 

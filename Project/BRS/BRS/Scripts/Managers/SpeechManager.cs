@@ -99,6 +99,8 @@ namespace BRS.Scripts {
                 if (line[0] == '-') { eventIndex++; continue; } // line with event type
                 string lineEscaped = EscapeLineAutomatically(11, line);
                 //string lineEscaped = line.Replace('|', '\n'); // newline
+                Debug.Assert(UserInterface.FontSupportsString(lineEscaped, Font.comic), "string not supported");
+
                 AddString(eventIndex, lineEscaped);
             }
         }

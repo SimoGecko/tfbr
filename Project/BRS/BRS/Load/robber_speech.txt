@@ -48,7 +48,7 @@ I will win everything!
 Another point for me!
 Let's go!!
 It was well worth my time!
-I can’t wait for the next robbery!
+I can't wait for the next robbery!
 
 -Lose
 Damn. Maybe next time...
@@ -60,9 +60,9 @@ Another lost point for me...
 Damn...
 I should have put more effort...
 I lost also this round...
-I didn’t know I was THAT slow!
+I didn't know I was THAT slow!
 I tough it would be easier...
-I doubt if I’m a good robber...
+I doubt if I'm a good robber...
 
 -Random
 Best robbery ever!
@@ -177,7 +177,7 @@ Base, here I come!
 Quick, let's go back!
 Imagine all of this cash in my base!
 I hope I can reach my base!
-Arghh! I’m feeling heavy!
+Arghh! I'm feeling heavy!
 
 -BringBase
 Sweet!
