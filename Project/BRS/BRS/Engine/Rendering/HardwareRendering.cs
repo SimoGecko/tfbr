@@ -8,8 +8,8 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
-        public static GraphicsDeviceManager gDM { get; set; }
-        private static GraphicsDevice GD => gDM.GraphicsDevice;
+        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
+        private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
 
         // Effects
         private static Effect _instanceEffect;
@@ -49,11 +49,10 @@ namespace BRS.Engine.Rendering {
         /// <summary>
         /// Draw all the models with hardware-instancing
         /// </summary>
-        /// <param name="camera">Current camera to render on</param>
-        public static void Draw(Camera camera) {
+        public static void Draw() {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
                 if (ModelTransformations.ContainsKey(mt))
-                    DrawModelInstanciated(camera.View, camera.Proj, ModelTransformations[mt]);
+                    DrawModelInstanciated(ModelTransformations[mt]);
             }
         }
 
@@ -103,10 +102,8 @@ namespace BRS.Engine.Rendering {
         /// <summary>
         /// Draw a model with the vertex-/index-buffers to accelerate the drawing
         /// </summary>
-        /// <param name="view">Camera-view-matrix</param>
-        /// <param name="projection">Camera-projection-matrix</param>
         /// <param name="modelInstance">Instanciation information</param>
-        static void DrawModelInstanciated(Matrix view, Matrix projection, ModelInstance modelInstance) {
+        static void DrawModelInstanciated(ModelInstance modelInstance) {
             if (modelInstance.GameObjects.Count == 0) {
                 return;
             }
@@ -118,45 +115,44 @@ namespace BRS.Engine.Rendering {
             foreach (ModelMesh mesh in modelInstance.Model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     // Tell the GPU to read from both the model vertex buffer plus our instanceVertexBuffer.
-                    GD.SetVertexBuffers(
+                    GraphicsDevice.SetVertexBuffers(
                         new VertexBufferBinding(part.VertexBuffer, part.VertexOffset, 0),
                         new VertexBufferBinding(modelInstance.VertexBuffer, 0, 1)
                     );
 
-                    GD.Indices = part.IndexBuffer;
+                    GraphicsDevice.Indices = part.IndexBuffer;
 
                     // load the instanciation effect and set the correct technique based on the material
                     part.Effect = _instanceEffect;
-                    _instanceEffect.CurrentTechnique = _instanceEffect.Techniques[material.RenderingType.ToString()];
 
-                    // Set camera-properties for shader
+                    // Set properties which are valid for all cameras
+                    // - Transformation
                     _instanceEffect.Parameters["World"].SetValue(mesh.ParentBone.Transform);
-                    _instanceEffect.Parameters["View"].SetValue(view);
-                    _instanceEffect.Parameters["Projection"].SetValue(projection);
-
-                    // Set texture  for shader
+                    // - Texture
                     _instanceEffect.Parameters["ColorTexture"].SetValue(texture);
                     _instanceEffect.Parameters["LightmapTexture"].SetValue(lightmap);
 
-                    // Draw all the instance copies in a single call.
-                    foreach (EffectPass pass in _instanceEffect.CurrentTechnique.Passes) {
-                        pass.Apply();
+                    _instanceEffect.CurrentTechnique = _instanceEffect.Techniques[material.RenderingType.ToString()];
+                    foreach (Camera cam in Screen.Cameras) {
+                        GraphicsDevice.Viewport = cam.Viewport;
 
-                        GD.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,
-                            part.NumVertices, part.StartIndex,
-                            part.PrimitiveCount, modelInstance.VertexInformation.Length);
+                        // Set camera-properties for shader
+                        _instanceEffect.Parameters["View"].SetValue(cam.View);
+                        _instanceEffect.Parameters["Projection"].SetValue(cam.Proj);
+
+                        // Draw all the instance copies in a single call.
+                        foreach (EffectPass pass in _instanceEffect.CurrentTechnique.Passes) {
+                            pass.Apply();
+
+                            GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,
+                                part.NumVertices, part.StartIndex,
+                                part.PrimitiveCount, modelInstance.VertexInformation.Length);
+                        }
                     }
                 }
             }
         }
 
         #endregion
-
-
-
-
-
-
-
     }
 }

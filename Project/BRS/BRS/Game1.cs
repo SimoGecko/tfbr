@@ -36,7 +36,7 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
-            HardwareRendering.gDM = _graphics;
+            HardwareRendering.GraphicsDeviceManager = _graphics;
 
             //IsFixedTimeStep = false;
         }
@@ -163,6 +163,8 @@ namespace BRS {
             //-----3D-----
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
+            HardwareRendering.Draw();
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -174,7 +176,6 @@ namespace BRS {
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
-                HardwareRendering.Draw(cam);
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
 
