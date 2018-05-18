@@ -42,6 +42,13 @@ namespace BRS.Scripts.PlayerScripts {
 
         //reference
 
+        // Last collider which used the vibration-event
+        private Collider _lastCollider;
+        // Last time when the vibration-event was used
+        private float _collidedAt;
+        // Allows to vibrate for the same collider if time between is larger than this
+        private const float TimeResetLastCollider = 2;
+
         //subcomponents
         PlayerAttack _pA;
         PlayerMovement _pM;
@@ -163,8 +170,14 @@ namespace BRS.Scripts.PlayerScripts {
         public override void OnCollisionEnter(Collider c) {
             if (c.GameObject.tag == ObjectTag.StaticObstacle) {
                 _pM.SetSpeedPad(false);
-                // CamController.Shake(.3f);
+
+                if (_lastCollider != c || _collidedAt + TimeResetLastCollider < Time.CurrentTime) {
+                    Debug.Log("Vibration: " +(_collidedAt + TimeResetLastCollider )+ " < " + Time.CurrentTime);
                     Input.Vibrate(.05f, .1f, PlayerIndex);
+                }
+
+                _lastCollider = c;
+                _collidedAt = Time.CurrentTime;
             }
         }
 
