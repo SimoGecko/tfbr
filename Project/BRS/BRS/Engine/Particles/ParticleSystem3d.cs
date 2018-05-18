@@ -317,13 +317,10 @@ namespace BRS.Engine.Particles {
             }
         }
 
-
         /// <summary>
         /// Draws the particle system.
         /// </summary>
-        public void Draw3D(Camera camera) {
-            _effectViewParameter.SetValue(camera.View);
-            _effectProjectionParameter.SetValue(camera.Proj);
+        public void Draw3D() {
             GraphicsDevice device = Graphics.gD;
 
 
@@ -355,27 +352,34 @@ namespace BRS.Engine.Particles {
                 device.SetVertexBuffer(_vertexBuffer);
                 device.Indices = _indexBuffer;
 
-                // Activate the particle effect.
-                foreach (EffectPass pass in _particleEffect.CurrentTechnique.Passes) {
-                    pass.Apply();
+                foreach (Camera camera in Screen.Cameras) {
+                    device.Viewport = camera.Viewport;
 
-                    if (_firstActiveParticle < _firstFreeParticle) {
-                        // If the active particles are all in one consecutive range,
-                        // we can draw them all in a single call.
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     _firstActiveParticle * 4, (_firstFreeParticle - _firstActiveParticle) * 4,
-                                                     _firstActiveParticle * 6, (_firstFreeParticle - _firstActiveParticle) * 2);
-                    } else {
-                        // If the active particle range wraps past the end of the queue
-                        // back to the start, we must split them over two draw calls.
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     _firstActiveParticle * 4, (Settings.MaxParticles - _firstActiveParticle) * 4,
-                                                     _firstActiveParticle * 6, (Settings.MaxParticles - _firstActiveParticle) * 2);
+                    _effectViewParameter.SetValue(camera.View);
+                    _effectProjectionParameter.SetValue(camera.Proj);
 
-                        if (_firstFreeParticle > 0) {
+                    // Activate the particle effect.
+                    foreach (EffectPass pass in _particleEffect.CurrentTechnique.Passes) {
+                        pass.Apply();
+
+                        if (_firstActiveParticle < _firstFreeParticle) {
+                            // If the active particles are all in one consecutive range,
+                            // we can draw them all in a single call.
                             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                         0, _firstFreeParticle * 4,
-                                                         0, _firstFreeParticle * 2);
+                                _firstActiveParticle * 4, (_firstFreeParticle - _firstActiveParticle) * 4,
+                                _firstActiveParticle * 6, (_firstFreeParticle - _firstActiveParticle) * 2);
+                        } else {
+                            // If the active particle range wraps past the end of the queue
+                            // back to the start, we must split them over two draw calls.
+                            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                                _firstActiveParticle * 4, (Settings.MaxParticles - _firstActiveParticle) * 4,
+                                _firstActiveParticle * 6, (Settings.MaxParticles - _firstActiveParticle) * 2);
+
+                            if (_firstFreeParticle > 0) {
+                                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                                    0, _firstFreeParticle * 4,
+                                    0, _firstFreeParticle * 2);
+                            }
                         }
                     }
                 }

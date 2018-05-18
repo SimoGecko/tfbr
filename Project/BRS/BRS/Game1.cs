@@ -37,6 +37,7 @@ namespace BRS {
             File.content = Content;
             Graphics.gDM = _graphics;
             HardwareRendering.GraphicsDeviceManager = _graphics;
+            ParticleRendering.GraphicsDeviceManager = _graphics;
 
             //IsFixedTimeStep = false;
         }
@@ -93,6 +94,7 @@ namespace BRS {
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
             HardwareRendering.Start();
+            ParticleRendering.Start();
             //start other big components
             Input.Start();
 
@@ -150,6 +152,7 @@ namespace BRS {
 
             // Instanciating
             HardwareRendering.Update();
+            ParticleRendering.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -164,6 +167,7 @@ namespace BRS {
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
             HardwareRendering.Draw();
+            ParticleRendering.Draw();
 
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;

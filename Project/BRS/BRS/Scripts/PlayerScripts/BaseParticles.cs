@@ -17,7 +17,7 @@ namespace BRS.Scripts.PlayerScripts {
         // => because it defines the particles of the player base, we could move it to Scripts/Elements as well
         // used particle types for the base
         private enum PlayerParticleType { CashDrop };
-        List<Type> _effects = new List<Type>() { typeof(CashDrop)};
+        List<Type> _effects = new List<Type> { typeof(CashDrop)};
         private ParticleComponent[] _particleComponents;
 
         // base where the particle emitting systems are attached to
@@ -49,15 +49,7 @@ namespace BRS.Scripts.PlayerScripts {
             _particleComponents[(int)PlayerParticleType.CashDrop].IsEmitting = _base.FullDeloadDone;
 
             foreach (ParticleComponent pc in _particleComponents) {
-
                 pc.Update();
-            }
-        }
-
-
-        public override void Draw3D(Camera camera) {
-            foreach (ParticleComponent pc in _particleComponents) {
-                pc.Draw3D(camera);
             }
         }
     }
