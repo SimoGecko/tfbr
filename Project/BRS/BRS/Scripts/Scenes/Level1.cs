@@ -137,7 +137,6 @@ namespace BRS.Scripts.Scenes {
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 Vector3 startPos = StartPositions[i];
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
-                player.UseHardwareInstanciation = true;
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
                 player.transform.Scale(1.0f);
@@ -179,6 +178,10 @@ namespace BRS.Scripts.Scenes {
 
                 // Model instanciation
                 ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), "player" + i, true);
+
+                player.UseHardwareInstanciation = true;
+                player.ModelType = modelType;
+
                 HardwareRendering.InitializeModel(modelType, player.Model, player.material);
                 HardwareRendering.AddInstance(modelType, player);
 
@@ -244,6 +247,16 @@ namespace BRS.Scripts.Scenes {
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
+
+
+                // Model instanciation
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), "base" + i, true);
+
+                playerBase.UseHardwareInstanciation = true;
+                playerBase.ModelType = modelType;
+
+                HardwareRendering.InitializeModel(modelType, playerBase.Model, playerBase.material);
+                HardwareRendering.AddInstance(modelType, playerBase);
             }
         }
 

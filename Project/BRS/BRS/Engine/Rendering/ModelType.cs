@@ -8,6 +8,9 @@
     /// </remarks>
     public enum ModelType {
         NoHardwareInstanciation,
+        InsideScene,
+        OutsideScene,
+        Ground,
         Cash,
         Gold,
         Diamond,
@@ -37,9 +40,8 @@
         Player1,
         Player2,
         Player3,
-        InsideScene,
-        OutsideScene,
-        Ground,
+        Base0,
+        Base1,
         Vault,
 
         // The ones below have all a transparent texture => have to remain at the bottom!
