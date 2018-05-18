@@ -87,7 +87,7 @@ namespace BRS {
             SceneManager.Start();
 
 #if DEBUG
-            SceneManager.LoadScene("LevelMenu");
+            SceneManager.LoadScene("Level1");
 #else
             SceneManager.LoadScene("LevelMenu");
 #endif
