@@ -1,7 +1,6 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.ComponentModel.DataAnnotations;
 using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -23,8 +22,6 @@ namespace BRS.Engine {
         public bool IsTransparent;
 
         public bool IsAlphaAnimated;
-        [Range(0.0f, 1.0f)]
-        public float Alpha;
 
         public bool baked;
         public bool textured;
@@ -56,7 +53,7 @@ namespace BRS.Engine {
             colorTex = color;
             lightTex = light;
         }
-        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false, float alpha = 1.0f) {
+        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false) {
             if (isAlphaAnimated) {
                 RenderingType = RenderingType.HITextureAlphaAnimated;
             } else if (isTransparent) {
@@ -70,7 +67,6 @@ namespace BRS.Engine {
             colorTex = color;
             IsTransparent = isTransparent;
             IsAlphaAnimated = isAlphaAnimated;
-            Alpha = alpha;
         }
         public Material(string type) {
             if (type == "skybox") skybox = true;
@@ -89,7 +85,6 @@ namespace BRS.Engine {
                 Diffuse = Diffuse,
                 IsTransparent = IsTransparent,
                 IsAlphaAnimated = IsAlphaAnimated,
-                Alpha = Alpha,
                 baked = baked,
                 textured = textured,
                 colorTex = colorTex,

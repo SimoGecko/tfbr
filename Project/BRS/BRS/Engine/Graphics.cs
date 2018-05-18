@@ -70,7 +70,7 @@ namespace BRS.Engine {
             //selects which effect to use based on material
             if (mat == null) DrawModelSimple(model, view, proj, world);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
-            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated, mat.Alpha);
+            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
 
@@ -112,7 +112,7 @@ namespace BRS.Engine {
             }
         }
 
-        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     part.Effect = textureEffect;
@@ -123,7 +123,6 @@ namespace BRS.Engine {
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
                     textureEffect.Parameters["IsTransparent"].SetValue(isTransparent); // why the fuck would you modify this
                     textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
-                    textureEffect.Parameters["Alpha"].SetValue(alpha);
                 }
                 mesh.Draw();
             }

@@ -37,6 +37,7 @@ namespace BRS.Engine {
         public bool UseHardwareInstanciation = false;
         // If hardware-instanciation is used the model type has to be specified
         public ModelType ModelType { get; set; }
+        public float Alpha = 1.0f;
 
 
         static int InstanceCount = 0;

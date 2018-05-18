@@ -92,7 +92,7 @@ namespace BRS.Engine.Rendering {
 
             for (int i = 0; i < GameObjects.Count; ++i) {
                 VertexInformation[i].Matrix = GameObjects[i].transform.World;
-                VertexInformation[i].Alpha = GameObjects[i].material.Alpha;
+                VertexInformation[i].Alpha = GameObjects[i].Alpha;
             }
 
             // Re-Initialize the vertex-buffer if needed
