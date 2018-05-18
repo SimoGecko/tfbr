@@ -35,7 +35,7 @@ namespace BRS.Scripts.Particles3D {
                     MaxParticles = 1000,
                     ParticlesPerRound = 1,
                     TimeBetweenRounds =  0.1f,
-                    Duration = TimeSpan.FromSeconds(2),
+                    Duration = 2.0f,
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.01f,
 

@@ -18,6 +18,7 @@
 //*/
 
 //#region Using Statements
+////#define PORTABLE
 //using System;
 //using System.Collections.Generic;
 
@@ -31,15 +32,13 @@
 //#endif
 //#endregion
 
-//namespace Jitter
-//{
+//namespace Jitter {
 
 //    /// <summary>
 //    /// Jitters ThreadManager class handles the internal multithreading of the
 //    /// engine.
 //    /// </summary>
-//    public class ThreadManager
-//    {
+//    public class ThreadManager {
 
 //        public const int ThreadsPerProcessor = 1;
 
@@ -64,12 +63,9 @@
 
 //        static ThreadManager instance = null;
 
-//        public static ThreadManager Instance 
-//        { 
-//            get 
-//            {
-//                if (instance == null)
-//                {
+//        public static ThreadManager Instance {
+//            get {
+//                if (instance == null) {
 //                    instance = new ThreadManager();
 //                    instance.Initialize();
 //                }
@@ -80,8 +76,7 @@
 
 //        private ThreadManager() { }
 
-//        private void Initialize()
-//        {
+//        private void Initialize() {
 
 
 //            threadCount = System.Environment.ProcessorCount * ThreadsPerProcessor;
@@ -94,10 +89,8 @@
 
 //            AutoResetEvent initWaitHandle = new AutoResetEvent(false);
 
-//            for (int i = 1; i < threads.Length; i++)
-//            {
-//                threads[i] = NewThread(() =>
-//                {
+//            for (int i = 1; i < threads.Length; i++) {
+//                threads[i] = NewThread(() => {
 //                    initWaitHandle.Set();
 //                    ThreadProc();
 //                });
@@ -114,8 +107,7 @@
 //        /// Executes all tasks previously added to the ThreadManager.
 //        /// The method finishes when all tasks are complete.
 //        /// </summary>
-//        public void Execute()
-//        {
+//        public void Execute() {
 //            currentTaskIndex = 0;
 //            waitingThreadCount = 0;
 
@@ -138,16 +130,13 @@
 //        /// </summary>
 //        /// <param name="task"></param>
 //        /// <param name="param"></param>
-//        public void AddTask(Action<object> task, object param)
-//        {
+//        public void AddTask(Action<object> task, object param) {
 //            tasks.Add(task);
 //            parameters.Add(param);
 //        }
 
-//        private void ThreadProc()
-//        {
-//            while (true)
-//            {
+//        private void ThreadProc() {
+//            while (true) {
 //                Interlocked.Increment(ref waitingThreadCount);
 //                waitHandleA.WaitOne();
 //                PumpTasks();
@@ -158,24 +147,20 @@
 //            }
 //        }
 
-//        private void PumpTasks()
-//        {
+//        private void PumpTasks() {
 //            int count = tasks.Count;
 
-//            while (currentTaskIndex < count)
-//            {
+//            while (currentTaskIndex < count) {
 //                int taskIndex = currentTaskIndex;
 
 //                if (taskIndex == Interlocked.CompareExchange(ref currentTaskIndex, taskIndex + 1, taskIndex)
-//                    && taskIndex < count)
-//                {
+//                    && taskIndex < count) {
 //                    tasks[taskIndex](parameters[taskIndex]);
 //                }
 //            }
 //        }
 
-//        private static void ThreadSleep(int dueTime)
-//        {
+//        private static void ThreadSleep(int dueTime) {
 //#if PORTABLE
 //            Task.Delay(dueTime).Wait();
 //#else
@@ -187,8 +172,7 @@
 //        private delegate void ThreadStart();
 //#endif
 
-//        private static Thread NewThread(ThreadStart action)
-//        {
+//        private static Thread NewThread(ThreadStart action) {
 //#if PORTABLE
 //            return new Thread(action.Invoke, TaskCreationOptions.LongRunning);
 //#else

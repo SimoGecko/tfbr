@@ -32,7 +32,7 @@ namespace BRS.Scripts.Elements {
             Invoke(StartDelay, () => _active = true);
             Audio.Play("active_magnet", transform.position);
             ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy, 1.5f);
-            new Timer(Duration, () => RemoveMagnet());
+            new Timer(Duration, () => RemoveMagnet(), boundToRound:true);
 
             PostProcessingManager.Instance.ActivateWave(transform.position, deactivate: true, deactivateAfter: Duration);
         }

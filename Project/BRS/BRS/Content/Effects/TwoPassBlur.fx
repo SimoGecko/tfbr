@@ -30,40 +30,30 @@ float BlurWeights[7] =
    0.002216
 };
 
-float axWeights[7] =
-{
-   0.5,
-   0.3,
-   0.1,
-   0.5,
-   0.5,
-   0.5,
-   0.5
-};
-
-
 
 float4 generalBlur(float4 pos : SV_POSITION, float4 color1 : COLOR0, float2 textureCoordinate : TEXCOORD0, bool horizontal) : COLOR0
 {
+	int usedPixels = 16;
+	float4 result = tex2D(TextureSampler, textureCoordinate.xy) * 1.0/usedPixels;
+	float stepSize = 1;
 	
-	float4 result = tex2D(TextureSampler, textureCoordinate.xy) * 0.199471;
-	
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < usedPixels; ++i) {
 		
 		float2 dis;
 		if(horizontal) {
-			dis = float2(3 * i / screenSize.x, 0.0);
+			dis = float2(stepSize * i / screenSize.x, 0.0);
 		} else {
-			dis = float2(0.0, 3 * i / screenSize.y);
+			dis = float2(0.0, stepSize * i / screenSize.y);
 		}
 		float weight = 1.0;
 		
-		if(i == 1) weight = 0.176033;
-		if(i == 2) weight = 0.120985;
-		if(i == 3) weight = 0.064759;
-		if(i == 4) weight = 0.026995;
-		if(i == 5) weight = 0.008764;
-		if(i == 6) weight = 0.002216;
+		//if(i == 1) weight = 0.176033;
+		//if(i == 2) weight = 0.120985;
+		//if(i == 3) weight = 0.064759;
+		//if(i == 4) weight = 0.026995;
+		//if(i == 5) weight = 0.008764;
+		//if(i == 6) weight = 0.002216;
+		if (i >= 1) weight = 1.0/ (2*usedPixels);
 		result += tex2D(TextureSampler, textureCoordinate.xy + dis) * weight;
 		result += tex2D(TextureSampler, textureCoordinate.xy - dis) * weight;
 	}
@@ -104,12 +94,16 @@ float4 PixelShaderFunctionVertical(float4 pos : SV_POSITION, float4 color1 : COL
 //-------------------------- TECHNIQUES ----------------------------------------
 technique Blur
 {
-    pass HorizontalBlur
-    {
-        PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
-    }
-	pass VerticalBlur
-    {
-        PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
-    }
+	pass HorizontalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
+	}
+	pass VerticalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
+	}
+	pass HorizontalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
+	}
+	pass VerticalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
+	}
 }

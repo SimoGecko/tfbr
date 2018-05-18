@@ -40,7 +40,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX3_T_RayStraight",
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 
@@ -69,8 +69,8 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX3_T_GlowStar",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(1),
-                    // Create a wind effect by tilting the gravity vector sideways.
+                    Duration = 1.0f,
+                    
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 
@@ -107,9 +107,12 @@ namespace BRS.Scripts.Particles3D {
 
         }
 
+        /// <summary>
+        /// Create a random sample on a circle witha given radius on agiven height
+        /// </summary>
+        /// <param name="radius">Radius of the circle</param>
+        /// <param name="height">Height of the circle</param>
         Vector3 RandomPointOnCircle(float radius, float height) {
-            
-
             double angle = _random.NextDouble() * Math.PI * 2;
 
             float x = (float)Math.Cos(angle);

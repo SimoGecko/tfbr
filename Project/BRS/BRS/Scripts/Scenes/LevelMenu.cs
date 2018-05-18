@@ -2,7 +2,9 @@
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework.Graphics;
 using BRS.Engine.PostProcessing;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
+using BRS.Scripts.UI;
 
 namespace BRS.Scripts.Scenes {
 
@@ -33,19 +35,31 @@ namespace BRS.Scripts.Scenes {
         /// </summary>
         void MenuScene() {
             Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/menu_inside"));
-            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
-            insideScene.material = insideMat;
-
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/menu_outside"));
-            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
-            outsideScene.material = outsideMat;
-
             Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+
+            // Model instanciation
+            HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
+            HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
+            HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
+
+
+            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
+            insideScene.DrawOrder = 1;
+            insideScene.material = insideMat;
+            insideScene.tag = ObjectTag.Ground;
+
+            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
+            outsideScene.DrawOrder = 2;
+            outsideScene.material = outsideMat;
+            outsideScene.tag = ObjectTag.Ground;
+
             GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
+            infinitePlane.DrawOrder = 200;
             infinitePlane.material = groundMat;
-            //infinitePlane.transform.position = new;
             infinitePlane.transform.Scale(1000);
-            infinitePlane.transform.position = new Vector3(0, 0, -.1f);
+            infinitePlane.transform.position = new Vector3(0, -5.0f, 0);
+
         }
 
         /// <summary>
@@ -81,7 +95,9 @@ namespace BRS.Scripts.Scenes {
 
             // Define the menu
             GameObject Manager = new GameObject("manager");
+            Manager.AddComponent(new Suggestions());
             Manager.AddComponent(new MenuManager());
+            
         }
 
         #endregion

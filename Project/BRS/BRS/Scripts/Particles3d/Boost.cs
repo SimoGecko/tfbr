@@ -4,7 +4,6 @@
 using BRS.Engine;
 using BRS.Engine.Particles;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace BRS.Scripts.Particles3D {
     /// <summary>
@@ -33,16 +32,16 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "CFX_T_Flame1_ABP",
                     MaxParticles = 200,
-                    ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(.35f),
+                    ParticlesPerRound = 5,
+                    Duration = 0.85f,
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.0f,
 
                     MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 0.1f,
+                    MaxHorizontalVelocity = 0.5f,
 
-                    MinVerticalVelocity = 0.01f,
-                    MaxVerticalVelocity = 0.01f,
+                    MinVerticalVelocity = 1.3f,
+                    MaxVerticalVelocity = 1.5f,
 
                     MinColor = new Color(255, 255, 255, 0),
                     MaxColor = new Color(255, 255, 255, 128),

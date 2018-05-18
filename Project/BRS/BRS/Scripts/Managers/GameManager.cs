@@ -2,8 +2,10 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Engine.Menu;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace BRS.Scripts.Managers {
     static class GameManager {
@@ -41,13 +43,34 @@ namespace BRS.Scripts.Managers {
 
 
         // commands 
+        static Tuple<bool, int> CheckPauseForAllControllers() {
+            bool pressed = false;
+            int controllerNo = 0;
+
+            for (int i = 0; i < NumPlayers; ++i) {
+                if (Input.GetButtonDown(Buttons.Start, i)) {
+                    pressed = true;
+                    controllerNo = i;
+                }
+            }
+
+            return new Tuple<bool, int>(pressed, controllerNo);
+        }
+
         static void CheckForPause() {
-            if (Input.GetKeyDown(Keys.P) || Input.GetButtonDown(Buttons.Start)) { // TODO all players can press start
+            Tuple<bool, int> controllerPaused = CheckPauseForAllControllers();
+            if (Input.GetKeyDown(Keys.P) || controllerPaused.Item1) {
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
 
-                if (MenuManager.Instance.MenuRect.ContainsKey("pause"))
+                if (MenuManager.Instance.MenuRect.ContainsKey("pause")) {
                     MenuManager.Instance.MenuRect["pause"].active = GamePaused;
+
+                    foreach (Component comp in MenuManager.Instance.MenuRect["pause"].components)
+                        if (comp is MenuComponent MC)
+                            MC.IndexAssociatedPlayerScreen = controllerPaused.Item2;
+                    
+                }
             }
         }
 

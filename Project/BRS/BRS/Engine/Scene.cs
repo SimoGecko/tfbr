@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 using BRS.Scripts.Scenes;
 using Microsoft.Xna.Framework;
@@ -65,7 +66,7 @@ namespace BRS.Engine {
 
             //GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
-            Time.ClearTimers();
+            HardwareRendering.Reset();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();

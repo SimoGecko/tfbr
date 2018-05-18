@@ -39,7 +39,7 @@ namespace BRS.Scripts.Elements {
                 new Timer(SlowdownTime, () => {
                     pM.SetSlowdown(false);
                     pM.SetOilTracks(false);
-                });
+                }, boundToRound:true);
                 Audio.Play("catched_trap", transform.position);
 
                 ElementManager.Instance.Remove(this.gameObject);

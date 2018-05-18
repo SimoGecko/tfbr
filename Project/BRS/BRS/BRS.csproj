@@ -147,8 +147,13 @@
     <Compile Include="Engine\Physics\ShapeType.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingEffect.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
+    <Compile Include="Engine\PostProcessing\PostprocessingType.cs" />
     <Compile Include="Engine\PostProcessing\Skybox.cs" />
     <Compile Include="Engine\Prefabs.cs" />
+    <Compile Include="Engine\Rendering\HardwareRendering.cs" />
+    <Compile Include="Engine\Rendering\ModelType.cs" />
+    <Compile Include="Engine\Rendering\RenderingType.cs" />
+    <Compile Include="Engine\Rendering\VertexPositionAlpha.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
     <Compile Include="Engine\SpriteSheet.cs" />
@@ -156,6 +161,7 @@
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Engine\UserInterface.cs" />
+    <Compile Include="Engine\Rendering\ModelInstance.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
     <Compile Include="Engine\Utilities\Distribution.cs" />
@@ -290,6 +296,7 @@
     <Content Include="Assets\WideTile.scale-200.png" />
     <Content Include="Load\PolicePaths_level1.txt" />
     <Content Include="Load\PolicePaths_level2.txt" />
+    <Content Include="Load\MenuPanels\Tutorial4.txt" />
     <Content Include="Load\Rankings\ranking10 min1P.txt" />
     <Content Include="Load\Rankings\ranking10 min2P.txt" />
     <Content Include="Load\Rankings\ranking10 min4P.txt" />

@@ -763,17 +763,17 @@ namespace Jitter
 
         private void HandleArbiter(int iterations, bool multiThreaded)
         {
-            //if (multiThreaded)
-            //{
-            //    for (int i = 0; i < islands.Count; i++)
-            //    {
-            //        if(islands[i].IsActive()) threadManager.AddTask(arbiterCallback, islands[i]);
-            //    }
-
-            //    threadManager.Execute();
-            //}
-            //else
-            //{
+            // if (multiThreaded)
+            // {
+            //     for (int i = 0; i < islands.Count; i++)
+            //     {
+            //         if(islands[i].IsActive()) threadManager.AddTask(arbiterCallback, islands[i]);
+            //     }
+            // 
+            //     threadManager.Execute();
+            // }
+            // else
+            // {
                 for (int i = 0; i < islands.Count; i++)
                 {
                     if (islands[i].IsActive()) arbiterCallback(islands[i]);

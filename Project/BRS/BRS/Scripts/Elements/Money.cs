@@ -49,7 +49,7 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        protected override void DoPickup(Player p) {
+        public override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
                 Audio.Play("pickup_" + type.ToString().ToLower(), transform.position);

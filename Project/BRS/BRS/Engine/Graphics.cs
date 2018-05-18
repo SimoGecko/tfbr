@@ -2,6 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
+using System.Collections.Generic;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -53,6 +55,7 @@ namespace BRS.Engine {
         public static Effect skyboxEffect;
         //public static Texture2D lightMap;
         //public static Texture2D textureCol;
+
         //reference
 
         public static void Start() {
@@ -70,10 +73,11 @@ namespace BRS.Engine {
         // commands
         //GRAPHICS METHODS
         public static void DrawModel(Model model, Matrix view, Matrix proj, Matrix world, Material mat = null) {
+            //DrawModelInstanciated(model, world, view, proj, instances);
             //selects which effect to use based on material
             if (mat == null) DrawModelSimple(model, view, proj, world);
             else if (mat.baked) DrawModelBaked(model, mat.colorTex, mat.lightTex, view, proj, world);
-            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated, mat.Alpha);
+            else if (mat.textured) DrawModelTextured(model, mat.colorTex, view, proj, world, mat.IsTransparent, mat.IsAlphaAnimated);
             else DrawModelMaterial(model, view, proj, world, mat);
         }
 
@@ -82,7 +86,7 @@ namespace BRS.Engine {
         static void DrawModelSimple(Model model, Matrix view, Matrix proj, Matrix world) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (Effect effect in mesh.Effects) {
-                    if(effect is BasicEffect) {
+                    if (effect is BasicEffect) {
                         BasicEffect beff = (BasicEffect)effect;
                         beff.EnableDefaultLighting();
 
@@ -90,7 +94,7 @@ namespace BRS.Engine {
                         beff.View = view;
                         beff.Projection = proj;
                     }
-                    
+
                 }
                 mesh.Draw(); // outside, not inside
             }
@@ -115,7 +119,7 @@ namespace BRS.Engine {
             }
         }
 
-        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated, float alpha) {
+        static void DrawModelTextured(Model model, Texture2D colorTex, Matrix view, Matrix proj, Matrix world, bool isTransparent, bool isAlphaAnimated) {
             foreach (ModelMesh mesh in model.Meshes) {
                 foreach (ModelMeshPart part in mesh.MeshParts) {
                     part.Effect = textureEffect;
@@ -126,7 +130,6 @@ namespace BRS.Engine {
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
                     textureEffect.Parameters["IsTransparent"].SetValue(isTransparent); // why the fuck would you modify this
                     textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
-                    textureEffect.Parameters["Alpha"].SetValue(alpha);
                 }
                 mesh.Draw();
             }
@@ -146,7 +149,7 @@ namespace BRS.Engine {
                 mesh.Draw();
             }
         }
-        
+
 
         static void DrawModelWithEffect(Model model, Matrix world, Matrix view, Matrix projection, Effect effect) {
             foreach (ModelMesh mesh in model.Meshes) {
