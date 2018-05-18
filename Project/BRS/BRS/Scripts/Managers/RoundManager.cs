@@ -63,7 +63,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void RestartRound() { // done at beginning of every round
-            roundTimer = new Timer(RoundTime, OnRoundEnd);
+            roundTimer = new Timer(RoundTime, OnRoundEnd, boundToRound:true);
             roundNumber++;
             roundStarted = calledPolice = roundEnded = false;
             RoundUI.instance.ShowEndRound(false);
@@ -102,8 +102,8 @@ namespace BRS.Scripts.Managers {
             roundStarted = true;
             OnRoundStartAction?.Invoke();
             PoliceManager.Instance.StartRound();
-            new Timer(RoundTime- 60, () => OnRoundAlmostEnd());
-            new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing());
+            new Timer(RoundTime- 60, () => OnRoundAlmostEnd(), boundToRound:true);
+            new Timer(RoundTime-TimeBeforePolice, () => OnPoliceComing(), boundToRound:true);
         }
 
         void OnRoundAlmostEnd() {
@@ -147,6 +147,9 @@ namespace BRS.Scripts.Managers {
             PostProcessingManager.Instance.RemoveShader(PostprocessingType.BlackAndWhite);
             PostProcessingManager.Instance.RemoveShader(PostprocessingType.ShockWave);
             PostProcessingManager.Instance.RemoveShader(PostprocessingType.Wave);
+
+            // Cleanup timers
+            Time.ClearRoundTimers();
 
             foreach (Base b in ElementManager.Instance.Bases()) b.NotifyRoundEnd();
 

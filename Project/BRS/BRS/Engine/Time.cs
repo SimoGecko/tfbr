@@ -22,7 +22,7 @@ namespace BRS.Engine {
         public static List<Timer> timers = new List<Timer>();
 
         public static float CurrentTime { get { return (float)Gt.TotalGameTime.TotalSeconds; } }
-        public static float DeltaTime { get { return (float)Gt.ElapsedGameTime.TotalSeconds*TimeScale; } }
+        public static float DeltaTime { get { return (float)Gt.ElapsedGameTime.TotalSeconds * TimeScale; } }
         public static int OneFrame { get { return Gt.ElapsedGameTime.Milliseconds; } }
         public static float FrameRate { get { return 1 / (float)Gt.ElapsedGameTime.TotalSeconds; } } // TODO draw this on screen
 
@@ -33,7 +33,11 @@ namespace BRS.Engine {
 
             CheckTimescaleInput();
             DisplayInfo();
-            
+
+            if (needClearTimers) {
+                ActualClearRoundTimers();
+            }
+
 
             //Debug.Log("Start with " + timers.Count + " timers");
             //process timers
@@ -61,7 +65,7 @@ namespace BRS.Engine {
         }
 
         public static Task WaitForSeconds(float s) { // used in coroutines
-            int millisec = MathHelper.Max(1, (int)(s * 1000/TimeScale));
+            int millisec = MathHelper.Max(1, (int)(s * 1000 / TimeScale));
             return Task.Delay(millisec);
         }
         public static Task WaitForFrame() { // used in coroutines
@@ -70,38 +74,14 @@ namespace BRS.Engine {
         }
 
         // Todo: Think about this one in more detail
-        public static void ClearTimers() {
+        public static void ClearRoundTimers() {
             needClearTimers = true;
-            
-            //lock (new object())
-            //{
-            //    for (int i = 0; i < timers.Count; ++i)
-            //    {
-            //        if (!timers[i].AlwaysRun)
-            //        {
-            //            timers.RemoveAt(i--);
-            //        }
-            //    }
-            //}
-
-            //var newList = new List<Timer>();
-
-            //foreach (Timer timer in timers)
-            //{
-            //    if (timer.AlwaysRun)
-            //    {
-            //        newList.Add(timer);
-            //    }
-            //}
-
-            //timers = newList;
-
         }
 
-        static void ActualClearTimers() {
-            for (int i = 0; i < timers.Count; ++i) {
-                if (!timers[i].AlwaysRun) {
-                    timers.RemoveAt(i--);
+        static void ActualClearRoundTimers() {
+            for (int i = timers.Count - 1; i >= 0; --i) {
+                if (timers[i].BoundToRound) {
+                    timers.RemoveAt(i);
                 }
             }
             needClearTimers = false;

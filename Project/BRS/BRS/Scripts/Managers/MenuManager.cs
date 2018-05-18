@@ -366,6 +366,7 @@ namespace BRS.Scripts.Managers {
         /// Start (directly) the game
         /// </summary>
         public void StartGameFunction(object sender, EventArgs e) {
+            Time.ClearRoundTimers();
             ScenesCommunicationManager.loadOnlyPauseMenu = true;
             GameManager.state = GameManager.State.Playing;
             SceneManager.LoadGame = true;
@@ -421,6 +422,7 @@ namespace BRS.Scripts.Managers {
         /// Load menu
         /// </summary>
         public void LoadMenuFunction(object sender, EventArgs e) {
+            Time.ClearRoundTimers();
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
         }

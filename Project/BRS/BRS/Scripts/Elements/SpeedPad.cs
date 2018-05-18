@@ -37,7 +37,7 @@ namespace BRS.Scripts.Elements {
                 pM.SetSpeedPad(true);
                 Audio.Play("speedpad", transform.position);
 
-                new Timer(EffectTime, () => pM.SetSpeedPad(false));
+                new Timer(EffectTime, () => pM.SetSpeedPad(false), boundToRound:true);
             }
         }
 
