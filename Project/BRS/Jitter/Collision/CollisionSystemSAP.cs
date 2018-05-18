@@ -97,18 +97,18 @@ namespace Jitter.Collision
 
             active.Clear();
 
-            if (multiThreaded)
-            {
-                for (int i = 0; i < bodyList.Count; i++)
-                    AddToActiveMultithreaded(bodyList[i], false);
+            //if (multiThreaded)
+            //{
+            //    for (int i = 0; i < bodyList.Count; i++)
+            //        AddToActiveMultithreaded(bodyList[i], false);
 
-                threadManager.Execute();
-            }
-            else
-            {
+            //    threadManager.Execute();
+            //}
+            //else
+            //{
                 for (int i = 0; i < bodyList.Count; i++)
                     AddToActive(bodyList[i], false);
-            }
+            //}
         }
 
         #region private void AddToActiveSingleThreaded(IBroadphaseEntity body, bool addToList)
@@ -156,52 +156,52 @@ namespace Jitter.Collision
         #endregion
 
         #region private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
-        private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
-        {
-            float xmin = body.BoundingBox.Min.X;
-            int n = active.Count;
+        //private void AddToActiveMultithreaded(IBroadphaseEntity body, bool addToList)
+        //{
+        //    float xmin = body.BoundingBox.Min.X;
+        //    int n = active.Count;
 
-            bool thisInactive = body.IsStaticOrInactive;
+        //    bool thisInactive = body.IsStaticOrInactive;
 
-            JBBox acBox, bodyBox;
+        //    JBBox acBox, bodyBox;
 
 
-            for (int i = 0; i != n; )
-            {
-                IBroadphaseEntity ac = active[i];
-                acBox = ac.BoundingBox;
+        //    for (int i = 0; i != n; )
+        //    {
+        //        IBroadphaseEntity ac = active[i];
+        //        acBox = ac.BoundingBox;
 
-                if (acBox.Max.X < xmin)
-                {
-                    n--;
-                    active.RemoveAt(i);
-                }
-                else
-                {
-                    bodyBox = body.BoundingBox;
+        //        if (acBox.Max.X < xmin)
+        //        {
+        //            n--;
+        //            active.RemoveAt(i);
+        //        }
+        //        else
+        //        {
+        //            bodyBox = body.BoundingBox;
 
-                    if (!(thisInactive && ac.IsStaticOrInactive) &&
-                        (((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)) &&
-                        ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
-                    {
-                        if (base.RaisePassedBroadphase(ac, body))
-                        {
-                            BroadphasePair pair = BroadphasePair.Pool.GetNew();
+        //            if (!(thisInactive && ac.IsStaticOrInactive) &&
+        //                (((bodyBox.Max.Z >= acBox.Min.Z) && (bodyBox.Min.Z <= acBox.Max.Z)) &&
+        //                ((bodyBox.Max.Y >= acBox.Min.Y) && (bodyBox.Min.Y <= acBox.Max.Y))))
+        //            {
+        //                if (base.RaisePassedBroadphase(ac, body))
+        //                {
+        //                    BroadphasePair pair = BroadphasePair.Pool.GetNew();
 
-                            if (swapOrder) { pair.Entity1 = body; pair.Entity2 = ac; }
-                            else { pair.Entity2 = body; pair.Entity1 = ac; }
-                            swapOrder = !swapOrder;
+        //                    if (swapOrder) { pair.Entity1 = body; pair.Entity2 = ac; }
+        //                    else { pair.Entity2 = body; pair.Entity1 = ac; }
+        //                    swapOrder = !swapOrder;
 
-                            threadManager.AddTask(detectCallback, pair);
-                        }
-                    }
+        //                    threadManager.AddTask(detectCallback, pair);
+        //                }
+        //            }
 
-                    i++;
-                }
-            }
+        //            i++;
+        //        }
+        //    }
 
-            active.Add(body);
-        }
+        //    active.Add(body);
+        //}
         #endregion
 
         private void DetectCallback(object obj)

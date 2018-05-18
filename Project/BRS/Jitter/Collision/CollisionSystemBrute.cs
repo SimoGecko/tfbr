@@ -84,32 +84,32 @@ namespace Jitter.Collision
         {
             int count = bodyList.Count;
 
-            if (multiThreaded)
-            {
-                for (int i = 0; i < count; i++)
-                {
-                    for (int e = i + 1; e < count; e++)
-                    {
-                        if (!this.CheckBothStaticOrInactive(bodyList[i], bodyList[e]) && this.CheckBoundingBoxes(bodyList[i], bodyList[e]))
-                        {
-                            if (RaisePassedBroadphase(bodyList[i], bodyList[e]))
-                            {
-                                BroadphasePair pair = BroadphasePair.Pool.GetNew();
+            //if (multiThreaded)
+            //{
+            //    for (int i = 0; i < count; i++)
+            //    {
+            //        for (int e = i + 1; e < count; e++)
+            //        {
+            //            if (!this.CheckBothStaticOrInactive(bodyList[i], bodyList[e]) && this.CheckBoundingBoxes(bodyList[i], bodyList[e]))
+            //            {
+            //                if (RaisePassedBroadphase(bodyList[i], bodyList[e]))
+            //                {
+            //                    BroadphasePair pair = BroadphasePair.Pool.GetNew();
 
-                                if (swapOrder) { pair.Entity1 = bodyList[i]; pair.Entity2 = bodyList[e]; }
-                                else { pair.Entity2 = bodyList[e]; pair.Entity1 = bodyList[i]; }
-                                swapOrder = !swapOrder;
+            //                    if (swapOrder) { pair.Entity1 = bodyList[i]; pair.Entity2 = bodyList[e]; }
+            //                    else { pair.Entity2 = bodyList[e]; pair.Entity1 = bodyList[i]; }
+            //                    swapOrder = !swapOrder;
 
-                                threadManager.AddTask(detectCallback, pair);
-                            }
-                        }
-                    }
-                }
+            //                    threadManager.AddTask(detectCallback, pair);
+            //                }
+            //            }
+            //        }
+            //    }
 
-                threadManager.Execute();
-            }
-            else
-            {
+            //    threadManager.Execute();
+            //}
+            //else
+            //{
                 for (int i = 0; i < count; i++)
                 {
                     for (int e = i + 1; e < count; e++)
@@ -125,7 +125,7 @@ namespace Jitter.Collision
                         }
                     }
                 }
-            }
+            //}
         }
         #endregion
 
