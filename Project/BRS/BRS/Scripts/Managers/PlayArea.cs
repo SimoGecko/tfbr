@@ -51,6 +51,10 @@ namespace BRS.Scripts {
             return new Vector2(x0, y0);
         }
 
+        public static bool IsInsidePlayArea(Vector3 p) {
+            return SpawnArea.Contains(p.X, p.Z);
+        }
+
 
         // other
 

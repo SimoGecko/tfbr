@@ -21,7 +21,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 20;
+        public static int RoundTime = 120;
         public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
@@ -75,6 +75,10 @@ namespace BRS.Scripts.Managers {
         }
 
         public override void Update() {
+            if (roundEnded) {
+                //check for input to restart
+                if (InputRestart()) TryRestartRound();
+            }
         }
 
 
@@ -83,7 +87,11 @@ namespace BRS.Scripts.Managers {
 
 
         // commands
-
+        bool InputRestart() {
+            bool Apressed = false;
+            for (int i = 0; i < GameManager.NumPlayers; i++) Apressed = Apressed || Input.GetButtonDown(Buttons.A, i);
+            return Input.GetKeyDown(Keys.Space) || Input.GetKeyDown(Keys.Space) || Apressed;
+        }
 
         async void CountDown() {
             for (int i = 3; i >= 0; i--) {
@@ -168,7 +176,7 @@ namespace BRS.Scripts.Managers {
 
             //ready to restart
             OnRoundEndAction?.Invoke();
-            new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
+            //new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
         }
 
         void TryRestartRound() {

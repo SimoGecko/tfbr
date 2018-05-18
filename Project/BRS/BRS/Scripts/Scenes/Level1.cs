@@ -41,6 +41,7 @@ namespace BRS.Scripts.Scenes {
             CreateBases();
             CreateSpecialObjects();
             SetMenuShaderEffects();
+
         }
 
 

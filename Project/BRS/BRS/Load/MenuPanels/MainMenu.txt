@@ -71,3 +71,21 @@ Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Options Play null null
 NameSwitchTo: credits
 </Button>
+
+<Image>
+NameIdentifier: TitleGame
+Texture: titleGame
+Position: 120 140
+Active: yes
+ScaleHeight: 0.25
+ScaleWidth: 0.25
+</Image>
+
+<Image>
+NameIdentifier: Paral
+Texture: paral
+Position: 120 570
+Active: yes
+ScaleHeight: 0.16
+ScaleWidth: 0.16
+</Image>

@@ -109,6 +109,8 @@ namespace BRS.Scripts.UI {
             Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
             Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
             Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
+            Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
+            Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -139,7 +141,9 @@ namespace BRS.Scripts.UI {
                 { "trash", textureIconTrash },
                 { "thunder", textureIconThunder },
                 { "decline", textureIconDecline },
-                { "dollar", textureIconDollar }
+                { "dollar", textureIconDollar },
+                { "titleGame", textureTitle },
+                { "paral", textureParal }
             };
 
             // Set mapping name - functions
@@ -180,7 +184,7 @@ namespace BRS.Scripts.UI {
 
         // Normal menu
         public void BuildMenuPanels(string panelPlay2Name) {
-            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true, offsetWidth: 420);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");

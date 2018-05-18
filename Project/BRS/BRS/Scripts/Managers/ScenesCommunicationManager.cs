@@ -46,9 +46,9 @@ namespace BRS.Scripts.Managers {
         /// <summary>
         /// Store the color of each team
         /// </summary>
-        public static Color[] ColorModel = { new Color(215, 173, 35), Graphics.Red, Graphics.Green, Graphics.Blue, Graphics.Yellow, Color.Violet };
-        public static Color TeamAColor = new Color(215, 173, 35);
-        public static Color TeamBColor = Graphics.Red;
+        public static Color[] ColorModel = { Graphics.Yellow, Graphics.Green, Graphics.Blue, Graphics.Purple, Graphics.Pink, Graphics.Red, Graphics.Orange };
+        public static Color TeamAColor = Graphics.Yellow;
+        public static Color TeamBColor = Graphics.Green;
 
         /// <summary>
         /// Structure that store the statistic of a model
