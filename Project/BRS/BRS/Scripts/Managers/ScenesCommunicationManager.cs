@@ -46,9 +46,9 @@ namespace BRS.Scripts.Managers {
         /// <summary>
         /// Store the color of each team
         /// </summary>
-        public static Color[] ColorModel = { new Color(215, 173, 35), Graphics.Red, Graphics.Green, Graphics.Blue, Graphics.Yellow, Color.Violet };
-        public static Color TeamAColor = new Color(215, 173, 35);
-        public static Color TeamBColor = Graphics.Red;
+        public static Color[] ColorModel = { Graphics.Yellow, Graphics.Green, Graphics.Blue, Graphics.Purple, Graphics.Pink, Graphics.Red, Graphics.Orange };
+        public static Color TeamAColor = Graphics.Yellow;
+        public static Color TeamBColor = Graphics.Green;
 
         /// <summary>
         /// Structure that store the statistic of a model
@@ -69,9 +69,9 @@ namespace BRS.Scripts.Managers {
         /// <summary>
         /// Define the possible statistic of each model
         /// </summary>
-        public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 6, 4);
-        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 6, 4), new ModelsStatsStruct(27, 4.667f, 4, 2.667f), new ModelsStatsStruct(18, 7, 4, 2.667f) };
-        public static string[] NameStats = { "Capacity", "Distance of attack", "Speed (min-max)" };
+        public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 7, 3);
+        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 7, 3), new ModelsStatsStruct(27, 4.667f, 4.667f, 2), new ModelsStatsStruct(18, 7, 4.667f, 2) };
+        public static string[] NameStats = { "Capacity", "Distance of attack", "Speed" };
 
         /// <summary>
         /// Define the possible game modes name

@@ -25,6 +25,11 @@ namespace BRS.Engine.Menu {
         /// </summary>
         public string nameIdentifier;
 
+        /// <summary>
+        /// Index of the associate playerScreen for split screen menu
+        /// </summary>
+        public int IndexAssociatedPlayerScreen = 0;
+
         #endregion
 
         #region Constructor

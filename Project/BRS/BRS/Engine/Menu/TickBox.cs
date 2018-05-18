@@ -135,7 +135,7 @@ namespace BRS.Engine.Menu {
                 var col = colour;
 
                 if (IsHovering)
-                    col = new Color(110, 235, 150);
+                    col = Graphics.Green;
 
                 UserInterface.DrawPicture(_textureNotClicked, Rectangle, null, Align.TopLeft, Align.Center, col: col);
                 if (IsClicked)

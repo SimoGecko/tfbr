@@ -33,7 +33,7 @@ Position: 1080 455
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 234 67 53
+Color: 109 202 35
 </Image>
 
 <Image>
@@ -52,7 +52,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 234 67 53
+Color: 109 202 35
 </Image>
 
 <Image>
@@ -71,7 +71,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 234 67 53
+Color: 109 202 35
 </Image>
 
 <Button>
@@ -105,7 +105,7 @@ Position: 1005 620
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 234 67 53
+Color: 109 202 35
 </Button>
 
 <Button>

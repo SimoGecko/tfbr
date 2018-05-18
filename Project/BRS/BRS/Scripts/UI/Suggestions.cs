@@ -37,8 +37,10 @@ namespace BRS.Scripts.UI {
             _xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
             _commands = new List<ButtonCommand>();
 
-            Player p = ElementManager.Instance.Player(0);
-            if (p != null) Player = p.transform;
+            if (ElementManager.Instance != null) {
+                Player p = ElementManager.Instance.Player(0);
+                if (p != null) Player = p.transform;
+            }
         }
 
         public override void Update() {
@@ -76,7 +78,7 @@ namespace BRS.Scripts.UI {
 
 
         // queries
-        Rectangle SourceRectangle(XboxButtons button) {
+        public static Rectangle SourceRectangle(XboxButtons button) {
             int column = (int)button % 4;
             int row = (int)button / 4;
             return new Rectangle(column * AtlasWidth, row * AtlasWidth, AtlasWidth, AtlasWidth);

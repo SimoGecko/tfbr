@@ -32,7 +32,6 @@ namespace BRS.Engine {
             Frame++;
 
             CheckTimescaleInput();
-            DisplayInfo();
 
             if (needClearTimers) {
                 ActualClearRoundTimers();

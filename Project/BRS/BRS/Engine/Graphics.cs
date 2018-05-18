@@ -28,10 +28,17 @@ namespace BRS.Engine {
         private static readonly Color Yellow = new Color(251, 188, 5);*/
 
         //default colors from unity
+        //COLORS USED FOR PLAYERS AND STUFF
+        public static Color Yellow = new Color(255, 198, 13);
         public static Color Green = new Color(109, 202, 35);
         public static Color Blue = new Color(0, 158, 255);
-        public static Color Yellow = new Color(255, 198, 13);
+        public static Color Purple = new Color(162, 86, 255);
+        public static Color Pink = new Color(254, 68, 212);
         public static Color Red = new Color(234, 67, 53);
+        public static Color Orange = new Color(234, 142,53);
+
+
+
         public static Color White = new Color(255, 255, 255);
 
 

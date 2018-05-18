@@ -23,7 +23,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         Effect _ZBufferShader;
-        const string startScene = "LevelMenu";
+        const string startScene = "Level1";
         bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
@@ -32,7 +32,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = false };
+            _graphics = new GraphicsDeviceManager(this) /*{ IsFullScreen = true }*/;
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -102,11 +102,7 @@ namespace BRS {
             GameMode.Start();
             SceneManager.Start();
 
-#if DEBUG
-            SceneManager.LoadScene("Level1");
-#else
-            SceneManager.LoadScene("LevelMenu");
-#endif
+            SceneManager.LoadScene(startScene);
 
             Audio.Start();
 

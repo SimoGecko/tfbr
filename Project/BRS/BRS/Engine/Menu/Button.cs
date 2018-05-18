@@ -65,11 +65,6 @@ namespace BRS.Engine.Menu {
         public string NameMenuToSwitchTo { get; set; }
 
         /// <summary>
-        /// Index of the associate playerScreen for split screen menu
-        /// </summary>
-        public int IndexAssociatedPlayerScreen = 0;
-
-        /// <summary>
         /// Index used for specific indexing in MenuManager
         /// </summary>
         public int Index { get; set; } 

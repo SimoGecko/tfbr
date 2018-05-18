@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using BRS.Engine.PostProcessing;
 using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
+using BRS.Scripts.UI;
 
 namespace BRS.Scripts.Scenes {
 
@@ -94,7 +95,9 @@ namespace BRS.Scripts.Scenes {
 
             // Define the menu
             GameObject Manager = new GameObject("manager");
+            Manager.AddComponent(new Suggestions());
             Manager.AddComponent(new MenuManager());
+            
         }
 
         #endregion
