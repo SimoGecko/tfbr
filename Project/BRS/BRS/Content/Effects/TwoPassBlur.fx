@@ -94,18 +94,16 @@ float4 PixelShaderFunctionVertical(float4 pos : SV_POSITION, float4 color1 : COL
 //-------------------------- TECHNIQUES ----------------------------------------
 technique Blur
 {
-    pass HorizontalBlur
-    {
-        PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
-    }
-	pass VerticalBlur
-    {
-        PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
-    }
-	pass HorizontalBlur1 {
+	pass HorizontalBlur {
 		PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
 	}
-	pass VerticalBlur1 {
+	pass VerticalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
+	}
+	pass HorizontalBlur {
+		PixelShader = compile ps_4_0 PixelShaderFunctionHorizontal();
+	}
+	pass VerticalBlur {
 		PixelShader = compile ps_4_0 PixelShaderFunctionVertical();
 	}
 }
