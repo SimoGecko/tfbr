@@ -1,4 +1,7 @@
-﻿using System;
+﻿// (c) Alexander Lelidis and Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using System;
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Particles;
@@ -6,14 +9,19 @@ using BRS.Scripts.Elements;
 using BRS.Scripts.Particles3D;
 
 namespace BRS.Scripts.PlayerScripts {
-    class BaseParticles : Component { // why is this under player scripts?
-
+    /// <summary>
+    /// Particle-effect for base of the player
+    /// </summary>
+    class BaseParticles : Component { 
+        // why is this under player scripts?
+        // => because it defines the particles of the player base, we could move it to Scripts/Elements as well
+        // used particle types for the base
         private enum PlayerParticleType { CashDrop };
         List<Type> _effects = new List<Type>() { typeof(CashDrop)};
         private ParticleComponent[] _particleComponents;
 
+        // base where the particle emitting systems are attached to
         private Base _base;
-
         // --------------------- BASE METHODS ------------------
 
         public override void Awake() {
@@ -26,10 +34,6 @@ namespace BRS.Scripts.PlayerScripts {
 
                 PlayerParticleType ppt = (PlayerParticleType) Enum.Parse(typeof(PlayerParticleType), type.Name);
                 _particleComponents[(int)ppt] = pc;
-
-                //if (pc is Dust) _dust = pc as Dust;
-                //if (pc is Boost) _boost = pc as Boost;
-                //if (pc is Cash) _cash = pc as Cash;
             }
         }
 
@@ -44,9 +48,8 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Update() {
             _particleComponents[(int)PlayerParticleType.CashDrop].IsEmitting = _base.FullDeloadDone;
 
-
             foreach (ParticleComponent pc in _particleComponents) {
-                //Debug.Log(pc.GetType().Name + ": " + pc.IsEmitting);
+
                 pc.Update();
             }
         }

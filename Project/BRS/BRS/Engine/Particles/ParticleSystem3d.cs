@@ -12,7 +12,7 @@ using System;
 
 namespace BRS.Engine.Particles {
     /// <summary>
-    /// The main component in charge of displaying particles.
+    /// The main component in charge of displaying 3D particles.
     /// </summary>
     public class ParticleSystem3D : Component {
         #region Fields

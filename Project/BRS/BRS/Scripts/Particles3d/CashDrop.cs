@@ -14,7 +14,7 @@ namespace BRS.Scripts.Particles3D {
 
         // --------------------- VARIABLES ---------------------
 
-        ParticleSystem3D _smokePlumeParticles;
+        ParticleSystem3D _cashDropParticles;
 
         public override bool IsEmitting { get; set; } = true;
 
@@ -25,7 +25,7 @@ namespace BRS.Scripts.Particles3D {
         /// Initialization of the particle-system
         /// </summary>
         public override void Awake() {
-            _smokePlumeParticles = new ParticleSystem3D {
+            _cashDropParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "dollar2",
                     MaxParticles = 2,
@@ -41,9 +41,6 @@ namespace BRS.Scripts.Particles3D {
                     MinVerticalVelocity = 2.5f,
                     MaxVerticalVelocity = 3.0f,
 
-                    //MinColor = new Color(255, 215, 0, 255),
-                    //MaxColor = new Color(255, 215, 0, 128),
-
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
 
@@ -56,14 +53,14 @@ namespace BRS.Scripts.Particles3D {
             };
 
 
-            _smokePlumeParticles.Awake();
+            _cashDropParticles.Awake();
         }
 
         /// <summary>
         /// Initialize the particle system
         /// </summary>
         public override void Start() {
-            _smokePlumeParticles.Start();
+            _cashDropParticles.Start();
         }
 
         /// <summary>
@@ -71,10 +68,10 @@ namespace BRS.Scripts.Particles3D {
         /// </summary>
         public override void Update() {
             if (IsEmitting) {
-                _smokePlumeParticles.AddParticles(transform.position, Vector3.Zero);
+                _cashDropParticles.AddParticles(transform.position, Vector3.Zero);
             }
 
-            _smokePlumeParticles.Update();
+            _cashDropParticles.Update();
         }
         
         /// <summary>
@@ -82,7 +79,7 @@ namespace BRS.Scripts.Particles3D {
         /// </summary>
         /// <param name="camera">Camera to draw</param>
         public override void Draw3D(Camera camera) {
-            _smokePlumeParticles.Draw3D(camera);
+            _cashDropParticles.Draw3D(camera);
         }
     }
 }
