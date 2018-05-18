@@ -30,7 +30,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX4Smoke",
                     MaxParticles = 1500,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(3),
+                    Duration = 3.0f,
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(-5, -2.5f, 0),
                     EndVelocity = 0.75f,

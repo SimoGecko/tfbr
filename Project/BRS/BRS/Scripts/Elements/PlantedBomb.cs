@@ -42,7 +42,7 @@ namespace BRS.Scripts.Elements {
             }
             if(doProximityCheck)
                 new Timer(TimeBeforeProximityCheck, () => checkProximity = true);
-            new Timer(TimeBeforeExplosion, Explode);
+            new Timer(TimeBeforeExplosion, Explode, boundToRound:true);
         }
 
         void CheckProximity() {

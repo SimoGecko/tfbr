@@ -29,10 +29,6 @@ namespace BRS.Scripts.Elements {
             Invoke(DelayBeforePickup, () => CanPickup = true);
         }
 
-        public override void Update() {
-            
-        }
-
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && CanPickup) {
@@ -58,7 +54,7 @@ namespace BRS.Scripts.Elements {
             
         }*/
 
-        protected virtual void DoPickup(Player p) {
+        public virtual void DoPickup(Player p) {
             //fill
         }
 

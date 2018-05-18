@@ -63,7 +63,7 @@ namespace BRS.Scripts.Elements.Lighting {
         public override void Update() {
             for (int i = 0; i < Followers.Count; ++i) {
                 float t = _alphaStart[i] + Speed * (float)Time.Gt.TotalGameTime.TotalSeconds;
-                Followers[i].GameObject.material.Alpha = MathHelper.Clamp((float)Math.Sin(t), 0.0f, 1.0f);
+                Followers[i].GameObject.Alpha = MathHelper.Clamp((float)Math.Sin(t), 0.0f, 1.0f);
             }
         }
 

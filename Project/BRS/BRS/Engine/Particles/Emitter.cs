@@ -49,9 +49,7 @@ namespace BRS.Engine.Particles {
         /// </summary>
         public Emitter(ParticleSystem3D particleSystem, float particlesPerSecond, Vector3 initialPosition) {
             _particleSystem = particleSystem;
-
             _timeBetweenParticles = 1.0f / particlesPerSecond;
-
             _previousPosition = initialPosition;
         }
 

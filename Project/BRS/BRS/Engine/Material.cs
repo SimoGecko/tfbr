@@ -1,7 +1,7 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.ComponentModel.DataAnnotations;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,7 +11,7 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
-        public enum ShaderType { Simple, Textured, Baked};
+        public RenderingType RenderingType;
         //simple = basic effect without anything
         //textured = one single texture
         //baked = texture for color and for lightmap
@@ -22,8 +22,6 @@ namespace BRS.Engine {
         public bool IsTransparent;
 
         public bool IsAlphaAnimated;
-        [Range(0.0f, 1.0f)]
-        public float Alpha;
 
         public bool baked;
         public bool textured;
@@ -49,18 +47,26 @@ namespace BRS.Engine {
             //Lit = false;
         }
         public Material(Texture2D color, Texture2D light) {
+            RenderingType = RenderingType.HIBaked;
             baked = true;
             textured = false;
             colorTex = color;
             lightTex = light;
         }
-        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false, float alpha = 1.0f) {
+        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false) {
+            if (isAlphaAnimated) {
+                RenderingType = RenderingType.HITextureAlphaAnimated;
+            } else if (isTransparent) {
+                RenderingType = RenderingType.HITextureAlpha;
+            } else {
+                RenderingType = RenderingType.HITexture;
+            }
+
             baked = false;
             textured = true;
             colorTex = color;
             IsTransparent = isTransparent;
             IsAlphaAnimated = isAlphaAnimated;
-            Alpha = alpha;
         }
         public Material(string type) {
             if (type == "skybox") skybox = true;
@@ -79,7 +85,6 @@ namespace BRS.Engine {
                 Diffuse = Diffuse,
                 IsTransparent = IsTransparent,
                 IsAlphaAnimated = IsAlphaAnimated,
-                Alpha = Alpha,
                 baked = baked,
                 textured = textured,
                 colorTex = colorTex,

@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using BRS.Scripts;
 using System;
 using System.Collections.Generic;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 
 namespace BRS {
@@ -25,12 +26,19 @@ namespace BRS {
         const string startScene = "Level1";
         bool showUI = true;
 
+        // todo: for andy for debugging framerate => to be removed soon
+        private SpriteFont _font;
+        private int _frames = 0;
+
         public Game1() {
             //NOTE: don't add anything into constructor
             _graphics = new GraphicsDeviceManager(this) /*{ IsFullScreen = true }*/;
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
+            HardwareRendering.gDM = _graphics;
+
+            //IsFixedTimeStep = false;
         }
 
         protected override void Initialize() {
@@ -56,7 +64,14 @@ namespace BRS {
                 DepthFormat.Depth24);
 
             // set up the post processing manager
-            List<PostprocessingType> defaultEffects = new List<PostprocessingType> { PostprocessingType.Chromatic, PostprocessingType.ColorGrading, PostprocessingType.Vignette, PostprocessingType.TwoPassBlur };
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType>
+            {
+                PostprocessingType.Chromatic,
+                PostprocessingType.ColorGrading,
+                PostprocessingType.Vignette,
+                PostprocessingType.TwoPassBlur,
+                PostprocessingType.BlackAndWhite
+            };
             PostProcessingManager.Initialize(defaultEffects);
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
@@ -77,6 +92,7 @@ namespace BRS {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
+            HardwareRendering.Start();
             //start other big components
             Input.Start();
 
@@ -95,6 +111,8 @@ namespace BRS {
 
             // load the z buffer shader
             _ZBufferShader = File.Load<Effect>("Effects/Depth");
+
+            _font = File.Load<SpriteFont>("Other/font/debugFont");
 
             // add skybox
             //Skybox.Start();
@@ -129,7 +147,9 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
-            PostProcessingManager.Instance.Update(gameTime);
+
+            // Instanciating
+            HardwareRendering.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -138,9 +158,11 @@ namespace BRS {
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
             base.Draw(gameTime);
+            _graphics.PreferMultiSampling = true;
 
             //-----3D-----
-            GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+            GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -152,19 +174,21 @@ namespace BRS {
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
+                HardwareRendering.Draw(cam);
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
-                //gizmos
-                GraphicsDevice.RasterizerState = Screen._wireRasterizer;
-                Gizmos.DrawWire(cam);
-                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                Gizmos.DrawFull(cam);
+
+                ////gizmos
+                //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
+                //Gizmos.DrawWire(cam);
+                //GraphicsDevice.RasterizerState = Screen._fullRasterizer;
+                //Gizmos.DrawFull(cam);
             }
-            Gizmos.ClearOrders();
+            //Gizmos.ClearOrders();
 
 
-            // Todo: For now disabled because it screwed up all shadows and lights etc...
-            //// draw everything 3 D to get the depth info 
+            //// Todo: For now disabled because it screwed up all shadows and lights etc...
+            // draw everything 3 D to get the depth info 
             //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
             //_graphics.GraphicsDevice.Clear(Color.Black);
 
@@ -174,7 +198,7 @@ namespace BRS {
 
             //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
             //}
-            
+
 
 
             // apply post processing
@@ -190,17 +214,35 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
-                if(showUI)
+                if (showUI)
                     foreach (GameObject go in GameObject.All) go.Draw2D(i);
                 _spriteBatch.End();
                 i++;
             }
 
             GraphicsDevice.Viewport = Screen.FullViewport;
-            _spriteBatch.Begin();
-            if(showUI)
+            if (showUI) {
+                _spriteBatch.Begin();
                 foreach (GameObject go in GameObject.All) go.Draw2D(0);
+                _spriteBatch.End();
+            }
+
+            try {
+            string text = string.Format(
+                "Frames per second: {0}/{1}\n" +
+                "Instances: {2}\n",
+                (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+                (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+                GameObject.All.Length);
+
+            _spriteBatch.Begin();
+
+            _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+            _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+
             _spriteBatch.End();
+            }
+            catch { }
         }
     }
 

@@ -11,9 +11,11 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BRS.Engine.Rendering;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
+
 
 
     /// <summary>
@@ -31,6 +33,12 @@ namespace BRS.Engine {
         public ObjectTag tag { set; get; } = ObjectTag.Default;
         public Material material = null;
 
+        // True if the gameobject/model is flaged to use the hardware-instanciation for rendering speedup
+        public bool UseHardwareInstanciation = false;
+        // If hardware-instanciation is used the model type has to be specified
+        public ModelType ModelType { get; set; }
+        public float Alpha = 1.0f;
+
 
         static int InstanceCount = 0;
 
@@ -42,9 +50,39 @@ namespace BRS.Engine {
             transform = new Transform();
             components = new List<IComponent>();
             Model = model;
+
+            //UseHardwareInstanciation = false;
+            //ModelType = ModelType.NoHardwareInstanciation;
+
             allGameObjects.Add(this);
             SortAll();
         }
+
+        /// <summary>
+        /// This constructor is ONLY for the use of hardware instanciation..
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="modelType"></param>
+        /// <param name="addToDrawings">True if the model is drawn, false if not.</param>
+        public GameObject(string name, ModelType modelType, bool addToDrawings ) {
+            Debug.Assert(!NameExists(name), "Name " + name + " must be unique!");
+
+            this.name = name;
+            DrawOrder = 0;
+            transform = new Transform();
+            components = new List<IComponent>();
+            allGameObjects.Add(this);
+
+            UseHardwareInstanciation = true;
+            ModelType = modelType;
+
+            if (addToDrawings) {
+                HardwareRendering.AddInstance(modelType, this);
+            }
+
+            SortAll();
+        }
+
 
         // ---------- CALLBACKS ----------
         public void Awake() {
@@ -74,7 +112,8 @@ namespace BRS.Engine {
 
         public void Draw3D(Camera cam) {
             if (active) {
-                if (Model != null) {
+                if (Model != null && !UseHardwareInstanciation) {
+                    //Debug.Log(name);
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
 
@@ -83,10 +122,9 @@ namespace BRS.Engine {
         }
 
         internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (tag == ObjectTag.Police) { Debug.Log("HHHH");}
             if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
                 if (Model != null) {
-                    Graphics.DrawModelDepth(Model, cam.View, cam.Proj, transform.World, depthShader);
+                    Graphics.DrawModelDepth(Model, cam.View, cam.ProjDepth, transform.World, depthShader);
                 }
 
                 foreach (IComponent c in components) {
@@ -153,17 +191,35 @@ namespace BRS.Engine {
             return result;
         }
 
-        public virtual object Clone() {
-            GameObject newObject = new GameObject(name + "_clone_" + InstanceCount);// (((GameObject)Activator.CreateInstance(type);
+        public virtual object Clone()  {
+            string newName = name + "_clone_" + InstanceCount;
+            GameObject newObject;
+
+            if (UseHardwareInstanciation) {
+                newObject=  new GameObject(newName, ModelType, true);
+            } else {
+                newObject = new GameObject(newName);
+                newObject.Model = Model;
+                newObject.material = material?.Clone();
+            }
+
             InstanceCount++;
+            newObject.UseHardwareInstanciation = UseHardwareInstanciation;
+            newObject.ModelType = ModelType;
             newObject.transform.CopyFrom(this.transform);
             newObject.tag = tag;
             newObject.active = true;
+
             foreach (IComponent c in this.components) {
                 newObject.AddComponent((IComponent)c.Clone());
             }
-            newObject.Model = this.Model;
-            newObject.material = material?.Clone();
+
+
+            // Instanciating
+            if (Model != null && UseHardwareInstanciation) {
+                HardwareRendering.AddInstance(ModelType, newObject);
+            }
+
             return newObject;
         }
 
@@ -184,6 +240,11 @@ namespace BRS.Engine {
             allGameObjects.Remove(o);
             //TODO free up memory
             foreach (Component c in o.components) c.Destroy();
+
+            // Instanciating
+            if (o.Model != null) {
+                HardwareRendering.RemoveInstance(o.ModelType, o);
+            }
         }
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time

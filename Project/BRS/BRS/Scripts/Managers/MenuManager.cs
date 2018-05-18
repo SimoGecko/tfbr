@@ -9,6 +9,7 @@ using BRS.Engine;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using BRS.Engine.Menu;
+using BRS.Engine.PostProcessing;
 using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Scripts.Managers {
@@ -387,6 +388,7 @@ namespace BRS.Scripts.Managers {
         /// Start (directly) the game
         /// </summary>
         public void StartGameFunction(object sender, EventArgs e) {
+            Time.ClearRoundTimers();
             ScenesCommunicationManager.loadOnlyPauseMenu = true;
             GameManager.state = GameManager.State.Playing;
             SceneManager.LoadGame = true;
@@ -442,6 +444,14 @@ namespace BRS.Scripts.Managers {
         /// Load menu
         /// </summary>
         public void LoadMenuFunction(object sender, EventArgs e) {
+            // Remove all dynamic shaders
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.BlackAndWhite);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.ShockWave);
+            PostProcessingManager.Instance.RemoveShader(PostprocessingType.Wave);
+
+            // Reset timers which belongs to the round
+            Time.ClearRoundTimers();
+
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
             SceneManager.LoadMenu = true;
         }

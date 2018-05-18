@@ -31,7 +31,7 @@ namespace BRS.Engine.Particles {
 
 
         // How long these particles will last.
-        public TimeSpan Duration = TimeSpan.FromSeconds(1);
+        public float Duration = 1.0f;
 
 
         // If greater than zero, some particles will last a shorter time than others.

@@ -226,7 +226,11 @@ namespace BRS.Engine.Physics {
                     continue;
                 }
 
-                Instance.World.CollisionSystem.Detect(rbSphere, rb);
+                try {
+                    Instance.World.CollisionSystem.Detect(rbSphere, rb);
+                } catch (Exception ex) {
+                    Debug.LogError(ex.Message);
+                }
             }
 
             Instance._status = CollisionState.Propagate;

@@ -8,7 +8,7 @@ float players;
 float rOffset = 0.005;
 float gOffset = 0.01;
 float bOffset = -0.005;
-float SOFTNESS = 1.8;
+float SOFTNESS = 1;
 
 // Our sampler for the texture, which is just going to be pretty simple
 sampler TextureSampler = sampler_state

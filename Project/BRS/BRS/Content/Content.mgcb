@@ -4261,3 +4261,9 @@
 /processorParam:TextureFormat=Color
 /build:Images/tutorial/title.png
 
+#begin Other/shaders/instancedModel.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Other/shaders/instancedModel.fx
+

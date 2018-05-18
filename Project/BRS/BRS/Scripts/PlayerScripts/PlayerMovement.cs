@@ -111,12 +111,12 @@ namespace BRS.Scripts.PlayerScripts {
                 Speed = CapacityBasedSpeed * speedboost * _smoothMagnitude;
             }
 
-            Vector3 linearVelocity = Vector3.Forward * Speed;
+            Vector3 linearVelocity = Vector3.Forward * Speed * Time.DeltaTime;
 
             // If physics is available apply the forces/changes to it, otherwise to the gameobject itself
             if (_collider != null) {
                 _collider.RotationY = MathHelper.ToRadians(_rotation);
-                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 3,
+                _collider.Speed = JVector.Transform(Conversion.ToJitterVector(linearVelocity) * 200,
                     _collider.Orientation);
             } else {
                 transform.Translate(linearVelocity * Time.DeltaTime);
