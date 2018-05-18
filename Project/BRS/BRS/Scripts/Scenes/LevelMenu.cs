@@ -54,8 +54,8 @@ namespace BRS.Scripts.Scenes {
             outsideScene.material = outsideMat;
             outsideScene.tag = ObjectTag.Ground;
 
-            GameObject infinitePlane = new GameObject("infinitePlane", File.Load<Model>("Models/elements/ground"));
-            infinitePlane.DrawOrder = 200;
+            GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
+            infinitePlane.DrawOrder = 0;
             infinitePlane.material = groundMat;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -5.0f, 0);
