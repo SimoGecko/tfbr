@@ -94,9 +94,11 @@ namespace BRS.Scripts.UI {
             Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
             Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
             Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
-            Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tutorial_1");
-            Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tutorial_2");
-            Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tutorial_3");
+            Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tut_1");
+            Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tut_2");
+            Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tut_3");
+            Texture2D textureTuto4 = File.Load<Texture2D>("Images/tutorial/tut_4");
+            Texture2D textureBlack = File.Load<Texture2D>("Images/tutorial/black_pic");
             Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
             Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
             Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
@@ -111,6 +113,7 @@ namespace BRS.Scripts.UI {
             Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
             Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
             Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
+            Texture2D xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
@@ -134,6 +137,7 @@ namespace BRS.Scripts.UI {
                 { "imageTuto1", textureTuto1 },
                 { "imageTuto2", textureTuto2 },
                 { "imageTuto3", textureTuto3 },
+                { "imageTuto4", textureTuto4 },
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
                 { "tickBoxCliqued", textureTickBoxCliqued },
@@ -143,13 +147,14 @@ namespace BRS.Scripts.UI {
                 { "decline", textureIconDecline },
                 { "dollar", textureIconDollar },
                 { "titleGame", textureTitle },
-                { "paral", textureParal }
+                { "paral", textureParal },
+                { "xboxButtons", xboxButtons },
+                { "textureBlack", textureBlack }
             };
 
             // Set mapping name - functions
             FunctionsMenu = new Dictionary<string, EventHandler> {
                 { "SwitchToMenu", MenuManager.Instance.SwitchToMenu },
-                { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
@@ -190,6 +195,7 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");
             CreatePanel("Load/MenuPanels/Tutorial2.txt", "tutorial2");
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
+            CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
             CreatePanel("Load/MenuPanels/Play2SharedTeamA.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
@@ -272,6 +278,8 @@ namespace BRS.Scripts.UI {
                     if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
                     if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
                     if (MS.Color != default(Color)) img.colour = MS.Color;
+                    if (MS.transparency != default(int))
+                        img.colour.A = (byte)MS.transparency;
 
                     img.Active = MS.Active;
 
@@ -549,7 +557,7 @@ namespace BRS.Scripts.UI {
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - firstLine.Length];
                 }
                 else {
-                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("ModelChangeLeft", panelName);
+                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("ModelChangeRight", panelName);
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - secondLine.Length];
                 }
             }

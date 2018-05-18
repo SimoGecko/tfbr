@@ -88,8 +88,8 @@ namespace BRS.Scripts.Managers {
         /// <summary>
         /// Index for chosable parameter from ScenesCommunicationManager
         /// </summary>
-        int _idModel = 0;
-        int _idColor = 0;
+        int[] _idModel = { 0, 0 , 0, 0};
+        int[] _idColor = { 0, 1 };
 
         #endregion
 
@@ -138,13 +138,14 @@ namespace BRS.Scripts.Managers {
             Instance = this;
 
             // Load menu content (texture,functions)
+            SetDefaultValues();
             _menuGame.LoadContent();
             GameManager.state = GameManager.State.Menu;
 
             // Create panels to be load from files
-            string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(2, 3, 0), new Vector3(2, 3, 0), new Vector3(2, 3, 0) };
-            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0) };
+            string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(0, 10, 0), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(2, 3, 0), new Vector3(2, 3, 0), new Vector3(2, 3, 0) };
+            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-30, 0, 0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0) };
 
             for (int i = 0; i < namePanels.Length; ++i) {
                 GameObject go = new GameObject(namePanels[i]);
@@ -182,12 +183,13 @@ namespace BRS.Scripts.Managers {
 
             // Check for button B pressed to go to previous panel
             if (Input.GetKeyUp(Keys.B) || Input.GetButtonUp(Buttons.B)) {
-                if (_currentMenuName == "tutorial2") {
+                if (_currentMenuName == "play2Shared2") {
                     MenuRect["play2Shared0"].active = true;
                     MenuRect["play2Shared1"].active = true;
                     MenuRect["play2Shared2"].active = false;
                     MenuRect["play2Shared3"].active = false;
                     _currentMenuName = "play2Shared0";
+                    _changeToMenu = "play2Shared0";
                 }
                 else {
                     Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
@@ -215,12 +217,31 @@ namespace BRS.Scripts.Managers {
         /// Monogame Draw function
         /// </summary>
         public override void Draw2D(int i) {
-            
+            if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
+                Image blackBackground = new Image(Menu.Instance.TexturesButtons["textureBlack"]);
+                blackBackground.Position = new Vector2(960, 540);
+                blackBackground.colour.A = 25;
+                blackBackground.Draw2D(i);
+
+                UserInterface.DrawString("Next:", new Rectangle(115, 100, 40, 40), Align.TopLeft, Align.Center, Align.Center, font: UserInterface.menuSmallFont);
+                Suggestions.Instance.GiveCommand(0, new Rectangle(185, 95, 40, 40), XboxButtons.A, Align.TopLeft);
+            }
         }
 
         #endregion
 
         #region Custom methods
+
+        /// <summary>
+        /// Set default the parameters of the game
+        /// </summary>
+        public void SetDefaultValues() {
+            GameManager.NumPlayers = 2;
+            RoundManager.RoundTime = 2 * 60;
+            GameMode.currentGameMode = ScenesCommunicationManager.ModesName[0];
+            GameManager.LvlScene = 1;
+            GameManager.lvlDifficulty = 1;
+        }
 
         /// <summary>
         /// Updates Camera position and rotation for a smooth camera transition towards a goal
@@ -438,16 +459,6 @@ namespace BRS.Scripts.Managers {
         #region Change game settings
 
         /// <summary>
-        /// Set default the parameters of the game
-        /// </summary>
-        public void SetDefaultParametersGame(object sender, EventArgs e) {
-            if (GameManager.NumPlayers != 1 && GameManager.NumPlayers != 2 && GameManager.NumPlayers != 4)
-                GameManager.NumPlayers = 2;
-            if (RoundManager.RoundTime != 2 * 60 && RoundManager.RoundTime != 3 * 60 && RoundManager.RoundTime != 5 * 60 && RoundManager.RoundTime != 10 * 60)
-                RoundManager.RoundTime = 2 * 60;
-        }
-
-        /// <summary>
         /// Update the duration of a round 
         /// </summary>
         public void UpdateRoundDuration(object sender, EventArgs e) {
@@ -595,7 +606,7 @@ namespace BRS.Scripts.Managers {
             Button button = (Button)sender;
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is ListComponents lC) {
-                    if (lC.NameIdentifier == "model" + _idModel.ToString() + "Stats")
+                    if (lC.NameIdentifier == "model" + _idModel[button.IndexAssociatedPlayerScreen].ToString() + "Stats")
                         lC.Active = true;
                     else
                         lC.Active = false;
@@ -608,18 +619,19 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public void ChangeModelPlayer(object sender, EventArgs e) {
             Button button = (Button)sender;
+            int idButton = button.IndexAssociatedPlayerScreen;
 
             // Audio feedback
             Audio.Play("characters_popup", transform.position);
 
             // Change model used
             if (button.nameIdentifier == "ModelChangeRight") {
-                ++_idModel;
-                if (_idModel >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel = 0; //_idModel = 0;
+                ++_idModel[idButton];
+                if (_idModel[idButton] >= ScenesCommunicationManager.Instance.ModelCharacter.Count) _idModel[idButton] = 0; //_idModel = 0;
             }
             else if (button.nameIdentifier == "ModelChangeLeft") {
-                --_idModel;
-                if (_idModel < 0) _idModel = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = modelCharacter.Count - 1;
+                --_idModel[idButton];
+                if (_idModel[idButton] < 0) _idModel[idButton] = ScenesCommunicationManager.Instance.ModelCharacter.Count - 1; //_idModel = modelCharacter.Count - 1;
             }
             else
                 Debug.Log("Model was not Changed. NameIdentifier of current button not recognized!");
@@ -630,16 +642,16 @@ namespace BRS.Scripts.Managers {
 
             // Save new model Choice
             if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey(NamePlayerInfosToChange))
-                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
+                ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange] = new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[NamePlayerInfosToChange].Item1, _idModel[idButton], button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor);
             else
-                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, _idModel, button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
+                ScenesCommunicationManager.Instance.PlayersInfo.Add(NamePlayerInfosToChange, new Tuple<string, int, Color>(NamePlayerInfosToChange, _idModel[idButton], button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor));
 
             // Activate correct image in the menu
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
-                    if (img.NameIdentifier == "pictureModel" + (_idModel + 1).ToString())
+                    if (img.NameIdentifier == "pictureModel" + (_idModel[idButton] + 1).ToString())
                         img.Active = true;
-                    else if (img.NameIdentifier == "pictureModel" + (_idModel + 1).ToString() + "Color")
+                    else if (img.NameIdentifier == "pictureModel" + (_idModel[idButton] + 1).ToString() + "Color")
                         img.Active = true;
                     else
                         img.Active = false;
@@ -652,45 +664,46 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public void UpdateChosenColor(object sender, EventArgs e) {
             Button button = (Button)sender;
+            int idButton = button.IndexAssociatedPlayerScreen % 2;
 
             // Change color used
             if (button.nameIdentifier == "ColorChangeRight") {
-                ++_idColor;
+                ++_idColor[idButton];
 
-                if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
-                    _idColor = 0;
-                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
-                    ++_idColor;
-                if (_idColor >= ScenesCommunicationManager.ColorModel.Length)
-                    _idColor = 0;
+                if (_idColor[idButton] >= ScenesCommunicationManager.ColorModel.Length)
+                    _idColor[idButton] = 0;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor[idButton]] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor[idButton]] == ScenesCommunicationManager.TeamAColor)
+                    ++_idColor[idButton];
+                if (_idColor[idButton] >= ScenesCommunicationManager.ColorModel.Length)
+                    _idColor[idButton] = 0;
             }
             else if (button.nameIdentifier == "ColorChangeLeft") {
-                --_idColor;
-                if (_idColor < 0)
-                    _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
-                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor] == ScenesCommunicationManager.TeamAColor)
-                    --_idColor;
-                if (_idColor < 0) _idColor = ScenesCommunicationManager.ColorModel.Length - 1;
+                --_idColor[idButton];
+                if (_idColor[idButton] < 0)
+                    _idColor[idButton] = ScenesCommunicationManager.ColorModel.Length - 1;
+                if (button.IndexAssociatedPlayerScreen % 2 == 0 ? ScenesCommunicationManager.ColorModel[_idColor[idButton]] == ScenesCommunicationManager.TeamBColor : ScenesCommunicationManager.ColorModel[_idColor[idButton]] == ScenesCommunicationManager.TeamAColor)
+                    --_idColor[idButton];
+                if (_idColor[idButton] < 0) _idColor[idButton] = ScenesCommunicationManager.ColorModel.Length - 1;
             }
             else
                 Debug.Log("Color was not Changed. NameIdentifier of current button not recognized!");
 
             // Save color
             if (button.IndexAssociatedPlayerScreen % 2 == 0)
-                ScenesCommunicationManager.TeamAColor = ScenesCommunicationManager.ColorModel[_idColor];
+                ScenesCommunicationManager.TeamAColor = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
             else
-                ScenesCommunicationManager.TeamBColor = ScenesCommunicationManager.ColorModel[_idColor];
+                ScenesCommunicationManager.TeamBColor = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
 
             // Update color for model pictures
             foreach (var elem in MenuRect[panelPlay2NameOption + button.IndexAssociatedPlayerScreen.ToString()].components) {
                 if (elem is Image img) {
                     for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                         if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
-                            img.colour = ScenesCommunicationManager.ColorModel[_idColor];
+                            img.colour = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
                     }
                 }
                 if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
-                    bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor];
+                    bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
             }
 
             if (GameManager.NumPlayers == 4) {
@@ -698,11 +711,11 @@ namespace BRS.Scripts.Managers {
                     if (elem is Image img) {
                         for (int i = 0; i < ScenesCommunicationManager.Instance.ModelCharacter.Count; ++i) {
                             if (img.NameIdentifier == "pictureModel" + (i + 1).ToString() + "Color")
-                                img.colour = ScenesCommunicationManager.ColorModel[_idColor];
+                                img.colour = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
                         }
                     }
                     if (elem is Button bu && bu.nameIdentifier == "ColorChosen")
-                        bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor];
+                        bu.ImageColor = ScenesCommunicationManager.ColorModel[_idColor[idButton]];
                 }
             }
 
@@ -722,9 +735,9 @@ namespace BRS.Scripts.Managers {
                     ScenesCommunicationManager.Instance.PlayersInfo[playerName] =
                         new Tuple<string, int, Color>(ScenesCommunicationManager.Instance.PlayersInfo[playerName].Item1,
                         ScenesCommunicationManager.Instance.PlayersInfo[playerName].Item2,
-                        ScenesCommunicationManager.ColorModel[_idColor]);
+                        ScenesCommunicationManager.ColorModel[_idColor[idButton]]);
                 else
-                    ScenesCommunicationManager.Instance.PlayersInfo.Add(playerName, new Tuple<string, int, Color>(playerName, 0, ScenesCommunicationManager.ColorModel[_idColor]));
+                    ScenesCommunicationManager.Instance.PlayersInfo.Add(playerName, new Tuple<string, int, Color>(playerName, 0, ScenesCommunicationManager.ColorModel[_idColor[idButton]]));
             }
         }
 
