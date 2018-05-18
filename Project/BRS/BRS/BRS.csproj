@@ -287,6 +287,7 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
+    <Content Include="Load\MenuPanels\Tutorial4.txt" />
     <Content Include="Load\PolicePaths.txt" />
     <Content Include="Load\Rankings\ranking10 min1P.txt" />
     <Content Include="Load\Rankings\ranking10 min2P.txt" />

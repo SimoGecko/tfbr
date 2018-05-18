@@ -1,6 +1,6 @@
 <Image>
-NameIdentifier: picturetuto3
-Texture: imageTuto3
+NameIdentifier: picturetuto4
+Texture: imageTuto4
 Position: 960 540
 Active: yes
 </Image>
@@ -32,7 +32,7 @@ ScaleWidthInside: 1.2
 ScaleHeightInside: 1.2
 Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Back Back
-NameSwitchTo: tutorial4
+NameSwitchTo: main
 ColorInside: 148 148 148
 CurrentSelection: yes
 Active: no

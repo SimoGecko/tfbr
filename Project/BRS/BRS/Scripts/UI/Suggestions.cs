@@ -37,8 +37,10 @@ namespace BRS.Scripts.UI {
             _xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
             _commands = new List<ButtonCommand>();
 
-            Player p = ElementManager.Instance.Player(0);
-            if (p != null) Player = p.transform;
+            if (ElementManager.Instance != null) {
+                Player p = ElementManager.Instance.Player(0);
+                if (p != null) Player = p.transform;
+            }
         }
 
         public override void Update() {

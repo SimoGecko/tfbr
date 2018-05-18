@@ -143,9 +143,9 @@ namespace BRS.Scripts.Managers {
             GameManager.state = GameManager.State.Menu;
 
             // Create panels to be load from files
-            string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
-            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
+            string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(0, 10, 0), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
+            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-30, 0, 0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
 
             for (int i = 0; i < namePanels.Length; ++i) {
                 GameObject go = new GameObject(namePanels[i]);
@@ -217,7 +217,10 @@ namespace BRS.Scripts.Managers {
         /// Monogame Draw function
         /// </summary>
         public override void Draw2D(int i) {
-            
+            if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
+                UserInterface.DrawString("Next:", new Rectangle(115, 100, 40, 40), Align.TopLeft, Align.Center, Align.Center, font: UserInterface.menuSmallFont);
+                Suggestions.Instance.GiveCommand(0, new Rectangle(185, 95, 40, 40), XboxButtons.A, Align.TopLeft);
+            }
         }
 
         #endregion
