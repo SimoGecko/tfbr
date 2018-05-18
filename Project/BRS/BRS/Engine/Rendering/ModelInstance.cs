@@ -42,7 +42,7 @@ namespace BRS.Engine.Rendering {
         #endregion
 
         #region Constructor
-        
+
         /// <summary>
         /// Instanciate a new model
         /// </summary>
@@ -56,7 +56,7 @@ namespace BRS.Engine.Rendering {
         #endregion
 
         #region Collection-handling
-        
+
         /// <summary>
         /// Add a new gameobject to the instance to draw in a batch
         /// </summary>
@@ -76,7 +76,7 @@ namespace BRS.Engine.Rendering {
         #endregion
 
         #region Monogame-structure
-        
+
         /// <summary>
         /// Updates the vertex-buffer with the newest information
         /// </summary>
@@ -94,7 +94,7 @@ namespace BRS.Engine.Rendering {
                 VertexInformation[i].Matrix = GameObjects[i].transform.World;
                 VertexInformation[i].Alpha = GameObjects[i].material.Alpha;
             }
-            
+
             // Re-Initialize the vertex-buffer if needed
             if (VertexBuffer == null || GameObjects.Count > VertexBuffer.VertexCount) {
                 VertexBuffer?.Dispose();
@@ -105,6 +105,13 @@ namespace BRS.Engine.Rendering {
 
             // Transfer the latest instance gameObject matrices into the vertex-buffer.
             VertexBuffer.SetData(VertexInformation, 0, VertexInformation.Length, SetDataOptions.Discard);
+        }
+
+        /// <summary>
+        /// Reset all instances so that no game-object belongs to any hardware-instance
+        /// </summary>
+        public void Reset() {
+            GameObjects.Clear();
         }
 
         #endregion

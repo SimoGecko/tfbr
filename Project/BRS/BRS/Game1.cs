@@ -32,7 +32,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true };
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = false };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -150,6 +150,9 @@ namespace BRS {
 
             PhysicsDrawer.Instance.Update(gameTime);
             PhysicsManager.Instance.Update(gameTime);
+
+            // Instanciating
+            HardwareRendering.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -163,9 +166,6 @@ namespace BRS {
             //-----3D-----
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
-            // Instanciating
-            HardwareRendering.UpdateModelInstances();
-
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
@@ -177,7 +177,7 @@ namespace BRS {
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
-                HardwareRendering.DrawModelInstances(cam);
+                HardwareRendering.Draw(cam);
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
 
@@ -230,6 +230,7 @@ namespace BRS {
                 _spriteBatch.End();
             }
 
+            try {
             string text = string.Format(
                 "Frames per second: {0}/{1}\n" +
                 "Instances: {2}\n",
@@ -243,6 +244,8 @@ namespace BRS {
             _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
 
             _spriteBatch.End();
+            }
+            catch { }
         }
     }
 
