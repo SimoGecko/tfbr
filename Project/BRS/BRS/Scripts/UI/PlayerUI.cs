@@ -80,13 +80,13 @@ namespace BRS.Scripts.UI {
             UserInterface.DrawString(staminaString, new Rectangle(275, 107, 75, 25), Align.TopLeft, Align.TopLeft, Align.Left, flip: flip);
 
             //small bars
-            Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position);
-            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-37, -68), new Point(75, 7));
+            Vector2 screenPosition = Camera.GetCamera(index).WorldToScreenPoint(ElementManager.Instance.Player(index).transform.position+ Vector3.Up * 1.5f);
+            Rectangle smallBar = new Rectangle(screenPosition.ToPoint() + new Point(-37, -8), new Point(75, 7)); // -8 instead of -68
             UserInterface.DrawBarStriped(capacityPercent, smallBar, Graphics.Green);
             smallBar.Y += 8;
             UserInterface.DrawBarStriped(staminaPercent, smallBar, Graphics.Blue);
 
-            //draw name of all other players except myself
+            //draw name of all other players except self
             for(int playerIndex = 0; playerIndex < GameManager.NumPlayers; playerIndex++) {
                 if (playerIndex == index) continue; // not myself
                 Player otherPlayer = ElementManager.Instance.Player(playerIndex);
@@ -96,16 +96,16 @@ namespace BRS.Scripts.UI {
 
             Player p = ElementManager.Instance.Player(index);
             string attentionNotification = p.Empty() ? "no fuel" : p.Full() ? "full" : " ";
-            Rectangle notificationRect = new Rectangle(screenPosition.ToPoint() + new Point(0, -78), new Point(75, 20));
+            Rectangle notificationRect = new Rectangle(screenPosition.ToPoint() + new Point(0, -18), new Point(75, 20));
             UserInterface.DrawString(attentionNotification, notificationRect, Align.TopLeft, Align.Center, Align.Bottom, scale:.7f);
 
 
             //suggestions
             //stamina button suggestions
             if (_playerUi[index].CanAttack) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.A, Align.TopLeft, flip);
+                ButtonsUI.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.A, Align.TopLeft, flip);
             } else if (staminaPercent == 1) {
-                Suggestions.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.RT, Align.TopLeft, flip);
+                ButtonsUI.Instance.GiveCommand(index, new Rectangle(70, 155, 40, 40), XboxButtons.RT, Align.TopLeft, flip);
             }
 
         }

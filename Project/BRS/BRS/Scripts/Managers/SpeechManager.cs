@@ -16,7 +16,7 @@ namespace BRS.Scripts {
         //there must be one per player
 
 
-        const int maxCharsPerLine = 11;
+        const int maxCharsPerLine = 10;
         const int maxLines = 4;
 
         public enum EventType {
@@ -218,7 +218,7 @@ namespace BRS.Scripts {
 
 
 
-        async void RandomEvents() {
+        async void RandomEvents() { // check when it's started and if it should be .gameactive
             while (true) {
                 if (GameManager.GameActive) {
                     OnEvent(EventType.Random);

@@ -99,7 +99,7 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new PlayerUI());
             UiManager.AddComponent(new PowerupUI());
             UiManager.AddComponent(new GameUI());
-            UiManager.AddComponent(new Suggestions());
+            UiManager.AddComponent(new ButtonsUI());
             UiManager.AddComponent(new MoneyUI());
             UiManager.AddComponent(new ParticleUI());
             UiManager.AddComponent(new SpeechUI());
@@ -156,6 +156,7 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerParticles());
                 player.AddComponent(new SpeechManager(i));
+                player.AddComponent(new TutorialUI(i));
                 player.AddComponent(new DynamicShadow());
 
                 // Modify player's name and model and color(choosen by user during menu)

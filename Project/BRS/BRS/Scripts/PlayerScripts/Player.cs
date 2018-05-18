@@ -265,34 +265,39 @@ namespace BRS.Scripts.PlayerScripts {
             return Input.GetThumbstick(Input.Stick.Left, PlayerIndex);
         }
 
-        bool AttackInput() {
+        public bool AttackInput() {
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.Space) : Input.GetKeyDown(Keys.Enter))
                 || Input.GetButtonDown(Buttons.A, PlayerIndex);
         }
 
-        bool DropCashInput() {
+        public bool DropCashInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.C) : Input.GetKey(Keys.M))
                || Input.GetButton(Buttons.B, PlayerIndex);
         }
 
-        bool PowerupInput() {
+        public bool PowerupInput() {
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
                || Input.GetButtonDown(Buttons.X, PlayerIndex);
         }
 
-        bool LiftInput() {
+        bool LiftInput() { // TODO remove
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
                || Input.GetButtonDown(Buttons.Y, PlayerIndex);
         }
 
-        bool BoostInput() {
+        public bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
                || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
                || Input.GetButton(Buttons.LeftShoulder, PlayerIndex) || Input.GetButton(Buttons.LeftTrigger, PlayerIndex);
         }
 
         // other
-
+        public PlayerAttack pA { get { return _pA; } }
+        public PlayerMovement pM { get { return _pM; } }
+        public PlayerInventory pI { get { return _pI; } }
+        public PlayerPowerup pP { get { return _pP; } }
+        public PlayerStamina pS { get { return _pS; } }
+        
 
     }
 
