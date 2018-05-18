@@ -81,7 +81,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //drop = leave on ground by choice based on input
         public void DropMoney() {
-            if (_canDropMoney) {
+            if (_canDropMoney && CarryingWeight>0) {
                 Audio.Play("leave", transform.position);
                 RemoveMoneyAmount(1, DropcashRadius);
                 _canDropMoney = false;

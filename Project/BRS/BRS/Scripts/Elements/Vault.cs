@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
 
-    // Todo: Probably belongs in the engine?
+    // Todo: Probably belongs in the engine? -> no as it's something particular
     public interface IOpenable : IComponent {
         void Open();
     }
@@ -42,10 +42,12 @@ namespace BRS.Scripts.Elements {
 
 
         //reference
+        public static Vault instance;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            instance = this;
             Health = 10;
             Dead = false;
 
@@ -100,7 +102,7 @@ namespace BRS.Scripts.Elements {
 
         // queries
         Vector3 pivotPoint { get { return transform.position + transform.Right * PivotOffset; } }
-
+        public bool IsOpen() { return _open; }
 
         // other
         void OpenCoroutine() {
@@ -114,6 +116,8 @@ namespace BRS.Scripts.Elements {
                 _open = true;
             }
         }
+
+
 
     }
 

@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using BRS.Engine;
+using BRS.Scripts.Elements;
 
 namespace BRS.Scripts {
     class GameMode  {
@@ -79,6 +80,8 @@ namespace BRS.Scripts {
         public string RandomValuable { get { return Utility.EvaluateDistribution(ValuableDistribution); } }
         public string RandomPowerup  { get { return Utility.EvaluateDistribution(PowerupDistribution); } }
 
+        public string RandomPowerupBiased { get { return ConvertKeyToBomb(RandomPowerup); } }
+        public static string ConvertKeyToBomb(string s) { return (s == "key"&& Vault.instance.IsOpen()) ? "bomb" : s; }
 
         // --------------------- CREATION METHODS ----------------
 

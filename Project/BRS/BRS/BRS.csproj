@@ -256,7 +256,8 @@
     <Compile Include="Scripts\UI\PowerupUI.cs" />
     <Compile Include="Scripts\UI\RoundUI.cs" />
     <Compile Include="Scripts\UI\SpeechUI.cs" />
-    <Compile Include="Scripts\UI\Suggestions.cs" />
+    <Compile Include="Scripts\UI\ButtonsUI.cs" />
+    <Compile Include="Scripts\UI\TutorialUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />

@@ -87,7 +87,7 @@ namespace BRS.Scripts.UI {
                     UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 65, 55, 55), _powerupsRectangle[powerup], Align.Top);
                     string powerupName = ((PowerupType)powerup).ToString();
                     UserInterface.DrawString(powerupName, new Rectangle(0, 127, 125, 25), Align.Top, Align.Top, Align.Top);
-                    Suggestions.Instance.GiveCommand(index, new Rectangle(0, 172, 40, 40), XboxButtons.X, Align.Top);
+                    ButtonsUI.Instance.GiveCommand(index, new Rectangle(0, 172, 40, 40), XboxButtons.X, Align.Top);
                 }
             }
         }

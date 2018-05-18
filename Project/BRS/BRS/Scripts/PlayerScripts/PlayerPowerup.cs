@@ -76,7 +76,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         // queries
-        bool HasPowerup { get { return _carryingPowerup.Count > 0; } }
+        public bool HasPowerup { get { return _carryingPowerup.Count > 0; } }
 
         public int[] CarryingPowerups() {
             List<int> result = new List<int>();
