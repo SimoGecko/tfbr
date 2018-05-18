@@ -98,6 +98,8 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnMoneyAt(Vector3 pos, string prefab, Vector3? linearVelocity = null) {//cashPrefab, goldPrefab, diamondPrefab
+            pos.Y = Math.Max(pos.Y, 1.0f);
+
             GameObject newMoney = GameObject.Instantiate(prefab, pos, MyRandom.YRotation(), linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newMoney.GetComponent<Money>());
         }
@@ -111,7 +113,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOneCrateRandom() {
-            GameObject newCrate = GameObject.Instantiate("cratePrefab", RandomPos() + Vector3.Up * .25f, Quaternion.Identity);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", RandomPos() + Vector3.Up * .5f, Quaternion.Identity);
             ElementManager.Instance.Add(newCrate.GetComponent<Crate>());
         }
 
@@ -137,7 +139,9 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOnePowerupAt(Vector3 position, Vector3? linearVelocity=null) {
-            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position + Vector3.Up * 1f, Quaternion.Identity, linearVelocity??Vector3.Zero);
+            position.Y = Math.Max(position.Y, 1.5f);
+
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position, Quaternion.Identity, linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
