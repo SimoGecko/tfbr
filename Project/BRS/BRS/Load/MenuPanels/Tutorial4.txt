@@ -16,7 +16,7 @@ ScaleWidthInside: 1.2
 ScaleHeightInside: 1.2
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: null null Next Next
-NameSwitchTo: tutorial2
+NameSwitchTo: tutorial3
 ColorInside: 148 148 148
 Active: no
 </Button>
