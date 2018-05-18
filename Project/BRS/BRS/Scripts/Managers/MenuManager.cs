@@ -225,7 +225,7 @@ namespace BRS.Scripts.Managers {
                 blackBackground.Draw2D(i);
 
                 UserInterface.DrawString("Next:", new Rectangle(115, 100, 40, 40), Align.TopLeft, Align.Center, Align.Center, font: UserInterface.menuSmallFont);
-                Suggestions.Instance.GiveCommand(0, new Rectangle(185, 95, 40, 40), XboxButtons.A, Align.TopLeft);
+                ButtonsUI.Instance.GiveCommand(0, new Rectangle(185, 95, 40, 40), XboxButtons.A, Align.TopLeft);
             }
         }
 
