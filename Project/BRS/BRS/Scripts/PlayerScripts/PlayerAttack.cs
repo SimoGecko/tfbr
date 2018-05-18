@@ -20,6 +20,11 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        //const
+        public float AttackDistance = 5;
+        private const float AttackDuration = .2f;
+        private const float AttackDistanceThreshold = 2f;
+        private const float AttackDamage = 40;
 
         //private
         private bool _attacking;
@@ -28,12 +33,7 @@ namespace BRS.Scripts.PlayerScripts {
         private float _attackRefTime;
         private float _attackStartTime;
         private bool _hasAppliedDamage;
-
-        //const
-        public float AttackDistance = 5;
-        private const float AttackDuration = .2f;
-        private const float AttackDistanceThreshold = 2f;
-        private const float AttackDamage = 40;
+        
 
         //reference
         public Action OnAttackBegin;
@@ -42,6 +42,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            Reset();
             _attacking = false;
             _rigidBody = gameObject.GetComponent<MovingRigidBody>();
         }
@@ -62,7 +63,11 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // --------------------- CUSTOM METHODS ----------------
-
+        public override void Reset() {
+            _attacking = _hasAppliedDamage = false;
+            _attackStartPos = _attackEndPos = _attackEndCollision = Vector3.Zero;
+            _attackRefTime = _attackStartTime = 0f;
+        }
 
         // commands
         public void BeginAttack() {

@@ -111,6 +111,8 @@ namespace BRS.Scripts.UI {
             Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
             Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
             Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
+            Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
+            Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
             Texture2D xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
 
             // Set mapping name - textures
@@ -144,6 +146,8 @@ namespace BRS.Scripts.UI {
                 { "thunder", textureIconThunder },
                 { "decline", textureIconDecline },
                 { "dollar", textureIconDollar },
+                { "titleGame", textureTitle },
+                { "paral", textureParal },
                 { "xboxButtons", xboxButtons },
                 { "textureBlack", textureBlack }
             };
@@ -170,7 +174,8 @@ namespace BRS.Scripts.UI {
                 { "SetMusic", MenuManager.Instance.SetMusic },
                 { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty },
                 { "SetCamera", MenuManager.Instance.SetCamera},
-                { "SetMode", MenuManager.Instance.SetMode}
+                { "SetMode", MenuManager.Instance.SetMode},
+                { "SetMap", MenuManager.Instance.SetMap}
             };
         }
 
@@ -184,7 +189,7 @@ namespace BRS.Scripts.UI {
 
         // Normal menu
         public void BuildMenuPanels(string panelPlay2Name) {
-            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true, offsetWidth: 420);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");

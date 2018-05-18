@@ -86,6 +86,14 @@ namespace BRS.Scripts.UI {
             smallBar.Y += 8;
             UserInterface.DrawBarStriped(staminaPercent, smallBar, Graphics.Blue);
 
+            //draw name of all other players except myself
+            for(int playerIndex = 0; playerIndex < GameManager.NumPlayers; playerIndex++) {
+                if (playerIndex == index) continue; // not myself
+                Player otherPlayer = ElementManager.Instance.Player(playerIndex);
+                Vector2 screenPosCam = Camera.GetCamera(index).WorldToScreenPoint(otherPlayer.transform.position+ Vector3.Up*1.5f);
+                UserInterface.DrawString(otherPlayer.PlayerName, screenPosCam, Align.TopLeft, Align.Center, Align.Bottom, scale:.7f);
+            }
+
             Player p = ElementManager.Instance.Player(index);
             string attentionNotification = p.Empty() ? "no fuel" : p.Full() ? "full" : " ";
             Rectangle notificationRect = new Rectangle(screenPosition.ToPoint() + new Point(0, -78), new Point(75, 20));

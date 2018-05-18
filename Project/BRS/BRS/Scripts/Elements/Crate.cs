@@ -7,6 +7,8 @@ using BRS.Engine.Physics.Colliders;
 using BRS.Engine.PostProcessing;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.Elements {
     class Crate : Component, IDamageable {
@@ -29,13 +31,16 @@ namespace BRS.Scripts.Elements {
 
         private bool _explosionRigged;
         private bool _cracked;
+        private int _teamWhoRigged;
 
         //reference
+        static Texture2D dangerIcon;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _explosionRigged = _cracked = false;
+            if (dangerIcon == null) dangerIcon = File.Load<Texture2D>("Images/UI/explodingboxicon");
         }
 
         public override void Update() {
@@ -98,10 +103,22 @@ namespace BRS.Scripts.Elements {
             if(!_cracked)CrackCrate();
         }
 
-        public void SetExplosionRigged() { _explosionRigged = true; }
+        public void SetExplosionRigged(int teamWhoRigged) { _explosionRigged = true; _teamWhoRigged = teamWhoRigged; }
 
 
         // queries
+
+        public override void Draw2D(int i) {
+            if (i == 0) return;
+            i--;
+            if (!_explosionRigged) return;
+            if(GameManager.TeamIndex(i) == _teamWhoRigged) {
+                //draw danger icon
+                float distScale = 14/(Camera.GetCamera(i).transform.position - transform.position).Length();
+                Vector2 screenPos = Camera.GetCamera(i).WorldToScreenPoint(transform.position);
+                UserInterface.DrawPicture(dangerIcon, screenPos, pivot:Align.Center, scale: .3f*distScale);
+            }
+        }
 
 
 

@@ -144,8 +144,8 @@ namespace BRS.Scripts.Managers {
 
             // Create panels to be load from files
             string[] namePanels = { "main", "credits", "tutorial1", "tutorial2", "tutorial3", "tutorial4", "ranking", "options", "play1", "play2Shared0", "play2Shared1", "play2Shared2", "play2Shared3" };
-            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(0, 10, 0), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(0,25,20), new Vector3(0,25,20), new Vector3(0,25,20) };
-            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-30, 0, 0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0), new Vector3(-40,0,0) };
+            Vector3[] posCam = { new Vector3(0,15,12), new Vector3(20,12,10), new Vector3(0,10,0), new Vector3(9,2,-32), new Vector3(0,10,-25), new Vector3(0, 10, 0), new Vector3(-22,7,-15), new Vector3(22,7,-15), new Vector3(-7,3,0), new Vector3(2,3,0), new Vector3(2, 3, 0), new Vector3(2, 3, 0), new Vector3(2, 3, 0) };
+            Vector3[] rotCam = { new Vector3(-37,0,0), new Vector3(-35,45,0), new Vector3(-30,0,0), new Vector3(-15,70,0), new Vector3(-40,0,0), new Vector3(-30, 0, 0), new Vector3(-20,-40,0), new Vector3(-20,40,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0), new Vector3(0,0,0) };
 
             for (int i = 0; i < namePanels.Length; ++i) {
                 GameObject go = new GameObject(namePanels[i]);
@@ -284,7 +284,7 @@ namespace BRS.Scripts.Managers {
                 // activate new current menu panel
                 if (_changeToMenu != "play2Shared")
                     _currentMenu.active = true;
-                else {
+                else if (_currentMenuName == "play2Shared0") {
                     MenuRect[_changeToMenu + "0"].active = true;
                     if (GameManager.NumPlayers == 2 || GameManager.NumPlayers == 4)
                         MenuRect[_changeToMenu + "1"].active = true;
@@ -371,7 +371,7 @@ namespace BRS.Scripts.Managers {
             if (!uniqueMenuSwitchUsed) {
                 if (_currentMenu != null)
                     _currentMenu.active = false;
-                if (_currentMenuName == "play2Shared0") {
+                if (_currentMenuName == "play2Shared") {
                     MenuRect["play2Shared0"].active = false;
                     MenuRect["play2Shared1"].active = false;
                     MenuRect["play2Shared2"].active = false;
@@ -418,7 +418,7 @@ namespace BRS.Scripts.Managers {
                         _currentMenuName = panelPlay2NameOption + "2";
                         _changeToMenu = panelPlay2NameOption + "2";
                         _currentMenu = MenuRect[_currentMenuName];
-
+                     
                         // only one change per frame
                         uniqueMenuSwitchUsed = true;
                     }
@@ -495,7 +495,7 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public void SetMap(object sender, EventArgs e) {
             Button button = (Button)sender;
-
+            GameManager.LvlScene = button.Index;
         }
 
         /// <summary>

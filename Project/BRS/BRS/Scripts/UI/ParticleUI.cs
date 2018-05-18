@@ -47,6 +47,10 @@ namespace BRS.Scripts {
             UpdateFrames();
         }
 
+        public override void Reset() {
+            if (particleOrders != null) particleOrders.Clear();
+        }
+
 
 
         // --------------------- CUSTOM METHODS ----------------

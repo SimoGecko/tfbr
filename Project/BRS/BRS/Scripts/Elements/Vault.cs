@@ -28,12 +28,17 @@ namespace BRS.Scripts.Elements {
         private const float OpeningDuration = 2f;
         private const float OpeningAnge = -90f;
         private const float PivotOffset = 0f;//-1.5f;
+        private const float ClosenessForMessage = 10f;
+        private const float TimeBetweenMessages = 20f;
 
         private bool _open; // at end of animation
         private bool _opening; // for animation
         private float _openRefTime;
 
         public System.Action OnVaultOpen;
+        public System.Action OnClosedClose;
+        public static int OnClosedCloseIndex;
+        float[] timeForNextClosenessCall;
 
 
         //reference
@@ -47,10 +52,12 @@ namespace BRS.Scripts.Elements {
             _open = false;
             _opening = false;
             _openRefTime = 0.0f;
+            timeForNextClosenessCall = new float[GameManager.NumPlayers];
         }
 
         public override void Update() {
             if (_opening) OpenCoroutine();
+            CheckForClosePlayer();
         }
 
         public override void Reset() {
@@ -62,6 +69,19 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
+        void CheckForClosePlayer() {
+            if (_open) return;
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                if (Time.CurrentTime > timeForNextClosenessCall[i]) {
+                    if ((ElementManager.Instance.Player(i).transform.position-transform.position).LengthSquared()<= ClosenessForMessage* ClosenessForMessage) {
+                        OnClosedCloseIndex = i;
+                        OnClosedClose?.Invoke();
+                        timeForNextClosenessCall[i] = Time.CurrentTime + TimeBetweenMessages;
+                    }
+                }
+            }
+        }
+
         public void Open() {
             Audio.Play("vault_opening", transform.position);
             OnVaultOpen?.Invoke();

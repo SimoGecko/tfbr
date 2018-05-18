@@ -18,7 +18,7 @@ namespace BRS.Scripts.Managers {
 
         //public
         public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
-        public static int LvlScene = 4;
+        public static int LvlScene = 1;
         public static int lvlDifficulty = 0; // 0 for Easy, 1 for Normal, 2 for Hard
 
 
@@ -100,7 +100,7 @@ namespace BRS.Scripts.Managers {
         public static bool GamePaused { get { return state == State.Paused; } }
         public static bool GameEnded { get { return state == State.Ended || state==State.Menu; } }
         public static int NumTeams { get { return NumPlayers == 1 ? 1 : 2; } }
-
+        public static int TeamIndex(int playerIndex) { return playerIndex % 2; }
 
         // other
 

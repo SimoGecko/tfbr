@@ -22,7 +22,7 @@ namespace BRS.Scripts.Managers {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static int RoundTime = 20;
+        public static int RoundTime = 120;
         public const int TimeBeforePolice = 15;
         public const int MoneyToWinRound = 20000;
         public const int NumRounds = 3;
@@ -38,7 +38,7 @@ namespace BRS.Scripts.Managers {
         //private
         Timer roundTimer;
 
-        int[] teamWins;
+        static int[] teamWins;
         static int roundNumber;
 
         bool roundStarted;
@@ -88,6 +88,11 @@ namespace BRS.Scripts.Managers {
         }
 
         public override void Update() {
+            if (roundEnded) {
+                //check for input to restart
+                if (InputRestart()) TryRestartRound();
+            }
+
             if (CamMoving)
                 CamTransitionForCountDown();
         }
@@ -121,6 +126,12 @@ namespace BRS.Scripts.Managers {
                 Screen.Cameras[i].transform.position = Utility.SmoothDamp(Screen.Cameras[i].transform.position, _posCam[i],ref  _velocityPos[i%2], _newTransitionTime[i % 2]);
                 Screen.Cameras[i].transform.eulerAngles = Utility.SmoothDampAngle(Screen.Cameras[i].transform.eulerAngles, _rotCam[i], ref _velocityRot[i%2], _newTransitionTime[i % 2]);
             }
+        }
+
+        bool InputRestart() {
+            bool Apressed = false;
+            for (int i = 0; i < GameManager.NumPlayers; i++) Apressed = Apressed || Input.GetButtonDown(Buttons.A, i);
+            return Input.GetKeyDown(Keys.Space) || Input.GetKeyDown(Keys.Space) || Apressed;
         }
 
         async void CountDown() {
@@ -168,6 +179,7 @@ namespace BRS.Scripts.Managers {
             int numRep = (int)System.Math.Round(TimeBeforePolice / duration);
 
             for(int i=0; i<numRep; i++) {
+                if (GameManager.GameEnded) return;
                 Audio.Play("police", Vector3.Zero, .0005f);
                 await Time.WaitForSeconds(duration);
             }
@@ -212,13 +224,16 @@ namespace BRS.Scripts.Managers {
 
             //ready to restart
             OnRoundEndAction?.Invoke();
-            new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
+            //new Timer(TimeBetweenRounds, () => TryRestartRound(), true);
         }
 
         void TryRestartRound() {
             UpdateRanking();
             Heatmap.instance.SaveHeatMap();
-            if (RoundNumber < NumRounds) {
+            bool oneAlreadyWon2Rounds = false;
+            for (int i = 0; i < GameManager.NumTeams; i++)
+                oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;
+            if (RoundNumber < NumRounds && !oneAlreadyWon2Rounds) {
                 GameManager.RestartCustom();
                 RestartRound();
             } else {
@@ -275,6 +290,8 @@ namespace BRS.Scripts.Managers {
         public static string RankToString(int rank) {
             return rank == 1 ? "1." : rank == 2 ? "2." : "-";
         }
+
+        public static int NumWins(int TeamIndex) { return teamWins[TeamIndex]; }
 
         // other
 

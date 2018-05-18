@@ -20,7 +20,7 @@ namespace BRS.Scripts {
         const int roundEndHeight = 256;
 
         //private
-        Texture2D countdownTex, endroundTex;
+        Texture2D countdownTex, endroundTex, robAgain;
         bool showCountdown = false;
         int countdownNumber = 0;
         int[] endRoundPlayerText;
@@ -39,6 +39,7 @@ namespace BRS.Scripts {
             endRoundPlayerText = new int[GameManager.NumPlayers];
             countdownTex = File.Load<Texture2D>("Images/UI/countdown");
             endroundTex = File.Load<Texture2D>("Images/UI/end_round_text");
+            robAgain = File.Load<Texture2D>("Images/UI/rob_again");
         }
 
         public override void Update() {
@@ -55,12 +56,22 @@ namespace BRS.Scripts {
             if (showEndRound) {
                 Rectangle source = TextFromNumber(endRoundPlayerText[i]);
                 UserInterface.DrawPicture(endroundTex, Vector2.Zero, source, Align.Center);
-                string finalCash = Utility.IntToMoneyString( ElementManager.Instance.Base(i%2).TotalMoney);
-                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 151), Align.Center, bold:true, scale:.6f, col:Color.Black);
-                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 149), Align.Center, bold:true, scale:.6f, col: Color.Black);
-                UserInterface.DrawString("you collected " + finalCash, new Vector2(-1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
-                UserInterface.DrawString("you collected " + finalCash, new Vector2(1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
-                UserInterface.DrawString("you collected " + finalCash, new Vector2(0, 150), Align.Center, bold:true, scale:.6f);
+                int finalCash    = ElementManager.Instance.Base(i % 2).TotalMoney;
+                int finalPenalty = ElementManager.Instance.Base(i % 2).TotalMoneyPenalty;
+                bool gotPenalty = finalPenalty > 0; 
+                string penaltyString = "penalty of " + Utility.IntToMoneyString(finalPenalty) + " Remaining cash " + Utility.IntToMoneyString(MathHelper.Max(0,finalCash - finalPenalty));
+                string cashString = "you collected " + Utility.IntToMoneyString(finalCash);
+
+                //UserInterface.DrawString(finalCashString, new Vector2(0, 151), Align.Center, bold:true, scale:.6f, col:Color.Black);
+                //UserInterface.DrawString(finalCashString, new Vector2(0, 149), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                //UserInterface.DrawString(finalCashString, new Vector2(-1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                //UserInterface.DrawString(finalCashString, new Vector2(1, 150), Align.Center, bold:true, scale:.6f, col: Color.Black);
+                UserInterface.DrawString(gotPenalty?penaltyString : cashString, new Vector2(0, 150), Align.Center, bold:true, scale:.6f);
+
+
+                //TODO show "A to start new robbery" or "A to rob again"
+                UserInterface.DrawPicture(robAgain,new Vector2(-20, 250), anchor: Align.Center, scale: .5f);
+
             }
         }
 

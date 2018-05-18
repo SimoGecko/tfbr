@@ -41,16 +41,18 @@ namespace BRS.Scripts.Scenes {
             CreateBases();
             CreateSpecialObjects();
             SetMenuShaderEffects();
+
         }
 
 
         void LoadBlenderBakedScene() {
-            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/lightmapInside"));
-            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/inside"));
+            string level = "level" + GameManager.LvlScene;
+            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/"+level+"_inside"));
+            GameObject insideScene = new GameObject("insideScene", File.Load<Model>("Models/scenes/" + level + "_inside"));
             insideScene.material = insideMat;
 
-            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/lightmapOutside"));
-            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/outside"));
+            Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/" + level + "_outside"));
+            GameObject outsideScene = new GameObject("outside", File.Load<Model>("Models/scenes/" + level + "_outside"));
             outsideScene.material = outsideMat;
 
 

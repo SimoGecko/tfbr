@@ -18,29 +18,28 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public float Speed;
+        // const
+        private float MinSpeed = 4f;
+        private float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
+        private const float MaxTurningRate = 10 * 360; // deg/sec
+        private const float BoostSpeedMultiplier = 1.5f;
+
+        private const float SlowdownMalus = .3f;
+        private const float SpeedPadMultiplier = 2f;
 
         //private
+        public float Speed;
+
         private float _smoothMagnitude, _refMagnitude;
         private float _refangle, _refangle2;
         private float _inputAngle;
         private float _rotation;
         private float _targetRotation;
 
-        // const
-        private float MinSpeed = 4f;
-        private float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
-        private const float MaxTurningRate = 10*360; // deg/sec
-        private const float BoostSpeedMultiplier = 1.5f;
-
-        private const float SlowdownMalus = .3f;
-        private const float SpeedPadMultiplier = 2f;
-
 
         //BOOST
         public bool Boosting;
         public bool PowerupBoosting;
-
 
         //SLOWDOWN
         private bool _slowdown;
@@ -56,25 +55,28 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            //transform.Rotate(Vector3.Up, -90);
-            //rotation = targetRotation = -90;
-
             playerInventory = gameObject.GetComponent<PlayerInventory>();
 
             MovingRigidBody dynamicRigidBody = gameObject.GetComponent<MovingRigidBody>();
             _collider = dynamicRigidBody?.RigidBody as SteerableCollider;
 
             // Reset all variables to the start-values
-            _rotation = 0;
-            _targetRotation = 0;
-            _smoothMagnitude = 0;
-            _refMagnitude = 0;
-            _refangle = 0;
-            _refangle2 = 0;
+            Reset();
         }
 
         public override void Update() {
 
+        }
+
+        public override void Reset() {
+            _smoothMagnitude = _refMagnitude = 0;
+            _refangle = _refangle2 = 0;
+            _inputAngle = 0;
+            _rotation = _targetRotation = 0;
+
+            _slowdown = SpeedPad = false;
+            Boosting = PowerupBoosting = false;
+            OilTracks = false;
         }
 
 

@@ -7,6 +7,7 @@ using Windows.UI.Notifications;
 using BRS.Scripts;
 using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace BRS.Engine {
     static class Time {
@@ -15,11 +16,13 @@ namespace BRS.Engine {
         public static GameTime Gt = new GameTime();
         public static int Frame = 0;
         static bool needClearTimers = false;
+        static float TimeScale = 1; // speedUp/slowdown
+        static float timeChange = .5f;
 
         public static List<Timer> timers = new List<Timer>();
 
         public static float CurrentTime { get { return (float)Gt.TotalGameTime.TotalSeconds; } }
-        public static float DeltaTime { get { return (float)Gt.ElapsedGameTime.TotalSeconds; } }
+        public static float DeltaTime { get { return (float)Gt.ElapsedGameTime.TotalSeconds*TimeScale; } }
         public static int OneFrame { get { return Gt.ElapsedGameTime.Milliseconds; } }
         public static float FrameRate { get { return 1 / (float)Gt.ElapsedGameTime.TotalSeconds; } } // TODO draw this on screen
 
@@ -28,12 +31,17 @@ namespace BRS.Engine {
             Gt = gt;
             Frame++;
 
+            CheckTimescaleInput();
+            //DisplayInfo();
+            
+
             //Debug.Log("Start with " + timers.Count + " timers");
             //process timers
             //if (myownLock) return;
             for (int i = 0; i < timers.Count; i++) {
                 if (!GameManager.GameActive && !timers[i].AlwaysRun) continue; // knows about gamemanager
-                timers[i].Span = timers[i].Span.Subtract(Gt.ElapsedGameTime);
+                TimeSpan toSubtract = new TimeSpan(0, 0, 0, 0, (int)Math.Round(gt.ElapsedGameTime.Milliseconds * TimeScale));
+                timers[i].Span = timers[i].Span.Subtract(toSubtract);//Gt.ElapsedGameTime);
                 if (timers[i].Span.TotalSeconds < 0) {
                     timers[i].Callback();
                     timers.RemoveAt(i--);
@@ -43,8 +51,17 @@ namespace BRS.Engine {
             //Debug.Log("End with " + timers.Count + " timers");
         }
 
+        static void CheckTimescaleInput() {
+            if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.Z)) TimeScale += timeChange;
+            if (Input.GetKeyDown(Microsoft.Xna.Framework.Input.Keys.U)) TimeScale = MathHelper.Max(TimeScale - timeChange, .25f);
+        }
+
+        static void DisplayInfo() {
+            Debug.Log("timescale: " + TimeScale);
+        }
+
         public static Task WaitForSeconds(float s) { // used in coroutines
-            int millisec = MathHelper.Max(1, (int)(s * 1000));
+            int millisec = MathHelper.Max(1, (int)(s * 1000/TimeScale));
             return Task.Delay(millisec);
         }
         public static Task WaitForFrame() { // used in coroutines
