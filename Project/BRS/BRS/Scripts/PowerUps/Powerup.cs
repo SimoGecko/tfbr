@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
@@ -65,16 +66,25 @@ namespace BRS.Scripts.PowerUps {
             }
         }
 
+        public override void OnCollisionEnd(Collider c) {
+            bool isPlayer = c.GameObject.tag == ObjectTag.Player;
+
+            if (isPlayer) {
+                PlayerPowerup pp = c.GameObject.GetComponent<PlayerPowerup>();
+                pp.RemoveCollided(this);
+            }
+        }
+
 
 
         // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
-        protected override void DoPickup(Player p) {
+        public override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
-                Audio.Play("pickup", transform.position);//+PowerupType.ToString().ToLower()
+                Audio.Play("pickup", transform.position); //+PowerupType.ToString().ToLower()
                 ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Star, 1f, powerupColor);
                 Owner = p;
                 if (_useInstantly) UsePowerup();
@@ -84,15 +94,16 @@ namespace BRS.Scripts.PowerUps {
 
                 //if(!destroyOnUse) gameObject.active = false;
                 GameObject.Destroy(gameObject);
+            } else {
+                pp.AddCollided(this);
             }
         }
 
         public virtual void UsePowerup() {
             transform.position = Owner.transform.position;
             string audioName = "use_" + PowerupType.ToString().ToLower();
-            if(Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
+            if (Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
             else Audio.Play("use_various", transform.position);
-
         }
 
         // queries
@@ -102,7 +113,7 @@ namespace BRS.Scripts.PowerUps {
         }
 
         public static Color PowerupColor(int index) {
-            return powerupColors[11-index%powerupColors.Length];
+            return powerupColors[11 - index % powerupColors.Length];
         }
 
 
