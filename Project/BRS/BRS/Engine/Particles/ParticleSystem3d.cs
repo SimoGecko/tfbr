@@ -210,7 +210,7 @@ namespace BRS.Engine.Particles {
             _effectTimeParameter = parameters["CurrentTime"];
 
             // Set the values of parameters that do not change.
-            parameters["Duration"].SetValue((float)Settings.Duration.TotalSeconds);
+            parameters["Duration"].SetValue(Settings.Duration);
             parameters["DurationRandomness"].SetValue(Settings.DurationRandomness);
             parameters["Gravity"].SetValue(Settings.Gravity);
             parameters["EndVelocity"].SetValue(Settings.EndVelocity);
@@ -267,7 +267,7 @@ namespace BRS.Engine.Particles {
         /// to the retired section.
         /// </summary>
         void RetireActiveParticles() {
-            float particleDuration = (float)Settings.Duration.TotalSeconds;
+            float particleDuration = Settings.Duration;
 
             while (_firstActiveParticle != _firstNewParticle) {
                 // Is this particle old enough to retire?

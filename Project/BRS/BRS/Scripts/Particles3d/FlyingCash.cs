@@ -47,7 +47,7 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "cash",
                     MaxParticles = 1800,
-                    Duration = TimeSpan.FromSeconds(8),
+                    Duration = 8.0f,
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(-1.0f, -5.5f, 0),
                     EndVelocity = 0.75f,

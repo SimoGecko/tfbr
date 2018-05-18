@@ -40,7 +40,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX3_T_RayStraight",
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 
@@ -69,7 +69,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "CFX3_T_GlowStar",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,

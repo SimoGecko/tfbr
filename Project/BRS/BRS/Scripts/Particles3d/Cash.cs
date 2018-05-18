@@ -32,7 +32,7 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "cash",
                     MaxParticles = 64,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     DurationRandomness = 3.5f,
                     EmitterVelocitySensitivity = 0.1f,
 

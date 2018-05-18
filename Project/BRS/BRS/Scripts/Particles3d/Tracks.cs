@@ -35,7 +35,7 @@ namespace BRS.Scripts.Particles3D {
                     TextureName = "tracks",
                     MaxParticles = 400,
                     ParticlesPerRound = 0.1f,
-                    Duration = TimeSpan.FromSeconds(4),
+                    Duration = 4.0f,
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.00f,
 
