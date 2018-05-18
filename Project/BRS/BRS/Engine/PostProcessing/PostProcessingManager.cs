@@ -27,7 +27,7 @@ namespace BRS.Engine.PostProcessing {
 
         private readonly List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
-        private readonly Dictionary<PostprocessingType, bool> _fixEffects = new Dictionary<PostprocessingType, bool>();
+        private readonly Dictionary<PostprocessingType, PostProcessingEffect> _fixEffects = new Dictionary<PostprocessingType, PostProcessingEffect>();
         private readonly PostProcessingEffect _twoPassEffect;
         private RenderTarget2D _blurTarget;
         private RenderTarget2D _renderTarget1;
@@ -50,7 +50,7 @@ namespace BRS.Engine.PostProcessing {
             foreach (PostprocessingType pType in initialized) {
                 PostProcessingEffect ppEffect = new PostProcessingEffect(pType, false, _loadedEffects[pType]);
 
-                _fixEffects[pType] = true;
+                _fixEffects[pType] = ppEffect;
 
                 ppEffect.SetParameter("players", (float)GameManager.NumPlayers);
                 // Special parameters for some effects
@@ -174,7 +174,7 @@ namespace BRS.Engine.PostProcessing {
             foreach (var ppShader in _effects) {
                 if (ppShader.IsActive()) {
                     ppShader.SetParameter("active", ppShader.ActiveParameter);
-                    ppShader.SetParameter("time", (float)gameTime.TotalGameTime.TotalSeconds);
+                    ppShader.SetParameter("time", Time.CurrentTime);
 
                     switch (ppShader.Type) {
                         case PostprocessingType.DepthOfField:
@@ -267,7 +267,7 @@ namespace BRS.Engine.PostProcessing {
         /// <remarks>Only shaders which are not fix by initialization are removed.</remarks>
         /// <param name="shader">Shader-type</param>
         public void RemoveShader(PostprocessingType shader) {
-            if (_fixEffects.ContainsKey(shader) && _fixEffects[shader]) {
+            if (_fixEffects.ContainsKey(shader) && _fixEffects.ContainsKey(shader)) {
                 return;
             }
 
@@ -282,7 +282,7 @@ namespace BRS.Engine.PostProcessing {
         /// <param name="effectId">Id of the effect</param>
         private void DectivateShader(int effectId) {
             for (int i = 0; i < _effects.Count; ++i) {
-                if (_effects[i].Id == effectId && _fixEffects[_effects[i].Type] == false) {
+                if (_effects[i].Id == effectId) {
                     _effects.RemoveAt(i);
                     break;
                 }
@@ -300,18 +300,10 @@ namespace BRS.Engine.PostProcessing {
         /// Important: parameters about duration are set in the shader-initialization.
         /// </summary>
         /// <param name="playerId">Id of the player to apply the shader</param>
-        /// <param name="deactivate">Deactivate the shader after <paramref name="deactivateAfter"/></param>
-        /// <param name="deactivateAfter">If <paramref name="deactivate"/> is set to true, after this many seconds the effect is disabled for this player-id.</param>
-        public void ActivateBlackAndWhite(int playerId, bool deactivate = true, float deactivateAfter = 2.0f) {
-            PostProcessingEffect ppEffect = new PostProcessingEffect(PostprocessingType.BlackAndWhite, false, _loadedEffects[PostprocessingType.BlackAndWhite]);
+        public void ActivateBlackAndWhite(int playerId) {
+            PostProcessingEffect ppEffect = _fixEffects[PostprocessingType.BlackAndWhite];
             ppEffect.Activate(playerId, true);
-            ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
-
-            _effects.Add(ppEffect);
-
-            if (deactivate) {
-                new Timer(deactivateAfter, () => DectivateShader(ppEffect.Id));
-            }
+            ppEffect.SetParameterForPlayer(playerId, "startTime", Time.CurrentTime);
         }
 
 
@@ -330,7 +322,7 @@ namespace BRS.Engine.PostProcessing {
                 Vector2 screenPosition = Screen.Cameras[playerId].WorldToScreenPoint01(position);
 
                 ppEffect.Activate(playerId, true);
-                ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+                ppEffect.SetParameterForPlayer(playerId, "startTime", Time.CurrentTime);
                 ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
                 ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
                 ppEffect.SetParameter("shockParams", new Vector3(10.0f, 0.8f, 0.1f));
@@ -360,7 +352,7 @@ namespace BRS.Engine.PostProcessing {
                 float distance = (position - Screen.Cameras[playerId].transform.position).Length();
 
                 ppEffect.Activate(playerId, true);
-                ppEffect.SetParameterForPlayer(playerId, "startTime", (float)Time.Gt.TotalGameTime.TotalSeconds);
+                ppEffect.SetParameterForPlayer(playerId, "startTime", Time.CurrentTime);
                 ppEffect.SetParameterForPlayer(playerId, "centerCoord", screenPosition);
                 ppEffect.SetParameterForPlayer(playerId, "animationLength", animationLength);
                 ppEffect.SetParameterForPlayer(playerId, "cameraDistance", distance);
