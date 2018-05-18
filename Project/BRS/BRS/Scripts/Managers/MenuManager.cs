@@ -219,10 +219,10 @@ namespace BRS.Scripts.Managers {
         /// </summary>
         public override void Draw2D(int i) {
             if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
-                Image blackBackground = new Image(Menu.Instance.TexturesButtons["textureBlack"]);
+                /*Image blackBackground = new Image(Menu.Instance.TexturesButtons["textureBlack"]);
                 blackBackground.Position = new Vector2(960, 540);
                 blackBackground.colour.A = 25;
-                blackBackground.Draw2D(i);
+                blackBackground.Draw2D(i);*/
 
                 UserInterface.DrawString("Next:", new Rectangle(115, 100, 40, 40), Align.TopLeft, Align.Center, Align.Center, font: UserInterface.menuSmallFont);
                 ButtonsUI.Instance.GiveCommand(0, new Rectangle(185, 95, 40, 40), XboxButtons.A, Align.TopLeft);
@@ -372,7 +372,7 @@ namespace BRS.Scripts.Managers {
             if (!uniqueMenuSwitchUsed) {
                 if (_currentMenu != null)
                     _currentMenu.active = false;
-                if (_currentMenuName == "play2Shared") {
+                if (_currentMenuName == "play2Shared0") {
                     MenuRect["play2Shared0"].active = false;
                     MenuRect["play2Shared1"].active = false;
                     MenuRect["play2Shared2"].active = false;
