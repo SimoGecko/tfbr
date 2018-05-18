@@ -69,7 +69,8 @@ namespace BRS {
                 PostprocessingType.Chromatic,
                 PostprocessingType.ColorGrading,
                 PostprocessingType.Vignette,
-                PostprocessingType.TwoPassBlur
+                PostprocessingType.TwoPassBlur,
+                PostprocessingType.BlackAndWhite
             };
             PostProcessingManager.Initialize(defaultEffects);
 
