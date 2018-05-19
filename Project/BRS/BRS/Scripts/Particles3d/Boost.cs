@@ -30,7 +30,7 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX_T_Flame1_ABP",
+                    TextureName = "boost",
                     MaxParticles = 200,
                     ParticlesPerRound = 5,
                     Duration = 0.85f,

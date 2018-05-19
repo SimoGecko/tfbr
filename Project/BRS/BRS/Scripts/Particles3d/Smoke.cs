@@ -26,7 +26,7 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _smokePlumeParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX4Smoke",
+                    TextureName = "smoke",
                     MaxParticles = 1500,
                     ParticlesPerRound = 1,
                     Duration = 3.0f,

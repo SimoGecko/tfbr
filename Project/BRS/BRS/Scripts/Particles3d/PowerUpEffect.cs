@@ -38,7 +38,7 @@ namespace BRS.Scripts.Particles3D {
             MaxColor.A = 64;
             _rayParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX3_T_RayStraight",
+                    TextureName = "powerup_ray",
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
                     Duration = 1.0f,
@@ -67,7 +67,7 @@ namespace BRS.Scripts.Particles3D {
             MaxColor.A = 128;
             _starParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX3_T_GlowStar",
+                    TextureName = "powerup_star",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
                     Duration = 1.0f,

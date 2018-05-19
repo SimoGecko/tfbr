@@ -45,7 +45,7 @@ namespace BRS.Engine.PostProcessing {
         private PostProcessingManager(List<PostprocessingType> initialized) {
             foreach (PostprocessingType pType in Enum.GetValues(typeof(PostprocessingType))) {
                 string fileName = pType.ToString();
-                _loadedEffects[pType] = File.Load<Effect>("Effects/" + fileName);
+                _loadedEffects[pType] = File.Load<Effect>("Other/effects/" + fileName);
             }
 
 
@@ -111,7 +111,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
 
-                        ppEffect.SetParameter("LUT", File.Load<Texture2D>("Images/lut/lut (1)"));
+                        ppEffect.SetParameter("LUT", File.Load<Texture2D>("Images/lut/lut_01"));
 
                         for (var i = 0; i < GameManager.NumPlayers; i++) {
                             ppEffect.Activate(i, true);

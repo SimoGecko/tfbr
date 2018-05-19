@@ -26,7 +26,7 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _cashDropParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "dollar2",
+                    TextureName = "base_cash_drop",
                     MaxParticles = 2,
                     ParticlesPerRound = 1,
                     Duration = 5.0f,
