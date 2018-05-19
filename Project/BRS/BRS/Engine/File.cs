@@ -261,6 +261,7 @@ namespace BRS.Engine {
 
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
+                System.IO.File.Delete(pathName);
                 using (FileStream fs = System.IO.File.OpenWrite(pathName)) {
                     fs.Flush();
                     int count = 0;

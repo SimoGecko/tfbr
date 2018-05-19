@@ -256,6 +256,7 @@ namespace BRS.Scripts.Managers {
 
         void UpdateRanking() {//@nico move somewhere else
             List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
+            rankinglist.Clear();
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
