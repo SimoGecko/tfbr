@@ -105,6 +105,10 @@ namespace BRS.Scripts.Scenes {
             UiManager.AddComponent(new SpeechUI());
             UiManager.AddComponent(new RoundUI());
 
+            GameObject ScenesCommManager = new GameObject("scenesComManager");
+            ScenesCommManager.AddComponent(new ScenesCommunicationManager());
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ElementManager());
             Manager.AddComponent(new RoundManager());
@@ -112,10 +116,8 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new PoliceManager(PoliceStartPositions));
-
-
             Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
-            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+
             //Add(Manager);         
 
             //new MenuManager().LoadContent(); // TODO add as component to manager
