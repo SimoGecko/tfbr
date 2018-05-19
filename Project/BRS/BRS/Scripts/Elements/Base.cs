@@ -45,7 +45,10 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public Base(int baseIndex) {
             _baseIndex = baseIndex;
-            BaseColor = Graphics.ColorIndex(baseIndex);
+            //BaseColor = Graphics.ColorIndex(baseIndex);
+            BaseColor = baseIndex == 0
+                ? ScenesCommunicationManager.TeamAColor
+                : ScenesCommunicationManager.TeamBColor;
         }
 
         public override void Start() {

@@ -68,7 +68,10 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             PlayerName = name + (playerIndex + 1).ToString();
-            PlayerColor = Graphics.ColorIndex(playerIndex);
+            //PlayerColor = Graphics.ColorIndex(playerIndex);
+            PlayerColor = playerIndex % 2 == 0
+                ? ScenesCommunicationManager.TeamAColor
+                : ScenesCommunicationManager.TeamBColor;
 
             startPosition = startPos;
         }
