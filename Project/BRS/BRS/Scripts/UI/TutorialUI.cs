@@ -66,9 +66,10 @@ namespace BRS.Scripts.UI {
                 showTutorial = false; // don't display anymore
             }
 
-            if(isDisplaying && displayButton != XboxButtons.Null) {
-                ButtonsUI.Instance.GiveCommand(_index, buttonDest, displayButton, Align.TopLeft);
-            }
+            if(GameManager.GameActive)
+                if(isDisplaying && displayButton != XboxButtons.Null) {
+                    ButtonsUI.Instance.GiveCommand(_index, buttonDest, displayButton, Align.TopLeft);
+                }
         }
 
 
@@ -111,7 +112,7 @@ namespace BRS.Scripts.UI {
 
         public override void Draw2D(int i) {
             i--;
-            if (i != _index) return;
+            if (i != _index || !GameManager.GameActive) return;
             if (isDisplaying) {
                 Vector2 screenPosition = Camera.GetCamera(_index).WorldToScreenPoint(player.transform.position);
 
