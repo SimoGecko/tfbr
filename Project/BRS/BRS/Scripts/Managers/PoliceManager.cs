@@ -86,7 +86,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnPatrolPolice() {
-            staticWaypoints = File.ReadPolicePaths("Load/PolicePaths_level" + GameManager.LvlScene + ".txt").ToArray();
+            staticWaypoints = File.ReadPolicePaths("Load/UnitySceneData/PolicePaths_level" + GameManager.LvlScene + ".txt").ToArray();
             int numPatrolPolice = MathHelper.Min(staticWaypoints.Length, patrolPolicePerDifficulty[GameManager.lvlDifficulty]);
 
             for (int i = 0; i < numPatrolPolice; i++) {

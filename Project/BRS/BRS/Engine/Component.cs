@@ -53,8 +53,10 @@ namespace BRS.Engine {
     }
 
 
-    //@nico remove this
-    public class ListComponents : Component { // WHAT IS THIS
+    /// <summary>
+    /// Class to store a list of components
+    /// </summary>
+    public class ListComponents : Component { 
         public readonly List<Component> Components;
         public readonly string NameIdentifier;
 

@@ -69,8 +69,8 @@ namespace BRS.Scripts.Managers {
         /// <summary>
         /// Define the possible statistic of each model
         /// </summary>
-        public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 7, 3);
-        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 7, 3), new ModelsStatsStruct(27, 4.667f, 4.667f, 2), new ModelsStatsStruct(18, 7, 4.667f, 2) };
+        public static ModelsStatsStruct maxModelStats = new ModelsStatsStruct(27, 7, 6, 3);
+        public static ModelsStatsStruct[] ValuesStats = { new ModelsStatsStruct(18, 4.667f, 6, 3), new ModelsStatsStruct(27, 4.667f, 4, 2), new ModelsStatsStruct(18, 7, 4, 2) };
         public static string[] NameStats = { "Capacity", "Distance of attack", "Speed" };
 
         /// <summary>
