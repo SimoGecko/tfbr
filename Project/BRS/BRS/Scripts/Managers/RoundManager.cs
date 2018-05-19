@@ -140,10 +140,11 @@ namespace BRS.Scripts.Managers {
                 RoundUI.instance.ShowCountDown(i);
                 if(i>0) Audio.Play("start321", Vector3.Zero);
                 else Audio.Play("start0", Vector3.Zero);
-                if (i == 0) OnRoundStart();
+                //if (i == 0) OnRoundStart();
             }
             await Time.WaitForSeconds(1f);
             RoundUI.instance.ShowCountDown(-1);//disables it
+            OnRoundStart();
 
             foreach (Camera c in Screen.Cameras) {
                 c.transform.position = c.gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset;
