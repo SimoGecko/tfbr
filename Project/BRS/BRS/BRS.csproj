@@ -263,7 +263,8 @@
     <Compile Include="Scripts\UI\PowerupUI.cs" />
     <Compile Include="Scripts\UI\RoundUI.cs" />
     <Compile Include="Scripts\UI\SpeechUI.cs" />
-    <Compile Include="Scripts\UI\Suggestions.cs" />
+    <Compile Include="Scripts\UI\ButtonsUI.cs" />
+    <Compile Include="Scripts\UI\TutorialUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
@@ -294,6 +295,7 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
+    <Content Include="Load\MenuPanels\Tutorial5.txt" />
     <Content Include="Load\PolicePaths_level1.txt" />
     <Content Include="Load\PolicePaths_level2.txt" />
     <Content Include="Load\MenuPanels\Tutorial4.txt" />

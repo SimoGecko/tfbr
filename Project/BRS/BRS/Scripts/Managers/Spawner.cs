@@ -139,9 +139,7 @@ namespace BRS.Scripts.Managers {
         }
 
         void SpawnOnePowerupAt(Vector3 position, Vector3? linearVelocity=null) {
-            position.Y = Math.Max(position.Y, 1.5f);
-
-            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerup + "Prefab", position, Quaternion.Identity, linearVelocity??Vector3.Zero);
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerupBiased + "Prefab", position + Vector3.Up * 1.5f, Quaternion.Identity, linearVelocity??Vector3.Zero);
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 

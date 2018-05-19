@@ -9,9 +9,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.UI {
-    public enum XboxButtons { A, X, Y, B, LB, RB, LT, RT, DD, DL, DR, DU, D, L, R, M };
+    public enum XboxButtons { A, X, Y, B, LB, RB, LT, RT, DD, DL, DR, DU, D, L, R, M, Null };
 
-    class Suggestions : Component {
+    class ButtonsUI : Component {
         ////////// shows on screen tips for the player //////////
 
         // --------------------- VARIABLES ---------------------
@@ -27,7 +27,7 @@ namespace BRS.Scripts.UI {
         private const int ButWidth = 50;
 
         //reference
-        public static Suggestions Instance;
+        public static ButtonsUI Instance;
         public Transform Player;
 
 

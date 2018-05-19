@@ -24,6 +24,7 @@ namespace BRS.Scripts.PlayerScripts {
         private const float AutoFollowSmoothTime = .4f;
         private const int AngleVariation = 40;
         private const float ShakeAmount = .1f;
+        private const float deadZone = .2f;
 
         public static readonly Vector3 Offset = new Vector3(0, 10, 10);
         public static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
@@ -42,6 +43,8 @@ namespace BRS.Scripts.PlayerScripts {
 
         float _shakeDuration = 0;
         Vector3 _shake;
+
+        bool inputGreaterThanDeadzone;
 
 
 
@@ -86,6 +89,8 @@ namespace BRS.Scripts.PlayerScripts {
 
             inputX += Input.GetThumbstick(Input.Stick.Right, CamIndex).X * _gamepadSensitivity.X;
             inputY += Input.GetThumbstick(Input.Stick.Right, CamIndex).Y * _gamepadSensitivity.Y;
+
+            inputGreaterThanDeadzone = new Vector2(inputX, inputY).LengthSquared() >= deadZone * deadZone;
 
             _xAngle = (_xAngle + inputY).Clamp(_angleRange.X, _angleRange.Y);
             _xAngleSmooth = Utility.SmoothDamp(_xAngleSmooth, _xAngle, ref _refVelocityX, SmoothTime);
@@ -132,6 +137,10 @@ namespace BRS.Scripts.PlayerScripts {
 
         public Vector3 GetPlayerPosition() {
             return _player.position;
+        }
+
+        public bool InputIsGreaterThanDeadZone() {
+            return inputGreaterThanDeadzone;
         }
 
         // other

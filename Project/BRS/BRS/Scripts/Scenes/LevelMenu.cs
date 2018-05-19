@@ -95,7 +95,7 @@ namespace BRS.Scripts.Scenes {
 
             // Define the menu
             GameObject Manager = new GameObject("manager");
-            Manager.AddComponent(new Suggestions());
+            Manager.AddComponent(new ButtonsUI());
             Manager.AddComponent(new MenuManager());
             
         }
