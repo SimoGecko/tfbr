@@ -59,8 +59,8 @@ namespace BRS.Scripts.UI {
 
             UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true, flip: flip);
             //UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
-            UserInterface.DrawPicture(_playerUi[index].modelBack, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
-            UserInterface.DrawPicture(_playerUi[index].modelPartColor, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, col: _playerUi[index].modelColor, flip: flip);
+            UserInterface.DrawPicture(_playerUi[index].modelBack, new Rectangle(15, 35, 110, 110), null, Align.TopLeft, flip: flip);
+            UserInterface.DrawPicture(_playerUi[index].modelPartColor, new Rectangle(15, 35, 110, 110), null, Align.TopLeft, col: _playerUi[index].modelColor, flip: flip);
 
             //capacity
             UserInterface.DrawPicture(_barIcons, new Rectangle(120, 57, 25, 25), new Rectangle(0, 0, 200, 200), Align.TopLeft, flip: flip);

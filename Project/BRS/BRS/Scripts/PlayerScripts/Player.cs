@@ -76,8 +76,9 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Start() {
             base.Start();
 
-            GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
-            if (po != null) _other = po.GetComponent<Player>();
+            //GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
+            //if (po != null) _other = po.GetComponent<Player>();
+            _other = ElementManager.Instance.Enemy(TeamIndex);
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
             CamController.Start();
