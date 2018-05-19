@@ -242,7 +242,12 @@ namespace BRS.Engine {
                         //string aPerson = reader.ReadLine();
 
                         string[] pSplit = line.Split(' ');
-                        listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+
+                        string namePlayer = "";
+                        for (int i = 0; i < pSplit.Length-1; ++i)
+                            namePlayer += pSplit[i];
+
+                        listPerson.Add(new Tuple<string, string>(namePlayer, pSplit[pSplit.Length-1]));
 
                     }
                 }
@@ -256,7 +261,7 @@ namespace BRS.Engine {
 
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
-                using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
+                using (FileStream fs = System.IO.File.OpenWrite(pathName)) {
                     fs.Flush();
                     int count = 0;
                     foreach (var elem in listPlayersNameScore) {
