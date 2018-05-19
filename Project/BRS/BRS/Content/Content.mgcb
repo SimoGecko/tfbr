@@ -4267,3 +4267,9 @@
 /processorParam:TextureFormat=Color
 /build:images/tutorial/tut_5.png
 
+#begin Effects/DepthHardwareInstancing.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Auto
+/build:Effects/DepthHardwareInstancing.fx
+

@@ -32,7 +32,7 @@ namespace BRS.Scripts.PowerUps {
             base.UsePowerup();
             //instantiate exploding box
             transform.position = Owner.transform.position;
-            GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * .25f, Quaternion.Identity);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * 0.75f, Quaternion.Identity);
             Crate c = newCrate.GetComponent<Crate>();
             c.SetExplosionRigged(Owner.TeamIndex);
             ElementManager.Instance.Add(c);
