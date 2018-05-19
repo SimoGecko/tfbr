@@ -116,20 +116,6 @@ namespace BRS.Engine {
                     //Debug.Log(name);
                     Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
                 }
-
-                foreach (IComponent c in components) c.Draw3D(cam);
-            }
-        }
-
-        internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
-                if (Model != null) {
-                    Graphics.DrawModelDepth(Model, cam.View, cam.ProjDepth, transform.World, depthShader);
-                }
-
-                foreach (IComponent c in components) {
-                    c.Draw3D(cam);
-                }
             }
         }
 

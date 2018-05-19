@@ -163,7 +163,7 @@ namespace Jitter
         private WorldEvents events = new WorldEvents();
         public WorldEvents Events { get { return events; } }
 
-        //private ThreadManager threadManager = ThreadManager.Instance;
+        private ThreadManager threadManager = ThreadManager.Instance;
 
         /// <summary>
         /// Holds a list of <see cref="Arbiter"/>. All currently
@@ -763,23 +763,23 @@ namespace Jitter
 
         private void HandleArbiter(int iterations, bool multiThreaded)
         {
-            // if (multiThreaded)
-            // {
-            //     for (int i = 0; i < islands.Count; i++)
-            //     {
-            //         if(islands[i].IsActive()) threadManager.AddTask(arbiterCallback, islands[i]);
-            //     }
-            // 
-            //     threadManager.Execute();
-            // }
-            // else
-            // {
+            if (multiThreaded)
+            {
                 for (int i = 0; i < islands.Count; i++)
                 {
-                    if (islands[i].IsActive()) arbiterCallback(islands[i]);
+                    if(islands[i].IsActive()) threadManager.AddTask(arbiterCallback, islands[i]);
                 }
+            
+                threadManager.Execute();
+            }
+            else
+            {
+              for (int i = 0; i < islands.Count; i++)
+              {
+                  if (islands[i].IsActive()) arbiterCallback(islands[i]);
+              }
 
-            //}
+            }
         }
 
         private void IntegrateForces()
@@ -865,24 +865,24 @@ namespace Jitter
 
         private void Integrate(bool multithread)
         {
-            //if (multithread)
-            //{
-            //    foreach (RigidBody body in rigidBodies)
-            //    {
-            //        if (body.isStatic || !body.IsActive) continue;
-            //        threadManager.AddTask(integrateCallback, body);
-            //    }
-
-            //    threadManager.Execute();
-            //}
-            //else
-            //{
+            if (multithread)
+            {
                 foreach (RigidBody body in rigidBodies)
                 {
                     if (body.isStatic || !body.IsActive) continue;
-                    integrateCallback(body);
+                    threadManager.AddTask(integrateCallback, body);
                 }
-            //}
+
+                threadManager.Execute();
+            }
+            else
+            {
+              foreach (RigidBody body in rigidBodies)
+              {
+                  if (body.isStatic || !body.IsActive) continue;
+                  integrateCallback(body);
+              }
+            }
         }
 
         private void CollisionDetected(RigidBody body1, RigidBody body2, JVector point1, JVector point2, JVector normal, float penetration)

@@ -25,7 +25,7 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            
+
         }
 
 
@@ -39,8 +39,10 @@ namespace BRS.Scripts.PowerUps {
 
             // Initialize the weight with a linear velocity which matches the player
             Vector3 velocity = Conversion.ToXnaVector(randomEnemyPlayer.gameObject.GetComponent<MovingRigidBody>().RigidBody.LinearVelocity);
-            velocity.Normalize();
-            velocity = 3 * velocity + Vector3.Down;
+            if (velocity.LengthSquared() > 0.1f) {
+                velocity.Normalize();
+            }
+            velocity = 0.75f * randomEnemyPlayer.gameObject.GetComponent<PlayerMovement>().Speed * velocity + Vector3.Down;
 
             GameObject fallingWeight = GameObject.Instantiate("fallingWeightPrefab", spawnPos, MyRandom.YRotation(), velocity);
             ElementManager.Instance.Add(fallingWeight);

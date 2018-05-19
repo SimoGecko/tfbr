@@ -98,6 +98,7 @@ namespace BRS.Scripts.UI {
             Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tut_2");
             Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tut_3");
             Texture2D textureTuto4 = File.Load<Texture2D>("Images/tutorial/tut_4");
+            Texture2D textureTuto5 = File.Load<Texture2D>("Images/tutorial/tut_5");
             Texture2D textureBlack = File.Load<Texture2D>("Images/tutorial/black_pic");
             Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
             Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
@@ -138,6 +139,7 @@ namespace BRS.Scripts.UI {
                 { "imageTuto2", textureTuto2 },
                 { "imageTuto3", textureTuto3 },
                 { "imageTuto4", textureTuto4 },
+                { "imageTuto5", textureTuto5 },
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
                 { "tickBoxCliqued", textureTickBoxCliqued },
@@ -196,6 +198,7 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial2.txt", "tutorial2");
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
+            CreatePanel("Load/MenuPanels/Tutorial5.txt", "tutorial5");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
             CreatePanel("Load/MenuPanels/Play2SharedTeamA.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);

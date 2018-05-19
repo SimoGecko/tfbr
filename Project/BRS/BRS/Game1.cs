@@ -22,8 +22,8 @@ namespace BRS {
         RenderTarget2D _renderTarget;
         // depth info
         RenderTarget2D _ZBuffer;
-        Effect _ZBufferShader;
-        const string startScene = "LevelMenu";
+        private Effect _zBufferShaderHardwareInstancing;
+        const string startScene = "Level1";
         bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
@@ -36,7 +36,8 @@ namespace BRS {
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
-            HardwareRendering.gDM = _graphics;
+            HardwareRendering.GraphicsDeviceManager = _graphics;
+            ParticleRendering.GraphicsDeviceManager = _graphics;
 
             //IsFixedTimeStep = false;
         }
@@ -66,6 +67,7 @@ namespace BRS {
             // set up the post processing manager
             List<PostprocessingType> defaultEffects = new List<PostprocessingType>
             {
+                PostprocessingType.DepthOfField,
                 PostprocessingType.Chromatic,
                 PostprocessingType.ColorGrading,
                 PostprocessingType.Vignette,
@@ -93,6 +95,7 @@ namespace BRS {
             UserInterface.sB = _spriteBatch;
             Graphics.Start();
             HardwareRendering.Start();
+            ParticleRendering.Start();
             //start other big components
             Input.Start();
 
@@ -110,7 +113,7 @@ namespace BRS {
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _ZBufferShader = File.Load<Effect>("Effects/Depth");
+            _zBufferShaderHardwareInstancing = File.Load<Effect>("Effects/DepthHardwareInstancing");
 
             _font = File.Load<SpriteFont>("Other/font/debug");
 
@@ -150,6 +153,7 @@ namespace BRS {
 
             // Instanciating
             HardwareRendering.Update();
+            ParticleRendering.Update();
         }
 
         protected override void Draw(GameTime gameTime) {
@@ -163,18 +167,16 @@ namespace BRS {
             //-----3D-----
             GraphicsDevice.DepthStencilState = DepthStencilState.Default; // new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
 
+            HardwareRendering.Draw();
+            ParticleRendering.Draw();
+
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
-
-                GraphicsDevice.RasterizerState = Screen._nocullRasterizer;
-                //Skybox.Draw(cam);
-                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
-                HardwareRendering.Draw(cam);
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
 
@@ -187,23 +189,17 @@ namespace BRS {
             //Gizmos.ClearOrders();
 
 
-            //// Todo: For now disabled because it screwed up all shadows and lights etc...
-            // draw everything 3 D to get the depth info 
-            //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
-            //_graphics.GraphicsDevice.Clear(Color.Black);
+            // Todo: For now disabled because it screwed up all shadows and lights etc...
+            // draw everything 3 D to get the depth info
+            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            _graphics.GraphicsDevice.Clear(Color.Black);
 
-            //GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-            //foreach (Camera cam in Screen.Cameras) {
-            //    GraphicsDevice.Viewport = cam.Viewport;
-
-            //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
-            //}
-
+            HardwareRendering.Draw(_zBufferShaderHardwareInstancing);
 
 
             // apply post processing
             // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer, gameTime);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
@@ -227,22 +223,22 @@ namespace BRS {
                 _spriteBatch.End();
             }
 
-            try {
-            string text = string.Format(
-                "Frames per second: {0}/{1}\n" +
-                "Instances: {2}\n",
-                (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
-                (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
-                GameObject.All.Length);
+            //try {
+            //string text = string.Format(
+            //    "Frames per second: {0}/{1}\n" +
+            //    "Instances: {2}\n",
+            //    (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+            //    (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+            //    GameObject.All.Length);
 
-            _spriteBatch.Begin();
+            //_spriteBatch.Begin();
 
-            _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
-            _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+            //_spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+            //_spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
 
-            _spriteBatch.End();
-            }
-            catch { }
+            //_spriteBatch.End();
+            //}
+            //catch { }
         }
     }
 

@@ -279,20 +279,20 @@ namespace Jitter.Collision
             }
             else
             {
-                //if (multiThreaded)
-                //{
-                //    threadManager.AddTask(sortCallback, axis1);
-                //    threadManager.AddTask(sortCallback, axis2);
-                //    threadManager.AddTask(sortCallback, axis3);
+                if (multiThreaded)
+                {
+                    threadManager.AddTask(sortCallback, axis1);
+                    threadManager.AddTask(sortCallback, axis2);
+                    threadManager.AddTask(sortCallback, axis3);
 
-                //    threadManager.Execute();
-                //}
-                //else
-                //{
-                    sortCallback(axis1);
-                    sortCallback(axis2);
-                    sortCallback(axis3);
-                //}
+                    threadManager.Execute();
+                }
+                else
+                {
+                  sortCallback(axis1);
+                  sortCallback(axis2);
+                  sortCallback(axis3);
+                }
             }
 
             addCounter = 0;
@@ -303,24 +303,24 @@ namespace Jitter.Collision
 
                 if (base.RaisePassedBroadphase(key.Entity1, key.Entity2))
                 {
-                    //if (multiThreaded)
-                    //{
-                    //    BroadphasePair pair = BroadphasePair.Pool.GetNew();
-                    //    if (swapOrder) { pair.Entity1 = key.Entity1; pair.Entity2 = key.Entity2; }
-                    //    else { pair.Entity2 = key.Entity2; pair.Entity1 = key.Entity1; }
-                    //    threadManager.AddTask(detectCallback, pair);
-                    //}
-                    //else
-                    //{
-                        if (swapOrder) { Detect(key.Entity1, key.Entity2); }
-                        else Detect(key.Entity2, key.Entity1);
-                    //}
+                    if (multiThreaded)
+                    {
+                        BroadphasePair pair = BroadphasePair.Pool.GetNew();
+                        if (swapOrder) { pair.Entity1 = key.Entity1; pair.Entity2 = key.Entity2; }
+                        else { pair.Entity2 = key.Entity2; pair.Entity1 = key.Entity1; }
+                        threadManager.AddTask(detectCallback, pair);
+                    }
+                    else
+                    {
+                      if (swapOrder) { Detect(key.Entity1, key.Entity2); }
+                      else Detect(key.Entity2, key.Entity1);
+                    }
 
                     swapOrder = !swapOrder;
                 }
             }
 
-            //threadManager.Execute();
+            threadManager.Execute();
 
         }
 
