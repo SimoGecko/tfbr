@@ -46,7 +46,7 @@ namespace BRS.Scripts.PowerUps {
             base.Start();
             _rotate = true;
             transform.rotation = MyRandom.YRotation();
-            Texture2D pcol = File.Load<Texture2D>("Images/colors/powerupColors");
+            Texture2D pcol = File.Load<Texture2D>("Images/colors/powerup");
             powerupColors = Graphics.TextureTo1DArray(pcol);
 
             if (gameObject.HasComponent<DynamicRigidBody>()) {

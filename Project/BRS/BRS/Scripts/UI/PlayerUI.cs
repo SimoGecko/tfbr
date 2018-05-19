@@ -129,8 +129,8 @@ namespace BRS.Scripts.UI {
 
         // Set default Player Model Image and color (UI)
         public void SetPlayerUIModel() { 
-            Texture2D defaultModelImage = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
-            Texture2D defaultModelImagePartColor = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
+            Texture2D defaultModelImage = File.Load<Texture2D>("Images/vehicles/fl_back");
+            Texture2D defaultModelImagePartColor = File.Load<Texture2D>("Images/vehicles/fl_color");
 
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Color modelColor = i % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor;

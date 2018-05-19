@@ -114,12 +114,12 @@ namespace BRS.Scripts.Managers {
             ModelImages = new List<Texture2D>();
             ModelImagesColorPart = new List<Texture2D>();
 
-            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back"));
-            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back"));
-            ModelImages.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back"));
-            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color"));
-            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color"));
-            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color"));
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles/fl_back"));
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles/sw_back"));
+            ModelImages.Add(File.Load<Texture2D>("Images/vehicles/bz_back"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles/fl_color"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles/sw_color"));
+            ModelImagesColorPart.Add(File.Load<Texture2D>("Images/vehicles/bz_color"));
         }
 
         /// <summary>

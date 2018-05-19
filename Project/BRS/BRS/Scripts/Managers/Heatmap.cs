@@ -55,7 +55,7 @@ namespace BRS.Scripts {
             pixelSize = (float)PlayArea.SpawnArea.Width / moneyPic.Width;
 
             //HEATMAP
-            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
+            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/saved_heatmap");
             //playerHeatmap = new int[distribWidth, distribHeight];
             StartComputingHeatmap();
         }
