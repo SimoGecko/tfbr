@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.PostProcessing {
     /// <summary>
@@ -29,11 +30,12 @@ namespace BRS.Engine.PostProcessing {
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
         private readonly Dictionary<PostprocessingType, PostProcessingEffect> _fixEffects = new Dictionary<PostprocessingType, PostProcessingEffect>();
         private readonly PostProcessingEffect _twoPassEffect;
-        private RenderTarget2D _blurTarget;
+        private RenderTarget2D _blurTarget1;
+        private RenderTarget2D _blurTarget2;
         private RenderTarget2D _renderTarget1;
         private RenderTarget2D _renderTarget2;
-        private const float Distance = 6f;
-        private const float Range = 16.5f;
+        private  float Distance = 1f;
+        private  float Range = 16.5f;
 
         #endregion
 
@@ -148,7 +150,14 @@ namespace BRS.Engine.PostProcessing {
             _renderTarget2 = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
                 spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
 
-            _blurTarget = new RenderTarget2D(
+            _blurTarget1 = new RenderTarget2D(
+                spriteBatch.GraphicsDevice,
+                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
+                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
+                false,
+                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            _blurTarget2 = new RenderTarget2D(
                 spriteBatch.GraphicsDevice,
                 Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
                 Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
@@ -165,8 +174,7 @@ namespace BRS.Engine.PostProcessing {
         /// <param name="spriteBatch"></param>
         /// <param name="graphicsDevice"></param>
         /// <param name="depth1Texture"></param>
-        /// <param name="gameTime"></param>
-        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture, GameTime gameTime) {
+        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture) {
             RenderTarget2D curTarget = renderTarget;
             int targetI = 0;
 
@@ -178,23 +186,29 @@ namespace BRS.Engine.PostProcessing {
 
                     switch (ppShader.Type) {
                         case PostprocessingType.DepthOfField:
-                            // set the target to the blur target
-                            graphicsDevice.SetRenderTarget(_blurTarget);
+                            RenderTarget2D curBlurTarget = renderTarget;
 
                             // get the gaussian blur shader
                             PostProcessingEffect blurShader = _twoPassEffect;
                             blurShader.SetParameter("active", new Vector4(1, 1, 1, 1));
 
-                            // apply 2 blur passes      
-                            SpriteBatchBegin(ref spriteBatch);
-                            blurShader.Effect.CurrentTechnique.Passes[0].Apply();
-                            blurShader.Effect.CurrentTechnique.Passes[1].Apply();
-                            spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                            for (int i = 0; i < 2; i++) {
+                                // Setup next render-target to apply next filter
+                                RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _blurTarget1 : _blurTarget2;
+                                graphicsDevice.SetRenderTarget(nextTarget);
 
-                            SpriteBatchEnd(ref spriteBatch);
+                                // apply post processing shader
+                                SpriteBatchBegin(ref spriteBatch);
+                                blurShader.Effect.CurrentTechnique.Passes[i].Apply();
+                                spriteBatch.Draw(curBlurTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                                SpriteBatchEnd(ref spriteBatch);
+
+                                graphicsDevice.SetRenderTarget(null);
+                                curBlurTarget = nextTarget;
+                            }
 
                             // set the blurred scene and the depth map as parameter
-                            ppShader.SetParameter("BlurScene", _blurTarget);
+                            ppShader.SetParameter("BlurScene", curBlurTarget);
                             ppShader.SetParameter("DepthTexture", depth1Texture);
 
                             break;

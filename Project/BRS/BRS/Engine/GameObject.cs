@@ -119,14 +119,6 @@ namespace BRS.Engine {
             }
         }
 
-        internal void Draw3DDepth(Camera cam, Effect depthShader) {
-            if (active && (tag == ObjectTag.Default || tag == ObjectTag.Boundary || tag == ObjectTag.StaticObstacle || tag == ObjectTag.Ground)) {
-                if (Model != null) {
-                    Graphics.DrawModelDepth(Model, cam.View, cam.ProjDepth, transform.World, depthShader);
-                }
-            }
-        }
-
         public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
             if (active) {
                 foreach (IComponent c in components) c.Draw2D(i);

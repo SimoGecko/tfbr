@@ -49,10 +49,15 @@ namespace BRS.Engine.Rendering {
         /// <summary>
         /// Draw all the models with hardware-instancing
         /// </summary>
-        public static void Draw() {
+        public static void Draw(Effect effect = null) {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
-                if (ModelTransformations.ContainsKey(mt))
-                    DrawModelInstanciated(ModelTransformations[mt]);
+                if (ModelTransformations.ContainsKey(mt)) {
+                    if (effect == null) {
+                        DrawModelInstanciated(ModelTransformations[mt]);
+                    } else {
+                        DrawModelInstanciated(ModelTransformations[mt], effect);
+                    }
+                }
             }
         }
 
@@ -124,6 +129,7 @@ namespace BRS.Engine.Rendering {
 
                     // load the instanciation effect and set the correct technique based on the material
                     part.Effect = _instanceEffect;
+                    _instanceEffect.CurrentTechnique = _instanceEffect.Techniques[material.RenderingType.ToString()];
 
                     // Set properties which are valid for all cameras
                     // - Transformation
@@ -132,7 +138,6 @@ namespace BRS.Engine.Rendering {
                     _instanceEffect.Parameters["ColorTexture"].SetValue(texture);
                     _instanceEffect.Parameters["LightmapTexture"].SetValue(lightmap);
 
-                    _instanceEffect.CurrentTechnique = _instanceEffect.Techniques[material.RenderingType.ToString()];
                     foreach (Camera cam in Screen.Cameras) {
                         GraphicsDevice.Viewport = cam.Viewport;
 
@@ -142,6 +147,53 @@ namespace BRS.Engine.Rendering {
 
                         // Draw all the instance copies in a single call.
                         foreach (EffectPass pass in _instanceEffect.CurrentTechnique.Passes) {
+                            pass.Apply();
+
+                            GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,
+                                part.NumVertices, part.StartIndex,
+                                part.PrimitiveCount, modelInstance.VertexInformation.Length);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw a model with the vertex-/index-buffers to accelerate the drawing
+        /// </summary>
+        /// <param name="modelInstance">Instanciation information</param>
+        /// <param name="effect"></param>
+        static void DrawModelInstanciated(ModelInstance modelInstance, Effect effect) {
+            if (modelInstance.GameObjects.Count == 0) {
+                return;
+            }
+
+            foreach (ModelMesh mesh in modelInstance.Model.Meshes) {
+                foreach (ModelMeshPart part in mesh.MeshParts) {
+                    // Tell the GPU to read from both the model vertex buffer plus our instanceVertexBuffer.
+                    GraphicsDevice.SetVertexBuffers(
+                        new VertexBufferBinding(part.VertexBuffer, part.VertexOffset, 0),
+                        new VertexBufferBinding(modelInstance.VertexBuffer, 0, 1)
+                    );
+
+                    GraphicsDevice.Indices = part.IndexBuffer;
+
+                    // load the instanciation effect and set the correct technique based on the material
+                    part.Effect = effect;
+
+                    // Set properties which are valid for all cameras
+                    // - Transformation
+                    effect.Parameters["World"].SetValue(mesh.ParentBone.Transform);
+
+                    foreach (Camera cam in Screen.Cameras) {
+                        GraphicsDevice.Viewport = cam.Viewport;
+
+                        // Set camera-properties for shader
+                        effect.Parameters["View"].SetValue(cam.View);
+                        effect.Parameters["Projection"].SetValue(cam.ProjDepth);
+
+                        // Draw all the instance copies in a single call.
+                        foreach (EffectPass pass in effect.CurrentTechnique.Passes) {
                             pass.Apply();
 
                             GraphicsDevice.DrawInstancedPrimitives(PrimitiveType.TriangleList, 0, 0,

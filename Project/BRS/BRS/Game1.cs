@@ -22,7 +22,7 @@ namespace BRS {
         RenderTarget2D _renderTarget;
         // depth info
         RenderTarget2D _ZBuffer;
-        Effect _ZBufferShader;
+        private Effect _zBufferShaderHardwareInstancing;
         const string startScene = "Level1";
         bool showUI = true;
 
@@ -67,6 +67,7 @@ namespace BRS {
             // set up the post processing manager
             List<PostprocessingType> defaultEffects = new List<PostprocessingType>
             {
+                PostprocessingType.DepthOfField,
                 PostprocessingType.Chromatic,
                 PostprocessingType.ColorGrading,
                 PostprocessingType.Vignette,
@@ -112,7 +113,7 @@ namespace BRS {
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _ZBufferShader = File.Load<Effect>("Effects/Depth");
+            _zBufferShaderHardwareInstancing = File.Load<Effect>("Effects/DepthHardwareInstancing");
 
             _font = File.Load<SpriteFont>("Other/font/debugFont");
 
@@ -172,10 +173,6 @@ namespace BRS {
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
 
-                GraphicsDevice.RasterizerState = Screen._nocullRasterizer;
-                //Skybox.Draw(cam);
-                GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                 // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
@@ -192,23 +189,17 @@ namespace BRS {
             //Gizmos.ClearOrders();
 
 
-            //// Todo: For now disabled because it screwed up all shadows and lights etc...
-            // draw everything 3 D to get the depth info 
-            //_graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
-            //_graphics.GraphicsDevice.Clear(Color.Black);
+            // Todo: For now disabled because it screwed up all shadows and lights etc...
+            // draw everything 3 D to get the depth info
+            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            _graphics.GraphicsDevice.Clear(Color.Black);
 
-            //GraphicsDevice.DepthStencilState = new DepthStencilState() { DepthBufferEnable = true }; // activates z buffer
-            //foreach (Camera cam in Screen.Cameras) {
-            //    GraphicsDevice.Viewport = cam.Viewport;
-
-            //    foreach (GameObject go in GameObject.All) go.Draw3DDepth(cam, _ZBufferShader);
-            //}
-
+            HardwareRendering.Draw(_zBufferShaderHardwareInstancing);
 
 
             // apply post processing
             // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer, gameTime);
+            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
