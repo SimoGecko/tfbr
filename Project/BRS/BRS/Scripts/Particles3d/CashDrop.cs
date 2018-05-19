@@ -1,9 +1,8 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -27,7 +26,7 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _cashDropParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "dollar2",
+                    TextureName = "base_cash_drop",
                     MaxParticles = 2,
                     ParticlesPerRound = 1,
                     Duration = 5.0f,
@@ -54,6 +53,7 @@ namespace BRS.Scripts.Particles3D {
 
 
             _cashDropParticles.Awake();
+            ParticleRendering.AddInstance(_cashDropParticles);
         }
 
         /// <summary>
@@ -73,13 +73,12 @@ namespace BRS.Scripts.Particles3D {
 
             _cashDropParticles.Update();
         }
-        
+
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _cashDropParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_cashDropParticles);
         }
     }
 }

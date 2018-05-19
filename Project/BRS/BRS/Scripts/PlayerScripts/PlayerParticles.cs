@@ -50,12 +50,5 @@ namespace BRS.Scripts.PlayerScripts {
                 pc.Update();
             }
         }
-
-
-        public override void Draw3D(Camera camera) {
-            foreach (ParticleComponent pc in _particleComponents) {
-                pc.Draw3D(camera);
-            }
-        }
     }
 }

@@ -1,4 +1,6 @@
-﻿
+﻿// (c) Nicolas Huart 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 namespace BRS.Engine.Menu {
     /// <summary>
     /// Class to a component of the menu which can selected

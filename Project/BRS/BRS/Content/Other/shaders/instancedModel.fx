@@ -22,19 +22,23 @@ float4x4 Projection;
 texture ColorTexture;
 sampler2D colorTextureSampler = sampler_state {
 	Texture = (ColorTexture);
+	MipFilter = Linear;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	AddressU = Clamp;
 	AddressV = Clamp;
+	AddressW = Clamp;
 };
 
 texture LightmapTexture;
 sampler2D lightTextureSampler = sampler_state {
 	Texture = (LightmapTexture);
+	MipFilter = Linear;
 	MinFilter = Linear;
 	MagFilter = Linear;
 	AddressU = Clamp;
 	AddressV = Clamp;
+	AddressW = Clamp;
 };
 
 

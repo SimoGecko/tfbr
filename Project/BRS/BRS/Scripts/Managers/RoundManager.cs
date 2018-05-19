@@ -1,4 +1,4 @@
-// (c) Simone Guggiari 2018
+// (c) Simone Guggiari / Nicolas Huart (camera transition + rankings update only) 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
@@ -99,6 +99,9 @@ namespace BRS.Scripts.Managers {
 
         // --------------------- CUSTOM METHODS ---------b -------
 
+        /// <summary>
+        /// Set up the start information for the 3-2-1 count down camera transition
+        /// </summary>
         void SetUpStartCamTransition() {
             // Start position and rotation for the cameras
             for (int i = 0; i < Screen.Cameras.Length; ++i) {
@@ -119,7 +122,9 @@ namespace BRS.Scripts.Managers {
             CamMoving = true;
         }
 
-        // commands
+        /// <summary>
+        /// Update the camera during the camera transition
+        /// </summary>
         void CamTransitionForCountDown() {
             // Update camera position and rotation
             for (int i = 0; i < Screen.Cameras.Length; ++i) {
@@ -232,7 +237,7 @@ namespace BRS.Scripts.Managers {
 
         void TryRestartRound() {
             UpdateRanking();
-            Heatmap.instance.SaveHeatMap();
+            //Heatmap.instance.SaveHeatMap();
             bool oneAlreadyWon2Rounds = false;
             for (int i = 0; i < GameManager.NumTeams; i++)
                 oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;
@@ -252,15 +257,17 @@ namespace BRS.Scripts.Managers {
             SceneManager.LoadScene("LevelMenu");
         }
 
-
-        void UpdateRanking() {//@nico move somewhere else
-            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
+        /// <summary>
+        /// Update the rankings => write them to a file
+        /// </summary>
+        void UpdateRanking() {
+            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Saves/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
             rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-            File.WriteRanking("Load/Rankings/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
+            File.WriteRanking("Load/Saves/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
 
         // queries

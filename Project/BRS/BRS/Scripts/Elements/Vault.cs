@@ -46,8 +46,11 @@ namespace BRS.Scripts.Elements {
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
+        public override void Awake() {
             instance = this;
+        }
+
+        public override void Start() {
             Health = 10;
             Dead = false;
 

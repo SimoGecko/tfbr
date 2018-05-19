@@ -53,7 +53,7 @@ namespace BRS.Engine {
             HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police"), policeMat);
             HardwareRendering.InitializeModel(ModelType.Crate, File.Load<Model>("Models/elements/crate"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), elementsMat);
             HardwareRendering.InitializeModel(ModelType.Bomb, File.Load<Model>("Models/powerups/bomb"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Weight, File.Load<Model>("Models/powerups/weight"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Magnet, File.Load<Model>("Models/powerups/magnet"), powerupMat);

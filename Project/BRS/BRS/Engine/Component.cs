@@ -17,7 +17,7 @@ namespace BRS.Engine {
         void LateUpdate();
         void OnCollisionEnter(Collider c);
         void OnCollisionEnd(Collider c);
-        void Draw3D(Camera camera);
+        //void Draw3D(Camera camera);
         void Draw2D(int i);
 
         object Clone();
@@ -40,7 +40,7 @@ namespace BRS.Engine {
         public virtual void Destroy() { }
         public virtual void OnCollisionEnter(Collider c) { }
         public virtual void OnCollisionEnd(Collider c) { }
-        public virtual void Draw3D(Camera camera) { }
+        //public virtual void Draw3D(Camera camera) { }
         public virtual void Draw2D(int i) { }
 
         public virtual object Clone() {
@@ -53,8 +53,10 @@ namespace BRS.Engine {
     }
 
 
-    //@nico remove this
-    public class ListComponents : Component { // WHAT IS THIS
+    /// <summary>
+    /// Class to store a list of components
+    /// </summary>
+    public class ListComponents : Component { 
         public readonly List<Component> Components;
         public readonly string NameIdentifier;
 

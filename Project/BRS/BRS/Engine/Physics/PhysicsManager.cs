@@ -98,7 +98,7 @@ namespace BRS.Engine.Physics {
                 step = 1.0f / 100.0f;
             }
 
-            World.Step(step, false);
+            World.Step(step, true);
         }
 
         #endregion

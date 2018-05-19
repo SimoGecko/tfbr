@@ -80,49 +80,40 @@ namespace BRS.Scripts.UI {
             Instance = this;
 
             // Load needed textures
-            Texture2D textureButton = File.Load<Texture2D>("Images/UI/panel");
-            Texture2D textureButtonBackground = File.Load<Texture2D>("Images/UI/panel_Background");
-            Texture2D textureButtonBigBackground = File.Load<Texture2D>("Images/UI/panel_BigBackground");
-            Texture2D textureSlider = File.Load<Texture2D>("Images/UI/progress_bar");
-            Texture2D textureButtonTitle = File.Load<Texture2D>("Images/UI/panel_Title");
-            Texture2D textureButtonCircle = File.Load<Texture2D>("Images/UI/CircleSmall");
-            Texture2D textureButtonSlider = File.Load<Texture2D>("Images/UI/sliderButton");
-            Texture2D textureTickBoxCliqued = File.Load<Texture2D>("Images/UI/tickbox_clicked");
-            Texture2D textureTickBoxNotCliqued = File.Load<Texture2D>("Images/UI/tickbox_notclicked");
-            Texture2D textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
-            Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
-            Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
-            Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
-            Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
+            Texture2D textureButton = File.Load<Texture2D>("Images/Menu/panel");
+            Texture2D textureButtonBackground = File.Load<Texture2D>("Images/Menu/panel_Background");
+            Texture2D textureButtonBigBackground = File.Load<Texture2D>("Images/Menu/panel_BigBackground");
+            Texture2D textureSlider = File.Load<Texture2D>("Images/Menu/progress_bar");
+            Texture2D textureButtonTitle = File.Load<Texture2D>("Images/Menu/panel_Title");
+            Texture2D textureButtonCircle = File.Load<Texture2D>("Images/Menu/CircleSmall");
+            Texture2D textureArrowLeft = File.Load<Texture2D>("Images/Menu/ArrowLeft");
+            Texture2D textureArrowRight = File.Load<Texture2D>("Images/Menu/ArrowRight");
+            Texture2D textureButtonAccept = File.Load<Texture2D>("Images/Menu/Accept");
+            Texture2D textureMenuIcon = File.Load<Texture2D>("Images/Menu/Menu");
+            Texture2D textureRestartIcon = File.Load<Texture2D>("Images/Menu/Restart");
             Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tut_1");
             Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tut_2");
             Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tut_3");
             Texture2D textureTuto4 = File.Load<Texture2D>("Images/tutorial/tut_4");
-            Texture2D textureBlack = File.Load<Texture2D>("Images/tutorial/black_pic");
-            Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
-            Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
-            Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
-            Texture2D textureModel1Color = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
-            Texture2D textureModel2Color = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color");
-            Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
+            Texture2D textureTuto5 = File.Load<Texture2D>("Images/tutorial/tut_5");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
-            Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Ui/ArrowDelete");
-            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Ui/Trash");
-            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Ui/Thunder");
-            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Ui/Decline");
-            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Ui/Dolar");
+            Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Menu/ArrowDelete");
+            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Menu/Trash");
+            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Menu/Thunder");
+            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Menu/Decline");
+            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Menu/Dolar");
             Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
             Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
             Texture2D xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
-                { "model1Back", textureModel1Back },
-                { "model2Back", textureModel2Back },
-                { "model3Back", textureModel3Back },
-                { "model1Color", textureModel1Color },
-                { "model2Color", textureModel2Color },
-                { "model3Color", textureModel3Color },
+                { "model1Back", ScenesCommunicationManager.Instance.ModelImages[0] },
+                { "model2Back", ScenesCommunicationManager.Instance.ModelImages[1] },
+                { "model3Back", ScenesCommunicationManager.Instance.ModelImages[2] },
+                { "model1Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[0] },
+                { "model2Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[1] },
+                { "model3Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[2] },
                 { "button", textureButton },
                 { "background", textureButtonBackground },
                 { "bigBackground", textureButtonBigBackground },
@@ -138,10 +129,9 @@ namespace BRS.Scripts.UI {
                 { "imageTuto2", textureTuto2 },
                 { "imageTuto3", textureTuto3 },
                 { "imageTuto4", textureTuto4 },
+                { "imageTuto5", textureTuto5 },
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
-                { "tickBoxCliqued", textureTickBoxCliqued },
-                { "tickBoxNotCliqued", textureTickBoxNotCliqued },
                 { "trash", textureIconTrash },
                 { "thunder", textureIconThunder },
                 { "decline", textureIconDecline },
@@ -149,7 +139,6 @@ namespace BRS.Scripts.UI {
                 { "titleGame", textureTitle },
                 { "paral", textureParal },
                 { "xboxButtons", xboxButtons },
-                { "textureBlack", textureBlack }
             };
 
             // Set mapping name - functions
@@ -196,6 +185,7 @@ namespace BRS.Scripts.UI {
             CreatePanel("Load/MenuPanels/Tutorial2.txt", "tutorial2");
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
             CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
+            CreatePanel("Load/MenuPanels/Tutorial5.txt", "tutorial5");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
             CreatePanel("Load/MenuPanels/Play2SharedTeamA.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
@@ -458,8 +448,6 @@ namespace BRS.Scripts.UI {
 
                 if (i != 0) listStats.Active = false;
 
-                
-
                 // Add list to current panel
                 MenuManager.Instance.MenuRect[panelName].AddComponent(listStats);
             }
@@ -481,7 +469,6 @@ namespace BRS.Scripts.UI {
             float scaleAlphabet;
 
             Vector2[] startoffset;
-            //startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(885, 230), new Vector2(910, 230) };
             startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(860, 230), new Vector2(860, 230) };
             scaleAlphabet = 0.37f;
 
@@ -574,7 +561,7 @@ namespace BRS.Scripts.UI {
             // Create list of components for each combinaison of (#players <-> duration of a round)
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
-                    List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
+                    List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Saves/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);
                     int count = 0;
