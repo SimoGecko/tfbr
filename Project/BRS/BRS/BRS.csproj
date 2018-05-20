@@ -198,9 +198,8 @@
     <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
-    <Compile Include="Scripts\Scenes\Level1.cs" />
-    <Compile Include="Scripts\Scenes\Level2.cs" />
-    <Compile Include="Scripts\Scenes\Level3.cs" />
+    <Compile Include="Scripts\Scenes\LevelGame.cs" />
+    <Compile Include="Scripts\Scenes\LevelTest.cs" />
     <Compile Include="Scripts\Scenes\LevelMenu.cs" />
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
@@ -244,7 +243,6 @@
     <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\PlayerScripts\Player.cs" />
-    <Compile Include="Scripts\PlayerScripts\PlayerLift.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerAttack.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerMovement.cs" />

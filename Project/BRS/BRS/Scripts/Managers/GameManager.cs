@@ -17,7 +17,7 @@ namespace BRS.Scripts.Managers {
         public static State state; // CONTROLS STATE OF THE GAME
 
         //public
-        public static int NumPlayers = 2; // TODO always check it works with 1, 2, and 4 players
+        public static int NumPlayers = 1; // TODO always check it works with 1, 2, and 4 players
         public static int LvlScene = 1;
         public static int lvlDifficulty = 0; // 0 for Easy, 1 for Normal, 2 for Hard
 

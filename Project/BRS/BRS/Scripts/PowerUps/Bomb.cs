@@ -8,20 +8,18 @@ using BRS.Scripts.Elements;
 
 namespace BRS.Scripts.PowerUps {
     class Bomb : Powerup {
-        ////////// bomb that can be planted and explodes after some time damaging what's around //////////
+        ////////// bomb that can be planted //////////
 
         // --------------------- VARIABLES ---------------------
 
         //public
         public Bomb() {
-            PowerupType = PowerupType.Bomb;
-            powerupColor = Color.Purple;
+            powerupType = PowerupType.Bomb;
         }
         
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-           
         }
 
 
@@ -29,7 +27,6 @@ namespace BRS.Scripts.PowerUps {
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
-            transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedBomb = GameObject.Instantiate("plantedBombPrefab", transform);
             plantedBomb.GetComponent<PlantedBomb>().Plant(Owner.TeamIndex);
             ElementManager.Instance.Add(plantedBomb);

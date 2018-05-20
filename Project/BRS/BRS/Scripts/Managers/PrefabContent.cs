@@ -48,25 +48,25 @@ namespace BRS.Engine {
 
             // Initialize the models for hardware instanciating
             // Important: it doesn't matter when we load the modelds for the 
-            HardwareRendering.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police"), policeMat);
-            HardwareRendering.InitializeModel(ModelType.Crate, File.Load<Model>("Models/elements/crate"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Bomb, File.Load<Model>("Models/powerups/bomb"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Weight, File.Load<Model>("Models/powerups/weight"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Magnet, File.Load<Model>("Models/powerups/magnet"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Speedpad, File.Load<Model>("Models/elements/speedpad"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Stack, File.Load<Model>("Models/elements/stack"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Shadow, File.Load<Model>("Models/primitives/plane"), shadowMat);
-            HardwareRendering.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
-            HardwareRendering.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/primitives/plane"), lightBlueMat);
-            HardwareRendering.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/primitives/plane"), lightRedMat);
-            HardwareRendering.InitializeModel(ModelType.WheelFl, File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
-            HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
-            HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
-            HardwareRendering.InitializeModel(ModelType.Vault, File.Load<Model>("Models/elements/vault"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Cash,           File.Load<Model>("Models/elements/cash"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Gold,           File.Load<Model>("Models/elements/gold"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Diamond,        File.Load<Model>("Models/elements/diamond"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Police,         File.Load<Model>("Models/vehicles/police"), policeMat);
+            HardwareRendering.InitializeModel(ModelType.Crate,          File.Load<Model>("Models/elements/crate"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Oil,            File.Load<Model>("Models/elements/oil"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Bomb,           File.Load<Model>("Models/powerups/bomb"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Weight,         File.Load<Model>("Models/powerups/weight"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Magnet,         File.Load<Model>("Models/powerups/magnet"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Speedpad,       File.Load<Model>("Models/elements/speedpad"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Stack,          File.Load<Model>("Models/elements/stack"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Shadow,         File.Load<Model>("Models/primitives/plane"), shadowMat);
+            HardwareRendering.InitializeModel(ModelType.YellowLight,    File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
+            HardwareRendering.InitializeModel(ModelType.BlueLight,      File.Load<Model>("Models/primitives/plane"), lightBlueMat);
+            HardwareRendering.InitializeModel(ModelType.RedLight,       File.Load<Model>("Models/primitives/plane"), lightRedMat);
+            HardwareRendering.InitializeModel(ModelType.WheelFl,        File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
+            HardwareRendering.InitializeModel(ModelType.WheelBz,        File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
+            HardwareRendering.InitializeModel(ModelType.WheelPolice,    File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
+            HardwareRendering.InitializeModel(ModelType.Vault,          File.Load<Model>("Models/elements/vault"), elementsMat);
 
             for (int i = 0; i < powerupName.Length; i++) {
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);

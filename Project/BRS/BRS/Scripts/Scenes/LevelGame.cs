@@ -5,9 +5,6 @@ using System;
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Physics;
-using BRS.Engine.Physics.Colliders;
-using BRS.Engine.Utilities;
-using BRS.Scripts;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
@@ -22,7 +19,7 @@ using BRS.Engine.Rendering;
 using BRS.Scripts.Elements.Lighting;
 
 namespace BRS.Scripts.Scenes {
-    class Level1 : Scene {
+    class LevelGame : Scene {
         ////////// first game level, loads all the things //////////
 
         public List<Vector3> StartPositions;
@@ -33,7 +30,7 @@ namespace BRS.Scripts.Scenes {
 
         public override void Load() {
             LoadBlenderBakedScene();
-            LoadUnityScene();
+            LoadUnityScene(); // TODO rename to loadColliders and loadDynamicObjects
             CreateSkybox();
             SetStartPositions();
             CreateManagers();
@@ -42,21 +39,19 @@ namespace BRS.Scripts.Scenes {
             CreateBases();
             CreateSpecialObjects();
             SetMenuShaderEffects();
-
         }
 
 
         void LoadBlenderBakedScene() {
             string level = "level" + GameManager.LvlScene;
 
-            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/" + level + "_inside"));
+            Material insideMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/" + level + "_inside"));
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/" + level + "_outside"));
-            Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+            Material groundMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
             HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/" + level + "_inside"), insideMat);
             HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/" + level + "_outside"), outsideMat);
             HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
-
 
             GameObject insideScene = new GameObject("insideScene", ModelType.InsideScene, true);
             insideScene.tag = ObjectTag.Ground;
@@ -67,8 +62,6 @@ namespace BRS.Scripts.Scenes {
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -.1f, 0);
-
-            // Model instanciation
         }
 
         void LoadUnityScene() {
@@ -76,6 +69,45 @@ namespace BRS.Scripts.Scenes {
             task1.Wait();
             var task2 = Task.Run(() => { File.ReadDynamic("Load/UnitySceneData/export_scene_level" + GameManager.LvlScene + "_dynamicObjects.txt"); });
             task2.Wait();
+        }
+
+        void CreateSkybox() {
+            bool useRandomSkybox = true;
+            string[] skyboxTextures = new string[] { "daybreak", "midday", "evening", "sunset", "midnight", };
+            string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
+            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
+            skybox.transform.Scale(2); // not more than this or it will be culled
+            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/" + skyTexture));
+            skybox.material = skyboxMat;
+        }
+        
+        void CreateManagers() {
+            GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
+            UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));
+            UiManager.AddComponent(new BaseUI());
+            UiManager.AddComponent(new ButtonsUI());
+            UiManager.AddComponent(new GameUI());
+            //minimap
+            UiManager.AddComponent(new MoneyUI());
+            UiManager.AddComponent(new ParticleUI());
+            UiManager.AddComponent(new PlayerUI());
+            UiManager.AddComponent(new PowerupUI());
+            UiManager.AddComponent(new RoundUI());
+            UiManager.AddComponent(new SpeechUI());
+            //tutorial
+
+            GameObject ScenesCommManager = new GameObject("scenesComManager");
+            ScenesCommManager.AddComponent(new ScenesCommunicationManager());
+            ScenesCommunicationManager.loadOnlyPauseMenu = true;
+
+            GameObject Manager = new GameObject("manager");
+            Manager.AddComponent(new ElementManager());
+            Manager.AddComponent(new RoundManager());
+            Manager.AddComponent(new Heatmap());
+            Manager.AddComponent(new Spawner());
+            Manager.AddComponent(new Minimap());
+            Manager.AddComponent(new PoliceManager(PoliceStartPositions));
+            Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
         }
 
         void SetStartPositions() {
@@ -92,49 +124,7 @@ namespace BRS.Scripts.Scenes {
             }
         }
 
-        void CreateManagers() {
-            GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
-            UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));
-            UiManager.AddComponent(new BaseUI());
-            UiManager.AddComponent(new PlayerUI());
-            UiManager.AddComponent(new PowerupUI());
-            UiManager.AddComponent(new GameUI());
-            UiManager.AddComponent(new ButtonsUI());
-            UiManager.AddComponent(new MoneyUI());
-            UiManager.AddComponent(new ParticleUI());
-            UiManager.AddComponent(new SpeechUI());
-            UiManager.AddComponent(new RoundUI());
-
-            GameObject ScenesCommManager = new GameObject("scenesComManager");
-            ScenesCommManager.AddComponent(new ScenesCommunicationManager());
-            ScenesCommunicationManager.loadOnlyPauseMenu = true;
-
-            GameObject Manager = new GameObject("manager");
-            Manager.AddComponent(new ElementManager());
-            Manager.AddComponent(new RoundManager());
-            Manager.AddComponent(new Heatmap());
-            Manager.AddComponent(new Spawner());
-            Manager.AddComponent(new Minimap());
-            Manager.AddComponent(new PoliceManager(PoliceStartPositions));
-            Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
-
-            //Add(Manager);         
-
-            //new MenuManager().LoadContent(); // TODO add as component to manager
-        }
-
-        void CreateSkybox() {
-            bool useRandomSkybox = false;
-            string[] skyboxTextures = new string[]{"daybreak", "midday", "evening", "sunset", "midnight", };
-            string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
-            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
-            skybox.transform.Scale(2); // not more than this or it will be culled
-            Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/"+ skyTexture));
-            skybox.material = skyboxMat;
-        }
-
         void CreatePlayers() {
-
             //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
@@ -142,24 +132,23 @@ namespace BRS.Scripts.Scenes {
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
-                player.transform.Scale(1.0f);
 
                 player.material = new Material(File.Load<Texture2D>("Images/textures/player_colors_p" + (i + 1).ToString()), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 player.AddComponent(new Player(i, i % 2, startPos));
                 player.AddComponent(new MovingRigidBody());
                 //subcomponents
-                player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerAttack());
+                player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerInventory());
+                player.AddComponent(new PlayerMovement());
+                player.AddComponent(new PlayerParticles());
                 player.AddComponent(new PlayerPowerup());
                 player.AddComponent(new PlayerStamina());
-                player.AddComponent(new PlayerLift());
-                player.AddComponent(new PlayerCollider());
-                player.AddComponent(new PlayerParticles());
+
+                player.AddComponent(new DynamicShadow());
                 player.AddComponent(new SpeechManager(i));
                 player.AddComponent(new TutorialUI(i));
-                player.AddComponent(new DynamicShadow());
 
                 // Modify player's name and model and color(choosen by user during menu)
                 if (MenuManager.Instance != null) {
@@ -177,7 +166,6 @@ namespace BRS.Scripts.Scenes {
                 }
 
 
-                //Add(player);
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 // Model instanciation
@@ -189,18 +177,19 @@ namespace BRS.Scripts.Scenes {
                 HardwareRendering.InitializeModel(modelType, player.Model, player.material);
                 HardwareRendering.AddInstance(modelType, player);
 
+                //ARROWS
                 Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 //arrow for base
                 GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
-                arrow.material = arrowMat;//new Material(Graphics.Green);
+                arrow.material = arrowMat;
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
                 arrow.transform.Scale(.6f);
 
                 //arrow for enemy
                 if (GameManager.NumPlayers > 1) {
                     GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
-                    arrow2.material = arrowMat;// new Material(Graphics.Red);
+                    arrow2.material = arrowMat;
                     arrow2.AddComponent(new Arrow(player, true, i, () => true));
                     arrow2.transform.Scale(.3f);
                 }
@@ -210,48 +199,27 @@ namespace BRS.Scripts.Scenes {
         void CreateCameraControllers() {
             int i = 0;
             foreach (Camera c in Screen.Cameras) {
-                GameObject camObject = c.gameObject;
-                camObject.AddComponent(new CameraController()); // TODO move out this creation code
-                camObject.GetComponent<CameraController>().CamIndex = i++;
+                c.gameObject.AddComponent(new CameraController(i++)); // TODO move out this creation code
             }
         }
 
         void CreateBases() {
             for (int i = 0; i < GameManager.NumTeams; i++) {
                 // Load the texture and create a copy for the colored base
-                Texture2D texture = File.Load<Texture2D>("Images/textures/base");
-                Texture2D colored = new Texture2D(texture.GraphicsDevice, texture.Width, texture.Height);
-
-                // Read the texture-data into a color-array and replace all visible pixels to the base-color
-                Color[] data = new Color[texture.Width * texture.Height];
-                texture.GetData(data);
-
-                Color teamColor = i == 0
-                    ? ScenesCommunicationManager.TeamAColor
-                    : ScenesCommunicationManager.TeamBColor;
-
-                for (int j = 0; j < data.Length; ++j) {
-                    if (data[j].A > 0) {
-                        data[j].R = teamColor.R;
-                        data[j].G = teamColor.G;
-                        data[j].B = teamColor.B;
-                    }
-                }
-
-                // Once you have finished changing data, set it back to the texture:
-                colored.SetData(data);
+                Texture2D baseTexture = File.Load<Texture2D>("Images/textures/base");
+                Color teamColor = (i == 0) ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor;
+                Texture2D coloredBase = Graphics.TextureTint(baseTexture, teamColor);
 
                 GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/plane"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.Scale(0.5f);
                 playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
-                playerBase.material = new Material(colored, true);
+                playerBase.material = new Material(coloredBase, true);
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new BaseParticles());
                 playerBase.AddComponent(new StaticRigidBody(shapeType: ShapeType.BoxUniform, pureCollider: true));
                 playerBase.AddComponent(new BaseParticles());
                 ElementManager.Instance.Add(playerBase.GetComponent<Base>());
-
 
                 // Model instanciation
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), "base" + i, true);
@@ -280,16 +248,14 @@ namespace BRS.Scripts.Scenes {
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);
             //GameObject speedpad = new GameObject("speedpad", ModelType.Speedpad, true);
-            //speedpad.transform.position = new Vector3(0, 0, -18);
             speedpad.transform.eulerAngles = Vector3.Up * 90;
-
         }
 
         void SetMenuShaderEffects() {
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
-                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Chromatic, i, true); // why is this disabled?
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, false);
             }
 

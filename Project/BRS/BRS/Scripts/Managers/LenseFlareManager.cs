@@ -139,11 +139,9 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int i) {
-            if (i == 0 || !IsActive) {
+            if (i == -1 || !IsActive) {
                 return;
             }
-
-            i--;
 
             if (!_active[i]) {
                 return;

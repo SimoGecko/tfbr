@@ -25,16 +25,15 @@ namespace BRS.Scripts.Elements {
         public bool FullDeloadDone = false;
 
         //private
-        private const float DeloadDistanceThreshold = 4f;
         private const float TimeBetweenUnloads = .03f;
-        private const float MoneyPenalty = .5f; // percent
         private const int MoneyPenaltyAmount = 1000;
-        private readonly int _baseIndex = 0;
+        private const int _bundlesPerStack = 10;
+        private const int _columnsPerRow = 2;
+        private const float _margin = 1f;
 
         private int _shownMoneyStacks = 0;
-        private int _bundlesPerStack = 10;
-        private int _columnsPerRow = 2;
-        private float _margin = 1f;
+        private readonly int _baseIndex = 0;
+
         private List<GameObject> _moneyGameObjects = new List<GameObject>();
 
         public System.Action OnBringBase;
@@ -72,7 +71,7 @@ namespace BRS.Scripts.Elements {
             }
 
             _moneyGameObjects.Clear();
-            BaseUI.Instance.UpdateBaseUI(_baseIndex, 100, 100, 0);
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, 0);
 
             Start();
         }
@@ -107,58 +106,26 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        //public void DeloadPlayer(PlayerInventory pi) {
-        //    TotalMoney += pi.CarryingValue;
-        //    pi.DeloadAll();
-        //    UpdateUI();
-        //}
-
         void UpdateUI() {
-            BaseUI.Instance.UpdateBaseUI(_baseIndex, Health, StartingHealth, TotalMoney);
-        }
-
-        protected override void Die() {
-            //TODO show gameover because base exploded
-        }
-
-        public override void TakeDamage(float damage) {
-            //base.TakeDamage(damage);
-            //UpdateUI();
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, TotalMoney);
         }
 
         public void NotifyRoundEnd() {
             foreach (var p in ElementManager.Instance.Team(_baseIndex)) {
                 PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
 
-                //if (!pi.CanDeload) { // PROXIMITY CHECK
                 if (PlayArea.IsInsidePlayArea(p.transform.position)) { // PROXIMITY CHECK
-                    //Debug.Log("BUSTED!!!");
                     //apply penalty (could happen twice)
-                    //TotalMoney -= (int)(TotalMoney * MoneyPenalty);
                     TotalMoneyPenalty += MoneyPenaltyAmount;
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }
-            //SHOW money penalty (BUSTED!)
             UpdateUI();
         }
 
 
         // queries
-        //bool PlayerInsideRange(GameObject p) {
-        //    return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold * DeloadDistanceThreshold;
-        //}
-
-        Player[] TeamPlayers() {
-            List<Player> result = new List<Player>();
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (var player in players) {
-                Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == _baseIndex) result.Add(p);
-            }
-            return result.ToArray();
-        }
-
+       
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
@@ -188,7 +155,7 @@ namespace BRS.Scripts.Elements {
             int totalStacksToShow = TotalMoney / 1000;
 
             while (_shownMoneyStacks < totalStacksToShow) {
-                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
+                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, MyRandom.YRotation());
                 _moneyGameObjects.Add(newBundle);
 
                 Vector3 size = BoundingBoxHelper.CalculateSize(newBundle.Model, newBundle.transform.scale);
@@ -201,7 +168,6 @@ namespace BRS.Scripts.Elements {
                 Vector3 back = (colId * _margin + size.Z * colId) * Vector3.Backward;
 
                 newBundle.transform.position = transform.position + up + right + back;
-                newBundle.transform.eulerAngles = new Vector3(0, MyRandom.Range(0.0f, 360.0f), 0);
 
                 ++_shownMoneyStacks;
             }

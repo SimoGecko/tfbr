@@ -180,7 +180,7 @@ namespace BRS.Engine.Menu {
         /// Monogame Draw method
         /// </summary>
         public override void Draw2D(int i) {
-            if (Active && i==0) {
+            if (Active && i==-1) {
                 // Update default color/scale/rotation depending on the states of the button
                 var colour = ImageColor;
 

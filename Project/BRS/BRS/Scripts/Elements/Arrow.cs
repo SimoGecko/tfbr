@@ -19,14 +19,11 @@ namespace BRS.Scripts.Elements {
         //public
         const float Margin = .6f;
         const float SmoothTime = .1f;
-        //const float smallSize = .05f;
-        //const float bigSize = .2f;
-
 
         //private
         private float _smoothAngle, _smoothRefAngle;
-        private float scale;
-        bool _followEnemy;
+        private float _originalScale;
+        bool _pointEnemy;
         int _playerIndex;
 
         //reference
@@ -36,19 +33,21 @@ namespace BRS.Scripts.Elements {
 
 
         // --------------------- BASE METHODS ------------------
-        public Arrow(GameObject follow, bool followEnemy, int playerIndex, Predicate condition) {
+        public Arrow(GameObject follow, bool pointEnemy, int playerIndex, Predicate condition) {
             _follow = follow;
-            _followEnemy = followEnemy;
+            _pointEnemy = pointEnemy;
             _playerIndex = playerIndex;
             _condition = condition;
         }
 
         public override void Start() {
-            scale = transform.scale.X;
+            _originalScale = transform.scale.X;
             int teamIndex = _playerIndex % 2;
-            if (_followEnemy) {
+            if (_pointEnemy) {
                 if (ElementManager.Instance.Enemy(teamIndex) != null)
                     _target = ElementManager.Instance.Enemy(teamIndex).transform;
+                else
+                    GameObject.Destroy(gameObject); // no enemy to point at -> destroy self
             } else {
                 _target = ElementManager.Instance.Base(teamIndex).transform;
             }
@@ -65,6 +64,14 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
+        void CheckIfDisplay() {
+            if (_condition()) {
+                transform.scale = Vector3.One * _originalScale;
+            } else {
+                transform.scale = Vector3.Zero;
+            }
+        }
+
         void LookAtPoi() {
             transform.position = _follow.transform.position+Vector3.Up*.1f;
             Vector3 direction = _target.position - transform.position;
@@ -74,13 +81,7 @@ namespace BRS.Scripts.Elements {
             transform.Translate(Vector3.Right * Margin);
         }
 
-        void CheckIfDisplay() {
-            if (_condition()) {
-                transform.scale = Vector3.One * scale;
-            } else {
-                transform.scale = Vector3.Zero;
-            }
-        }
+        
 
         // queries
         

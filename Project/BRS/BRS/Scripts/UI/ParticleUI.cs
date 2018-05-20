@@ -16,13 +16,12 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        const float defaultDistance = 14f; // at this distance the particle is drawn to original size
+        const float defaultDistance = Camera.FocusDistance; // at this distance the particle is drawn to original size
 
 
         //private
         List<ParticleOrder> particleOrders = new List<ParticleOrder>();
-        //int[,] rowcols = new int[,] { { 8, 3 }, { 8, 3 }, { 4, 4 }, { 8, 4 }, { 7, 6 }, { 8, 8 }, { 4, 4 }, { 8, 8 }, { 4, 4 }, { 8, 3 }, { 4, 4 } };
-        bool[] is128 = new bool[] { false, true, false, true, false, false, false, false, false, true, false, false }; // if not 128 then 256
+        bool[] is128 = new bool[] { false, true, false, true, false, false, false, false, false, true, false, false }; // if not 128 then 256 pixels wide per image in atlas
         int numSpritesheets;
 
         //reference
@@ -38,7 +37,6 @@ namespace BRS.Scripts {
             for(int i=0; i<numSpritesheets; i++) {
                 string fileName = ((ParticleType)i).ToString();
                 fileName = Char.ToLowerInvariant(fileName[0]) + fileName.Substring(1); // first letter lowercase
-                //spritesheets[i] = new SpriteSheet(File.Load<Texture2D>("Images/particles/" + fileName), rows, cols);
                 spritesheets[i] = new SpriteSheet(File.Load<Texture2D>("Images/particles/" + fileName), is128[i]?128:256);
             }
         }
@@ -58,7 +56,7 @@ namespace BRS.Scripts {
 
         // commands
         void UpdateFrames() {
-            if (Time.Frame % 3 == 0) return; // updates once every 2 frames // now it's 30fps, not 15fps
+            if (Time.Frame % 3 == 0) return; // TODO make sure the update is 20fps (gifs are recorded at 30fps) -> use deltatime
             for (int i = 0; i < particleOrders.Count; i++) {
                 ParticleOrder p = particleOrders[i];
                 //if(Time.Frame%10==0) // slowmo
@@ -70,12 +68,10 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);
-
                 float dist = (p.position - Camera.GetCamera(index).transform.position).Length();
                 float scaling = defaultDistance / dist;
                 SpriteSheetFromType(p.effect).Draw(position, p.frame, p.colorTint, p.scale*scaling);

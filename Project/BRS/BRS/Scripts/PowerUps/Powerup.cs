@@ -21,18 +21,13 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public PowerupType PowerupType;
+        public PowerupType powerupType;
         private const float RotSpeed = 1;
 
         //private
-        //protected bool destroyOnUse = true;
-        private bool _rotate = true;
         protected bool _useInstantly = false;
 
-        public Color powerupColor = Color.White;
         static Color[] powerupColors;
-
-        //private float _rotationAngle = 0.0f;
 
         // const
 
@@ -44,10 +39,9 @@ namespace BRS.Scripts.PowerUps {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            _rotate = true;
             transform.rotation = MyRandom.YRotation();
-            Texture2D pcol = File.Load<Texture2D>("Images/colors/powerup");
-            powerupColors = Graphics.TextureTo1DArray(pcol);
+
+            
 
             if (gameObject.HasComponent<DynamicRigidBody>()) {
                 _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
@@ -56,14 +50,7 @@ namespace BRS.Scripts.PowerUps {
 
         public override void Update() {
             base.Update();
-
-            if (_rotate) {
-                if (_rigidBody != null) {
-                    _rigidBody.RigidBody.AngularVelocity = new JVector(0, 2, 0);
-                } else {
-                    transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
-                }
-            }
+            Rotate();
         }
 
         public override void OnCollisionEnd(Collider c) {
@@ -76,11 +63,18 @@ namespace BRS.Scripts.PowerUps {
         }
 
 
-
         // --------------------- CUSTOM METHODS ----------------
 
 
         // commands
+        void Rotate() {
+            if (_rigidBody != null) {
+                _rigidBody.RigidBody.AngularVelocity = new JVector(0, 2, 0);
+            } else {
+                transform.Rotate(Vector3.Up, RotSpeed * Time.DeltaTime);
+            }
+        }
+
         public override void DoPickup(Player p) {
             PlayerPowerup pp = p.gameObject.GetComponent<PlayerPowerup>();
             if (pp.CanPickUp(this)) {
@@ -91,8 +85,6 @@ namespace BRS.Scripts.PowerUps {
                 else pp.Collect(this);
 
                 ElementManager.Instance.Remove(this);
-
-                //if(!destroyOnUse) gameObject.active = false;
                 GameObject.Destroy(gameObject);
             } else {
                 pp.AddCollided(this);
@@ -100,8 +92,8 @@ namespace BRS.Scripts.PowerUps {
         }
 
         public virtual void UsePowerup() {
-            transform.position = Owner.transform.position;
-            string audioName = "use_" + PowerupType.ToString().ToLower();
+            transform.position = Owner.transform.position + Vector3.Up;
+            string audioName = "use_" + powerupType.ToString().ToLower();
             if (Audio.Contains(audioName)) Audio.Play(audioName, transform.position);
             else Audio.Play("use_various", transform.position);
         }
@@ -112,8 +104,19 @@ namespace BRS.Scripts.PowerUps {
             return true;
         }
 
+        public Color powerupColor {
+            get {
+                return PowerupColor((int)powerupType);
+            }
+        }
+
+
         public static Color PowerupColor(int index) {
-            return powerupColors[11 - index % powerupColors.Length];
+            if (powerupColors == null) { // TODO see if it can be moved to start
+                Texture2D pcol = File.Load<Texture2D>("Images/colors/powerup");
+                powerupColors = Graphics.TextureTo1DArray(pcol);
+            }
+            return powerupColors[index];
         }
 
 

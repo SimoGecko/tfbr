@@ -11,17 +11,22 @@ namespace BRS.Scripts.Elements {
     /// Bomb that can be planted and explodes after some time damaging what's around
     /// </summary>
     class PlantedBomb : Component {
+        // --------------------- VARIABLES ---------------------
 
+
+        //const
         private const float TimeBeforeExplosion = 4f;
         private const float TimeBeforeProximityCheck = 1;
         private const float ExplosionRadius = 7f; // also proximity explosion
         private const float ExplosionDamage = 60;
-        const bool doProximityCheck = false;
+        private const bool doProximityCheck = false;
 
-        int teamIndex;
+        //private
+        int _teamIndex;
 
         bool exploded;
         bool checkProximity;
+        // --------------------- BASE METHODS ------------------
 
         public override void Start() {
             exploded = false;
@@ -33,11 +38,13 @@ namespace BRS.Scripts.Elements {
             if(checkProximity)
                 CheckProximity();
         }
+        // --------------------- CUSTOM METHODS ----------------
 
         public void Plant(int teamIndex) {
+            _teamIndex = teamIndex;
             exploded = false;
             Audio.Play("bomb_timer", transform.position);
-            for (float i = 0; i < TimeBeforeExplosion; i += .5f) {
+            for (float i = 0; i < TimeBeforeExplosion; i += .4f) {
                 new Timer(i, () => ParticleUI.Instance.GiveOrder(FusePosition(), ParticleType.Sparks));
             }
             if(doProximityCheck)
@@ -47,7 +54,7 @@ namespace BRS.Scripts.Elements {
 
         void CheckProximity() {
             foreach(var p in ElementManager.Instance.Players()) {
-                if (p.TeamIndex != teamIndex && InExplosionRange(p.gameObject))
+                if (p.TeamIndex != _teamIndex && InExplosionRange(p.gameObject))
                     Explode();
             }
         }
