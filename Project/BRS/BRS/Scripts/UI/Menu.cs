@@ -584,10 +584,6 @@ namespace BRS.Scripts.UI {
                     int count = 0;
 
                     // Text component with player's name and score
-                    //rankinglist.ContinueWith(task =>
-                    //{
-                    
-                    //List<Tuple<string, string>> listHighscores = rankinglist.Result;
                     foreach (var aPerson in rankinglist) {
                         var namePerson = new TextBox() {
                             InitPos = offsetStart[0] + new Vector2(0, count * 40),
@@ -605,7 +601,6 @@ namespace BRS.Scripts.UI {
                         listPersons.AddComponent(namePerson); listPersons.AddComponent(score);
                         count++;
                     }
-                    //});
 
                     if (i != 0) listPersons.Active = false;
                     ++i;

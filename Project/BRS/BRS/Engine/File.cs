@@ -261,65 +261,20 @@ namespace BRS.Engine {
             }
         }
 
-        async public static Task<List<Tuple<string, string>>> ReadRankingSpecial(string pathName) {
-            try {
-                List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
-
-                Debug.Log("DP" + localFolder.DisplayName);
-                Debug.Log("TS" + localFolder.ToString());
-                Debug.Log("P" + localFolder.Path.ToString());
-
-                StorageFile sampleFile = await localFolder.GetFileAsync(pathName);
-                IList<string> lines = await FileIO.ReadLinesAsync(sampleFile);
-                //localFolder.dis
-
-                foreach (var line in lines) {
-                    if (line == "")
-                        break;
-
-                    string[] pSplit = line.Split(' ');
-
-                    string namePlayer = "";
-                    for (int i = 0; i < pSplit.Length - 1; ++i)
-                        namePlayer += pSplit[i];
-
-                    listPerson.Add(new Tuple<string, string>(namePlayer, pSplit[pSplit.Length - 1]));
-                }
-
-                return listPerson;
-            }
-            catch (FileNotFoundException e) {
-                // Cannot find file
-                Debug.LogError(e.Message);
-                return new List<Tuple<string, string>>();
-            }
-            catch (IOException e) {
-                // Get information from the exception, then throw
-                // the info to the parent method.
-                if (e.Source != null) {
-                    Debug.Log("IOException source: {0}" + e.Source);
-                }
-                throw;
-                return new List<Tuple<string, string>>();
-            }
-        }
-
         async public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
                 StorageFile sampleFile = await localFolder.CreateFileAsync(pathName,
                     CreationCollisionOption.ReplaceExisting);
-                await FileIO.WriteTextAsync(sampleFile, "");
+                //await FileIO.WriteTextAsync(sampleFile, "");
 
-                //using (FileStream fs = System.IO.File.OpenWrite(pathName)) {
-                    //fs.Flush();
-                    int count = 0;
-                    foreach (var elem in listPlayersNameScore) {
-                        //AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
-                        await FileIO.AppendTextAsync(sampleFile, elem.Item1 + " " + elem.Item2 + "\n");
-                        ++count;
-                        if (count >= maxElem) break;
-                    }
-                //}
+                int count = 0;
+                foreach (var elem in listPlayersNameScore) {
+                    //AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
+                    await FileIO.AppendTextAsync(sampleFile, elem.Item1 + " " + elem.Item2 + "\n");
+                    ++count;
+                    if (count >= maxElem) break;
+                }
+
             } catch (Exception e) {
                 Debug.LogError(e.Message);
             }

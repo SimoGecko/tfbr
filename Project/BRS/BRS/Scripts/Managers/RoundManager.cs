@@ -254,24 +254,15 @@ namespace BRS.Scripts.Managers {
             SceneManager.LoadScene("LevelMenu");
         }
 
-        List<Tuple<string, string>> listHighscores;
-        public void UpdateRanking() {//@nico move somewhere else
+        public void UpdateRanking() {
             List<Tuple<string, string>> rankinglist = File.ReadRanking("ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
 
-            //rankinglist2.ContinueWith(task2 =>
-            //{
-                //listHighscores = rankinglist2.Result;
-                for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                    Base b = ElementManager.Instance.Base(i % 2);
-                    rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
-                }
-
-                rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-                
-            //});
-
+            for (int i = 0; i < GameManager.NumPlayers; ++i) {
+                Base b = ElementManager.Instance.Base(i % 2);
+                rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
+            }
+            rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
             File.WriteRanking("ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
-
         }
 
         // queries

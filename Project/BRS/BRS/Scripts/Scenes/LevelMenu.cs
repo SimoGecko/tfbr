@@ -24,8 +24,6 @@ namespace BRS.Scripts.Scenes {
             CreateManagers();
             CreateSkybox();
             //Audio.PlayRandomSong();
-
-            //RoundManager.Instance.UpdateRanking();
         }
 
         #endregion
