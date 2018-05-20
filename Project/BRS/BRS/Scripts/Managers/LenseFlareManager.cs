@@ -17,7 +17,7 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static bool IsActive = false;
+        public static bool IsActive = true;
 
         //private
         private List<List<Flare>> _flares;

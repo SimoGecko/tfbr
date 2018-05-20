@@ -47,12 +47,6 @@ namespace BRS {
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
 
-            // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = true;
-            LenseFlareManager.IsActive = true;
-            ParticleSystem3D.IsActive = true;
-            Skybox.IsActive = false;
-
             base.Initialize();
         }
 
@@ -79,6 +73,7 @@ namespace BRS {
 
             PostProcessingManager.Instance.Start(_spriteBatch);
 
+            // Todo: Andy removes as soon as he is 100% sure that framerate is not a problem anymore
             _font = File.Load<SpriteFont>("Other/font/debug");
 
             // add skybox
@@ -103,12 +98,6 @@ namespace BRS {
 
             GameManager.Update();
 
-            // Todo: Switch for the interim
-            if (Input.GetKeyDown(Keys.Tab)) {
-                ParticleSystem3D.IsActive = !ParticleSystem3D.IsActive;
-                LenseFlareManager.IsActive = !LenseFlareManager.IsActive;
-            }
-
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
@@ -122,7 +111,7 @@ namespace BRS {
 
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
-            GraphicsDevice.SetRenderTarget(PostProcessingManager._sceneTarget);
+            GraphicsDevice.SetRenderTarget(PostProcessingManager.SceneTarget);
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
             base.Draw(gameTime);
@@ -153,9 +142,8 @@ namespace BRS {
             //Gizmos.ClearOrders();
 
 
-            // Todo: For now disabled because it screwed up all shadows and lights etc...
-            // draw everything 3 D to get the depth info
-            _graphics.GraphicsDevice.SetRenderTarget(PostProcessingManager._depthTarget);
+            // draw everything 3D to get the depth info
+            _graphics.GraphicsDevice.SetRenderTarget(PostProcessingManager.DepthTarget);
             _graphics.GraphicsDevice.Clear(Color.Black);
 
             HardwareRendering.DrawDepth();

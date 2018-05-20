@@ -232,7 +232,7 @@ namespace BRS.Engine {
             HardwareRendering.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
             HardwareRendering.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police"), policeMat);
+            HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police_chassis"), policeMat);
             HardwareRendering.InitializeModel(ModelType.Crate, File.Load<Model>("Models/elements/crate"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), elementsMat);
             HardwareRendering.InitializeModel(ModelType.Bomb, File.Load<Model>("Models/powerups/bomb"), powerupMat);
