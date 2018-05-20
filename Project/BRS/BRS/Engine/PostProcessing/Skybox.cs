@@ -13,7 +13,7 @@ namespace BRS.Engine.PostProcessing {
         public static void Start() {
             skyBox = File.Load<Model>("Models/primitives/cube"); // normals should be inward!
             skyBoxTexture = File.Load<TextureCube>("Images/skyboxes/Skybox");
-            skyBoxEffect = File.Load<Effect>("Effects/Skybox");
+            skyBoxEffect = File.Load<Effect>("Other/effects/Skybox");
         }
 
         public static void Draw(Camera cam) {

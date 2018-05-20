@@ -59,10 +59,10 @@ namespace BRS.Engine {
         //reference
 
         public static void Start() {
-            texlightEffect = File.Load<Effect>("Other/shaders/colortexlightmap");
+            texlightEffect = File.Load<Effect>("Other/shaders/baked");
             //texlightEffect = File.Load<Effect>("Other/shaders/lightmap");
             textureEffect = File.Load<Effect>("Other/shaders/textured");
-            skyboxEffect = File.Load<Effect>("Effects/Skybox");
+            skyboxEffect = File.Load<Effect>("Other/effects/Skybox");
         }
 
 

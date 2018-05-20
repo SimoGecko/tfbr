@@ -59,7 +59,7 @@ namespace BRS.Scripts.UI {
             }
 
             _slot = File.Load<Texture2D>("Images/powerup/powerup_slot");
-            smallButton = File.Load<Texture2D>("Images/UI/small_button");
+            smallButton = File.Load<Texture2D>("Images/powerup/small_button");
         }
 
         public override void Update() {

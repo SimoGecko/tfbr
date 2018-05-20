@@ -52,8 +52,12 @@ namespace BRS.Scripts.UI {
         // commands
         public override void Draw2D(int index) {
             if (index == 0) {
-                //draw vertical center line
-                UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 4, 2000), null, Align.Right, Align.Center);
+                if(GameManager.NumPlayers>=2)
+                    //draw vertical center line
+                    UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 5, 4000), null, Align.BotRight, Align.Center);
+                if (GameManager.NumPlayers >= 4)
+                    //draw horizontal center line
+                    UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 4000, 5), null, Align.BotRight, Align.Center);
                 return;
             }
             index--;
@@ -63,10 +67,10 @@ namespace BRS.Scripts.UI {
 
             //police bar
             float policePercent = (float)(1 - _roundtime.Span.TotalSeconds / RoundManager.RoundTime);
-            UserInterface.DrawBarStriped(policePercent, new Rectangle(-270, -310, 250, 25), Color.LightGray, Align.BotRight);
+            UserInterface.DrawBarStriped(policePercent, new Rectangle(-220, -260, 200, 25), Color.LightGray, Align.BotRight);
             //police car and blinking
-            int fgRectWidth = (int)(250 * policePercent);
-            Rectangle policeRect = new Rectangle(-270 + fgRectWidth, -298, 64, 64);
+            int fgRectWidth = (int)(200 * policePercent);
+            Rectangle policeRect = new Rectangle(-220 + fgRectWidth, -248, 64, 64);
             UserInterface.DrawPicture(_policeCar, policeRect, null, Align.BotRight, Align.Center);
 
             if (_showPolice) {
@@ -79,8 +83,8 @@ namespace BRS.Scripts.UI {
 
             //time
             string roundTimeString = _roundtime.Span.ToReadableString();
-            UserInterface.DrawString(roundTimeString, new Rectangle(-20, -310, 75, 25), Align.BotRight, Align.BotRight, Align.Right);
-            UserInterface.DrawString("time left:", new Rectangle(-145, -310, 125, 25), Align.BotRight, Align.BotRight, Align.Left, scale:.7f);
+            UserInterface.DrawString(roundTimeString, new Rectangle(-20, -260, 75, 25), Align.BotRight, Align.BotRight, Align.Right);
+            UserInterface.DrawString("time left:", new Rectangle(-95, -260, 125, 25), Align.BotRight, Align.BotRight, Align.Left, scale:.7f);
         }
         
 

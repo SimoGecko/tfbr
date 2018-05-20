@@ -28,7 +28,7 @@ namespace BRS.Scripts.UI {
         private const int MapWidth = 603, MapHeight = 770; // of screenshot
         private const int IconSize = 64;
         private const float MapScale = 1f;
-        private const int SmallMapWidth = 250; // squared pixel size of minimap
+        private const int SmallMapWidth = 200; // squared pixel size of minimap
 
         //to avoid passing them to the function
         private Vector2 _playerPos;

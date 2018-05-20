@@ -1,4 +1,4 @@
-// (c) Simone Guggiari 2018
+// (c) Simone Guggiari / Nicolas Huart (camera transition + rankings update only) 2018
 // ETHZ - GAME PROGRAMMING LAB
 
 using System;
@@ -100,6 +100,9 @@ namespace BRS.Scripts.Managers {
 
         // --------------------- CUSTOM METHODS ---------b -------
 
+        /// <summary>
+        /// Set up the start information for the 3-2-1 count down camera transition
+        /// </summary>
         void SetUpStartCamTransition() {
             // Start position and rotation for the cameras
             for (int i = 0; i < Screen.Cameras.Length; ++i) {
@@ -120,7 +123,9 @@ namespace BRS.Scripts.Managers {
             CamMoving = true;
         }
 
-        // commands
+        /// <summary>
+        /// Update the camera during the camera transition
+        /// </summary>
         void CamTransitionForCountDown() {
             // Update camera position and rotation
             for (int i = 0; i < Screen.Cameras.Length; ++i) {
@@ -234,6 +239,7 @@ namespace BRS.Scripts.Managers {
 
         void TryRestartRound() {
             UpdateRanking();
+            //Heatmap.instance.SaveHeatMap();
             bool oneAlreadyWon2Rounds = false;
             for (int i = 0; i < GameManager.NumTeams; i++)
                 oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;

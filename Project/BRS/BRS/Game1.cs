@@ -113,9 +113,9 @@ namespace BRS {
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _zBufferShaderHardwareInstancing = File.Load<Effect>("Effects/DepthHardwareInstancing");
+            _zBufferShaderHardwareInstancing = File.Load<Effect>("Other/effects/DepthHardwareInstancing");
 
-            _font = File.Load<SpriteFont>("Other/font/debugFont");
+            _font = File.Load<SpriteFont>("Other/font/debug");
 
             // add skybox
             //Skybox.Start();

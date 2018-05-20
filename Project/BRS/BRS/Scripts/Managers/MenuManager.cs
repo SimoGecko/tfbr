@@ -236,7 +236,7 @@ namespace BRS.Scripts.Managers {
             RoundManager.RoundTime = 2 * 60;
             GameMode.currentGameMode = ScenesCommunicationManager.ModesName[0];
             GameManager.LvlScene = 1;
-            GameManager.lvlDifficulty = 1;
+            GameManager.lvlDifficulty = 0;
         }
 
         /// <summary>

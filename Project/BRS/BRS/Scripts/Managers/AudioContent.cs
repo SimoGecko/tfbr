@@ -39,7 +39,7 @@ namespace BRS.Scripts {
 
         // commands
         public static string[] SongString() {
-            return new string[] { "Happy Happy Game Show", "fun", "lively" };
+            return new string[] { "gameshow", "fun", "lively" };
         }
 
         public static string[] SoundString() {
