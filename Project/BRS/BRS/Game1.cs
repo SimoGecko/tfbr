@@ -23,8 +23,8 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         private Effect _zBufferShaderHardwareInstancing;
-        const string startScene = "LevelMenu";
-        bool showUI = true;
+        const bool loadMenu = false;
+        const bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
         private SpriteFont _font;
@@ -105,7 +105,7 @@ namespace BRS {
             GameMode.Start();
             SceneManager.Start();
 
-            SceneManager.LoadScene(startScene);
+            SceneManager.LoadScene(loadMenu? "LevelMenu" : "LevelGame");
 
             Audio.Start();
 

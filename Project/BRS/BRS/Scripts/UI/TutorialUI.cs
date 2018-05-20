@@ -18,7 +18,6 @@ namespace BRS.Scripts.UI {
         delegate bool Predicate();
         const float timeBetweenTut = 3f;
 
-
         //private
         bool showTutorial = true;
 
@@ -47,7 +46,7 @@ namespace BRS.Scripts.UI {
             player = ElementManager.Instance.Player(_index);
 
             tutIndex = 0;
-            nextTutTime = Time.CurrentTime + timeBetweenTut + 3f ; // initial countdown
+            nextTutTime = Time.CurrentTime + timeBetweenTut + 4f ; // initial countdown
             isDisplaying = false;
 
             displayString = "";
@@ -55,6 +54,8 @@ namespace BRS.Scripts.UI {
         }
 
         public override void Update() {
+            if (!showTutorial) return;
+
             if (tutIndex < tutorial.Length) {
                 if (!isDisplaying) {
                     if(Time.CurrentTime > nextTutTime)
@@ -66,10 +67,11 @@ namespace BRS.Scripts.UI {
                 showTutorial = false; // don't display anymore
             }
 
-            if(GameManager.GameActive)
-                if(isDisplaying && displayButton != XboxButtons.Null) {
+            if (GameManager.GameActive) {
+                if (isDisplaying && displayButton != XboxButtons.Null) {
                     ButtonsUI.Instance.GiveCommand(_index, buttonDest, displayButton, Align.TopLeft);
                 }
+            }
         }
 
 

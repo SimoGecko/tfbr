@@ -223,7 +223,6 @@ namespace BRS.Scripts.PlayerScripts {
             }
             bool canAttack = /*_pS.HasStaminaForAttack() &&*/ playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
-                Health, StartingHealth,
                 _pS.Stamina, _pS.MaxStamina,
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }

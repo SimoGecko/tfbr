@@ -114,7 +114,7 @@ namespace BRS.Scripts.Elements {
             if (!_explosionRigged) return;
             if(GameManager.TeamIndex(i) == _teamWhoRigged) {
                 //draw danger icon
-                float distScale = 14/(Camera.GetCamera(i).transform.position - transform.position).Length();
+                float distScale = Camera.FocusDistance/(Camera.GetCamera(i).transform.position - transform.position).Length();
                 Vector2 screenPos = Camera.GetCamera(i).WorldToScreenPoint(transform.position);
                 UserInterface.DrawPicture(dangerIcon, screenPos, pivot:Align.Center, scale: .3f*distScale);
             }

@@ -16,6 +16,7 @@ namespace BRS.Engine {
         public const float Far = 1000f;
         public const float FarDepth = 100f;
         const float defaultFOV = 40;
+        public const float FocusDistance = 14;
 
         //private
         Projection projectiontype = Projection.Perspective;

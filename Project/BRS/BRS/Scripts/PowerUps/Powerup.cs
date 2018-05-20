@@ -106,12 +106,17 @@ namespace BRS.Scripts.PowerUps {
 
         public Color powerupColor {
             get {
-                if (powerupColors == null) {
-                    Texture2D pcol = File.Load<Texture2D>("Images/colors/powerup");
-                    powerupColors = Graphics.TextureTo1DArray(pcol);
-                }
-                return powerupColors[(int)powerupType];
+                return PowerupColor((int)powerupType);
             }
+        }
+
+
+        public static Color PowerupColor(int index) {
+            if (powerupColors == null) { // TODO see if it can be moved to start
+                Texture2D pcol = File.Load<Texture2D>("Images/colors/powerup");
+                powerupColors = Graphics.TextureTo1DArray(pcol);
+            }
+            return powerupColors[index];
         }
 
 

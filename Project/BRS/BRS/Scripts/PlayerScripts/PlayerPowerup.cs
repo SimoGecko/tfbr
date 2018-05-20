@@ -76,7 +76,7 @@ namespace BRS.Scripts.PlayerScripts {
             OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
-            PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor, playerIndex);
+            //PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor, playerIndex);
         }
 
         public bool CanPickUp(Powerup powerup) {
