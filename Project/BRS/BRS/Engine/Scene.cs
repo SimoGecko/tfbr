@@ -22,10 +22,9 @@ namespace BRS.Engine {
             scenes = new Dictionary<string, Scene>();
 
             //FILL here all the scenes in the game
-            Add("Level1", new Level1());
-            Add("Level2", new Level2());
-            Add("Level3", new Level3());
+            Add("LevelGame", new LevelGame());
             Add("LevelMenu", new LevelMenu());
+            Add("LevelTest", new LevelTest());
 
             LoadMenu = false;
             LoadGame = false;

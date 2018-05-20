@@ -228,7 +228,6 @@ namespace BRS.Engine {
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             // Initialize the models for hardware instanciating
-            // Important: it doesn't matter when we load the modelds for the 
             HardwareRendering.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
             HardwareRendering.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
             HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);

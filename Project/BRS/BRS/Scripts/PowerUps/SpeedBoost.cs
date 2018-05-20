@@ -15,8 +15,7 @@ namespace BRS.Scripts.PowerUps {
         private const float BoostTime = 3f;
 
         public SpeedBoost() {
-            PowerupType = PowerupType.Speed;
-            powerupColor = Color.Green;
+            powerupType = PowerupType.Speed;
         }
 
         // --------------------- BASE METHODS ------------------

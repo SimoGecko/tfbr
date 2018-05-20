@@ -36,7 +36,6 @@ namespace BRS.Scripts.Elements {
                 PlayerMovement pM = c.GameObject.GetComponent<PlayerMovement>();
                 pM.SetSpeedPad(true);
                 Audio.Play("speedpad", transform.position);
-
                 new Timer(EffectTime, () => pM.SetSpeedPad(false), boundToRound:true);
             }
         }

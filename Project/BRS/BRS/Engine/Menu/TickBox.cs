@@ -131,7 +131,7 @@ namespace BRS.Engine.Menu {
         }
 
         public override void Draw2D(int i) {
-            if (Active && i == 0) {
+            if (Active && i == -1) {
                 var col = colour;
 
                 if (IsHovering)

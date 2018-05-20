@@ -12,7 +12,7 @@ namespace BRS.Scripts.UI {
     public enum XboxButtons { A, X, Y, B, LB, RB, LT, RT, DD, DL, DR, DU, D, L, R, M, Null };
 
     class ButtonsUI : Component {
-        ////////// shows on screen tips for the player //////////
+        ////////// shows on screen the buttons with wiggle effect //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -23,12 +23,10 @@ namespace BRS.Scripts.UI {
         private List<ButtonCommand> _commands;
 
         // const
-        private const int AtlasWidth = 105;
-        private const int ButWidth = 50;
+        private const int ButtonSize = 105;
 
         //reference
         public static ButtonsUI Instance;
-        public Transform Player;
 
 
         // --------------------- BASE METHODS ------------------
@@ -36,11 +34,6 @@ namespace BRS.Scripts.UI {
             Instance = this;
             _xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
             _commands = new List<ButtonCommand>();
-
-            if (ElementManager.Instance != null) {
-                Player p = ElementManager.Instance.Player(0);
-                if (p != null) Player = p.transform;
-            }
         }
 
         public override void Update() {
@@ -54,19 +47,17 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
-                    //Rectangle destination = new Rectangle((int)c.Pos.X, (int)c.Pos.Y, ButWidth, ButWidth);
                     bool wiggle = (int)Time.CurrentTime % 5 == 0;
                     float angle = (wiggle) ? (float)System.Math.Sin(Time.CurrentTime * 40) : 0;
                     UserInterface.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
             if(index==GameManager.NumPlayers-1)
-                _commands.Clear();
+                _commands.Clear(); // at end of all calls
         }
 
         public void GiveCommand(int _index, Rectangle _dest, XboxButtons _button, Align _anchor, bool flip=false) {
@@ -82,7 +73,7 @@ namespace BRS.Scripts.UI {
         public static Rectangle SourceRectangle(XboxButtons button) {
             int column = (int)button % 4;
             int row = (int)button / 4;
-            return new Rectangle(column * AtlasWidth, row * AtlasWidth, AtlasWidth, AtlasWidth);
+            return new Rectangle(column * ButtonSize, row * ButtonSize, ButtonSize, ButtonSize);
         }
 
 

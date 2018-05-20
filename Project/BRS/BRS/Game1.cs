@@ -1,15 +1,12 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.PostProcessing;
-using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
+using BRS.Scripts;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Scripts;
-using System;
-using System.Collections.Generic;
-using BRS.Engine.Rendering;
-using BRS.Scripts.Managers;
 
 namespace BRS {
 
@@ -18,8 +15,8 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        const string startScene = "LevelMenu";
-        bool showUI = true;
+        const bool loadMenu = false;
+        const bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
         private SpriteFont _font;
@@ -66,7 +63,7 @@ namespace BRS {
             GameMode.Start();
             SceneManager.Start();
 
-            SceneManager.LoadScene(startScene);
+            SceneManager.LoadScene(loadMenu? "LevelMenu" : "LevelGame");
 
             Audio.Start();
 
@@ -158,7 +155,7 @@ namespace BRS {
 
 
             //-----2D-----
-            int i = 1;
+            int i = 0;
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
@@ -171,26 +168,25 @@ namespace BRS {
             GraphicsDevice.Viewport = Screen.FullViewport;
             if (showUI) {
                 _spriteBatch.Begin();
-                foreach (GameObject go in GameObject.All) go.Draw2D(0);
+                foreach (GameObject go in GameObject.All) go.Draw2D(-1);
                 _spriteBatch.End();
             }
 
-            //try {
-            //string text = string.Format(
-            //    "Frames per second: {0}/{1}\n" +
-            //    "Instances: {2}\n",
-            //    (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
-            //    (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
-            //    GameObject.All.Length);
+            try {
+                string text = string.Format(
+                    "Frames per second: {0}/{1}\n" +
+                    "Instances: {2}\n",
+                    (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+                    (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+                    GameObject.All.Length);
 
-            //_spriteBatch.Begin();
+                _spriteBatch.Begin();
 
-            //_spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
-            //_spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+                _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+                _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
 
-            //_spriteBatch.End();
-            //}
-            //catch { }
+                _spriteBatch.End();
+            } catch { }
         }
     }
 

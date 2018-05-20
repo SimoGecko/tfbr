@@ -14,8 +14,7 @@ namespace BRS.Scripts.PowerUps {
         //public
 
         public Magnet() {
-            PowerupType = PowerupType.Magnet;
-            powerupColor = Color.Red;
+            powerupType = PowerupType.Magnet;
         }
         // --------------------- BASE METHODS ------------------
         public override void Start() {
@@ -29,7 +28,6 @@ namespace BRS.Scripts.PowerUps {
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate magnet slowing down stuff
-            transform.position = Owner.transform.position + Vector3.Up;
             GameObject plantedMagnet = GameObject.Instantiate("plantedMagnetPrefab", transform);
             ElementManager.Instance.Add(plantedMagnet);
         }

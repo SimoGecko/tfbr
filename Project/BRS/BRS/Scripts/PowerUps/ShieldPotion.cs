@@ -16,15 +16,13 @@ namespace BRS.Scripts.PowerUps {
         private const float ValuePotion = 20f;
 
         public ShieldPotion() {
-            PowerupType = PowerupType.Shield;
+            powerupType = PowerupType.Shield;
             _useInstantly = true;
         }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            
-
         }
 
 
@@ -33,7 +31,6 @@ namespace BRS.Scripts.PowerUps {
         public override void UsePowerup() {
             base.UsePowerup();
             Base b = ElementManager.Instance.Base(Owner.TeamIndex);
-            //GameObject b = GameObject.FindGameObjectWithName("base_" + Owner.TeamIndex);
             if (b != null)  b.AddHealth(ValuePotion);
         }
     }

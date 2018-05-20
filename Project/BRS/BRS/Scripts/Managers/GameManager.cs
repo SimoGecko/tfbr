@@ -3,7 +3,6 @@
 
 using BRS.Engine;
 using BRS.Engine.Menu;
-using BRS.Scripts.UI;
 using Microsoft.Xna.Framework.Input;
 using System;
 

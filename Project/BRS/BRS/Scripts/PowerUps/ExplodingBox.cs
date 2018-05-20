@@ -14,15 +14,12 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public ExplodingBox() {
-            PowerupType = PowerupType.Explodingbox;
-            powerupColor = Color.Orange;
+            powerupType = PowerupType.Explodingbox;
         }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            
-
         }
 
 
@@ -31,8 +28,7 @@ namespace BRS.Scripts.PowerUps {
         public override void UsePowerup() {
             base.UsePowerup();
             //instantiate exploding box
-            transform.position = Owner.transform.position;
-            GameObject newCrate = GameObject.Instantiate("cratePrefab", transform.position + Vector3.Up * 0.75f, Quaternion.Identity);
+            GameObject newCrate = GameObject.Instantiate("cratePrefab", transform);
             Crate c = newCrate.GetComponent<Crate>();
             c.SetExplosionRigged(Owner.TeamIndex);
             ElementManager.Instance.Add(c);

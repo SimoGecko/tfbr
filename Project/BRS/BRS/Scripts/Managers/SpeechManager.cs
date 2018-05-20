@@ -156,7 +156,7 @@ namespace BRS.Scripts {
 
             if (GameObject.NameExists("vault")) {
                 GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultOpen += (() => OnEvent(EventType.OpenVault));
-                GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnClosedClose += (() => { if (Vault.OnClosedCloseIndex == index) OnEvent(EventType.CloseToVault); });
+                GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultClosedCloseEnough += (() => { if (Vault.OnClosedCloseIndex == index) OnEvent(EventType.CloseToVault); });
             }
 
             if (GameObject.NameExists("base_"+index%2)) {

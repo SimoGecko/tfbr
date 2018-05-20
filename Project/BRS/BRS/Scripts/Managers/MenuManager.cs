@@ -201,12 +201,16 @@ namespace BRS.Scripts.Managers {
                 } 
             }
 
-            if (Input.GetKeyUp(Keys.A) || Input.GetButtonUp(Buttons.A)) {
-                if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
+            
+            if (_currentMenuName.Substring(0, _currentMenuName.Length - 1) == "tutorial") {
+                if (Input.GetKeyUp(Keys.Enter) || Input.GetKeyUp(Keys.Space) || Input.GetKeyUp(Keys.Right) || Input.GetKeyUp(Keys.Up) || Input.GetButtonUp(Buttons.A)) {
                     Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Next", _currentMenuName);
                     if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
                 }
-
+                if (Input.GetKeyUp(Keys.Left) || Input.GetKeyUp(Keys.Down)) {
+                    Button bu = (Button)Menu.Instance.FindMenuComponentinPanelWithName("Back", _currentMenuName);
+                    if (bu != default(Button)) bu.Click?.Invoke(bu, new EventArgs());
+                }
             }
 
             // Update camera transition

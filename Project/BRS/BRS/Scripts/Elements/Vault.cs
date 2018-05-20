@@ -27,16 +27,16 @@ namespace BRS.Scripts.Elements {
         //private
         private const float OpeningDuration = 2f;
         private const float OpeningAnge = -90f;
-        private const float PivotOffset = 0f;//-1.5f;
         private const float ClosenessForMessage = 10f;
         private const float TimeBetweenMessages = 20f;
 
         private bool _open; // at end of animation
-        private bool _opening; // for animation
+        private bool _opening; // during animation
         private float _openRefTime;
 
         public System.Action OnVaultOpen;
-        public System.Action OnClosedClose;
+
+        public System.Action OnVaultClosedCloseEnough;
         public static int OnClosedCloseIndex;
         float[] timeForNextClosenessCall;
 
@@ -51,18 +51,16 @@ namespace BRS.Scripts.Elements {
         }
 
         public override void Start() {
+            base.Start();
             Health = 10;
-            Dead = false;
 
-            _open = false;
-            _opening = false;
-            _openRefTime = 0.0f;
+            _open = _opening = false;
             timeForNextClosenessCall = new float[GameManager.NumPlayers];
         }
 
         public override void Update() {
             if (_opening) OpenCoroutine();
-            CheckForClosePlayer();
+            if(!_open)CheckForClosePlayer();
         }
 
         public override void Reset() {
@@ -75,12 +73,11 @@ namespace BRS.Scripts.Elements {
 
         // commands
         void CheckForClosePlayer() {
-            if (_open) return;
             for(int i=0; i<GameManager.NumPlayers; i++) {
                 if (Time.CurrentTime > timeForNextClosenessCall[i]) {
                     if ((ElementManager.Instance.Player(i).transform.position-transform.position).LengthSquared()<= ClosenessForMessage* ClosenessForMessage) {
                         OnClosedCloseIndex = i;
-                        OnClosedClose?.Invoke();
+                        OnVaultClosedCloseEnough?.Invoke();
                         timeForNextClosenessCall[i] = Time.CurrentTime + TimeBetweenMessages;
                     }
                 }
@@ -107,7 +104,7 @@ namespace BRS.Scripts.Elements {
         }
 
         // queries
-        Vector3 pivotPoint { get { return transform.position + transform.Right * PivotOffset; } }
+        Vector3 pivotPoint { get { return transform.position; } }
         public bool IsOpen() { return _open; }
 
         // other

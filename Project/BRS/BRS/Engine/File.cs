@@ -6,12 +6,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Windows.Storage;
 using static BRS.Scripts.UI.Menu;
 
 namespace BRS.Engine {
@@ -27,7 +29,7 @@ namespace BRS.Engine {
 
 
         //private
-
+        static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         //reference
         public static ContentManager content;
@@ -233,16 +235,19 @@ namespace BRS.Engine {
             try {
                 List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
                 using (StreamReader reader =
-                    new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                    new StreamReader(new FileStream(localFolder.Path + "/" + pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                     string line;
                     while ((line = reader.ReadLine()) != null) {
                         if (line == "")
                             break;
 
-                        //string aPerson = reader.ReadLine();
-
                         string[] pSplit = line.Split(' ');
-                        listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+
+                        string namePlayer = "";
+                        for (int i = 0; i < pSplit.Length-1; ++i)
+                            namePlayer += pSplit[i];
+
+                        listPerson.Add(new Tuple<string, string>(namePlayer, pSplit[pSplit.Length-1]));
 
                     }
                 }
@@ -258,17 +263,18 @@ namespace BRS.Engine {
         /// Write the rankings to a file
         /// </summary>
         /// <param name="pathName">Path to the file</param>
-        public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
+        async public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
-                using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
-                    fs.Flush();
-                    int count = 0;
-                    foreach (var elem in listPlayersNameScore) {
-                        AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
-                        ++count;
-                        if (count >= maxElem) break;
-                    }
+                StorageFile sampleFile = await localFolder.CreateFileAsync(pathName,
+                    CreationCollisionOption.ReplaceExisting);
+
+                int count = 0;
+                foreach (var elem in listPlayersNameScore) {
+                    await FileIO.AppendTextAsync(sampleFile, elem.Item1 + " " + elem.Item2 + "\n");
+                    ++count;
+                    if (count >= maxElem) break;
                 }
+
             } catch (Exception e) {
                 Debug.LogError(e.Message);
             }

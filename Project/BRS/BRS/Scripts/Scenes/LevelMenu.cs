@@ -37,15 +37,14 @@ namespace BRS.Scripts.Scenes {
         /// Load the menu scene
         /// </summary>
         void MenuScene() {
-            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/menu_inside"));
+            Material insideMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/menu_inside"));
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/menu_outside"));
-            Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+            Material groundMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
             // Model instanciation
             HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
             HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
             HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
-
 
             GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
             insideScene.DrawOrder = 1;
@@ -62,7 +61,6 @@ namespace BRS.Scripts.Scenes {
             infinitePlane.material = groundMat;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -5.0f, 0);
-
         }
 
         /// <summary>
@@ -72,12 +70,12 @@ namespace BRS.Scripts.Scenes {
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.Vignette, i, true);
                 PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.TwoPassBlur, i, true);
-                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true);
+                //PostProcessingManager.Instance.SetShaderStatus(PostprocessingType.ColorGrading, i, true); // why disabled?
             }
         }
 
         void CreateSkybox() {
-            bool useRandomSkybox = false;
+            bool useRandomSkybox = true;
             string[] skyboxTextures = new string[] { "daybreak", "midday", "evening", "sunset", "midnight", };
             string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
             GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
@@ -100,7 +98,6 @@ namespace BRS.Scripts.Scenes {
             GameObject Manager = new GameObject("manager");
             Manager.AddComponent(new ButtonsUI());
             Manager.AddComponent(new MenuManager());
-            
         }
 
         #endregion

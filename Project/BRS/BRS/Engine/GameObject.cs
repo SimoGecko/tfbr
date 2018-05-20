@@ -119,7 +119,7 @@ namespace BRS.Engine {
             }
         }
 
-        public void Draw2D(int i) { // i=0 -> fullscreen, else (1..4) splitscreen
+        public void Draw2D(int i) { // i=-1 -> fullscreen, else (0, 1, 2...) splitscreen
             if (active) {
                 foreach (IComponent c in components) c.Draw2D(i);
             }
