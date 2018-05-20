@@ -32,7 +32,7 @@ namespace BRS.Engine {
 
         public static void Update() {
             if (LoadGame) {
-                LoadScene("Level1");
+                LoadScene("LevelGame");
                 LoadGame = false;
             }
 

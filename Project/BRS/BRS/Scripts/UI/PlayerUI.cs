@@ -129,8 +129,15 @@ namespace BRS.Scripts.UI {
                 Color modelColor = i % 2 == 0 ? ScenesCommunicationManager.TeamAColor : ScenesCommunicationManager.TeamBColor;
 
                 if (ScenesCommunicationManager.Instance != null) {
-                    int currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
-                    modelColor = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
+                    int currIdModel;
+                    if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i)) {
+                        currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+                        modelColor = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item3;
+                    }
+                    else {
+                        currIdModel = 0;
+                    }
+
                     defaultModelImage = ScenesCommunicationManager.Instance.ModelImages[currIdModel];
                     defaultModelImagePartColor = ScenesCommunicationManager.Instance.ModelImagesColorPart[currIdModel];
                 }
