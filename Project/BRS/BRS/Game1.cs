@@ -22,7 +22,6 @@ namespace BRS {
         RenderTarget2D _renderTarget;
         // depth info
         RenderTarget2D _ZBuffer;
-        private Effect _zBufferShaderHardwareInstancing;
         const string startScene = "LevelMenu";
         bool showUI = true;
 
@@ -112,9 +111,6 @@ namespace BRS {
 
             PostProcessingManager.Instance.Start(_spriteBatch);
 
-            // load the z buffer shader
-            _zBufferShaderHardwareInstancing = File.Load<Effect>("Other/effects/DepthHardwareInstancing");
-
             _font = File.Load<SpriteFont>("Other/font/debug");
 
             // add skybox
@@ -194,7 +190,7 @@ namespace BRS {
             _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
             _graphics.GraphicsDevice.Clear(Color.Black);
 
-            HardwareRendering.Draw(_zBufferShaderHardwareInstancing);
+            HardwareRendering.DrawDepth();
 
 
             // apply post processing

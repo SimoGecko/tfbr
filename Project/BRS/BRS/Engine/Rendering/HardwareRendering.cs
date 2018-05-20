@@ -13,6 +13,8 @@ namespace BRS.Engine.Rendering {
 
         // Effects
         private static Effect _instanceEffect;
+        private static Effect _zBufferEffect;
+
 
         //reference
         private static readonly Dictionary<ModelType, ModelInstance> ModelTransformations = new Dictionary<ModelType, ModelInstance>();
@@ -26,6 +28,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         public static void Start() {
             _instanceEffect = File.Load<Effect>("Other/shaders/instancedModel");
+            _zBufferEffect = File.Load<Effect>("Other/effects/DepthHardwareInstancing");
         }
 
         /// <summary>
@@ -49,14 +52,21 @@ namespace BRS.Engine.Rendering {
         /// <summary>
         /// Draw all the models with hardware-instancing
         /// </summary>
-        public static void Draw(Effect effect = null) {
+        public static void Draw() {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
                 if (ModelTransformations.ContainsKey(mt)) {
-                    if (effect == null) {
-                        DrawModelInstanciated(ModelTransformations[mt]);
-                    } else {
-                        DrawModelInstanciated(ModelTransformations[mt], effect);
-                    }
+                    DrawModelInstanciated(ModelTransformations[mt]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Draw all the models with hardware-instancing
+        /// </summary>
+        public static void DrawDepth() {
+            foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
+                if (ModelTransformations.ContainsKey(mt)) {
+                    DrawModelInstanciated(ModelTransformations[mt], _zBufferEffect);
                 }
             }
         }

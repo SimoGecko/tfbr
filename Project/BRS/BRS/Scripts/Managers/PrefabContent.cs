@@ -1,20 +1,18 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Scripts;
-using BRS.Scripts.Elements;
-using BRS.Scripts.PlayerScripts;
-using BRS.Scripts.PowerUps;
-using BRS.Scripts.Particles3D;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using BRS.Engine.Rendering;
 using BRS.Engine.Utilities;
+using BRS.Scripts;
+using BRS.Scripts.Elements;
 using BRS.Scripts.Elements.Lighting;
+using BRS.Scripts.Particles3D;
+using BRS.Scripts.PowerUps;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 
 
 namespace BRS.Engine {
@@ -22,9 +20,9 @@ namespace BRS.Engine {
         ////////// builds all the prefabs and gives them to Prefabs //////////
         static bool builtAlready = false;
 
-        static string[] powerupName = new string[] { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
-        static Powerup[] powerupcomponents = new Powerup[] { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet() };
-        static string[] dynamicElements = new string[] { "chair", "plant", "cart" };
+        private static readonly string[] powerupName = { "bomb", "capacity", "stamina", "key", "health", "shield", "speed", "trap", "explodingbox", "weight", "magnet" };
+        private static readonly Powerup[] powerupcomponents = { new Bomb(), new CapacityBoost(), new StaminaPotion(), new Key(), new HealthPotion(), new ShieldPotion(), new SpeedBoost(), new Trap(), new ExplodingBox(), new Weight(), new Magnet() };
+        private static readonly string[] dynamicElements = { "chair", "plant", "cart" };
 
         static float powerupScale = 2.2f;
 
@@ -36,47 +34,7 @@ namespace BRS.Engine {
             if (builtAlready) return;
             builtAlready = true;
 
-            //-------------------MATERIALS-------------------
-            Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
-            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
-            Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
-            Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
-            Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
-            Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
-            Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
-            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
-
-            // Initialize the models for hardware instanciating
-            // Important: it doesn't matter when we load the modelds for the 
-            HardwareRendering.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police"), policeMat);
-            HardwareRendering.InitializeModel(ModelType.Crate, File.Load<Model>("Models/elements/crate"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Bomb, File.Load<Model>("Models/powerups/bomb"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Weight, File.Load<Model>("Models/powerups/weight"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Magnet, File.Load<Model>("Models/powerups/magnet"), powerupMat);
-            HardwareRendering.InitializeModel(ModelType.Speedpad, File.Load<Model>("Models/elements/speedpad"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Stack, File.Load<Model>("Models/elements/stack"), elementsMat);
-            HardwareRendering.InitializeModel(ModelType.Shadow, File.Load<Model>("Models/primitives/plane"), shadowMat);
-            HardwareRendering.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
-            HardwareRendering.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/primitives/plane"), lightBlueMat);
-            HardwareRendering.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/primitives/plane"), lightRedMat);
-            HardwareRendering.InitializeModel(ModelType.WheelFl, File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
-            HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
-            HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
-            HardwareRendering.InitializeModel(ModelType.Vault, File.Load<Model>("Models/elements/vault"), elementsMat);
-
-            for (int i = 0; i < powerupName.Length; i++) {
-                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);
-                HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/powerups/" + powerupName[i]), powerupMat);
-            }
-
-            foreach (string s in dynamicElements) {
-                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
-                HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
-            }
+            InitializeHardwareInstancing();
 
             //-------------------VALUABLES-------------------
             //cash
@@ -214,6 +172,10 @@ namespace BRS.Engine {
             dynamicShadow.tag = ObjectTag.Lighting;
             Prefabs.AddPrefab(dynamicShadow);
 
+            GameObject tracks = new GameObject("trackPrefab", ModelType.Tracks, false);
+            tracks.tag = ObjectTag.Lighting;
+            Prefabs.AddPrefab(tracks);
+
 
             // dynamic lights
             GameObject lightPlayer = new GameObject(FollowerType.LightYellow.GetDescription(), ModelType.YellowLight, false);
@@ -228,6 +190,7 @@ namespace BRS.Engine {
             lightRed.tag = ObjectTag.Lighting;
             Prefabs.AddPrefab(lightRed);
 
+
             // Wheels for the player-models
             GameObject wheelType1 = new GameObject("wheelType1", ModelType.WheelFl, false);
             Prefabs.AddPrefab(wheelType1);
@@ -237,6 +200,50 @@ namespace BRS.Engine {
 
             GameObject wheelPolice = new GameObject("wheelPolice", ModelType.WheelPolice, false);
             Prefabs.AddPrefab(wheelPolice);
+        }
+
+        private static void InitializeHardwareInstancing()  {
+            //-------------------MATERIALS-------------------
+            Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
+            Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
+            Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
+            Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
+            Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
+            Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
+            Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
+
+            // Initialize the models for hardware instanciating
+            // Important: it doesn't matter when we load the modelds for the 
+            HardwareRendering.InitializeModel(ModelType.Cash, File.Load<Model>("Models/elements/cash"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Gold, File.Load<Model>("Models/elements/gold"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Diamond, File.Load<Model>("Models/elements/diamond"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Police, File.Load<Model>("Models/vehicles/police"), policeMat);
+            HardwareRendering.InitializeModel(ModelType.Crate, File.Load<Model>("Models/elements/crate"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Oil, File.Load<Model>("Models/elements/oil"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Bomb, File.Load<Model>("Models/powerups/bomb"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Weight, File.Load<Model>("Models/powerups/weight"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Magnet, File.Load<Model>("Models/powerups/magnet"), powerupMat);
+            HardwareRendering.InitializeModel(ModelType.Speedpad, File.Load<Model>("Models/elements/speedpad"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Stack, File.Load<Model>("Models/elements/stack"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.Shadow, File.Load<Model>("Models/primitives/plane"), shadowMat);
+            HardwareRendering.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
+            HardwareRendering.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/primitives/plane"), lightBlueMat);
+            HardwareRendering.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/primitives/plane"), lightRedMat);
+            HardwareRendering.InitializeModel(ModelType.WheelFl, File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
+            HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
+            HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
+            HardwareRendering.InitializeModel(ModelType.Vault, File.Load<Model>("Models/elements/vault"), elementsMat);
+
+            for (int i = 0; i < powerupName.Length; i++) {
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);
+                HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/powerups/" + powerupName[i]), powerupMat);
+            }
+
+            foreach (string s in dynamicElements) {
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
+                HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
+            }
         }
     }
 }
