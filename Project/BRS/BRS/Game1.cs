@@ -142,10 +142,10 @@ namespace BRS {
             _graphics.GraphicsDevice.Clear(Color.Black);
 
             HardwareRendering.DrawDepth();
+            ParticleRendering.DrawDepth();
 
 
             // apply post processing
-            // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
             PostProcessingManager.Instance.Draw(_spriteBatch);
 
             // Drop the render target

@@ -272,10 +272,14 @@ namespace BRS.Engine.Physics {
         }
 
         public void AddPointToDraw(Vector3 point) {
-            _pointsToDraw.Add(point);
+            try {
+                _pointsToDraw.Add(point);
 
-            if (_pointsToDraw.Count > CollisionPointsToDraw) {
-                _pointsToDraw.RemoveAt(0);
+                if (_pointsToDraw.Count > CollisionPointsToDraw) {
+                    _pointsToDraw.RemoveAt(0);
+                }
+            } catch {
+                // do nothing
             }
         }
 

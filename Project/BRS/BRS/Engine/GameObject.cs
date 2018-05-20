@@ -178,7 +178,7 @@ namespace BRS.Engine {
         }
 
         public virtual object Clone()  {
-            string newName = name + "_clone_" + InstanceCount;
+            string newName = name + "_clone_" + InstanceCount++;
             GameObject newObject;
 
             if (UseHardwareInstanciation) {
@@ -189,7 +189,6 @@ namespace BRS.Engine {
                 newObject.material = material?.Clone();
             }
 
-            InstanceCount++;
             newObject.UseHardwareInstanciation = UseHardwareInstanciation;
             newObject.ModelType = ModelType;
             newObject.Alpha = Alpha;
@@ -253,7 +252,7 @@ namespace BRS.Engine {
         }
 
         public static bool NameExists(string name) {
-            foreach (GameObject o in allGameObjects) {
+            foreach (GameObject o in allGameObjects.ToArray()) {
                 if (o.name.Equals(name)) return true;
             }
             return false;

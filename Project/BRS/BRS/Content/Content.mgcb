@@ -2913,7 +2913,7 @@
 /processorParam:TextureFormat=Color
 /build:Images/particles3d/tracks_speed.png
 
-#begin images/menu/bomb.png
+#begin Images/menu/bomb.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -2923,9 +2923,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/menu/bomb.png
+/build:Images/menu/bomb.png
 
-#begin images/menu/box.png
+#begin Images/menu/box.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -2935,9 +2935,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/menu/box.png
+/build:Images/menu/box.png
 
-#begin images/menu/chicken.png
+#begin Images/menu/chicken.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -2947,5 +2947,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:images/menu/chicken.png
+/build:Images/menu/chicken.png
 
