@@ -153,7 +153,7 @@ UniqueChoiceWith: ModeNormal ModeCrates ModeSurvival
 ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 1
-TextureInside: thunder
+TextureInside: bomb
 </Button>
 
 <Button>
@@ -166,7 +166,7 @@ UniqueChoiceWith: ModeNormal ModeBombs ModeSurvival
 ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 2
-TextureInside: trash
+TextureInside: box
 </Button>
 
 <Button>
@@ -179,19 +179,19 @@ UniqueChoiceWith: ModeNormal ModeBombs ModeCrates
 ScaleWidth: 0.75
 ScaleHeight: 0.85
 Index: 3
-TextureInside: decline
+TextureInside: chicken
 </Button>
 
 <Button>
 NameIdentifier: MapA
 Texture: button
-Position: 1020 710
-Text: A
+Position: 980 710
+Text: Zurich
 Functions: HighlightBorders SetMap
 NeighborsUpDownLeftRight: ModeBombs Next MapB MapB
 UniqueChoiceWith: MapB
 IsClicked: yes
-ScaleWidth: 0.75
+ScaleWidth: 1.1
 ScaleHeight: 0.85
 Index: 1
 </Button>
@@ -199,12 +199,12 @@ Index: 1
 <Button>
 NameIdentifier: MapB
 Texture: button
-Position: 1140 710
-Text: B
+Position: 1180 710
+Text: Bern
 Functions: HighlightBorders SetMap
 NeighborsUpDownLeftRight: ModeCrates Next MapA MapA
 UniqueChoiceWith: MapA
-ScaleWidth: 0.75
+ScaleWidth: 1.1
 ScaleHeight: 0.85
 Index: 2
 </Button>

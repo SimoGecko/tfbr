@@ -22,10 +22,6 @@ namespace BRS.Scripts.PowerUps {
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-
-        }
 
 
         // --------------------- CUSTOM METHODS ----------------

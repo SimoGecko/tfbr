@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------
 // Managed for this project by Alexander Lelidis and Andreas Emch
 
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -27,6 +26,8 @@ namespace BRS.Engine.Particles {
         // Number of particles generated in each round
         public float ParticlesPerRound = 1;
 
+
+        // Time between two emit-updates
         public float TimeBetweenRounds = 0.0f;
 
 

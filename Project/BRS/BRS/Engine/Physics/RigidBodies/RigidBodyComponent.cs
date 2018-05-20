@@ -142,6 +142,9 @@ namespace BRS.Engine.Physics.RigidBodies {
 
         #endregion
 
+        #region Helper-functions
+
+
         /// <summary>
         /// Calculate the tightest bounding-shape with the given <paramref name="type"/>
         /// </summary>
@@ -179,9 +182,18 @@ namespace BRS.Engine.Physics.RigidBodies {
             }
         }
 
+
+        /// <summary>
+        /// Add a game-object which is following this one with the given local rotation/offset.
+        /// </summary>
+        /// <param name="follower">Follower to synchronise with this one.</param>
         public void AddSyncedObject(Follower follower) {
             SyncedObjects.Add(follower);
             RigidBody?.SyncedObjects.Add(follower);
         }
+
+
+        #endregion
+
     }
 }

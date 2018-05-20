@@ -29,7 +29,6 @@ namespace BRS {
             File.content = Content;
             Graphics.gDM = _graphics;
             HardwareRendering.GraphicsDeviceManager = _graphics;
-            ParticleRendering.GraphicsDeviceManager = _graphics;
 
             //IsFixedTimeStep = false;
         }
@@ -124,7 +123,6 @@ namespace BRS {
                 GraphicsDevice.Viewport = cam.Viewport;
 
                 // Allow physics drawing for debug-reasons (display boundingboxes etc..)
-                // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
                 PhysicsDrawer.Instance.Draw(cam);
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);

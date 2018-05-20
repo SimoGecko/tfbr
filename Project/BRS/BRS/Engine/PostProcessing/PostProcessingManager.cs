@@ -29,21 +29,6 @@ namespace BRS.Engine.PostProcessing {
             };
 
             Instance = new PostProcessingManager(defaultEffects);
-
-            SceneTarget = new RenderTarget2D(
-                Graphics.gD,
-                Screen.Width,
-                Screen.Height,
-                false,
-                Graphics.gD.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            DepthTarget = new RenderTarget2D(
-                Graphics.gD,
-                Screen.Width,
-                Screen.Height,
-                false,
-                Graphics.gD.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
         }
 
         #endregion
@@ -175,20 +160,15 @@ namespace BRS.Engine.PostProcessing {
             _renderTarget2 = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
                 spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
 
-            _blurTarget1 = new RenderTarget2D(
-                spriteBatch.GraphicsDevice,
-                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
-                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-            _blurTarget2 = new RenderTarget2D(
-                spriteBatch.GraphicsDevice,
-                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
-                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
+            _blurTarget1 = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
+                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
+            _blurTarget2 = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
+                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
+
+            SceneTarget = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
+                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
+            DepthTarget = new RenderTarget2D(spriteBatch.GraphicsDevice, Screen.Width, Screen.Height, false,
+                spriteBatch.GraphicsDevice.PresentationParameters.BackBufferFormat, DepthFormat.Depth24);
         }
 
 
@@ -214,14 +194,14 @@ namespace BRS.Engine.PostProcessing {
                             PostProcessingEffect blurShader = _twoPassEffect;
                             blurShader.SetParameter("active", new Vector4(1, 1, 1, 1));
 
-                            for (int i = 0; i < 2; i++) {
+                            foreach (EffectPass pass in blurShader.Effect.CurrentTechnique.Passes) {
                                 // Setup next render-target to apply next filter
                                 RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _blurTarget1 : _blurTarget2;
                                 Graphics.gD.SetRenderTarget(nextTarget);
 
                                 // apply post processing shader
                                 SpriteBatchBegin(ref spriteBatch);
-                                blurShader.Effect.CurrentTechnique.Passes[i].Apply();
+                                pass.Apply();
                                 spriteBatch.Draw(curBlurTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                                 SpriteBatchEnd(ref spriteBatch);
 
@@ -252,14 +232,14 @@ namespace BRS.Engine.PostProcessing {
                             break;
                     }
 
-                    for (int i = 0; i < ppShader.Effect.CurrentTechnique.Passes.Count; i++) {
+                    foreach (EffectPass pass in ppShader.Effect.CurrentTechnique.Passes) {
                         // Setup next render-target to apply next filter
                         RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _renderTarget1 : _renderTarget2;
                         Graphics.gD.SetRenderTarget(nextTarget);
 
                         // apply post processing shader
                         SpriteBatchBegin(ref spriteBatch);
-                        ppShader.Effect.CurrentTechnique.Passes[i].Apply();
+                        pass.Apply();
                         spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         SpriteBatchEnd(ref spriteBatch);
 
