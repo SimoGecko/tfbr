@@ -1,6 +1,7 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using BRS.Engine;
 using BRS.Engine.Particles;
 using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
@@ -74,6 +75,10 @@ namespace BRS.Scripts.Particles3D {
         /// Update the projectile with emitting new particles and update the living
         /// </summary>
         public override void Update() {
+            if (IsEmitting) {
+                _projectileTrailParticles.AddParticles(transform.position, Vector3.Zero);
+            }
+
             _projectile.Update(transform.position);
         }
 

@@ -1021,18 +1021,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/particles3d/smoke.png
 
-#begin Images/particles3d/tracks.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/particles3d/tracks.png
-
 #begin Images/particles3d/vault_smoke.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2930,4 +2918,28 @@
 /processor:EffectProcessor
 /processorParam:DebugMode=Auto
 /build:Other/shaders/textured.fx
+
+#begin Images/particles3d/tracks_oil.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/particles3d/tracks_oil.png
+
+#begin Images/particles3d/tracks_speed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/particles3d/tracks_speed.png
 

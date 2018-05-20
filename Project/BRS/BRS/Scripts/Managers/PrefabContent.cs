@@ -167,14 +167,26 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(cashStack);
 
 
+            // Tracks of the player
+            GameObject tracksOil = new GameObject(ModelType.TracksOil.GetDescription(), ModelType.TracksOil, false);
+            tracksOil.transform.Scale(0.1f);
+            tracksOil.tag = ObjectTag.Lighting;
+            tracksOil.Alpha = 0.5f;
+            tracksOil.AddComponent(new TracksRedone());
+            Prefabs.AddPrefab(tracksOil);
+
+            GameObject tracksSpeed = new GameObject(ModelType.TracksSpeed.GetDescription(), ModelType.TracksSpeed, false);
+            tracksSpeed.transform.Scale(0.1f);
+            tracksSpeed.tag = ObjectTag.Lighting;
+            tracksSpeed.Alpha = 0.5f;
+            tracksSpeed.AddComponent(new TracksRedone());
+            Prefabs.AddPrefab(tracksSpeed);
+
+
             // dynamic shadow
             GameObject dynamicShadow = new GameObject(FollowerType.DynamicShadow.GetDescription(), ModelType.Shadow, false);
             dynamicShadow.tag = ObjectTag.Lighting;
             Prefabs.AddPrefab(dynamicShadow);
-
-            GameObject tracks = new GameObject("trackPrefab", ModelType.Tracks, false);
-            tracks.tag = ObjectTag.Lighting;
-            Prefabs.AddPrefab(tracks);
 
 
             // dynamic lights
@@ -209,6 +221,8 @@ namespace BRS.Engine {
             Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
             Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
             Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
+            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) {RenderingType = RenderingType.HITextureAlpha};
+            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) {RenderingType = RenderingType.HITextureAlpha};
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
@@ -230,6 +244,8 @@ namespace BRS.Engine {
             HardwareRendering.InitializeModel(ModelType.YellowLight, File.Load<Model>("Models/primitives/plane"), lightPlayerMat);
             HardwareRendering.InitializeModel(ModelType.BlueLight, File.Load<Model>("Models/primitives/plane"), lightBlueMat);
             HardwareRendering.InitializeModel(ModelType.RedLight, File.Load<Model>("Models/primitives/plane"), lightRedMat);
+            HardwareRendering.InitializeModel(ModelType.TracksOil, File.Load<Model>("Models/primitives/plane"), carTrackOilMat);
+            HardwareRendering.InitializeModel(ModelType.TracksSpeed, File.Load<Model>("Models/primitives/plane"), carTrackSpeedMat);
             HardwareRendering.InitializeModel(ModelType.WheelFl, File.Load<Model>("Models/vehicles/wheel_fl"), playerMat);
             HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
             HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);

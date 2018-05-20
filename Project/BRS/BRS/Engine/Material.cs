@@ -57,7 +57,7 @@ namespace BRS.Engine {
             if (isAlphaAnimated) {
                 RenderingType = RenderingType.HITextureAlphaAnimated;
             } else if (isTransparent) {
-                RenderingType = RenderingType.HITextureAlpha;
+                RenderingType = RenderingType.HITextureTransparent;
             } else {
                 RenderingType = RenderingType.HITexture;
             }

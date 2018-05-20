@@ -127,7 +127,7 @@ float4 PixelShaderFunctionTextured(VertexShaderOutput input) : COLOR0
 	return saturate(textureColor);
 }
 
-float4 PixelShaderFunctionTexturedAlpha(VertexShaderOutput input) : COLOR0
+float4 PixelShaderFunctionTexturedTransparent(VertexShaderOutput input) : COLOR0
 {
 	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
 
@@ -138,8 +138,25 @@ float4 PixelShaderFunctionTexturedAlphaAnimated(VertexShaderOutput input) : COLO
 {
 	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
 	textureColor.a = lerp(textureColor.a, 0, input.Alpha);
+	//textureColor.a = lerp(0, input.Alpha, textureColor.a);
+	//textureColor.r = textureColor.r * textureColor.a;
+	//textureColor.g = textureColor.g * textureColor.a;
+	//textureColor.b = textureColor.b * textureColor.a;
 
-	return saturate(textureColor);
+	return textureColor;
+}
+
+
+float4 PixelShaderFunctionTexturedAlpha(VertexShaderOutput input) : COLOR0
+{
+	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+
+	textureColor.a = lerp(0, input.Alpha, textureColor.a);
+	textureColor.r = textureColor.r * textureColor.a;
+	textureColor.g = textureColor.g * textureColor.a;
+	textureColor.b = textureColor.b * textureColor.a;
+
+	return textureColor;
 }
 
 // Hardware instancing technique with baked light maps.
@@ -160,10 +177,10 @@ technique HITexture {
 }
 
 // Hardware instancing technique with only texture.
-technique HITextureAlpha {
+technique HITextureTransparent {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
-		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlpha();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedTransparent();
 	}
 }
 
@@ -172,5 +189,13 @@ technique HITextureAlphaAnimated {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlphaAnimated();
+	}
+}
+
+// Hardware instancing technique with only texture.
+technique HITextureAlpha {
+	pass Pass1 {
+		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
+		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlpha();
 	}
 }
