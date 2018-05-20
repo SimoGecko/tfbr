@@ -187,12 +187,11 @@
     <Compile Include="Scripts\Particles3D\Boost.cs" />
     <Compile Include="Scripts\Particles3D\CashDrop.cs" />
     <Compile Include="Scripts\Particles3D\FlyingCash.cs" />
-    <Compile Include="Scripts\Particles3D\Tracks.cs" />
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
     <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
-    <Compile Include="Scripts\Particles3D\TracksRedone.cs" />
+    <Compile Include="Scripts\Particles3D\Tracks.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\Particles3D\BaseParticles.cs" />

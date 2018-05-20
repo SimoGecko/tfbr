@@ -62,11 +62,10 @@ namespace BRS.Scripts.PlayerScripts {
 
             if (_playerMovement.OilTracks && distance.LengthSquared() > 0.05f) {
                 _lastTrackPosition = transform.position;
-                 GameObject.Instantiate(_oilTrack, transform);
+                GameObject.Instantiate(_oilTrack, transform);
             }
 
-            if (_playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerAttack.IsAttacking)
-            {
+            if (_playerMovement.Boosting || _playerMovement.SpeedPad || _playerMovement.PowerupBoosting || _playerAttack.IsAttacking) {
                 _lastTrackPosition = transform.position;
                 GameObject.Instantiate(_speedTrack, transform);
             }

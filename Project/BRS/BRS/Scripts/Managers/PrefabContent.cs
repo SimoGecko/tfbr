@@ -172,14 +172,14 @@ namespace BRS.Engine {
             tracksOil.transform.Scale(0.1f);
             tracksOil.tag = ObjectTag.Lighting;
             tracksOil.Alpha = 0.5f;
-            tracksOil.AddComponent(new TracksRedone());
+            tracksOil.AddComponent(new Tracks());
             Prefabs.AddPrefab(tracksOil);
 
             GameObject tracksSpeed = new GameObject(ModelType.TracksSpeed.GetDescription(), ModelType.TracksSpeed, false);
             tracksSpeed.transform.Scale(0.1f);
             tracksSpeed.tag = ObjectTag.Lighting;
-            tracksSpeed.Alpha = 0.5f;
-            tracksSpeed.AddComponent(new TracksRedone());
+            tracksSpeed.Alpha = 0.1f;
+            tracksSpeed.AddComponent(new Tracks());
             Prefabs.AddPrefab(tracksSpeed);
 
 
