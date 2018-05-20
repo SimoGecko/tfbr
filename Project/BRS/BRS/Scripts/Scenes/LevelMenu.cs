@@ -44,7 +44,7 @@ namespace BRS.Scripts.Scenes {
             // Model instanciation -> not wokring with these models, but not to bad since we have not many models in the menu-level
             //HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
             //HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
-            //HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
+            HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
 
             GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
             insideScene.DrawOrder = 1;
