@@ -1,4 +1,7 @@
-﻿namespace BRS.Engine.Rendering {
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+namespace BRS.Engine.Rendering {
     /// <summary>
     /// Defines the model-type which is used for the hardware-instanciation.
     /// </summary>

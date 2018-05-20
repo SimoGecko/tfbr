@@ -1,4 +1,7 @@
-﻿using System;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -106,6 +109,7 @@ namespace BRS.Engine.Rendering {
             // Transfer the latest instance gameObject matrices into the vertex-buffer.
             VertexBuffer.SetData(VertexInformation, 0, VertexInformation.Length, SetDataOptions.Discard);
         }
+
 
         /// <summary>
         /// Reset all instances so that no game-object belongs to any hardware-instance

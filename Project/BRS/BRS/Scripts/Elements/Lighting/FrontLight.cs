@@ -28,7 +28,7 @@ namespace BRS.Scripts.Elements.Lighting {
         private List<float> _min, _diff;
         private List<float> _speed;
         private List<Vector3> _offsetsFront, _offsetsBack;
-        private Vector3 _lightSize = new Vector3(0.05f, 1.0f, 0.05f);
+        private readonly Vector3 _lightSize = new Vector3(0.05f, 1.0f, 0.05f);
         private int _size;
 
         // const
@@ -54,7 +54,7 @@ namespace BRS.Scripts.Elements.Lighting {
             }
         }
 
-        public void Init(Type type, Vector3 offsetFrontRight, Vector3 offsetBackLeft) {
+        private void Init(Type type, Vector3 offsetFrontRight, Vector3 offsetBackLeft) {
             _offsetsFront = new List<Vector3>
             {
                 new Vector3(offsetFrontRight.X, offsetFrontRight.Y, offsetFrontRight.Z + 0.001f),

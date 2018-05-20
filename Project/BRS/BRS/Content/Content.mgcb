@@ -2744,12 +2744,6 @@
 /processorParam:DebugMode=Auto
 /build:Other/effects/ShockWave.fx
 
-#begin Other/effects/Skybox.fx
-/importer:EffectImporter
-/processor:EffectProcessor
-/processorParam:DebugMode=Auto
-/build:Other/effects/Skybox.fx
-
 #begin Other/effects/TwoPassBlur.fx
 /importer:EffectImporter
 /processor:EffectProcessor

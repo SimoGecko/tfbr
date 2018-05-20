@@ -66,6 +66,7 @@ namespace BRS.Engine {
             //GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
             HardwareRendering.Reset();
+            ParticleRendering.Reset();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();

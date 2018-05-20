@@ -15,7 +15,8 @@ namespace BRS.Engine.Particles {
     /// The main component in charge of displaying 3D particles.
     /// </summary>
     public class ParticleSystem3D : Component {
-        #region Fields
+
+        #region Properties and attributes
 
         public static bool IsActive = true;
 

@@ -4,7 +4,6 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
-using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using BRS.Engine.Physics.Colliders;
 
@@ -41,8 +40,7 @@ namespace BRS.Scripts.Elements.Lighting {
         }
 
         public override void Start() {
-            for (int i = 0; i < Followers.Count; ++i) {
-                Follower follower = Followers[i];
+            foreach (Follower follower in Followers) {
                 if (gameObject.HasComponent<MovingRigidBody>()) {
                     gameObject.GetComponent<MovingRigidBody>().AddSyncedObject(follower);
                     Collider = gameObject.GetComponent<MovingRigidBody>().RigidBody;
@@ -61,8 +59,8 @@ namespace BRS.Scripts.Elements.Lighting {
         public abstract override void Update();
 
         public override void Destroy() {
-            for (int i = 0; i < Followers.Count; ++i) {
-                GameObject.Destroy(Followers[i].GameObject);
+            foreach (Follower follower in Followers) {
+                GameObject.Destroy(follower.GameObject);
             }
 
             Followers.Clear();
@@ -76,7 +74,7 @@ namespace BRS.Scripts.Elements.Lighting {
 
         // other
         protected abstract List<Follower> CreateFollower();
-        
+
 
     }
 }

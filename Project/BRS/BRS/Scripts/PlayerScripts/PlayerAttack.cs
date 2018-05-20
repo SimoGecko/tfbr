@@ -6,7 +6,6 @@ using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Curve = BRS.Engine.Utilities.Curve;
@@ -95,13 +94,7 @@ namespace BRS.Scripts.PlayerScripts {
                 float t = Curve.EvaluateSqrt(_attackRefTime);
                 Vector3 newPosition = Vector3.LerpPrecise(_attackStartPos, _attackEndPos, t);
 
-                // Todo: Fix attack-end
-                //if (newPosition.X - _attackStartPos.X > _attackEndCollision.X - _attackStartPos.X) {
-                //    newPosition = _attackEndCollision;
-                //}
-
                 // Apply new position to the rigid-body
-                // Todo by Andy for Andy: can be surely written better :-)
                 _rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
             } else {
                 _attacking = false;

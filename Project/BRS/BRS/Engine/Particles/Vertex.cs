@@ -1,11 +1,10 @@
-#region File Description
 //-----------------------------------------------------------------------------
 // ParticleVertex.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
-#endregion
+// Managed for this project by Alexander Lelidis and Andreas Emch
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
