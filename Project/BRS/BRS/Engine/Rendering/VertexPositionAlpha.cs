@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
@@ -33,5 +36,5 @@ namespace BRS.Engine.Rendering {
         /// Define vertex-declaration
         /// </summary>
         VertexDeclaration IVertexType.VertexDeclaration => InstanceVertexDeclaration;
-    };
+    }
 }

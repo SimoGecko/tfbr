@@ -138,29 +138,25 @@ float4 PixelShaderFunctionTexturedAlphaAnimated(VertexShaderOutput input) : COLO
 {
 	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
 	textureColor.a = lerp(textureColor.a, 0, input.Alpha);
-	//textureColor.a = lerp(0, input.Alpha, textureColor.a);
-	//textureColor.r = textureColor.r * textureColor.a;
-	//textureColor.g = textureColor.g * textureColor.a;
-	//textureColor.b = textureColor.b * textureColor.a;
 
 	return textureColor;
 }
 
-
 float4 PixelShaderFunctionTexturedAlpha(VertexShaderOutput input) : COLOR0
 {
 	float4 textureColor = tex2D(colorTextureSampler, input.ColorUV);
+	float alpha = lerp(0, input.Alpha, textureColor.a);
 
-	textureColor.a = lerp(0, input.Alpha, textureColor.a);
-	textureColor.r = textureColor.r * textureColor.a;
-	textureColor.g = textureColor.g * textureColor.a;
-	textureColor.b = textureColor.b * textureColor.a;
+	textureColor.a = alpha;
+	textureColor.r = textureColor.r * alpha;
+	textureColor.g = textureColor.g * alpha;
+	textureColor.b = textureColor.b * alpha;
 
 	return textureColor;
 }
 
 // Hardware instancing technique with baked light maps.
-technique HIBaked {
+technique Baked {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderBaked();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionBaked();
@@ -169,31 +165,31 @@ technique HIBaked {
 
 
 // Hardware instancing technique with only texture.
-technique HITexture {
+technique Texture {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTextured();
 	}
 }
 
-// Hardware instancing technique with only texture.
-technique HITextureTransparent {
+// Hardware instancing technique with only texture which is transparent.
+technique TextureTransparent {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedTransparent();
 	}
 }
 
-// Hardware instancing technique with only texture.
-technique HITextureAlphaAnimated {
+// Hardware instancing technique with only texture with animated transparency.
+technique TextureAlphaAnimated {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlphaAnimated();
 	}
 }
 
-// Hardware instancing technique with only texture.
-technique HITextureAlpha {
+// Hardware instancing technique with only texture with a given alpha-value.
+technique TextureAlpha {
 	pass Pass1 {
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderTexture();
 		PixelShader = compile PS_SHADERMODEL PixelShaderFunctionTexturedAlpha();

@@ -24,7 +24,6 @@ namespace BRS.Scripts.Elements {
 
         //private
         private readonly Type _type;
-        //private Matrix[] _meshPartTransforms;
         private readonly Vector3[] _wheelOffsets;
         private readonly int[] _wheelMeshPartIndex;
         private readonly List<Offset> _toUpdate;
@@ -96,65 +95,6 @@ namespace BRS.Scripts.Elements {
         }
 
 
-        //public override void Start() {
-
-        //    //    Model current = gameObject.Model;
-
-        //    //    List<ModelBone> bones = new List<ModelBone>();
-
-        //    //    foreach (var tmp in current.Bones) {
-        //    //        ModelBone newBone = new ModelBone();
-        //    //        newBone.Transform = tmp.Transform;
-        //    //        newBone.Name = tmp.Name;
-        //    //        newBone.Index = tmp.Index;
-        //    //        newBone.ModelTransform = tmp.ModelTransform;
-
-        //    //        foreach (var ms in tmp.Meshes) {
-        //    //            newBone.AddMesh(ms);
-        //    //        }
-        //    //    }
-
-        //    //    gameObject.Model = new Model(Graphics.gD, bones, current.Meshes.ToList());
-
-        //    //if (gameObject.HasComponent<MovingRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<MovingRigidBody>().RigidBody;
-        //    //}
-        //    //if (gameObject.HasComponent<AnimatedRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<AnimatedRigidBody>().RigidBody;
-        //    //}
-        //    //if (gameObject.HasComponent<DynamicRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<DynamicRigidBody>().RigidBody;
-        //    //}
-
-        //    _meshPartTransforms = new Matrix[gameObject.Model.Bones.Count];
-        //    gameObject.Model.CopyBoneTransformsTo(_meshPartTransforms);
-
-        //    for (int i = 0; i < gameObject.Model.Bones.Count; ++i) {
-        //        var bone = gameObject.Model.Bones[i];
-
-        //        Vector3 offset = bone.Meshes.Count > 0 ? bone.Meshes[0].BoundingSphere.Center : Vector3.Zero;
-
-        //        switch (bone.Name) {
-        //            case "wheel_fl":
-        //                _wheelMeshPartIndex[(int)Offset.FrontLeft] = i;
-        //                _wheelOffsets[(int)Offset.FrontLeft] = offset;
-        //                break;
-        //            case "wheel_fr":
-        //                _wheelMeshPartIndex[(int)Offset.FrontRight] = i;
-        //                _wheelOffsets[(int)Offset.FrontRight] = offset;
-        //                break;
-        //            case "wheel_bl":
-        //                _wheelMeshPartIndex[(int)Offset.BackLeft] = i;
-        //                _wheelOffsets[(int)Offset.BackLeft] = offset;
-        //                break;
-        //            case "wheel_br":
-        //                _wheelMeshPartIndex[(int)Offset.BackRight] = i;
-        //                _wheelOffsets[(int)Offset.BackRight] = offset;
-        //                break;
-        //        }
-        //    }
-        //}
-
         protected override List<Follower> CreateFollower() {
             Transform target = gameObject.transform;
             List<Follower> followers = new List<Follower>();
@@ -208,19 +148,6 @@ namespace BRS.Scripts.Elements {
                 follower.Orientation = local *
                     Quaternion.CreateFromAxisAngle(Vector3.Up, factor * MathHelper.ToRadians(Collider.LastRotation));
             }
-            //foreach (Offset offset in _toUpdate) {
-            //    int i = (int)offset;
-            //    int index = _wheelMeshPartIndex[i];
-
-            //    Matrix toLocal = Matrix.CreateTranslation(_wheelOffsets[i]) * transform.World;
-            //    Matrix t = Matrix.Invert(toLocal);
-            //    int factor = i < 2 ? _factor : -_factor;
-            //    _meshPartTransforms[index] = t * Matrix.CreateRotationY(factor * MathHelper.ToRadians(_collider.LastRotation)) * toLocal;
-            //    //_meshPartTransforms[index] = t * Matrix.CreateRotationY(factor * MathHelper.ToRadians((float)Time.Gt.TotalGameTime.TotalSeconds)) * toLocal;
-            //    Debug.Log(_collider.LastRotation);
-            //}
-
-            //gameObject.Model.CopyBoneTransformsFrom(_meshPartTransforms);
         }
 
 

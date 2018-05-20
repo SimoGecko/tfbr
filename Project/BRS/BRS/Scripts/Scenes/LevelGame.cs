@@ -22,8 +22,9 @@ namespace BRS.Scripts.Scenes {
     class LevelGame : Scene {
         ////////// first game level, loads all the things //////////
 
-        public List<Vector3> StartPositions;
-        public List<Vector3> PoliceStartPositions;
+        private List<Vector3> _startPositions;
+        private List<Vector3> _basePositions;
+        private List<Vector3> _policeStartPositions;
 
 
         public override int GetNumCameras() { return GameManager.NumPlayers; }
@@ -106,21 +107,25 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Heatmap());
             Manager.AddComponent(new Spawner());
             Manager.AddComponent(new Minimap());
-            Manager.AddComponent(new PoliceManager(PoliceStartPositions));
+            Manager.AddComponent(new PoliceManager(_policeStartPositions));
             Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
         }
 
         void SetStartPositions() {
-            StartPositions = new List<Vector3>();
-            PoliceStartPositions = new List<Vector3>();
-
+            _startPositions = new List<Vector3>();
+            _basePositions = new List<Vector3>();
+            _policeStartPositions = new List<Vector3>();
+            int overallOffset = GameManager.NumPlayers > 2 ? -1 : 0;
+            
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                int offset = i > 1 ? 1 : 0;
-                int x = -5 + 10 * (i % 2 == 0 ? 0 : 1) + offset;
+                int offset = i > 1 ? 2 : 0;
+                int xBase = -5 + 10 * (i % 2 == 0 ? 0 : 1) + offset;
+                int xPlayer = xBase + overallOffset;
                 int zPolice = 10 + offset;
 
-                StartPositions.Add(new Vector3(x, 0, 10));
-                PoliceStartPositions.Add(new Vector3(5 * x, 0, zPolice));
+                _startPositions.Add(new Vector3(xPlayer, 0, 10));
+                _basePositions.Add(new Vector3(xBase, 0, 10));
+                _policeStartPositions.Add(new Vector3(5 * xBase, 0, zPolice));
             }
         }
 
@@ -128,7 +133,7 @@ namespace BRS.Scripts.Scenes {
             //Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
             for (int i = 0; i < GameManager.NumPlayers; i++) {
-                Vector3 startPos = StartPositions[i];
+                Vector3 startPos = _startPositions[i];
                 GameObject player = new GameObject("player_" + i.ToString(), File.Load<Model>("Models/vehicles/forklift"));
                 player.tag = ObjectTag.Player;
                 player.transform.position = startPos;
@@ -139,7 +144,6 @@ namespace BRS.Scripts.Scenes {
                 player.AddComponent(new MovingRigidBody());
                 //subcomponents
                 player.AddComponent(new PlayerAttack());
-                player.AddComponent(new PlayerCollider());
                 player.AddComponent(new PlayerInventory());
                 player.AddComponent(new PlayerMovement());
                 player.AddComponent(new PlayerParticles());
@@ -213,7 +217,7 @@ namespace BRS.Scripts.Scenes {
                 GameObject playerBase = new GameObject("base_" + i.ToString(), File.Load<Model>("Models/primitives/plane"));
                 playerBase.tag = ObjectTag.Base;
                 playerBase.transform.Scale(0.5f);
-                playerBase.transform.position = StartPositions[i] + 0.001f * Vector3.Up;
+                playerBase.transform.position = _basePositions[i] + 0.001f * Vector3.Up;
                 playerBase.material = new Material(coloredBase, true);
                 playerBase.AddComponent(new Base(i));
                 playerBase.AddComponent(new BaseParticles());

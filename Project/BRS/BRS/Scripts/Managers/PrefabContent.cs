@@ -221,8 +221,8 @@ namespace BRS.Engine {
             Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
             Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
             Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
-            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) {RenderingType = RenderingType.HITextureAlpha};
-            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) {RenderingType = RenderingType.HITextureAlpha};
+            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) {RenderingType = RenderingType.TextureAlpha};
+            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) {RenderingType = RenderingType.TextureAlpha};
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));

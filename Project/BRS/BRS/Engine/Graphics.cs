@@ -1,9 +1,6 @@
 ﻿// (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using System.Collections.Generic;
-using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -52,7 +49,6 @@ namespace BRS.Engine {
 
         public static Effect texlightEffect;
         public static Effect textureEffect;
-        public static Effect skyboxEffect;
         //public static Texture2D lightMap;
         //public static Texture2D textureCol;
 
@@ -62,7 +58,6 @@ namespace BRS.Engine {
             texlightEffect = File.Load<Effect>("Other/shaders/baked");
             //texlightEffect = File.Load<Effect>("Other/shaders/lightmap");
             textureEffect = File.Load<Effect>("Other/shaders/textured");
-            skyboxEffect = File.Load<Effect>("Other/effects/Skybox");
         }
 
 
@@ -128,7 +123,7 @@ namespace BRS.Engine {
                     textureEffect.Parameters["Projection"].SetValue(proj);
 
                     textureEffect.Parameters["ColorTexture"].SetValue(colorTex);
-                    textureEffect.Parameters["IsTransparent"].SetValue(isTransparent); // why the fuck would you modify this
+                    textureEffect.Parameters["IsTransparent"].SetValue(isTransparent);
                     textureEffect.Parameters["IsAlphaAnimated"].SetValue(isAlphaAnimated);
                 }
                 mesh.Draw();

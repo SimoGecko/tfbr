@@ -12,12 +12,12 @@ namespace BRS.Engine {
         // --------------------- VARIABLES ---------------------
 
         public RenderingType RenderingType;
+
         //simple = basic effect without anything
         //textured = one single texture
         //baked = texture for color and for lightmap
 
         //public
-        //public bool Lit;
         public Color Diffuse;
         public bool IsTransparent;
 
@@ -25,15 +25,10 @@ namespace BRS.Engine {
 
         public bool baked;
         public bool textured;
-        public bool skybox;
         public Texture2D colorTex;
         public Texture2D lightTex;
 
-        //Texture2D Texture;
-        //EffectTechnique tt;
-
         public static Material Default = new Material(new Color(140, 140, 140), true);
-
 
 
         //private
@@ -44,22 +39,23 @@ namespace BRS.Engine {
             Diffuse = Color.White;
             baked = false;
             textured = false;
-            //Lit = false;
         }
+
         public Material(Texture2D color, Texture2D light) {
-            RenderingType = RenderingType.HIBaked;
+            RenderingType = RenderingType.Baked;
             baked = true;
             textured = false;
             colorTex = color;
             lightTex = light;
         }
+
         public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false) {
             if (isAlphaAnimated) {
-                RenderingType = RenderingType.HITextureAlphaAnimated;
+                RenderingType = RenderingType.TextureAlphaAnimated;
             } else if (isTransparent) {
-                RenderingType = RenderingType.HITextureTransparent;
+                RenderingType = RenderingType.TextureTransparent;
             } else {
-                RenderingType = RenderingType.HITexture;
+                RenderingType = RenderingType.Texture;
             }
 
             baked = false;
@@ -68,13 +64,9 @@ namespace BRS.Engine {
             IsTransparent = isTransparent;
             IsAlphaAnimated = isAlphaAnimated;
         }
-        public Material(string type) {
-            if (type == "skybox") skybox = true;
-        }
 
         public Material(Color color, bool lit = true) {
             Diffuse = color;
-            //Lit = lit;
         }
 
 
@@ -98,8 +90,6 @@ namespace BRS.Engine {
 
 
         // queries
-
-
 
         // other
 

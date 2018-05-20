@@ -193,6 +193,8 @@ namespace BRS.Engine.PostProcessing {
 
         #endregion
 
+        #region Camera handling
+
 
         /// <summary>
         /// Get the list of the affected cameras/viewports for player <paramref name="playerId"/>
@@ -207,6 +209,9 @@ namespace BRS.Engine.PostProcessing {
                 default: return new List<int>();
             }
         }
+
+
+        #endregion
 
     }
 }

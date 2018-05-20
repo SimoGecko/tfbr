@@ -130,7 +130,6 @@
     <Compile Include="Engine\Physics\Display.cs" />
     <Compile Include="Engine\Physics\Colliders\Collider.cs" />
     <Compile Include="Engine\Physics\Follower.cs" />
-    <Compile Include="Engine\Physics\ModelExtractor.cs" />
     <Compile Include="Engine\Physics\PhysicsDrawer.cs" />
     <Compile Include="Engine\Physics\PhysicsManager.cs" />
     <Compile Include="Engine\Physics\Primitives3D\BoxPrimitive.cs" />
@@ -165,7 +164,6 @@
     <Compile Include="Engine\Rendering\ModelInstance.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
-    <Compile Include="Engine\Utilities\Distribution.cs" />
     <Compile Include="Engine\Utilities\EnumExtensions.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
@@ -192,7 +190,6 @@
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
     <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
     <Compile Include="Scripts\Particles3D\Tracks.cs" />
-    <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
     <Compile Include="Scripts\Particles3D\BaseParticles.cs" />
     <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />

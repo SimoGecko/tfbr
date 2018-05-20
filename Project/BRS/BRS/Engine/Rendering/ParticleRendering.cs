@@ -1,19 +1,13 @@
-﻿using System;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 using System.Collections.Generic;
 using BRS.Engine.Particles;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
     public static class ParticleRendering {
 
         #region Properties and attributes
-
-        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
-        private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
-
-        // Effects
-        //private static Effect _instanceEffect;
 
         //reference
         private static readonly List<ParticleSystem3D> ParticleSystems = new List<ParticleSystem3D>();
@@ -59,25 +53,22 @@ namespace BRS.Engine.Rendering {
         #region Instanciation-handling
 
         /// <summary>
-        /// Add a gameobject to an instance to draw
+        /// Add a particle-system to render
         /// </summary>
-        /// <param name="modelType">Model-type on which the gameobject is added</param>
-        /// <param name="gameObject"></param>
+        /// <param name="particleSystem">New particle-system</param>
         public static void AddInstance(ParticleSystem3D particleSystem) {
             ParticleSystems.Add(particleSystem);
         }
 
         /// <summary>
-        /// Remove a gameobject to not be drawn anymore
+        /// Remove a particle-system to not be drawn anymore
         /// </summary>
-        /// <param name="modelType">Model-type on which the gameobject was added</param>
-        /// <param name="gameObject"></param>
+        /// <param name="particleSystem">Particle-system to remove</param>
         public static void RemoveInstance(ParticleSystem3D particleSystem) {
             ParticleSystems.Remove(particleSystem);
         }
 
         #endregion
-
 
     }
 }

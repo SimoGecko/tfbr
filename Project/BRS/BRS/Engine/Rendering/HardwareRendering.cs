@@ -1,4 +1,7 @@
-﻿using System;
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +11,7 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
-        public static GraphicsDeviceManager GraphicsDeviceManager { get; set; }
+        public static GraphicsDeviceManager GraphicsDeviceManager { private get; set; }
         private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
 
         // Effects

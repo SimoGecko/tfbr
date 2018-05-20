@@ -56,18 +56,16 @@ namespace BRS.Engine.Physics.RigidBodies {
 
         #endregion
 
+        #region Helper-functions
+
+
         /// <summary>
         /// Calculate the tightest bounding-shape with the given <paramref name="type"/>
         /// </summary>
         /// <param name="type">Type of the bounding-shape</param>
         protected override void CalculateShape(ShapeType type) {
             if (_isGround) {
-                Model model = gameObject.Model;
-                BoundingBox bb = BoundingBoxHelper.Calculate(model);
-                JVector bbSize = Conversion.ToJitterVector(bb.Max - bb.Min);
-                bbSize = new JVector(1000,
-                    10,
-                    1000);
+                JVector  bbSize = new JVector(1000, 10, 1000);
 
                 CenterOfMass = new JVector(0, -5, 0);
                 CollisionShape = new BoxShape(bbSize);
@@ -75,5 +73,8 @@ namespace BRS.Engine.Physics.RigidBodies {
                 base.CalculateShape(type);
             }
         }
+
+        #endregion
+
     }
 }

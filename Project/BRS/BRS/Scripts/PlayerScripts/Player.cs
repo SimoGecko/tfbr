@@ -10,7 +10,6 @@ using BRS.Scripts.Managers;
 using BRS.Scripts.UI;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -50,12 +49,11 @@ namespace BRS.Scripts.PlayerScripts {
         private const float TimeResetLastCollider = 2;
 
         //subcomponents
-        PlayerAttack _pA;
-        PlayerMovement _pM;
-        PlayerInventory _pI;
-        PlayerPowerup _pP;
-        PlayerStamina _pS;
-        private PlayerCollider _pC;
+        private PlayerAttack _pA;
+        private PlayerMovement _pM;
+        private PlayerInventory _pI;
+        private PlayerPowerup _pP;
+        private PlayerStamina _pS;
         private SteerableCollider _steerableCollider;
 
         public CameraController CamController;
@@ -91,7 +89,6 @@ namespace BRS.Scripts.PlayerScripts {
             _pI = gameObject.GetComponent<PlayerInventory>();
             _pP = gameObject.GetComponent<PlayerPowerup>();
             _pS = gameObject.GetComponent<PlayerStamina>();
-            _pC = gameObject.GetComponent<PlayerCollider>();
 
             MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
             _steerableCollider = mrb.SteerableCollider;
@@ -160,7 +157,6 @@ namespace BRS.Scripts.PlayerScripts {
             _pI.Reset();
             _pP.Reset();
             _pS.Reset();
-            _pC.Reset();
             UpdateUI();
             _steerableCollider.PostStep(0.0f);
         }
@@ -238,7 +234,6 @@ namespace BRS.Scripts.PlayerScripts {
         /// <param name="endAngle"></param>
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Normal;
-            //_pC.Begin(other, endPosition, endAngle);
             //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
@@ -289,6 +284,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         // other
+        // Why not directly make it like: public PlayerAttack pA { get; private set; } => Then we couls save 5 properties and code redundancy
         public PlayerAttack pA { get { return _pA; } }
         public PlayerMovement pM { get { return _pM; } }
         public PlayerInventory pI { get { return _pI; } }
