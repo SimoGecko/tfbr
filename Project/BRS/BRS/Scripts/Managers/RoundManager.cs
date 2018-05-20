@@ -234,7 +234,6 @@ namespace BRS.Scripts.Managers {
 
         void TryRestartRound() {
             UpdateRanking();
-            Heatmap.instance.SaveHeatMap();
             bool oneAlreadyWon2Rounds = false;
             for (int i = 0; i < GameManager.NumTeams; i++)
                 oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;

@@ -26,7 +26,7 @@ namespace BRS.Engine {
 
 
         //private
-
+        static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         //reference
         public static ContentManager content;
@@ -241,8 +241,6 @@ namespace BRS.Engine {
                         if (line == "")
                             break;
 
-                        //string aPerson = reader.ReadLine();
-
                         string[] pSplit = line.Split(' ');
 
                         string namePlayer = "";
@@ -265,11 +263,9 @@ namespace BRS.Engine {
             try {
                 StorageFile sampleFile = await localFolder.CreateFileAsync(pathName,
                     CreationCollisionOption.ReplaceExisting);
-                //await FileIO.WriteTextAsync(sampleFile, "");
 
                 int count = 0;
                 foreach (var elem in listPlayersNameScore) {
-                    //AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
                     await FileIO.AppendTextAsync(sampleFile, elem.Item1 + " " + elem.Item2 + "\n");
                     ++count;
                     if (count >= maxElem) break;
@@ -279,8 +275,6 @@ namespace BRS.Engine {
                 Debug.LogError(e.Message);
             }
         }
-
-        static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         private static void AddText(FileStream fs, string value) {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
