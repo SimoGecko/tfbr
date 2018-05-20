@@ -23,7 +23,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         private Effect _zBufferShaderHardwareInstancing;
-        const string startScene = "LevelMenu";
+        const string startScene = "Level1";
         bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon

@@ -13,7 +13,7 @@ namespace BRS.Scripts.PowerUps {
         private const int ValueBoost = 2;
 
         public CapacityBoost() {
-            PowerupType = PowerupType.Capacity;
+            powerupType = PowerupType.Capacity;
             _useInstantly = true;
         }
 

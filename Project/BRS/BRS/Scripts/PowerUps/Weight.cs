@@ -18,8 +18,7 @@ namespace BRS.Scripts.PowerUps {
         const float WeightSpawnHeight = 5;
 
         public Weight() {
-            PowerupType = PowerupType.Weight;
-            powerupColor = Color.Gray;
+            powerupType = PowerupType.Weight;
         }
 
         // --------------------- BASE METHODS ------------------

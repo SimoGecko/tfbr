@@ -103,7 +103,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         public int[] CarryingPowerups() {
             List<int> result = new List<int>();
-            foreach (var p in _carryingPowerup) result.Add((int)p.PowerupType);
+            foreach (var p in _carryingPowerup) result.Add((int)p.powerupType);
             return result.ToArray();
         }
 

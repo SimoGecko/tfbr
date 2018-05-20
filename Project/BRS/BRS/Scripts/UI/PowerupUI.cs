@@ -16,7 +16,7 @@ namespace BRS.Scripts.UI {
 
         //public
         //string[] pngNames = { "bomb", "key", "capacity", "speed", "health", "shield", "trap" };
-        bool usePowerupColor = false;
+        bool usePowerupColor = true;
         //private
         //Dictionary<string, int> powerupStringToIndex = new Dictionary<string, int>();
         private readonly int _numPowerups = System.Enum.GetValues(typeof(PowerupType)).Length;

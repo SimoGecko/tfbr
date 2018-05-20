@@ -78,10 +78,8 @@ namespace BRS.Scripts.UI {
 
 
         // commands
-        public void UpdateBaseUI(int index, float baseHealth, float baseMaxHealth, int value) {
+        public void UpdateBaseUI(int index, int value) {
             if (index < _baseUi.Length) {
-                _baseUi[index].BaseHealth = baseHealth;
-                _baseUi[index].BaseMaxHealth = baseMaxHealth;
                 _baseUi[index].TotalMoneyInBase = value;
             }
         }
@@ -100,7 +98,5 @@ namespace BRS.Scripts.UI {
 
     public struct BaseUIStruct {
         public int TotalMoneyInBase;
-        public float BaseHealth;
-        public float BaseMaxHealth;
     }
 }

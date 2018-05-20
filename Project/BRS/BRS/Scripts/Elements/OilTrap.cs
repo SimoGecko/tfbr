@@ -13,7 +13,7 @@ namespace BRS.Scripts.Elements {
 
         //private
         private const float SlowdownTime = 3f;
-        private const float TimeToEffect = 1f;
+        private const float TimeToEffect = 1f; // time before it gets active
 
         private bool _inUse = false;
 
@@ -43,7 +43,6 @@ namespace BRS.Scripts.Elements {
                 Audio.Play("catched_trap", transform.position);
 
                 ElementManager.Instance.Remove(this.gameObject);
-
                 GameObject.Destroy(gameObject);
             }
         }

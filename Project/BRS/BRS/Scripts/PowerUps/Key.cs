@@ -16,13 +16,12 @@ namespace BRS.Scripts.Elements {
         //public
 
         //private
-        private const float TimeToUse = .3f;
+        private const float TimeToUseDelay = .3f;
         private const float OpenRadius = 10f;
 
         //reference
         public Key() {
-            PowerupType = PowerupType.Key;
-            powerupColor = Color.LightBlue;
+            powerupType = PowerupType.Key;
         }
 
 
@@ -39,13 +38,11 @@ namespace BRS.Scripts.Elements {
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
-            transform.position = Owner.transform.position;
-            new Timer(TimeToUse, OpenVault);
+            new Timer(TimeToUseDelay, TryOpen);
         }
 
-        void OpenVault() {
+        void TryOpen() {
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, OpenRadius);
-
             foreach (Collider c in overlapColliders) {
                 if (c.GameObject.HasComponent<IOpenable>()) {
                     c.GameObject.GetComponent<IOpenable>().Open();
@@ -54,6 +51,7 @@ namespace BRS.Scripts.Elements {
         }
 
         // queries
+        /*
         bool InOpeningRange(GameObject o) {
             transform.position = Owner.transform.position;
             return (o.transform.position - transform.position).LengthSquared() <= OpenRadius * OpenRadius;
@@ -73,6 +71,7 @@ namespace BRS.Scripts.Elements {
         public override bool CanUse() {
             return ThereIsOneOpenableInRange();
         }
+        */
 
 
 

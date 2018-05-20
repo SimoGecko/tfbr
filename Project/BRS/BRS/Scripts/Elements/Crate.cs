@@ -50,7 +50,7 @@ namespace BRS.Scripts.Elements {
         public override void OnCollisionEnter(Collider c) {
             if(c.GameObject.tag == ObjectTag.Player) {
                 PlayerAttack pa = c.GameObject.GetComponent<PlayerAttack>();
-                if (pa.IsAttacking)
+                if (pa.IsAttacking && !_cracked)
                     CrackCrate();
             }
         }
@@ -86,7 +86,7 @@ namespace BRS.Scripts.Elements {
         void Explode() {
             //same code as in bomb
             Audio.Play("bomb_explosion", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion, 1.5f);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion, 1.8f);
 
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
@@ -99,8 +99,9 @@ namespace BRS.Scripts.Elements {
         }
 
 
-        public void TakeDamage(float damage) { // TODO is it necessary to have both?
-            if(!_cracked)CrackCrate();
+        public void TakeDamage(float damage) { // TODO is it necessary to have both -> yes as bombs could crack it
+            if(!_cracked)
+                CrackCrate();
         }
 
         public void SetExplosionRigged(int teamWhoRigged) { _explosionRigged = true; _teamWhoRigged = teamWhoRigged; }

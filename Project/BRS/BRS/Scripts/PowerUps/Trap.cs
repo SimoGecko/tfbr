@@ -14,14 +14,12 @@ namespace BRS.Scripts.PowerUps {
         //public
 
         public Trap() {
-            PowerupType = PowerupType.Trap;
-            powerupColor = Color.Yellow;
+            powerupType = PowerupType.Trap;
         }
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             base.Start();
-            
         }
 
 
@@ -29,7 +27,6 @@ namespace BRS.Scripts.PowerUps {
         // commands
         public override void UsePowerup() {
             base.UsePowerup();
-            //transform.position = owner.transform.position + Vector3.Up;
             //instantiate oil trap
             GameObject oil = GameObject.Instantiate("oilPrefab", Owner.transform.position, MyRandom.YRotation());
             ElementManager.Instance.Add(oil);
