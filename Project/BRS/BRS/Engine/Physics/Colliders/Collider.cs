@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using Jitter.Collision.Shapes;
 using Jitter.Dynamics;
@@ -96,6 +97,9 @@ namespace BRS.Engine.Physics.Colliders {
                 GameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(Orientation));
 
                 _newRotation = GameObject.transform.eulerAngles.Y;
+                //float test = (float)Math.Acos(Vector3.Dot(GameObject.transform.Forward, Vector3.Forward));
+                //Debug.Log(test + " == " + _newRotation);
+            
             }
 
 

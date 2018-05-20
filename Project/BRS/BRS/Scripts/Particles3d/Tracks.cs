@@ -22,6 +22,8 @@ namespace BRS.Scripts.Particles3D {
         public override void Start() {
             _fadeOut = false;
             new Timer(1, () => _fadeOut = true);
+
+            transform.SetStatic();
         }
 
 
