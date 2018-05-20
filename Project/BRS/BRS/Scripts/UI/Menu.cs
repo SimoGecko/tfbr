@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Menu;
 using BRS.Scripts.Managers;
+using System.Threading.Tasks;
 
 namespace BRS.Scripts.UI {
 
@@ -561,10 +562,11 @@ namespace BRS.Scripts.UI {
             // Create list of components for each combinaison of (#players <-> duration of a round)
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
-                    List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Saves/ranking" + durationRound + noPlayers + ".txt");
+                    List<Tuple<string, string>> rankinglist = File.ReadRanking("ranking" + durationRound + noPlayers + ".txt"); //File.ReadRanking("Load /Rankings/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);
                     int count = 0;
+
                     // Text component with player's name and score
                     foreach (var aPerson in rankinglist) {
                         var namePerson = new TextBox() {

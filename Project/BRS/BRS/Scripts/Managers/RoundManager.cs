@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using BRS.Engine;
 using BRS.Engine.PostProcessing;
 using BRS.Engine.Utilities;
@@ -145,10 +146,11 @@ namespace BRS.Scripts.Managers {
                 RoundUI.instance.ShowCountDown(i);
                 if(i>0) Audio.Play("start321", Vector3.Zero);
                 else Audio.Play("start0", Vector3.Zero);
-                if (i == 0) OnRoundStart();
+                //if (i == 0) OnRoundStart();
             }
             await Time.WaitForSeconds(1f);
             RoundUI.instance.ShowCountDown(-1);//disables it
+            OnRoundStart();
 
             foreach (Camera c in Screen.Cameras) {
                 c.transform.position = c.gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset;
@@ -257,17 +259,15 @@ namespace BRS.Scripts.Managers {
             SceneManager.LoadScene("LevelMenu");
         }
 
-        /// <summary>
-        /// Update the rankings => write them to a file
-        /// </summary>
-        void UpdateRanking() {
-            List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Saves/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
+        public void UpdateRanking() {
+            List<Tuple<string, string>> rankinglist = File.ReadRanking("ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt");
+
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
             rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
-            File.WriteRanking("Load/Saves/ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
+            File.WriteRanking("ranking" + RoundTime / 60 + " min" + GameManager.NumPlayers + "P.txt", rankinglist, 10);
         }
 
         // queries
