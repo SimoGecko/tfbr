@@ -20,12 +20,54 @@ namespace BRS.Engine.PostProcessing {
 
         public static void Initialize(List<PostprocessingType> initialized) {
             Instance = new PostProcessingManager(initialized);
+            _sceneTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,                  
+                Screen.Height,                 
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            _depthTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,                   
+                Screen.Height,                  
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+        }
+        public static void Initialize() {
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType>
+            {
+                PostprocessingType.DepthOfField,
+                PostprocessingType.Chromatic,
+                PostprocessingType.ColorGrading,
+                PostprocessingType.Vignette,
+                PostprocessingType.TwoPassBlur,
+                PostprocessingType.BlackAndWhite
+            };
+
+            Instance = new PostProcessingManager(defaultEffects);
+            _sceneTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,
+                Screen.Height,
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            _depthTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,
+                Screen.Height,
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
         }
 
         #endregion
 
         #region Properties and attributes
-
+        public static RenderTarget2D _sceneTarget;
+        public static RenderTarget2D _depthTarget;
         private readonly List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
         private readonly Dictionary<PostprocessingType, PostProcessingEffect> _fixEffects = new Dictionary<PostprocessingType, PostProcessingEffect>();
@@ -170,12 +212,10 @@ namespace BRS.Engine.PostProcessing {
         /// <summary>
         /// Apply all postprocessing-effects on the 3D-rendered output
         /// </summary>
-        /// <param name="renderTarget"></param>
         /// <param name="spriteBatch"></param>
         /// <param name="graphicsDevice"></param>
-        /// <param name="depth1Texture"></param>
-        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture) {
-            RenderTarget2D curTarget = renderTarget;
+        public void Draw( SpriteBatch spriteBatch) {
+            RenderTarget2D curTarget = _sceneTarget;
             int targetI = 0;
 
             // if dynamic props are needed
@@ -186,7 +226,7 @@ namespace BRS.Engine.PostProcessing {
 
                     switch (ppShader.Type) {
                         case PostprocessingType.DepthOfField:
-                            RenderTarget2D curBlurTarget = renderTarget;
+                            RenderTarget2D curBlurTarget = _sceneTarget;
 
                             // get the gaussian blur shader
                             PostProcessingEffect blurShader = _twoPassEffect;
@@ -195,7 +235,7 @@ namespace BRS.Engine.PostProcessing {
                             for (int i = 0; i < 2; i++) {
                                 // Setup next render-target to apply next filter
                                 RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _blurTarget1 : _blurTarget2;
-                                graphicsDevice.SetRenderTarget(nextTarget);
+                                Graphics.gD.SetRenderTarget(nextTarget);
 
                                 // apply post processing shader
                                 SpriteBatchBegin(ref spriteBatch);
@@ -203,13 +243,13 @@ namespace BRS.Engine.PostProcessing {
                                 spriteBatch.Draw(curBlurTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                                 SpriteBatchEnd(ref spriteBatch);
 
-                                graphicsDevice.SetRenderTarget(null);
+                                Graphics.gD.SetRenderTarget(null);
                                 curBlurTarget = nextTarget;
                             }
 
                             // set the blurred scene and the depth map as parameter
                             ppShader.SetParameter("BlurScene", curBlurTarget);
-                            ppShader.SetParameter("DepthTexture", depth1Texture);
+                            ppShader.SetParameter("DepthTexture", _depthTarget);
 
                             break;
 
@@ -233,7 +273,7 @@ namespace BRS.Engine.PostProcessing {
                     for (int i = 0; i < ppShader.Effect.CurrentTechnique.Passes.Count; i++) {
                         // Setup next render-target to apply next filter
                         RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _renderTarget1 : _renderTarget2;
-                        graphicsDevice.SetRenderTarget(nextTarget);
+                        Graphics.gD.SetRenderTarget(nextTarget);
 
                         // apply post processing shader
                         SpriteBatchBegin(ref spriteBatch);
@@ -241,14 +281,14 @@ namespace BRS.Engine.PostProcessing {
                         spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         SpriteBatchEnd(ref spriteBatch);
 
-                        graphicsDevice.SetRenderTarget(null);
+                        Graphics.gD.SetRenderTarget(null);
                         curTarget = nextTarget;
                     }
                 }
             }
 
             // draw to screen
-            graphicsDevice.SetRenderTarget(null);
+            Graphics.gD.SetRenderTarget(null);
             SpriteBatchBegin(ref spriteBatch);
             spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
             SpriteBatchEnd(ref spriteBatch);
