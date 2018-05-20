@@ -6,18 +6,15 @@ using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Particles;
 using BRS.Scripts.Elements;
-using BRS.Scripts.Particles3D;
 
-namespace BRS.Scripts.PlayerScripts {
+namespace BRS.Scripts.Particles3D {
     /// <summary>
     /// Particle-effect for base of the player
     /// </summary>
-    class BaseParticles : Component { 
-        // why is this under player scripts?
-        // => because it defines the particles of the player base, we could move it to Scripts/Elements as well
-        // used particle types for the base
+    class BaseParticles : Component {
         private enum PlayerParticleType { CashDrop };
-        List<Type> _effects = new List<Type> { typeof(CashDrop)};
+
+        readonly List<Type> _effects = new List<Type> { typeof(CashDrop)};
         private ParticleComponent[] _particleComponents;
 
         // base where the particle emitting systems are attached to
