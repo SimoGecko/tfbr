@@ -43,7 +43,7 @@ namespace BRS.Engine {
 
 
         public static Color Clear = new Color(255, 255, 255, 0);
-        public static Color StreetGray = new Color(64, 64, 64, 0);
+        public static Color StreetGray = new Color(69, 69, 69, 0);
         public static Color SkyBlue = new Color(50, 206, 244, 0);
         //private
 

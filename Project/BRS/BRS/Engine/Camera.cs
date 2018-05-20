@@ -62,6 +62,8 @@ namespace BRS.Engine {
 
         public Vector2 WorldToScreenPoint(Vector3 world) {
             Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
+            bool isInRightHalf = Vector3.Dot(world - transform.position, transform.Forward) > 0;
+            if (!isInRightHalf) return Vector2.One * -1000;
             return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
         }
 
