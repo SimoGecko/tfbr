@@ -23,7 +23,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         private Effect _zBufferShaderHardwareInstancing;
-        const string startScene = "Level1";
+        const string startScene = "LevelMenu";
         bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
@@ -206,7 +206,7 @@ namespace BRS {
 
 
             //-----2D-----
-            int i = 1;
+            int i = 0;
             foreach (Camera cam in Screen.Cameras) {
                 GraphicsDevice.Viewport = cam.Viewport;
                 _spriteBatch.Begin();
@@ -219,7 +219,7 @@ namespace BRS {
             GraphicsDevice.Viewport = Screen.FullViewport;
             if (showUI) {
                 _spriteBatch.Begin();
-                foreach (GameObject go in GameObject.All) go.Draw2D(0);
+                foreach (GameObject go in GameObject.All) go.Draw2D(-1);
                 _spriteBatch.End();
             }
 

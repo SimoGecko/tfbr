@@ -110,8 +110,7 @@ namespace BRS.Scripts.Elements {
         // queries
 
         public override void Draw2D(int i) {
-            if (i == 0) return;
-            i--;
+            if (i == -1) return;
             if (!_explosionRigged) return;
             if(GameManager.TeamIndex(i) == _teamWhoRigged) {
                 //draw danger icon

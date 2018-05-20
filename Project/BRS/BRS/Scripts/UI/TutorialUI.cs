@@ -111,7 +111,6 @@ namespace BRS.Scripts.UI {
         }
 
         public override void Draw2D(int i) {
-            i--;
             if (i != _index || !GameManager.GameActive) return;
             if (isDisplaying) {
                 Vector2 screenPosition = Camera.GetCamera(_index).WorldToScreenPoint(player.transform.position);

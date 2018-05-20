@@ -52,8 +52,7 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             bool flip = false;// index % 2 != 0;
 

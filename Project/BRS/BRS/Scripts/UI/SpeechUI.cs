@@ -59,8 +59,7 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             //int posX = (int)System.Math.Round(MathHelper.LerpPrecise(-256, 0, showCharacterPercent[index]));
             int posY = (int)System.Math.Round(MathHelper.LerpPrecise(256, 0, showCharacterPercent[index]));

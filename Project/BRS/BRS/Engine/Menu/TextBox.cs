@@ -49,7 +49,7 @@ namespace BRS.Engine.Menu {
         #region Monogame-methods
 
         public override void Draw2D(int i) {
-            if (Active && i == 0) {
+            if (Active && i == -1) {
                 base.Draw2D(i);
                 UserInterface.DrawString(Text, Position, pivot: Align.Center, col: Colour, font: Font);
             }

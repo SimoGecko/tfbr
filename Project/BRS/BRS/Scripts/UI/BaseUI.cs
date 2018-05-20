@@ -18,7 +18,7 @@ namespace BRS.Scripts.UI {
 
         //private
         private BaseUIStruct[] _baseUi;
-        private readonly int[] _baseUIwins = new int[2]; // persists between plays
+        private readonly int[] _baseUIwins = new int[2]; // persists between rounds
 
         private Texture2D _baseIcon;
         private Texture2D _ribbon;
@@ -37,8 +37,8 @@ namespace BRS.Scripts.UI {
 
         public override void Start() {
             _baseIcon = File.Load<Texture2D>("Images/UI/base_icon");
-            _ribbon = File.Load<Texture2D>("Images/UI/ribbon");
             _barIcons = File.Load<Texture2D>("Images/UI/bar_icons");
+            _ribbon   = File.Load<Texture2D>("Images/UI/ribbon");
         }
 
         public override void Update() {
@@ -50,10 +50,9 @@ namespace BRS.Scripts.UI {
         // --------------------- CUSTOM METHODS ----------------
 
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
             bool flip = false;// index % 2 != 0;
-            int baseIndex = index % 2;
+            int baseIndex = GameManager.TeamIndex(index);
 
             UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, Align.TopRight, Align.Right, scale: .5f, bold: true, flip: flip);
             UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 100, 100), null, Align.TopRight, flip: flip);
@@ -79,7 +78,7 @@ namespace BRS.Scripts.UI {
 
         // commands
         public void UpdateBaseUI(int index, int value) {
-            if (index < _baseUi.Length) {
+            if (0<=index && index < _baseUi.Length) {
                 _baseUi[index].TotalMoneyInBase = value;
             }
         }

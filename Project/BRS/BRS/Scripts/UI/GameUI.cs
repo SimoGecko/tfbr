@@ -51,7 +51,7 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) {
-            if (index == 0) {
+            if (index == -1) {
                 if(GameManager.NumPlayers>=2)
                     //draw vertical center line
                     UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 5, 4000), null, Align.BotRight, Align.Center);
@@ -60,7 +60,6 @@ namespace BRS.Scripts.UI {
                     UserInterface.DrawPicture(blackTex, new Rectangle(0, 0, 4000, 5), null, Align.BotRight, Align.Center);
                 return;
             }
-            index--;
 
             string roundString = "round " + RoundManager.RoundNumber + "/" + RoundManager.NumRounds;
             UserInterface.DrawString(roundString, new Rectangle(-20, 140, 100, 25), Align.TopRight, Align.TopRight, Align.Center, scale:.7f);

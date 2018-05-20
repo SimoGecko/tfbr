@@ -70,8 +70,7 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             foreach (ParticleOrder p in particleOrders) {
                 Vector2 position = Camera.GetCamera(index).WorldToScreenPoint(p.position);

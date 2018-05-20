@@ -73,8 +73,7 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) { // TODO clean out this code
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             UserInterface.DrawString("powerup", new Rectangle(0, 32, 125, 25), Align.Top, Align.Top, Align.Bottom, scale:.7f);
             UserInterface.DrawPicture(smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 0, 64, 64), Align.Top);

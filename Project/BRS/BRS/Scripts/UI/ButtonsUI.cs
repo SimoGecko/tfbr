@@ -54,8 +54,7 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int index) {
-            if (index == 0) return;
-            index--;
+            if (index == -1) return;
 
             foreach (ButtonCommand c in _commands) {
                 if (c.Index == index) {
