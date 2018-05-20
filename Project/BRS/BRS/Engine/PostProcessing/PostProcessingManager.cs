@@ -44,8 +44,8 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D _blurTarget2;
         private RenderTarget2D _renderTarget1;
         private RenderTarget2D _renderTarget2;
-        private  float Distance = 1f;
-        private  float Range = 16.5f;
+        public  float Distance = 10f;
+        public  float Range = 40f;
 
         #endregion
 
@@ -209,9 +209,17 @@ namespace BRS.Engine.PostProcessing {
                                 curBlurTarget = nextTarget;
                             }
 
+                            // apply post processing shader
+                            Graphics.gD.SetRenderTarget(null);
+                            SpriteBatchBegin(ref spriteBatch);
+                            spriteBatch.Draw(curBlurTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
+                            SpriteBatchEnd(ref spriteBatch);
+
                             // set the blurred scene and the depth map as parameter
                             ppShader.SetParameter("BlurScene", curBlurTarget);
                             ppShader.SetParameter("DepthTexture", DepthTarget);
+                            ppShader.SetParameter("Range", Range);
+                            ppShader.SetParameter("Distance", Distance);
 
                             break;
 

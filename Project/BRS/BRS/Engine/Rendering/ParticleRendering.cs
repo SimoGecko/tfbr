@@ -11,6 +11,7 @@ namespace BRS.Engine.Rendering {
 
         //reference
         private static readonly List<ParticleSystem3D> ParticleSystems = new List<ParticleSystem3D>();
+        private static readonly List<ParticleSystem3D> DepthParticleSystems = new List<ParticleSystem3D>();
 
         #endregion
 
@@ -48,6 +49,15 @@ namespace BRS.Engine.Rendering {
             }
         }
 
+        /// <summary>
+        /// Draw all the models with hardware-instancing
+        /// </summary>
+        public static void DrawDepth() {
+            foreach (ParticleSystem3D particleSystem in DepthParticleSystems) {
+                particleSystem.Draw3D();
+            }
+        }
+
         #endregion
 
         #region Instanciation-handling
@@ -56,8 +66,13 @@ namespace BRS.Engine.Rendering {
         /// Add a particle-system to render
         /// </summary>
         /// <param name="particleSystem">New particle-system</param>
-        public static void AddInstance(ParticleSystem3D particleSystem) {
+        /// <param name="useForDepth">Used for depth rendering</param>
+        public static void AddInstance(ParticleSystem3D particleSystem, bool useForDepth = false) {
             ParticleSystems.Add(particleSystem);
+
+            if (useForDepth) {
+                DepthParticleSystems.Add(particleSystem);
+            }
         }
 
         /// <summary>
@@ -66,6 +81,7 @@ namespace BRS.Engine.Rendering {
         /// <param name="particleSystem">Particle-system to remove</param>
         public static void RemoveInstance(ParticleSystem3D particleSystem) {
             ParticleSystems.Remove(particleSystem);
+            DepthParticleSystems.Remove(particleSystem);
         }
 
         #endregion
