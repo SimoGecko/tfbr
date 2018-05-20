@@ -55,7 +55,6 @@ namespace BRS.Scripts.PlayerScripts {
         PlayerInventory _pI;
         PlayerPowerup _pP;
         PlayerStamina _pS;
-        PlayerLift _pL;
         private PlayerCollider _pC;
         private SteerableCollider _steerableCollider;
 
@@ -89,7 +88,6 @@ namespace BRS.Scripts.PlayerScripts {
             _pI = gameObject.GetComponent<PlayerInventory>();
             _pP = gameObject.GetComponent<PlayerPowerup>();
             _pS = gameObject.GetComponent<PlayerStamina>();
-            _pL = gameObject.GetComponent<PlayerLift>();
             _pC = gameObject.GetComponent<PlayerCollider>();
 
             MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
@@ -142,9 +140,6 @@ namespace BRS.Scripts.PlayerScripts {
                     CamController.Shake(.5f);
                 }
                 
-                if (LiftInput()) {
-                    _pL.Lift();
-                }
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
@@ -162,7 +157,6 @@ namespace BRS.Scripts.PlayerScripts {
             _pI.Reset();
             _pP.Reset();
             _pS.Reset();
-            _pL.Reset();
             _pC.Reset();
             UpdateUI();
             _steerableCollider.PostStep(0.0f);

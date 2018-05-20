@@ -153,6 +153,26 @@ namespace BRS.Engine {
 
         //----------------------------------------------------------------------------------------------
 
+
+        //TEXTURE METHODS
+        public static Texture2D TextureTint(Texture2D tex, Color tint) {
+            //returns a copy of tex tinted with the color
+            Texture2D result = new Texture2D(gD, tex.Width, tex.Height);
+            Color[] data = new Color[tex.Width * tex.Height];
+            tex.GetData(data);
+
+            for (int j = 0; j < data.Length; ++j) {
+                if (data[j].A > 0) {
+                    data[j].R = tint.R;
+                    data[j].G = tint.G;
+                    data[j].B = tint.B;
+                }
+            }
+            result.SetData(data);
+            return result;
+        }
+
+
         //COLOR METHODS
         public static Color[,] TextureTo2DArray(Texture2D texture) {
             Color[] colors1D = new Color[texture.Width * texture.Height];
