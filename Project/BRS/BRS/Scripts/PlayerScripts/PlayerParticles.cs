@@ -2,18 +2,27 @@
 using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
+using BRS.Engine.Utilities;
 using BRS.Scripts.Particles3D;
+using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PlayerScripts {
     class PlayerParticles : Component {
 
-        private enum PlayerParticleType { Dust, Boost, Cash, Tracks }
-        private readonly List<Type> _effects = new List<Type> { typeof(Dust), typeof(Boost), typeof(Cash), typeof(Tracks) };
+        private enum PlayerParticleType { Dust, Boost, Cash }
+        private readonly List<Type> _effects = new List<Type> { typeof(Dust), typeof(Boost), typeof(Cash) };
         private ParticleComponent[] _particleComponents;
+
+        private string _oilTrack = ModelType.TracksOil.GetDescription();
+        private string _speedTrack = ModelType.TracksSpeed.GetDescription();
 
         private PlayerAttack _playerAttack;
         private PlayerMovement _playerMovement;
         private PlayerInventory _playerInventory;
+        private float _lastTrackEmitted;
+        private Vector3 _lastTrackPosition;
+
 
         // --------------------- BASE METHODS ------------------
 
@@ -25,7 +34,7 @@ namespace BRS.Scripts.PlayerScripts {
                 pc.Awake();
                 pc.gameObject = gameObject;
 
-                PlayerParticleType ppt = (PlayerParticleType) Enum.Parse(typeof(PlayerParticleType), type.Name);
+                PlayerParticleType ppt = (PlayerParticleType)Enum.Parse(typeof(PlayerParticleType), type.Name);
                 _particleComponents[(int)ppt] = pc;
             }
         }
@@ -44,10 +53,21 @@ namespace BRS.Scripts.PlayerScripts {
             _particleComponents[(int)PlayerParticleType.Dust].IsEmitting = _playerMovement.Speed > 3.0f;
             _particleComponents[(int)PlayerParticleType.Boost].IsEmitting = _playerMovement.Boosting || _playerMovement.PowerupBoosting || _playerMovement.SpeedPad;
             _particleComponents[(int)PlayerParticleType.Cash].IsEmitting = _playerInventory.IsAlmostFull();
-            _particleComponents[(int)PlayerParticleType.Tracks].IsEmitting = _playerMovement.OilTracks;
 
             foreach (ParticleComponent pc in _particleComponents) {
                 pc.Update();
+            }
+
+            Vector3 distance = _lastTrackPosition - transform.position;
+
+            if (_playerMovement.OilTracks && distance.LengthSquared() > 0.05f) {
+                _lastTrackPosition = transform.position;
+                GameObject.Instantiate(_oilTrack, transform);
+            }
+
+            if (_playerMovement.Boosting || _playerMovement.SpeedPad || _playerMovement.PowerupBoosting || _playerAttack.IsAttacking) {
+                _lastTrackPosition = transform.position;
+                GameObject.Instantiate(_speedTrack, transform);
             }
         }
     }

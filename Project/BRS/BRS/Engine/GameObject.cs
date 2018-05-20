@@ -192,6 +192,7 @@ namespace BRS.Engine {
             InstanceCount++;
             newObject.UseHardwareInstanciation = UseHardwareInstanciation;
             newObject.ModelType = ModelType;
+            newObject.Alpha = Alpha;
             newObject.transform.CopyFrom(this.transform);
             newObject.tag = tag;
             newObject.active = true;

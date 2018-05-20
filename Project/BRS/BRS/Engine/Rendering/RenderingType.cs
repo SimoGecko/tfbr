@@ -2,6 +2,7 @@
     public enum RenderingType {
         HIBaked,
         HITexture,
+        HITextureTransparent,
         HITextureAlpha,
         HITextureAlphaAnimated
     }

@@ -1,15 +1,12 @@
 ﻿using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.PostProcessing;
-using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
+using BRS.Scripts;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using BRS.Scripts;
-using System;
-using System.Collections.Generic;
-using BRS.Engine.Rendering;
-using BRS.Scripts.Managers;
 
 namespace BRS {
 
@@ -18,11 +15,6 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        // Render the scene to this target
-        RenderTarget2D _renderTarget;
-        // depth info
-        RenderTarget2D _ZBuffer;
-        private Effect _zBufferShaderHardwareInstancing;
         const bool loadMenu = false;
         const bool showUI = true;
 
@@ -45,46 +37,12 @@ namespace BRS {
         protected override void Initialize() {
             //NOTE: this is basic initialization of core components, nothing else
             Screen.InitialSetup(_graphics, this, GraphicsDevice); // setup screen and create cameras
-
-            // init the rendertarget with the graphics device
-            _renderTarget = new RenderTarget2D(
-                GraphicsDevice,
-                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
-                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-
-
-            _ZBuffer = new RenderTarget2D(
-                GraphicsDevice,
-                Screen.Width,                   // GraphicsDevice.PresentationParameters.BackBufferWidth,
-                Screen.Height,                  // GraphicsDevice.PresentationParameters.BackBufferHeight,
-                false,
-                GraphicsDevice.PresentationParameters.BackBufferFormat,
-                DepthFormat.Depth24);
-
-            // set up the post processing manager
-            List<PostprocessingType> defaultEffects = new List<PostprocessingType>
-            {
-                PostprocessingType.DepthOfField,
-                PostprocessingType.Chromatic,
-                PostprocessingType.ColorGrading,
-                PostprocessingType.Vignette,
-                PostprocessingType.TwoPassBlur,
-                PostprocessingType.BlackAndWhite
-            };
-            PostProcessingManager.Initialize(defaultEffects);
+            // init the post processing manager
+            PostProcessingManager.Initialize();
 
             // Allow physics drawing for debug-reasons (display boundingboxes etc..)
             // Todo: can be removed in the final stage of the game, but not yet, since it's extremly helpful to visualize the physics world
             PhysicsDrawer.Initialize(this, GraphicsDevice);
-
-            // Todo: can be removed for alpha-release
-            PoliceManager.IsActive = true;
-            LenseFlareManager.IsActive = true;
-            ParticleSystem3D.IsActive = true;
-            Skybox.IsActive = false;
 
             base.Initialize();
         }
@@ -112,9 +70,7 @@ namespace BRS {
 
             PostProcessingManager.Instance.Start(_spriteBatch);
 
-            // load the z buffer shader
-            _zBufferShaderHardwareInstancing = File.Load<Effect>("Other/effects/DepthHardwareInstancing");
-
+            // Todo: Andy removes as soon as he is 100% sure that framerate is not a problem anymore
             _font = File.Load<SpriteFont>("Other/font/debug");
 
             // add skybox
@@ -139,12 +95,6 @@ namespace BRS {
 
             GameManager.Update();
 
-            // Todo: Switch for the interim
-            if (Input.GetKeyDown(Keys.Tab)) {
-                ParticleSystem3D.IsActive = !ParticleSystem3D.IsActive;
-                LenseFlareManager.IsActive = !LenseFlareManager.IsActive;
-            }
-
             foreach (GameObject go in GameObject.All) go.Update();
             foreach (GameObject go in GameObject.All) go.LateUpdate();
 
@@ -158,7 +108,7 @@ namespace BRS {
 
         protected override void Draw(GameTime gameTime) {
             // render scene for real 
-            GraphicsDevice.SetRenderTarget(_renderTarget);
+            GraphicsDevice.SetRenderTarget(PostProcessingManager.SceneTarget);
             GraphicsDevice.Clear(Graphics.SkyBlue);
 
             base.Draw(gameTime);
@@ -189,17 +139,16 @@ namespace BRS {
             //Gizmos.ClearOrders();
 
 
-            // Todo: For now disabled because it screwed up all shadows and lights etc...
-            // draw everything 3 D to get the depth info
-            _graphics.GraphicsDevice.SetRenderTarget(_ZBuffer);
+            // draw everything 3D to get the depth info
+            _graphics.GraphicsDevice.SetRenderTarget(PostProcessingManager.DepthTarget);
             _graphics.GraphicsDevice.Clear(Color.Black);
 
-            HardwareRendering.Draw(_zBufferShaderHardwareInstancing);
+            HardwareRendering.DrawDepth();
 
 
             // apply post processing
             // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
-            PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);
+            PostProcessingManager.Instance.Draw(_spriteBatch);
 
             // Drop the render target
             GraphicsDevice.SetRenderTarget(null);
@@ -223,22 +172,21 @@ namespace BRS {
                 _spriteBatch.End();
             }
 
-            //try {
-            //string text = string.Format(
-            //    "Frames per second: {0}/{1}\n" +
-            //    "Instances: {2}\n",
-            //    (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
-            //    (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
-            //    GameObject.All.Length);
+            try {
+                string text = string.Format(
+                    "Frames per second: {0}/{1}\n" +
+                    "Instances: {2}\n",
+                    (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+                    (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+                    GameObject.All.Length);
 
-            //_spriteBatch.Begin();
+                _spriteBatch.Begin();
 
-            //_spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
-            //_spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+                _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+                _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
 
-            //_spriteBatch.End();
-            //}
-            //catch { }
+                _spriteBatch.End();
+            } catch { }
         }
     }
 

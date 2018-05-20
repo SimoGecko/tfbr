@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
 
 namespace BRS.Engine.PostProcessing {
     /// <summary>
@@ -18,14 +17,40 @@ namespace BRS.Engine.PostProcessing {
 
         public static PostProcessingManager Instance { get; private set; }
 
-        public static void Initialize(List<PostprocessingType> initialized) {
-            Instance = new PostProcessingManager(initialized);
+        public static void Initialize() {
+            List<PostprocessingType> defaultEffects = new List<PostprocessingType>
+            {
+                PostprocessingType.DepthOfField,
+                PostprocessingType.Chromatic,
+                PostprocessingType.ColorGrading,
+                PostprocessingType.Vignette,
+                PostprocessingType.TwoPassBlur,
+                PostprocessingType.BlackAndWhite
+            };
+
+            Instance = new PostProcessingManager(defaultEffects);
+
+            SceneTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,
+                Screen.Height,
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
+            DepthTarget = new RenderTarget2D(
+                Graphics.gD,
+                Screen.Width,
+                Screen.Height,
+                false,
+                Graphics.gD.PresentationParameters.BackBufferFormat,
+                DepthFormat.Depth24);
         }
 
         #endregion
 
         #region Properties and attributes
-
+        public static RenderTarget2D SceneTarget { get; private set; }
+        public static RenderTarget2D DepthTarget { get; private set; }
         private readonly List<PostProcessingEffect> _effects = new List<PostProcessingEffect>();
         private readonly Dictionary<PostprocessingType, Effect> _loadedEffects = new Dictionary<PostprocessingType, Effect>();
         private readonly Dictionary<PostprocessingType, PostProcessingEffect> _fixEffects = new Dictionary<PostprocessingType, PostProcessingEffect>();
@@ -54,7 +79,7 @@ namespace BRS.Engine.PostProcessing {
 
                 _fixEffects[pType] = ppEffect;
 
-                ppEffect.SetParameter("players", (float)GameManager.NumPlayers);
+                ppEffect.SetParameter("players", GameManager.NumPlayers);
                 // Special parameters for some effects
                 switch (pType) {
                     case PostprocessingType.BlackAndWhite:
@@ -83,7 +108,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Far", farClip);
 
                         PostProcessingEffect ppBlur = new PostProcessingEffect(PostprocessingType.TwoPassBlur, false, _loadedEffects[PostprocessingType.TwoPassBlur]);
-                        ppBlur.SetParameter("players", (float)GameManager.NumPlayers);
+                        ppBlur.SetParameter("players", GameManager.NumPlayers);
                         ppBlur.SetParameter("screenSize", new Vector2(Screen.Width, Screen.Height));
                         ppBlur.SetParameter("active", new Vector4(1, 1, 1, 1));
 
@@ -170,12 +195,9 @@ namespace BRS.Engine.PostProcessing {
         /// <summary>
         /// Apply all postprocessing-effects on the 3D-rendered output
         /// </summary>
-        /// <param name="renderTarget"></param>
         /// <param name="spriteBatch"></param>
-        /// <param name="graphicsDevice"></param>
-        /// <param name="depth1Texture"></param>
-        public void Draw(RenderTarget2D renderTarget, SpriteBatch spriteBatch, GraphicsDevice graphicsDevice, Texture2D depth1Texture) {
-            RenderTarget2D curTarget = renderTarget;
+        public void Draw( SpriteBatch spriteBatch) {
+            RenderTarget2D curTarget = SceneTarget;
             int targetI = 0;
 
             // if dynamic props are needed
@@ -186,7 +208,7 @@ namespace BRS.Engine.PostProcessing {
 
                     switch (ppShader.Type) {
                         case PostprocessingType.DepthOfField:
-                            RenderTarget2D curBlurTarget = renderTarget;
+                            RenderTarget2D curBlurTarget = SceneTarget;
 
                             // get the gaussian blur shader
                             PostProcessingEffect blurShader = _twoPassEffect;
@@ -195,7 +217,7 @@ namespace BRS.Engine.PostProcessing {
                             for (int i = 0; i < 2; i++) {
                                 // Setup next render-target to apply next filter
                                 RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _blurTarget1 : _blurTarget2;
-                                graphicsDevice.SetRenderTarget(nextTarget);
+                                Graphics.gD.SetRenderTarget(nextTarget);
 
                                 // apply post processing shader
                                 SpriteBatchBegin(ref spriteBatch);
@@ -203,13 +225,13 @@ namespace BRS.Engine.PostProcessing {
                                 spriteBatch.Draw(curBlurTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                                 SpriteBatchEnd(ref spriteBatch);
 
-                                graphicsDevice.SetRenderTarget(null);
+                                Graphics.gD.SetRenderTarget(null);
                                 curBlurTarget = nextTarget;
                             }
 
                             // set the blurred scene and the depth map as parameter
                             ppShader.SetParameter("BlurScene", curBlurTarget);
-                            ppShader.SetParameter("DepthTexture", depth1Texture);
+                            ppShader.SetParameter("DepthTexture", DepthTarget);
 
                             break;
 
@@ -233,7 +255,7 @@ namespace BRS.Engine.PostProcessing {
                     for (int i = 0; i < ppShader.Effect.CurrentTechnique.Passes.Count; i++) {
                         // Setup next render-target to apply next filter
                         RenderTarget2D nextTarget = (targetI++ % 2 == 0) ? _renderTarget1 : _renderTarget2;
-                        graphicsDevice.SetRenderTarget(nextTarget);
+                        Graphics.gD.SetRenderTarget(nextTarget);
 
                         // apply post processing shader
                         SpriteBatchBegin(ref spriteBatch);
@@ -241,14 +263,14 @@ namespace BRS.Engine.PostProcessing {
                         spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
                         SpriteBatchEnd(ref spriteBatch);
 
-                        graphicsDevice.SetRenderTarget(null);
+                        Graphics.gD.SetRenderTarget(null);
                         curTarget = nextTarget;
                     }
                 }
             }
 
             // draw to screen
-            graphicsDevice.SetRenderTarget(null);
+            Graphics.gD.SetRenderTarget(null);
             SpriteBatchBegin(ref spriteBatch);
             spriteBatch.Draw(curTarget, new Rectangle(0, 0, Screen.Width, Screen.Height), Color.White);
             SpriteBatchEnd(ref spriteBatch);
@@ -345,6 +367,7 @@ namespace BRS.Engine.PostProcessing {
             _effects.Add(ppEffect);
 
             if (deactivate) {
+                // ReSharper disable once ObjectCreationAsStatement
                 new Timer(deactivateAfter, () => DectivateShader(ppEffect.Id));
             }
         }
@@ -375,6 +398,7 @@ namespace BRS.Engine.PostProcessing {
             _effects.Add(ppEffect);
 
             if (deactivate) {
+                // ReSharper disable once ObjectCreationAsStatement
                 new Timer(deactivateAfter, () => DectivateShader(ppEffect.Id));
             }
         }
