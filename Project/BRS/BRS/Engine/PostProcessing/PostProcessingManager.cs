@@ -218,8 +218,8 @@ namespace BRS.Engine.PostProcessing {
                             // set the blurred scene and the depth map as parameter
                             ppShader.SetParameter("BlurScene", curBlurTarget);
                             ppShader.SetParameter("DepthTexture", DepthTarget);
-                            ppShader.SetParameter("Range", Range);
-                            ppShader.SetParameter("Distance", Distance);
+                            //ppShader.SetParameter("Range", Range);
+                            //ppShader.SetParameter("Distance", Distance);
 
                             break;
 
