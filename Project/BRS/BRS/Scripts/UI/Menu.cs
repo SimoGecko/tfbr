@@ -99,9 +99,9 @@ namespace BRS.Scripts.UI {
             Texture2D textureTuto5 = File.Load<Texture2D>("Images/tutorial/tut_5");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
             Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Menu/ArrowDelete");
-            Texture2D textureIconTrash = File.Load<Texture2D>("Images/Menu/Trash");
-            Texture2D textureIconThunder = File.Load<Texture2D>("Images/Menu/Thunder");
-            Texture2D textureIconDecline = File.Load<Texture2D>("Images/Menu/Decline");
+            Texture2D textureIconBomb = File.Load<Texture2D>("Images/Menu/bomb");
+            Texture2D textureIconBox = File.Load<Texture2D>("Images/Menu/box");
+            Texture2D textureIconChicken = File.Load<Texture2D>("Images/Menu/chicken");
             Texture2D textureIconDollar = File.Load<Texture2D>("Images/Menu/Dolar");
             Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
             Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
@@ -133,9 +133,9 @@ namespace BRS.Scripts.UI {
                 { "imageTuto5", textureTuto5 },
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
-                { "trash", textureIconTrash },
-                { "thunder", textureIconThunder },
-                { "decline", textureIconDecline },
+                { "bomb", textureIconBomb },
+                { "chicken", textureIconChicken },
+                { "box", textureIconBox },
                 { "dollar", textureIconDollar },
                 { "titleGame", textureTitle },
                 { "paral", textureParal },
