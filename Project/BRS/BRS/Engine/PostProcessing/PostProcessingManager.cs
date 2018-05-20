@@ -44,8 +44,8 @@ namespace BRS.Engine.PostProcessing {
         private RenderTarget2D _blurTarget2;
         private RenderTarget2D _renderTarget1;
         private RenderTarget2D _renderTarget2;
-        public  float Distance = 10f;
-        public  float Range = 40f;
+        private const float Distance = 10f;
+        private const float Range = 40f;
 
         #endregion
 
