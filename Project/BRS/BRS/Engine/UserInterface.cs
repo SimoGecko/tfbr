@@ -30,9 +30,9 @@ namespace BRS.Engine {
 
         //private
         //TODO reduce to debug, comic, super
-        public static SpriteFont arialFont { get; private set; }
+        public static SpriteFont debugFont { get; private set; }
         public static SpriteFont comicFont { get; private set; }
-        public static SpriteFont archerFont   { get; private set; }
+        public static SpriteFont superFont   { get; private set; }
         public static SpriteFont menuFont { get; private set; }
         public static SpriteFont menuHoveringFont { get; private set; }
         public static SpriteFont menuSmallFont { get; private set; }
@@ -47,18 +47,16 @@ namespace BRS.Engine {
         // --------------------- BASE METHODS ------------------
 
         public static void Start() {
-            arialFont = File.Load<SpriteFont>("Other/font/debugFont");
+            debugFont = File.Load<SpriteFont>("Other/font/debug");
             comicFont = File.Load<SpriteFont>("Other/font/comic");
-            archerFont   = File.Load<SpriteFont>("Other/font/archer");
+            superFont = File.Load<SpriteFont>("Other/font/super");
+            //create one single menu font
             menuFont = File.Load<SpriteFont>("Other/font/menu");
             menuHoveringFont = File.Load<SpriteFont>("Other/font/menuHovering");
             menuSmallFont = File.Load<SpriteFont>("Other/font/menuSmall");
             menuBigFont = File.Load<SpriteFont>("Other/font/menuBig");
 
             barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
-
-
-           
         }
 
 
@@ -112,7 +110,7 @@ namespace BRS.Engine {
 
         //Rotation not supported
         public static void DrawString(string text, Vector2 pos, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale = 1, bool bold = false, SpriteFont font = null, float rot = 0) { // bounds includes position offset and rectangle size
-            if (font == null ) font = bold ? archerFont : comicFont;
+            if (font == null ) font = bold ? superFont : comicFont;
             Rectangle dest = new Rectangle(pos.ToPoint(), (font.MeasureString(text) * scale).ToPoint());
             DrawString(text, dest, anchor, pivot, paragraph, col, flip, scale, bold, font, rot);
         }
@@ -124,7 +122,7 @@ namespace BRS.Engine {
                 dst.X *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
             }
-            if (font == null) font = bold ? archerFont : comicFont;
+            if (font == null) font = bold ? superFont : comicFont;
 
             //ERRROR
 
@@ -160,10 +158,10 @@ namespace BRS.Engine {
         }
 
         static SpriteFont SpriteFontFromFont(Font f) {
-            if (f == Font.debug) return arialFont;
+            if (f == Font.debug) return debugFont;
             if (f == Font.comic) return comicFont;
-            if (f == Font.super) return archerFont;
-            return arialFont;
+            if (f == Font.super) return superFont;
+            return debugFont;
         }
 
         public static bool FontSupportsString(string s, Font f) {

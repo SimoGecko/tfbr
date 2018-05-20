@@ -23,7 +23,7 @@ namespace BRS {
         // depth info
         RenderTarget2D _ZBuffer;
         private Effect _zBufferShaderHardwareInstancing;
-        const string startScene = "Level1";
+        const string startScene = "LevelMenu";
         bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
@@ -113,9 +113,9 @@ namespace BRS {
             PostProcessingManager.Instance.Start(_spriteBatch);
 
             // load the z buffer shader
-            _zBufferShaderHardwareInstancing = File.Load<Effect>("Effects/DepthHardwareInstancing");
+            _zBufferShaderHardwareInstancing = File.Load<Effect>("Other/effects/DepthHardwareInstancing");
 
-            _font = File.Load<SpriteFont>("Other/font/debugFont");
+            _font = File.Load<SpriteFont>("Other/font/debug");
 
             // add skybox
             //Skybox.Start();

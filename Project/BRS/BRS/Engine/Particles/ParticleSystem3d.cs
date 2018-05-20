@@ -191,7 +191,7 @@ namespace BRS.Engine.Particles {
         /// Helper for loading and initializing the particle effect.
         /// </summary>
         private void Load() {
-            Effect effect = File.Load<Effect>("Effects/ParticleEffect");
+            Effect effect = File.Load<Effect>("Other/effects/ParticleEffect");
 
             // If we have several particle systems, the content manager will return
             // a single shared effect instance to them all. But we want to preconfigure

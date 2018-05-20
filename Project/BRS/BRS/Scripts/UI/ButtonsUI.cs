@@ -65,7 +65,8 @@ namespace BRS.Scripts.UI {
                     UserInterface.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
-            _commands.Clear();
+            if(index==GameManager.NumPlayers-1)
+                _commands.Clear();
         }
 
         public void GiveCommand(int _index, Rectangle _dest, XboxButtons _button, Align _anchor, bool flip=false) {

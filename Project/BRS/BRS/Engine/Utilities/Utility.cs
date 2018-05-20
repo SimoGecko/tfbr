@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Engine {
@@ -66,8 +67,11 @@ namespace BRS.Engine {
             }
             float result = SmoothDamp(current, target, ref currentVelocity, smoothTime, maxSpeed);
             //return WrapAngle(result);
-            //while (result < 0  ) result += 360;
-            //while (result > 360) result -= 360;
+
+            if (CameraController.autoFollow) {
+                while (result < 0  ) result += 360;
+                while (result > 360) result -= 360;
+            }
 
             return result;
         }

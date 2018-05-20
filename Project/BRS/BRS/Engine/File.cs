@@ -15,8 +15,11 @@ using Microsoft.Xna.Framework.Graphics;
 using static BRS.Scripts.UI.Menu;
 
 namespace BRS.Engine {
+
+    /// <summary>
+    /// Class used to load files from disk and providing safeguard agains null files
+    /// </summary>
     class File : Component {
-        ////////// class used to load files from disk and providing safeguard agains null files //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -46,6 +49,7 @@ namespace BRS.Engine {
 
         // commands
         // Todo: Clean up
+        // simo code
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
 
@@ -59,13 +63,6 @@ namespace BRS.Engine {
             T result = content.Load<T>(s);
             return result;
         }
-
-
-        // queries
-
-
-
-        // other
 
         /// <summary>
         /// Read the scene-file and build the game- and physic-objects for it
@@ -228,7 +225,10 @@ namespace BRS.Engine {
             }
         }
 
-
+        /// <summary>
+        /// Read the rankings and return a list of player's name with their highscore
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<Tuple<string, string>> ReadRanking(string pathName) {
             try {
                 List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
@@ -254,6 +254,10 @@ namespace BRS.Engine {
             }
         }
 
+        /// <summary>
+        /// Write the rankings to a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
                 using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
@@ -270,11 +274,20 @@ namespace BRS.Engine {
             }
         }
 
+        /// <summary>
+        /// Add text to file stream
+        /// </summary>
+        /// <param name="fs">Filestream</param>
+        /// /// <param name="value">Text to add</param>
         private static void AddText(FileStream fs, string value) {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
             fs.Write(info, 0, info.Length);
         }
 
+        /// <summary>
+        /// Read the path of the police patrol
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<List<Vector3>> ReadPolicePaths(string pathName) {
             List<List<Vector3>> policePaths = new List<List<Vector3>>();
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
@@ -308,6 +321,11 @@ namespace BRS.Engine {
             return policePaths;
         }
 
+        /// <summary>
+        /// Write a 2D array of int to a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
+        /// <param name="values" fil>2D array of int</param>
         public static void Write2DArrayIntToFile(string pathName, int[,] values) {
             try {
                 using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
@@ -330,6 +348,10 @@ namespace BRS.Engine {
             }
         }
 
+        /// <summary>
+        /// Parse a menu panel describe by a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<MenuStruct> ReadMenuPanel(string pathName) {
             List<MenuStruct> panel = new List<MenuStruct>();
 
