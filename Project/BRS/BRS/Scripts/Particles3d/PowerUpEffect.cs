@@ -5,6 +5,7 @@ using System;
 using BRS.Engine;
 using BRS.Engine.Particles;
 using BRS.Engine.Rendering;
+using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -23,7 +24,7 @@ namespace BRS.Scripts.Particles3D {
         public PowerUpEffect(Color color) {
             _mainColor = new Color(color, 255);
         }
-        public override bool IsEmitting { get; set; } = true;
+        public override bool IsEmitting { get; set; } = GameManager.NumPlayers < 4;
 
 
         // --------------------- BASE METHODS ------------------
