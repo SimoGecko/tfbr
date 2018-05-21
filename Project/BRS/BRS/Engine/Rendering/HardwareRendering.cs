@@ -11,7 +11,7 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
-        private static List<ModelType> _usedForDepth = new List<ModelType>{ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
+        private static List<ModelType> _usedForDepth = new List<ModelType>{ModelType.SkyboxInvisible, ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
 
         public static GraphicsDeviceManager GraphicsDeviceManager { private get; set; }
         private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
@@ -59,7 +59,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         public static void Draw() {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
-                if (ModelTransformations.ContainsKey(mt)) {
+                if (mt != ModelType.SkyboxInvisible && ModelTransformations.ContainsKey(mt)) {
                     DrawModelInstanciated(ModelTransformations[mt]);
                 }
             }
