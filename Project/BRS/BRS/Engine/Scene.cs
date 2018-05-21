@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using BRS.Engine.Physics;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 using BRS.Scripts.Scenes;
 using Microsoft.Xna.Framework;
@@ -21,10 +22,9 @@ namespace BRS.Engine {
             scenes = new Dictionary<string, Scene>();
 
             //FILL here all the scenes in the game
-            Add("Level1", new Level1());
-            Add("Level2", new Level2());
-            Add("Level3", new Level3());
+            Add("LevelGame", new LevelGame());
             Add("LevelMenu", new LevelMenu());
+            Add("LevelTest", new LevelTest());
 
             LoadMenu = false;
             LoadGame = false;
@@ -32,7 +32,7 @@ namespace BRS.Engine {
 
         public static void Update() {
             if (LoadGame) {
-                LoadScene("Level1");
+                LoadScene("LevelGame");
                 LoadGame = false;
             }
 
@@ -47,11 +47,12 @@ namespace BRS.Engine {
             //if (Input.GetKeyDown(Keys.D3)) LoadScene("Level3");
 
             // For chris to load the different levels
+            /*
             if (Input.GetKeyDown(Keys.D1)) LoadScene("Level1", 1);
             if (Input.GetKeyDown(Keys.D2)) LoadScene("Level1", 2);
             if (Input.GetKeyDown(Keys.D3)) LoadScene("Level1", 3);
             if (Input.GetKeyDown(Keys.D4)) LoadScene("Level1", 4);
-            if (Input.GetKeyDown(Keys.D5)) LoadScene("Level1", 5);
+            if (Input.GetKeyDown(Keys.D5)) LoadScene("Level1", 5);*/
         }
 
         static void Add(string sceneName, Scene scene) {
@@ -62,8 +63,10 @@ namespace BRS.Engine {
             // Disable the physics-manager when loading the scene to avoid inconsistency between collision-handlings and loading
             PhysicsManager.Instance.IsActive = false;
 
-            GameManager.LvlScene = sceneId;
+            //GameManager.LvlScene = sceneId;
             GameObject.ClearAll();
+            HardwareRendering.Reset();
+            ParticleRendering.Reset();
             currentScene = scenes[sceneName];
             Screen.SetupViewportsAndCameras(Graphics.gDM, currentScene.GetNumCameras());
             if (currentScene != null) currentScene.Load();

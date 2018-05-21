@@ -13,16 +13,18 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- VARIABLES ---------------------
 
+        // const
+        const float TimeBetweenDrops = .1f;
+        const float DropcashRadius = .5f;
+        const float LosecashRadius = 3f;
+
         //public
         public bool CanDeload = false;
 
         //private
         private int _capacity = 20;
 
-        // const
-        const float TimeBetweenDrops = .1f;
-        const float DropcashRadius = .5f;
-        const float LosecashRadius = 3f;
+        
 
         //MONEY
         int _carryingWeight = 0;
@@ -79,7 +81,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         //drop = leave on ground by choice based on input
         public void DropMoney() {
-            if (_canDropMoney) {
+            if (_canDropMoney && CarryingWeight>0) {
                 Audio.Play("leave", transform.position);
                 RemoveMoneyAmount(1, DropcashRadius);
                 _canDropMoney = false;

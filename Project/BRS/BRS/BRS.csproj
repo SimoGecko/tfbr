@@ -24,6 +24,9 @@
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <PackageCertificateThumbprint>69E9FFB77C7D8ECED3AE2510E6FDC9EA9E43CE09</PackageCertificateThumbprint>
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DebugSymbols>true</DebugSymbols>
@@ -146,8 +149,14 @@
     <Compile Include="Engine\Physics\ShapeType.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingEffect.cs" />
     <Compile Include="Engine\PostProcessing\PostProcessingManager.cs" />
+    <Compile Include="Engine\PostProcessing\PostprocessingType.cs" />
     <Compile Include="Engine\PostProcessing\Skybox.cs" />
     <Compile Include="Engine\Prefabs.cs" />
+    <Compile Include="Engine\Rendering\ParticleRendering.cs" />
+    <Compile Include="Engine\Rendering\HardwareRendering.cs" />
+    <Compile Include="Engine\Rendering\ModelType.cs" />
+    <Compile Include="Engine\Rendering\RenderingType.cs" />
+    <Compile Include="Engine\Rendering\VertexPositionAlpha.cs" />
     <Compile Include="Engine\Scene.cs" />
     <Compile Include="Engine\Screen.cs" />
     <Compile Include="Engine\SpriteSheet.cs" />
@@ -155,9 +164,9 @@
     <Compile Include="Engine\Timer.cs" />
     <Compile Include="Engine\Transform.cs" />
     <Compile Include="Engine\UserInterface.cs" />
+    <Compile Include="Engine\Rendering\ModelInstance.cs" />
     <Compile Include="Engine\Utilities\Curve.cs" />
     <Compile Include="Engine\Utilities\Debug.cs" />
-    <Compile Include="Engine\Utilities\Distribution.cs" />
     <Compile Include="Engine\Utilities\EnumExtensions.cs" />
     <Compile Include="Engine\Utilities\MyRandom.cs" />
     <Compile Include="Engine\Utilities\Utility.cs" />
@@ -179,32 +188,28 @@
     <Compile Include="Scripts\Particles3D\Boost.cs" />
     <Compile Include="Scripts\Particles3D\CashDrop.cs" />
     <Compile Include="Scripts\Particles3D\FlyingCash.cs" />
-    <Compile Include="Scripts\Particles3D\Tracks.cs" />
     <Compile Include="Scripts\Particles3D\PowerUpEffect.cs" />
     <Compile Include="Scripts\Particles3D\Dust.cs" />
     <Compile Include="Scripts\Particles3D\Smoke.cs" />
     <Compile Include="Scripts\Elements\Lighting\FrontLight.cs" />
-    <Compile Include="Scripts\PlayerScripts\PlayerCollider.cs" />
+    <Compile Include="Scripts\Particles3D\Tracks.cs" />
     <Compile Include="Scripts\Managers\PoliceManager.cs" />
-    <Compile Include="Scripts\PlayerScripts\BaseParticles.cs" />
+    <Compile Include="Scripts\Particles3D\BaseParticles.cs" />
     <Compile Include="Scripts\Elements\Lighting\DynamicShadow.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerParticles.cs" />
     <Compile Include="Scripts\Managers\SpeechManager.cs" />
-    <Compile Include="Scripts\Scenes\Level1.cs" />
-    <Compile Include="Scripts\Scenes\Level2.cs" />
-    <Compile Include="Scripts\Scenes\Level3.cs" />
+    <Compile Include="Scripts\Scenes\LevelGame.cs" />
+    <Compile Include="Scripts\Scenes\LevelTest.cs" />
     <Compile Include="Scripts\Scenes\LevelMenu.cs" />
     <Compile Include="Scripts\Managers\PrefabContent.cs" />
     <Compile Include="Engine\Menu\Button.cs" />
     <Compile Include="Engine\Menu\Image.cs" />
-    <Compile Include="Scripts\Test\MaterialTest.cs" />
     <Compile Include="Scripts\UI\Menu.cs" />
     <Compile Include="Scripts\Managers\MenuManager.cs" />
     <Compile Include="Engine\Menu\Slider.cs" />
     <Compile Include="Engine\Menu\TextBox.cs" />
     <Compile Include="Engine\Menu\TickBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\Test\AudioTest.cs" />
     <Compile Include="Scripts\Elements\Arrow.cs" />
     <Compile Include="Scripts\Elements\Base.cs" />
     <Compile Include="Scripts\Elements\FallingWeight.cs" />
@@ -238,7 +243,6 @@
     <Compile Include="Engine\Physics\RigidBodies\RigidBodyComponent.cs" />
     <Compile Include="Scripts\Elements\Pickup.cs" />
     <Compile Include="Scripts\PlayerScripts\Player.cs" />
-    <Compile Include="Scripts\PlayerScripts\PlayerLift.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerAttack.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerInventory.cs" />
     <Compile Include="Scripts\PlayerScripts\PlayerMovement.cs" />
@@ -257,7 +261,8 @@
     <Compile Include="Scripts\UI\PowerupUI.cs" />
     <Compile Include="Scripts\UI\RoundUI.cs" />
     <Compile Include="Scripts\UI\SpeechUI.cs" />
-    <Compile Include="Scripts\UI\Suggestions.cs" />
+    <Compile Include="Scripts\UI\ButtonsUI.cs" />
+    <Compile Include="Scripts\UI\TutorialUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="project.json" />
@@ -288,32 +293,19 @@
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-400.png" />
     <Content Include="Assets\WideTile.scale-200.png" />
-    <Content Include="Load\PolicePaths.txt" />
-    <Content Include="Load\Rankings\ranking10 min1P.txt" />
-    <Content Include="Load\Rankings\ranking10 min2P.txt" />
-    <Content Include="Load\Rankings\ranking10 min4P.txt" />
-    <Content Include="Load\Rankings\ranking2 min1P.txt" />
-    <Content Include="Load\Rankings\ranking2 min2P.txt" />
-    <Content Include="Load\Rankings\ranking2 min4P.txt" />
-    <Content Include="Load\Rankings\ranking3 min1P.txt" />
-    <Content Include="Load\Rankings\ranking3 min2P.txt" />
-    <Content Include="Load\Rankings\ranking3 min4P.txt" />
-    <Content Include="Load\Rankings\ranking5 min1P.txt" />
-    <Content Include="Load\Rankings\ranking5 min2P.txt" />
-    <Content Include="Load\Rankings\ranking5 min4P.txt" />
+    <Content Include="Load\MenuPanels\Tutorial5.txt" />
+    <Content Include="Load\UnitySceneData\PolicePaths_level1.txt" />
+    <Content Include="Load\UnitySceneData\PolicePaths_level2.txt" />
+    <Content Include="Load\MenuPanels\Tutorial4.txt" />
     <Content Include="Load\robber_speech.txt" />
-    <Content Include="Load\saved_heatmap_level1.txt" />
+    <Content Include="Load\Saves\saved_heatmap_level1.txt" />
     <Content Include="Load\UnitySceneData\export1.txt" />
     <Content Include="Load\UnitySceneData\export_allBank.txt" />
     <Content Include="Load\UnitySceneData\export_fullBank.txt" />
     <Content Include="Load\UnitySceneData\export_scene_level1_dynamicObjects.txt" />
     <Content Include="Load\UnitySceneData\export_scene_level1_staticObjects.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl1.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl2.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl3.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl4.txt" />
-    <Content Include="Load\UnitySceneData\ObjectSceneUnity_lvl5.txt" />
-    <Content Include="Load\UnitySceneData\originalStatic.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level2_dynamicObjects.txt" />
+    <Content Include="Load\UnitySceneData\export_scene_level2_StaticObjects.txt" />
     <Content Include="Properties\Default.rd.xml" />
   </ItemGroup>
   <ItemGroup>
@@ -335,7 +327,9 @@
       <Name>Jitter</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\Test\" />
+  </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

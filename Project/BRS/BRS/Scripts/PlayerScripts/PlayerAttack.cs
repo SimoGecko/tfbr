@@ -6,7 +6,6 @@ using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
-using BRS.Engine.Utilities;
 using Jitter.LinearMath;
 using Microsoft.Xna.Framework;
 using Curve = BRS.Engine.Utilities.Curve;
@@ -20,6 +19,11 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        //const
+        public float AttackDistance = 5;
+        private const float AttackDuration = .2f;
+        private const float AttackDistanceThreshold = 2f;
+        private const float AttackDamage = 40;
 
         //private
         private bool _attacking;
@@ -28,12 +32,7 @@ namespace BRS.Scripts.PlayerScripts {
         private float _attackRefTime;
         private float _attackStartTime;
         private bool _hasAppliedDamage;
-
-        //const
-        public float AttackDistance = 5;
-        private const float AttackDuration = .2f;
-        private const float AttackDistanceThreshold = 2f;
-        private const float AttackDamage = 40;
+        
 
         //reference
         public Action OnAttackBegin;
@@ -42,6 +41,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
+            Reset();
             _attacking = false;
             _rigidBody = gameObject.GetComponent<MovingRigidBody>();
         }
@@ -62,7 +62,11 @@ namespace BRS.Scripts.PlayerScripts {
 
 
         // --------------------- CUSTOM METHODS ----------------
-
+        public override void Reset() {
+            _attacking = _hasAppliedDamage = false;
+            _attackStartPos = _attackEndPos = _attackEndCollision = Vector3.Zero;
+            _attackRefTime = _attackStartTime = 0f;
+        }
 
         // commands
         public void BeginAttack() {
@@ -90,13 +94,7 @@ namespace BRS.Scripts.PlayerScripts {
                 float t = Curve.EvaluateSqrt(_attackRefTime);
                 Vector3 newPosition = Vector3.LerpPrecise(_attackStartPos, _attackEndPos, t);
 
-                // Todo: Fix attack-end
-                //if (newPosition.X - _attackStartPos.X > _attackEndCollision.X - _attackStartPos.X) {
-                //    newPosition = _attackEndCollision;
-                //}
-
                 // Apply new position to the rigid-body
-                // Todo by Andy for Andy: can be surely written better :-)
                 _rigidBody.RigidBody.Position = new JVector(newPosition.X, _rigidBody.RigidBody.Position.Y, newPosition.Z);
             } else {
                 _attacking = false;

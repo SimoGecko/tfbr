@@ -24,7 +24,6 @@ namespace BRS.Scripts.Elements {
 
         //private
         private readonly Type _type;
-        //private Matrix[] _meshPartTransforms;
         private readonly Vector3[] _wheelOffsets;
         private readonly int[] _wheelMeshPartIndex;
         private readonly List<Offset> _toUpdate;
@@ -58,21 +57,24 @@ namespace BRS.Scripts.Elements {
 
 
             switch (playerType) {
-                default:
+                default: // forklift
+                    _model = "wheelType1";
                     _wheelOffsets[(int)Offset.FrontLeft] = new Vector3(-0.3149025f, 0.1552318f + 0.1f, -0.3100869f);
                     _wheelOffsets[(int)Offset.FrontRight] = new Vector3(0.3149025f, 0.1552318f + 0.1f, -0.3100869f);
                     _wheelOffsets[(int)Offset.BackLeft] = new Vector3(-0.2811967f, 0.1572949f + 0.1f, 0.5519256f);
                     _wheelOffsets[(int)Offset.BackRight] = new Vector3(0.2811967f, 0.1572949f + 0.1f, 0.5519256f);
                     break;
 
-                case 1:
+                case 1: // sweeper
+                    _model = "wheelType1";
                     _wheelOffsets[(int)Offset.FrontLeft] = new Vector3(-0.3388945f, 0.155463f + 0.1f, -0.02759502f);
                     _wheelOffsets[(int)Offset.FrontRight] = new Vector3(0.3612739f, 0.1896283f + 0.1f, -0.04256354f);
                     _wheelOffsets[(int)Offset.BackLeft] = new Vector3(-0.2638865f, 0.1711256f + 0.1f, 0.529377f);
                     _wheelOffsets[(int)Offset.BackRight] = new Vector3(0.2802619f, 0.1896285f + 0.1f, 0.4977417f);
                     break;
 
-                case 2:
+                case 2: // bulldozer
+                    _model = "wheelType2";
                     _wheelOffsets[(int)Offset.FrontLeft] = new Vector3(-0.3703101f, 0.250674f + 0.1f, 0.002451748f);
                     _wheelOffsets[(int)Offset.FrontRight] = new Vector3(0.3590385f, 0.2506741f + 0.1f, -0.00906501f);
                     _wheelOffsets[(int)Offset.BackLeft] = new Vector3(-0.362828f, 0.2506741f + 0.1f, 0.5842964f);
@@ -80,76 +82,18 @@ namespace BRS.Scripts.Elements {
                     break;
 
                 case 3: // police
-
-                    _wheelOffsets[(int)Offset.FrontLeft] = new Vector3(-0.4113479f, 0.1297145f + 0.1f, -0.6306446f);
-                    _wheelOffsets[(int)Offset.FrontRight] = new Vector3(0.3751468f, 0.1297147f + 0.1f, -0.6306445f);
-                    _wheelOffsets[(int)Offset.BackLeft] = new Vector3(-0.4162008f, 0.1115307f + 0.1f, 0.5381809f);
-                    _wheelOffsets[(int)Offset.BackRight] = new Vector3(0.3990484f, 0.1293239f + 0.1f, 0.587538f);
+                    _model = "wheelType1";
+                    _model = "wheelPolice";
+                    _wheelOffsets[(int)Offset.FrontLeft] = new Vector3(-0.4113479f, 0.1297145f, -0.6306446f);
+                    _wheelOffsets[(int)Offset.FrontRight] = new Vector3(0.4113479f, 0.1297147f, -0.6306445f);
+                    _wheelOffsets[(int)Offset.BackLeft] = new Vector3(-0.4162008f, 0.1297147f, 0.587538f);
+                    _wheelOffsets[(int)Offset.BackRight] = new Vector3(0.4162008f, 0.1297147f, 0.587538f);
                     break;
             }
 
 
         }
 
-
-        //public override void Start() {
-
-        //    //    Model current = gameObject.Model;
-
-        //    //    List<ModelBone> bones = new List<ModelBone>();
-
-        //    //    foreach (var tmp in current.Bones) {
-        //    //        ModelBone newBone = new ModelBone();
-        //    //        newBone.Transform = tmp.Transform;
-        //    //        newBone.Name = tmp.Name;
-        //    //        newBone.Index = tmp.Index;
-        //    //        newBone.ModelTransform = tmp.ModelTransform;
-
-        //    //        foreach (var ms in tmp.Meshes) {
-        //    //            newBone.AddMesh(ms);
-        //    //        }
-        //    //    }
-
-        //    //    gameObject.Model = new Model(Graphics.gD, bones, current.Meshes.ToList());
-
-        //    //if (gameObject.HasComponent<MovingRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<MovingRigidBody>().RigidBody;
-        //    //}
-        //    //if (gameObject.HasComponent<AnimatedRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<AnimatedRigidBody>().RigidBody;
-        //    //}
-        //    //if (gameObject.HasComponent<DynamicRigidBody>()) {
-        //    //    _collider = gameObject.GetComponent<DynamicRigidBody>().RigidBody;
-        //    //}
-
-        //    _meshPartTransforms = new Matrix[gameObject.Model.Bones.Count];
-        //    gameObject.Model.CopyBoneTransformsTo(_meshPartTransforms);
-
-        //    for (int i = 0; i < gameObject.Model.Bones.Count; ++i) {
-        //        var bone = gameObject.Model.Bones[i];
-
-        //        Vector3 offset = bone.Meshes.Count > 0 ? bone.Meshes[0].BoundingSphere.Center : Vector3.Zero;
-
-        //        switch (bone.Name) {
-        //            case "wheel_fl":
-        //                _wheelMeshPartIndex[(int)Offset.FrontLeft] = i;
-        //                _wheelOffsets[(int)Offset.FrontLeft] = offset;
-        //                break;
-        //            case "wheel_fr":
-        //                _wheelMeshPartIndex[(int)Offset.FrontRight] = i;
-        //                _wheelOffsets[(int)Offset.FrontRight] = offset;
-        //                break;
-        //            case "wheel_bl":
-        //                _wheelMeshPartIndex[(int)Offset.BackLeft] = i;
-        //                _wheelOffsets[(int)Offset.BackLeft] = offset;
-        //                break;
-        //            case "wheel_br":
-        //                _wheelMeshPartIndex[(int)Offset.BackRight] = i;
-        //                _wheelOffsets[(int)Offset.BackRight] = offset;
-        //                break;
-        //        }
-        //    }
-        //}
 
         protected override List<Follower> CreateFollower() {
             Transform target = gameObject.transform;
@@ -183,8 +127,13 @@ namespace BRS.Scripts.Elements {
                     Follower.FollowingType.Orientated));
                 _wheelMeshPartIndex[(int)Offset.BackRight] = index++;
 
-                _localRotations.Add(Quaternion.CreateFromAxisAngle(Vector3.Up, (float)Math.PI));
-                _localRotations.Add(Quaternion.Identity);
+                if (_model == "wheelPolice") {
+                    _localRotations.Add(Quaternion.Identity);
+                    _localRotations.Add(Quaternion.CreateFromAxisAngle(Vector3.Up, (float)Math.PI));
+                } else {
+                    _localRotations.Add(Quaternion.CreateFromAxisAngle(Vector3.Up, (float)Math.PI));
+                    _localRotations.Add(Quaternion.Identity);
+                }
             }
 
             return followers;
@@ -199,19 +148,6 @@ namespace BRS.Scripts.Elements {
                 follower.Orientation = local *
                     Quaternion.CreateFromAxisAngle(Vector3.Up, factor * MathHelper.ToRadians(Collider.LastRotation));
             }
-            //foreach (Offset offset in _toUpdate) {
-            //    int i = (int)offset;
-            //    int index = _wheelMeshPartIndex[i];
-
-            //    Matrix toLocal = Matrix.CreateTranslation(_wheelOffsets[i]) * transform.World;
-            //    Matrix t = Matrix.Invert(toLocal);
-            //    int factor = i < 2 ? _factor : -_factor;
-            //    _meshPartTransforms[index] = t * Matrix.CreateRotationY(factor * MathHelper.ToRadians(_collider.LastRotation)) * toLocal;
-            //    //_meshPartTransforms[index] = t * Matrix.CreateRotationY(factor * MathHelper.ToRadians((float)Time.Gt.TotalGameTime.TotalSeconds)) * toLocal;
-            //    Debug.Log(_collider.LastRotation);
-            //}
-
-            //gameObject.Model.CopyBoneTransformsFrom(_meshPartTransforms);
         }
 
 

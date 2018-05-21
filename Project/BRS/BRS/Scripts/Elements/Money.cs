@@ -16,8 +16,6 @@ namespace BRS.Scripts.Elements {
         //public
         public enum Type { Cash, Gold, Diamond };
 
-        // Todo: Do we really want to have it that each money has different value? Doesn't it make it too unpredictable? (Andy)
-        public const float randomizer = .0f; // how much to deviate from actual value
 
 
         //private
@@ -36,7 +34,6 @@ namespace BRS.Scripts.Elements {
 
         public override void Start() {
             base.Start();
-            value = (int)(Value*MyRandom.Range(1-randomizer, 1+randomizer));
         }
 
         public override void Update() {
@@ -49,7 +46,7 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        protected override void DoPickup(Player p) {
+        public override void DoPickup(Player p) {
             PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
             if (pi.CanPickUp(this)) {
                 Audio.Play("pickup_" + type.ToString().ToLower(), transform.position);

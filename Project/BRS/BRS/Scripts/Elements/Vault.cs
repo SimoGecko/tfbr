@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
 
-    // Todo: Probably belongs in the engine?
+    // Todo: Probably belongs in the engine? -> no as it's something particular
     public interface IOpenable : IComponent {
         void Open();
     }
@@ -27,30 +27,40 @@ namespace BRS.Scripts.Elements {
         //private
         private const float OpeningDuration = 2f;
         private const float OpeningAnge = -90f;
-        private const float PivotOffset = 0f;//-1.5f;
+        private const float ClosenessForMessage = 10f;
+        private const float TimeBetweenMessages = 20f;
 
         private bool _open; // at end of animation
-        private bool _opening; // for animation
+        private bool _opening; // during animation
         private float _openRefTime;
 
         public System.Action OnVaultOpen;
 
+        public System.Action OnVaultClosedCloseEnough;
+        public static int OnClosedCloseIndex;
+        float[] timeForNextClosenessCall;
+
 
         //reference
+        public static Vault instance;
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            Health = 10;
-            Dead = false;
+        public override void Awake() {
+            instance = this;
+        }
 
-            _open = false;
-            _opening = false;
-            _openRefTime = 0.0f;
+        public override void Start() {
+            base.Start();
+            Health = 10;
+
+            _open = _opening = false;
+            timeForNextClosenessCall = new float[GameManager.NumPlayers];
         }
 
         public override void Update() {
             if (_opening) OpenCoroutine();
+            if(!_open)CheckForClosePlayer();
         }
 
         public override void Reset() {
@@ -62,7 +72,22 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
+        void CheckForClosePlayer() {
+            for(int i=0; i<GameManager.NumPlayers; i++) {
+                if (Time.CurrentTime > timeForNextClosenessCall[i]) {
+                    if ((ElementManager.Instance.Player(i).transform.position-transform.position).LengthSquared()<= ClosenessForMessage* ClosenessForMessage) {
+                        OnClosedCloseIndex = i;
+                        OnVaultClosedCloseEnough?.Invoke();
+                        timeForNextClosenessCall[i] = Time.CurrentTime + TimeBetweenMessages;
+                    }
+                }
+            }
+        }
+
         public void Open() {
+            if (_open) {
+                return;
+            }
             Audio.Play("vault_opening", transform.position);
             OnVaultOpen?.Invoke();
             _opening = true;
@@ -79,8 +104,8 @@ namespace BRS.Scripts.Elements {
         }
 
         // queries
-        Vector3 pivotPoint { get { return transform.position + transform.Right * PivotOffset; } }
-
+        Vector3 pivotPoint { get { return transform.position; } }
+        public bool IsOpen() { return _open; }
 
         // other
         void OpenCoroutine() {
@@ -94,6 +119,8 @@ namespace BRS.Scripts.Elements {
                 _open = true;
             }
         }
+
+
 
     }
 

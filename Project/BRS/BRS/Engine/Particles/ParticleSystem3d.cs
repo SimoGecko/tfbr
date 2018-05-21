@@ -12,10 +12,11 @@ using System;
 
 namespace BRS.Engine.Particles {
     /// <summary>
-    /// The main component in charge of displaying particles.
+    /// The main component in charge of displaying 3D particles.
     /// </summary>
     public class ParticleSystem3D : Component {
-        #region Fields
+
+        #region Properties and attributes
 
         public static bool IsActive = true;
 
@@ -128,6 +129,9 @@ namespace BRS.Engine.Particles {
         // Store the current time, in seconds.
         private float _currentTime;
 
+        // Store the time when the last particle has been emitted.
+        private float _lastEmittingTime;
+
 
         // Count how many times Draw has been called. This is used to know
         // when it is safe to retire old particles back into the free list.
@@ -188,7 +192,7 @@ namespace BRS.Engine.Particles {
         /// Helper for loading and initializing the particle effect.
         /// </summary>
         private void Load() {
-            Effect effect = File.Load<Effect>("Effects/ParticleEffect");
+            Effect effect = File.Load<Effect>("Other/effects/ParticleEffect");
 
             // If we have several particle systems, the content manager will return
             // a single shared effect instance to them all. But we want to preconfigure
@@ -207,7 +211,7 @@ namespace BRS.Engine.Particles {
             _effectTimeParameter = parameters["CurrentTime"];
 
             // Set the values of parameters that do not change.
-            parameters["Duration"].SetValue((float)Settings.Duration.TotalSeconds);
+            parameters["Duration"].SetValue(Settings.Duration);
             parameters["DurationRandomness"].SetValue(Settings.DurationRandomness);
             parameters["Gravity"].SetValue(Settings.Gravity);
             parameters["EndVelocity"].SetValue(Settings.EndVelocity);
@@ -264,7 +268,7 @@ namespace BRS.Engine.Particles {
         /// to the retired section.
         /// </summary>
         void RetireActiveParticles() {
-            float particleDuration = (float)Settings.Duration.TotalSeconds;
+            float particleDuration = Settings.Duration;
 
             while (_firstActiveParticle != _firstNewParticle) {
                 // Is this particle old enough to retire?
@@ -314,15 +318,12 @@ namespace BRS.Engine.Particles {
             }
         }
 
-
         /// <summary>
         /// Draws the particle system.
         /// </summary>
-        public void Draw3D(Camera camera) {
-            _effectViewParameter.SetValue(camera.View);
-            _effectProjectionParameter.SetValue(camera.Proj);
+        public void Draw3D() {
             GraphicsDevice device = Graphics.gD;
-            
+
 
             // Restore the vertex buffer contents if the graphics device was lost.
             if (_vertexBuffer.IsContentLost) {
@@ -352,27 +353,34 @@ namespace BRS.Engine.Particles {
                 device.SetVertexBuffer(_vertexBuffer);
                 device.Indices = _indexBuffer;
 
-                // Activate the particle effect.
-                foreach (EffectPass pass in _particleEffect.CurrentTechnique.Passes) {
-                    pass.Apply();
+                foreach (Camera camera in Screen.Cameras) {
+                    device.Viewport = camera.Viewport;
 
-                    if (_firstActiveParticle < _firstFreeParticle) {
-                        // If the active particles are all in one consecutive range,
-                        // we can draw them all in a single call.
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     _firstActiveParticle * 4, (_firstFreeParticle - _firstActiveParticle) * 4,
-                                                     _firstActiveParticle * 6, (_firstFreeParticle - _firstActiveParticle) * 2);
-                    } else {
-                        // If the active particle range wraps past the end of the queue
-                        // back to the start, we must split them over two draw calls.
-                        device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                     _firstActiveParticle * 4, (Settings.MaxParticles - _firstActiveParticle) * 4,
-                                                     _firstActiveParticle * 6, (Settings.MaxParticles - _firstActiveParticle) * 2);
+                    _effectViewParameter.SetValue(camera.View);
+                    _effectProjectionParameter.SetValue(camera.Proj);
 
-                        if (_firstFreeParticle > 0) {
+                    // Activate the particle effect.
+                    foreach (EffectPass pass in _particleEffect.CurrentTechnique.Passes) {
+                        pass.Apply();
+
+                        if (_firstActiveParticle < _firstFreeParticle) {
+                            // If the active particles are all in one consecutive range,
+                            // we can draw them all in a single call.
                             device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
-                                                         0, _firstFreeParticle * 4,
-                                                         0, _firstFreeParticle * 2);
+                                _firstActiveParticle * 4, (_firstFreeParticle - _firstActiveParticle) * 4,
+                                _firstActiveParticle * 6, (_firstFreeParticle - _firstActiveParticle) * 2);
+                        } else {
+                            // If the active particle range wraps past the end of the queue
+                            // back to the start, we must split them over two draw calls.
+                            device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                                _firstActiveParticle * 4, (Settings.MaxParticles - _firstActiveParticle) * 4,
+                                _firstActiveParticle * 6, (Settings.MaxParticles - _firstActiveParticle) * 2);
+
+                            if (_firstFreeParticle > 0) {
+                                device.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0,
+                                    0, _firstFreeParticle * 4,
+                                    0, _firstFreeParticle * 2);
+                            }
                         }
                     }
                 }
@@ -425,8 +433,14 @@ namespace BRS.Engine.Particles {
         #region Public Methods
 
         public void AddParticles(Vector3 position, Vector3 velocity) {
-            for (int i = 0; i < Settings.ParticlesPerRound; ++i) {
-                AddSingleParticle(position, velocity);
+            float currentTime = (float)Time.Gt.TotalGameTime.TotalSeconds;
+
+            if (currentTime > _lastEmittingTime + Settings.TimeBetweenRounds) {
+                for (int i = 0; i < Settings.ParticlesPerRound; ++i) {
+                    AddSingleParticle(position, velocity);
+                }
+
+                _lastEmittingTime = currentTime;
             }
         }
 

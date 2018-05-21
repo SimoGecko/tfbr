@@ -1,0 +1,39 @@
+<Image>
+NameIdentifier: picturetuto5
+Texture: imageTuto5
+Position: 960 540
+Active: yes
+</Image>
+
+<Button>
+NameIdentifier: Back
+Texture: buttonCircle
+TextureInside: arrowLeft
+Position: 900 540
+ScaleWidth: 1.2
+ScaleHeight: 1.2
+ScaleWidthInside: 1.2
+ScaleHeightInside: 1.2
+Functions: SwitchToMenu
+NeighborsUpDownLeftRight: null null Next Next
+NameSwitchTo: tutorial4
+ColorInside: 148 148 148
+Active: no
+</Button>
+
+<Button>
+NameIdentifier: Next
+Texture: buttonCircle
+TextureInside: arrowRight
+Position: 1020 540
+ScaleWidth: 1.2
+ScaleHeight: 1.2
+ScaleWidthInside: 1.2
+ScaleHeightInside: 1.2
+Functions: SwitchToMenu GoRight
+NeighborsUpDownLeftRight: null null Back Back
+NameSwitchTo: main
+ColorInside: 148 148 148
+CurrentSelection: yes
+Active: no
+</Button>

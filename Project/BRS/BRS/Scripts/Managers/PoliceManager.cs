@@ -47,7 +47,7 @@ namespace BRS.Scripts {
         }
 
         public override void Update() {
-            DrawPoints();
+            //DrawPoints();
         }
 
         public override void Reset() {
@@ -86,7 +86,7 @@ namespace BRS.Scripts {
         }
 
         void SpawnPatrolPolice() {
-            staticWaypoints = File.ReadPolicePaths("Load/PolicePaths.txt").ToArray();
+            staticWaypoints = File.ReadPolicePaths("Load/UnitySceneData/PolicePaths_level" + GameManager.LvlScene + ".txt").ToArray();
             int numPatrolPolice = MathHelper.Min(staticWaypoints.Length, patrolPolicePerDifficulty[GameManager.lvlDifficulty]);
 
             for (int i = 0; i < numPatrolPolice; i++) {
@@ -97,6 +97,7 @@ namespace BRS.Scripts {
         async void SpawnFollowPoliceCoroutine() {
             int numFollowPolice = followPolicePerDifficulty[GameManager.lvlDifficulty];
             float spawnDelay = ((float)RoundManager.RoundTime - startDelay) / numFollowPolice;
+            spawnDelay = MathHelper.Max(spawnDelay, 1f);
 
             await Time.WaitForSeconds(startDelay);
 

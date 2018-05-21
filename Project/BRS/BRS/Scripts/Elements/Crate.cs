@@ -7,6 +7,8 @@ using BRS.Engine.Physics.Colliders;
 using BRS.Engine.PostProcessing;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.Elements {
     class Crate : Component, IDamageable {
@@ -29,13 +31,16 @@ namespace BRS.Scripts.Elements {
 
         private bool _explosionRigged;
         private bool _cracked;
+        private int _teamWhoRigged;
 
         //reference
+        static Texture2D dangerIcon;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _explosionRigged = _cracked = false;
+            if (dangerIcon == null) dangerIcon = File.Load<Texture2D>("Images/UI/explodingboxicon");
         }
 
         public override void Update() {
@@ -45,7 +50,7 @@ namespace BRS.Scripts.Elements {
         public override void OnCollisionEnter(Collider c) {
             if(c.GameObject.tag == ObjectTag.Player) {
                 PlayerAttack pa = c.GameObject.GetComponent<PlayerAttack>();
-                if (pa.IsAttacking)
+                if (pa.IsAttacking && !_cracked)
                     CrackCrate();
             }
         }
@@ -59,7 +64,7 @@ namespace BRS.Scripts.Elements {
         void CrackCrate() {
             _cracked = true;
             Audio.Play("crate_cracking", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Drill);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Drill, 1.5f);
             if (_explosionRigged) Explode();
             else SpawnValuables();
 
@@ -81,7 +86,7 @@ namespace BRS.Scripts.Elements {
         void Explode() {
             //same code as in bomb
             Audio.Play("bomb_explosion", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.FireExplosion, 1.8f);
 
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
@@ -90,20 +95,30 @@ namespace BRS.Scripts.Elements {
                 }
             }
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
-            }
+            PostProcessingManager.Instance.ActivateShockWave(transform.position);
         }
 
 
-        public void TakeDamage(float damage) { // TODO is it necessary to have both?
-            if(!_cracked)CrackCrate();
+        public void TakeDamage(float damage) { // TODO is it necessary to have both -> yes as bombs could crack it
+            if(!_cracked)
+                CrackCrate();
         }
 
-        public void SetExplosionRigged() { _explosionRigged = true; }
+        public void SetExplosionRigged(int teamWhoRigged) { _explosionRigged = true; _teamWhoRigged = teamWhoRigged; }
 
 
         // queries
+
+        public override void Draw2D(int i) {
+            if (i == -1) return;
+            if (!_explosionRigged) return;
+            if(GameManager.TeamIndex(i) == _teamWhoRigged) {
+                //draw danger icon
+                float distScale = Camera.FocusDistance/(Camera.GetCamera(i).transform.position - transform.position).Length();
+                Vector2 screenPos = Camera.GetCamera(i).WorldToScreenPoint(transform.position);
+                UserInterface.DrawPicture(dangerIcon, screenPos, pivot:Align.Center, scale: .3f*distScale);
+            }
+        }
 
 
 

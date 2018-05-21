@@ -1,9 +1,8 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -14,7 +13,7 @@ namespace BRS.Scripts.Particles3D {
 
         // --------------------- VARIABLES ---------------------
 
-        ParticleSystem3D _smokePlumeParticles;
+        ParticleSystem3D _cashDropParticles;
 
         public override bool IsEmitting { get; set; } = true;
 
@@ -25,12 +24,12 @@ namespace BRS.Scripts.Particles3D {
         /// Initialization of the particle-system
         /// </summary>
         public override void Awake() {
-            _smokePlumeParticles = new ParticleSystem3D {
+            _cashDropParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "dollar2",
+                    TextureName = "base_cash_drop",
                     MaxParticles = 2,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(5),
+                    Duration = 5.0f,
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(-0.5f, -0.2f, 0),
                     EndVelocity = 0.75f,
@@ -40,9 +39,6 @@ namespace BRS.Scripts.Particles3D {
 
                     MinVerticalVelocity = 2.5f,
                     MaxVerticalVelocity = 3.0f,
-
-                    //MinColor = new Color(255, 215, 0, 255),
-                    //MaxColor = new Color(255, 215, 0, 128),
 
                     MinRotateSpeed = 0,
                     MaxRotateSpeed = 0,
@@ -56,14 +52,15 @@ namespace BRS.Scripts.Particles3D {
             };
 
 
-            _smokePlumeParticles.Awake();
+            _cashDropParticles.Awake();
+            ParticleRendering.AddInstance(_cashDropParticles);
         }
 
         /// <summary>
         /// Initialize the particle system
         /// </summary>
         public override void Start() {
-            _smokePlumeParticles.Start();
+            _cashDropParticles.Start();
         }
 
         /// <summary>
@@ -71,18 +68,17 @@ namespace BRS.Scripts.Particles3D {
         /// </summary>
         public override void Update() {
             if (IsEmitting) {
-                _smokePlumeParticles.AddParticles(transform.position, Vector3.Zero);
+                _cashDropParticles.AddParticles(transform.position, Vector3.Zero);
             }
 
-            _smokePlumeParticles.Update();
+            _cashDropParticles.Update();
         }
-        
+
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _smokePlumeParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_cashDropParticles);
         }
     }
 }

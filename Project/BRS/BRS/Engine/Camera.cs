@@ -12,8 +12,11 @@ namespace BRS.Engine {
         public enum Projection { Orthographic, Perspective};
 
         //public
-        private const float Near = 0.3f;
-        private const float Far = 1000f;
+        public const float Near = 0.3f;
+        public const float Far = 1000f;
+        public const float FarDepth = 100f;
+        const float defaultFOV = 40;
+        public const float FocusDistance = 14;
 
         //private
         Projection projectiontype = Projection.Perspective;
@@ -25,10 +28,11 @@ namespace BRS.Engine {
         public Viewport Viewport { get; }
 
         public Matrix Proj; // precomputed
+        public Matrix ProjDepth; // precomputed
         public Matrix View { get { return Matrix.Invert(transform.World); } }
         //public int Index { get { return _index; } }
 
-        public Camera(Viewport vp, float fov = 60)  {
+        public Camera(Viewport vp, float fov = defaultFOV)  {
             //_index = index;
             _fov = fov;
             _aspectRatio = vp.AspectRatio;
@@ -40,8 +44,10 @@ namespace BRS.Engine {
         void ComputeProj(Projection projectionType) {
             if (projectionType == Projection.Perspective) {
                 Proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(_fov), _aspectRatio, Near, Far);
+                ProjDepth = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(_fov), _aspectRatio, Near, FarDepth);
             } else {
                 Proj = Matrix.CreateOrthographic(20, 20 / _aspectRatio, Near, Far);
+                ProjDepth = Matrix.CreateOrthographic(20, 20 / _aspectRatio, Near, FarDepth);
             }
         }
 
@@ -56,6 +62,8 @@ namespace BRS.Engine {
 
         public Vector2 WorldToScreenPoint(Vector3 world) {
             Vector3 result = Viewport.Project(world, Proj, View, Matrix.Identity);
+            bool isInRightHalf = Vector3.Dot(world - transform.position, transform.Forward) > 0;
+            if (!isInRightHalf) return Vector2.One * -1000;
             return new Vector2((int)Math.Round(result.X), (int)Math.Round(result.Y)) - Viewport.Bounds.Location.ToVector2();
         }
 

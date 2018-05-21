@@ -19,21 +19,22 @@ namespace BRS.Scripts.PlayerScripts {
         //public
 
         // const
+        public static bool autoFollow = false;
         private const float SmoothTime = .2f;
         private const float AutoFollowSmoothTime = .4f;
         private const int AngleVariation = 40;
         private const float ShakeAmount = .1f;
+        private const float deadZone = .2f;
 
-        static readonly Vector3 Offset = new Vector3(0, 10, 10);
-        static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
+        public static readonly Vector3 Offset = new Vector3(0, 10, 10);
+        public static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
         static readonly Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation);
 
         //private
         static Vector2 _mouseSensitivity = new Vector2(-.3f, -.3f); // TODO set those (also with sign) into options menu
         static Vector2 _gamepadSensitivity = new Vector2(-2f, -2f);
 
-        public int CamIndex;
-        public static bool autoFollow = true;
+        int camIndex;
 
         float _xAngle, _xAngleSmooth;
         float _yAngle, _yAngleSmooth;
@@ -43,31 +44,41 @@ namespace BRS.Scripts.PlayerScripts {
         float _shakeDuration = 0;
         Vector3 _shake;
 
+        bool inputGreaterThanDeadzone;
+
 
 
         //reference
         private Transform _player;
+
+        public CameraController(int _camIndex) {
+            camIndex = _camIndex;
+        }
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _xAngle = _xAngleSmooth = _yAngle = _yAngleSmooth = _refVelocityX = _refVelocityY = 0;
 
-            _player = GameObject.FindGameObjectWithName("player_" + CamIndex).transform;
+            _player = GameObject.FindGameObjectWithName("player_" + camIndex).transform;
             if (_player == null) {
                 Debug.LogError("player not found");
             }
 
-            transform.position = _player.position + Offset;
-            transform.eulerAngles = StartAngle;
+            // Nico: I comment that for the camera transition of the 3-2-1 countdown
+            //transform.position = _player.position + Offset;
+            //transform.eulerAngles = StartAngle;
         }
 
         public override void LateUpdate() { // after player has moved
-            if (GameManager.GameActive) ProcessInput();
+            if (!RoundManager.Instance.CamMoving) { // but only after the cam transition for the 3-2-1 count down
+                if (GameManager.GameActive) ProcessInput();
 
-            if (!autoFollow) FollowSmoothAndRotate();
-            else  SetBehindPlayer();
-            ProcessShake();
+                if (!autoFollow) FollowSmoothAndRotate();
+                else  SetBehindPlayer();
+                ProcessShake();
+            }
+            
         }
 
 
@@ -80,8 +91,10 @@ namespace BRS.Scripts.PlayerScripts {
             float inputX = (Input.MouseDelta.X * _mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
             float inputY = (Input.MouseDelta.Y * _mouseSensitivity.Y).Clamp(-100, 100);
 
-            inputX += Input.GetThumbstick(Input.Stick.Right, CamIndex).X * _gamepadSensitivity.X;
-            inputY += Input.GetThumbstick(Input.Stick.Right, CamIndex).Y * _gamepadSensitivity.Y;
+            inputX += Input.GetThumbstick(Input.Stick.Right, camIndex).X * _gamepadSensitivity.X;
+            inputY += Input.GetThumbstick(Input.Stick.Right, camIndex).Y * _gamepadSensitivity.Y;
+
+            inputGreaterThanDeadzone = new Vector2(inputX, inputY).LengthSquared() >= deadZone * deadZone;
 
             _xAngle = (_xAngle + inputY).Clamp(_angleRange.X, _angleRange.Y);
             _xAngleSmooth = Utility.SmoothDamp(_xAngleSmooth, _xAngle, ref _refVelocityX, SmoothTime);
@@ -126,7 +139,13 @@ namespace BRS.Scripts.PlayerScripts {
         // queries
         public float YRotation { get { return transform.eulerAngles.Y; } }//_yAngleSmooth
 
+        public Vector3 GetPlayerPosition() {
+            return _player.position;
+        }
 
+        public bool InputIsGreaterThanDeadZone() {
+            return inputGreaterThanDeadzone;
+        }
 
         // other
 

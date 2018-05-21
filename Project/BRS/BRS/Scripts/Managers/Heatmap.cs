@@ -18,11 +18,13 @@ namespace BRS.Scripts {
 
         //public
         bool showHeatMapOnScreen = false;
+        public static bool IsActive = false;
 
         //private
         CDFdistrib green, yellow, white; // stores yellow distribution
 
         float pixelSize;
+        int refreshFps = 40;
 
         int[,] playerHeatmap;
         int distribWidth, distribHeight;
@@ -39,9 +41,10 @@ namespace BRS.Scripts {
 
         public override void Start() {
             //DISTRIB   
-            Texture2D moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_green");
-            Texture2D goldPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_yellow");
-            Texture2D uniformPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_white");
+            int idx = GameManager.LvlScene;
+            Texture2D moneyPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_green");
+            Texture2D goldPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_yellow");
+            Texture2D uniformPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level" + idx + "_white");
 
             green = new CDFdistrib(moneyPic, 1);
             yellow = new CDFdistrib(goldPic, 1);
@@ -52,7 +55,7 @@ namespace BRS.Scripts {
             pixelSize = (float)PlayArea.SpawnArea.Width / moneyPic.Width;
 
             //HEATMAP
-            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/level1_heatmap");
+            heatmapPic = BRS.Engine.File.Load<Texture2D>("Images/heatmap/saved_heatmap");
             //playerHeatmap = new int[distribWidth, distribHeight];
             StartComputingHeatmap();
         }
@@ -91,10 +94,9 @@ namespace BRS.Scripts {
 
 
         async void StartComputingHeatmap() {
-            int refreshFps = 40;
             //checks continuously to see where the players are and increases a counter to get a heatmap in the end
             playerHeatmap = new int[distribWidth, distribHeight];
-            while (true) {
+            while (true && IsActive) {
                 foreach (Player p in ElementManager.Instance.Players()) {
                     Vector2 normCoord = PlayArea.Pos3DNormalized(p.transform.position);
                     Point coord = new Point((int)(distribWidth * normCoord.X), (int)(distribHeight * normCoord.Y));
@@ -110,17 +112,13 @@ namespace BRS.Scripts {
             }
         }
 
-        public void SaveHeatMap() { // TODO have nico save this to array/picture
-            //when game is closed
-
+        /// <summary>
+        /// Save heatMap to a file
+        /// </summary>
+        public void SaveHeatMap() {
             Color[,] colorData = Graphics.TextureTo2DArray(heatmapPic);
             int[,] array2Dint = Graphics.ColorToInt(colorData, 0);
-            Engine.File.Write2DArrayIntToFile("Load/saved_heatmap_level1.txt", array2Dint);
-
-            //Stream stream = System.IO.File.Create("Load/saved_heatmap_level1.png");
-            //heatmapPic.SaveAsPng(stream, heatmapPic.Width, heatmapPic.Height);
-            //stream.Dispose();
-            //heatmapPic.Dispose();
+            Engine.File.Write2DArrayIntToFile("Load/Saves/saved_heatmap_level1.txt", array2Dint);
         }
 
         public override void Draw2D(int index) {

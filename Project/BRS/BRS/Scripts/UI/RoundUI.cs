@@ -16,11 +16,12 @@ namespace BRS.Scripts {
 
         //public
         const int countdownSize = 256;
-        const int roundEndWidth = 500;
-        const int roundEndHeight = 200;
+        const int roundEndWidth = 600;
+        const int roundEndHeight = 256;
 
         //private
-        Texture2D countdownTex, endroundTex;
+        Texture2D countdownTex, endroundTex, robAgain;
+
         bool showCountdown = false;
         int countdownNumber = 0;
         int[] endRoundPlayerText;
@@ -36,9 +37,11 @@ namespace BRS.Scripts {
         }
 
         public override void Start() {
-            endRoundPlayerText = new int[GameManager.NumPlayers];
             countdownTex = File.Load<Texture2D>("Images/UI/countdown");
-            endroundTex = File.Load<Texture2D>("Images/UI/end_round");
+            endroundTex  = File.Load<Texture2D>("Images/UI/end_round_text");
+            robAgain     = File.Load<Texture2D>("Images/UI/rob_again");
+
+            endRoundPlayerText = new int[GameManager.NumPlayers];
         }
 
         public override void Update() {
@@ -46,8 +49,7 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int i) {
-            if (i == 0) return;
-            i--;
+            if (i == -1) return;
             if (showCountdown) {
                 Rectangle source = SpriteFromNumber(countdownNumber);
                 UserInterface.DrawPicture(countdownTex, Vector2.Zero, source, Align.Center);
@@ -55,6 +57,16 @@ namespace BRS.Scripts {
             if (showEndRound) {
                 Rectangle source = TextFromNumber(endRoundPlayerText[i]);
                 UserInterface.DrawPicture(endroundTex, Vector2.Zero, source, Align.Center);
+
+                int finalCash    = ElementManager.Instance.Base(GameManager.TeamIndex(i)).TotalMoney;
+                int finalPenalty = ElementManager.Instance.Base(GameManager.TeamIndex(i)).TotalMoneyPenalty;
+                bool gotPenalty = finalPenalty > 0; 
+                string penaltyString = "bust penalty of " + Utility.IntToMoneyString(finalPenalty) + " remaining cash " + Utility.IntToMoneyString(MathHelper.Max(0,finalCash - finalPenalty));
+                string cashString    = "you collected " + Utility.IntToMoneyString(finalCash);
+
+                UserInterface.DrawString(gotPenalty?penaltyString : cashString, new Vector2(0, 100), Align.Center, bold:true, scale:.6f);
+
+                UserInterface.DrawPicture(robAgain,new Vector2(-20, 200), anchor: Align.Center, scale: .5f);
             }
         }
 
@@ -91,6 +103,10 @@ namespace BRS.Scripts {
 
         Rectangle TextFromNumber(int num) {
             return new Rectangle(0, num * roundEndHeight, roundEndWidth, roundEndHeight);
+        }
+
+        public bool Busted(int i) {
+            return endRoundPlayerText[i] == (int)EndRoundCondition.Busted;
         }
 
 

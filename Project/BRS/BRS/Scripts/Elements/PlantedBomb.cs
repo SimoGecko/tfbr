@@ -11,36 +11,50 @@ namespace BRS.Scripts.Elements {
     /// Bomb that can be planted and explodes after some time damaging what's around
     /// </summary>
     class PlantedBomb : Component {
+        // --------------------- VARIABLES ---------------------
 
-        private const float TimeBeforeExplosion = 3f;
-        private const float ExplosionRadius = 5f; // also proximity explosion
+
+        //const
+        private const float TimeBeforeExplosion = 4f;
+        private const float TimeBeforeProximityCheck = 1;
+        private const float ExplosionRadius = 7f; // also proximity explosion
         private const float ExplosionDamage = 60;
+        private const bool doProximityCheck = false;
 
-        int teamIndex;
-        bool exploded = false;
+        //private
+        int _teamIndex;
+
+        bool exploded;
+        bool checkProximity;
+        // --------------------- BASE METHODS ------------------
 
         public override void Start() {
-
+            exploded = false;
+            checkProximity = false;
         }
 
         public override void Update() {
             base.Update();
-            CheckProximity();
+            if(checkProximity)
+                CheckProximity();
         }
+        // --------------------- CUSTOM METHODS ----------------
 
         public void Plant(int teamIndex) {
+            _teamIndex = teamIndex;
             exploded = false;
             Audio.Play("bomb_timer", transform.position);
-            for (float i = 0; i < TimeBeforeExplosion; i += .5f) {
+            for (float i = 0; i < TimeBeforeExplosion; i += .4f) {
                 new Timer(i, () => ParticleUI.Instance.GiveOrder(FusePosition(), ParticleType.Sparks));
             }
-            new Timer(TimeBeforeExplosion, Explode);
+            if(doProximityCheck)
+                new Timer(TimeBeforeProximityCheck, () => checkProximity = true);
+            new Timer(TimeBeforeExplosion, Explode, boundToRound:true);
         }
 
         void CheckProximity() {
-            //
             foreach(var p in ElementManager.Instance.Players()) {
-                if (p.TeamIndex != teamIndex && InExplosionRange(p.gameObject))
+                if (p.TeamIndex != _teamIndex && InExplosionRange(p.gameObject))
                     Explode();
             }
         }
@@ -49,7 +63,7 @@ namespace BRS.Scripts.Elements {
             if (exploded) return;
             exploded = true;
             Audio.Play("bomb_explosion", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Explosion, 1.5f);
 
             Collider[] overlapColliders = PhysicsManager.OverlapSphere(transform.position, ExplosionRadius);
             foreach (Collider c in overlapColliders) {
@@ -58,9 +72,7 @@ namespace BRS.Scripts.Elements {
                 }
             }
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateShockWave(i, transform.position);
-            }
+            PostProcessingManager.Instance.ActivateShockWave(transform.position);
             ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject);
         }

@@ -1,88 +1,47 @@
-﻿// (c) Alexander Lelidis and Andreas Emch 2018
+﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
-using BRS.Engine.Particles;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
-    /// <summary>
-    /// Particle-effect for the normal-state of the player
-    /// </summary>
-    class Tracks : ParticleComponent {
+    public class Tracks : Component {
 
-        // --------------------- VARIABLES ---------------------
+        #region Properties and attributes
 
-        private ParticleSystem3D _projectileTrailParticles;
-        private Projectile _projectile;
+        private bool _fadeOut;
+        private const float FadeOutSpeed = 0.01f;
 
-        public override bool IsEmitting {
-            get => _projectile.IsEmitting;
-            set => _projectile.IsEmitting = value;
-        }
+        #endregion
 
-
-        // --------------------- BASE METHODS ------------------
+        #region Monogame-structure
 
         /// <summary>
-        /// Initialization of the particle-system
-        /// </summary>
-        public override void Awake() {
-            float size = 1.0f;
-            _projectileTrailParticles = new ParticleSystem3D {
-                Settings = new Settings {
-                    TextureName = "tracks",
-                    MaxParticles = 400,
-                    ParticlesPerRound = 0.1f,
-                    Duration = TimeSpan.FromSeconds(4),
-                    DurationRandomness = 1.5f,
-                    EmitterVelocitySensitivity = 0.00f,
-
-                    MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 0.0f,
-
-                    MinVerticalVelocity = 0.00f,
-                    MaxVerticalVelocity = 0.0000001f,
-
-                    MinColor = new Color(255, 255, 255, 255),
-                    MaxColor = new Color(255, 255, 255, 255),
-
-                    MinRotateSpeed = 0,
-                    MaxRotateSpeed = 0,
-
-                    MinStartSize = size,
-                    MaxStartSize = size,
-
-                    MinEndSize = size,
-                    MaxEndSize = size
-                }
-            };
-
-            _projectileTrailParticles.Awake();
-        }
-
-        /// <summary>
-        /// Initialize the projectile with the correct position
+        /// Start the component.
+        /// Fading out starts 1 second after
         /// </summary>
         public override void Start() {
-            _projectileTrailParticles.Start();
-            _projectile = new Projectile(_projectileTrailParticles, transform.position);
+            _fadeOut = false;
+            new Timer(1, () => _fadeOut = true);
+
+            transform.SetStatic();
         }
 
+
         /// <summary>
-        /// Update the projectile with emitting new particles and update the living
+        /// Update-routine
         /// </summary>
         public override void Update() {
-            _projectile.Update(transform.position);
+            // If fade-out is enabled simply decrease the alpha-value
+            // and remove the track as soon as it's not visible anymore
+            if (_fadeOut) {
+                gameObject.Alpha -= FadeOutSpeed;
+
+                if (gameObject.Alpha <= 0.0f) {
+                    GameObject.Destroy(gameObject);
+                }
+            }
         }
 
-        /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
-        /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _projectileTrailParticles.Draw3D(camera);
-        }
+        #endregion
     }
 }

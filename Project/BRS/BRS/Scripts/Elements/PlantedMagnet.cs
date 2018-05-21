@@ -12,36 +12,40 @@ namespace BRS.Scripts.Elements {
 
         //public
 
-        //private
+        //const
         private const float ActionRadius = 3f;
         private const float StartDelay = 2f;
         private const float Duration = 60f;
-        private const float soundDuration = 1.5f;
+        private const float EffectDuration = 1.5f;
 
-        private List<PlayerMovement> _pMAffected;
+        //private
         private bool _active;
-        private bool canPlaySound = true;
+        private bool _canPlayEffect;
 
         //reference
+        private List<PlayerMovement> _pMAffected;
 
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             _active = false;
-            _pMAffected = new List<PlayerMovement>();
             Invoke(StartDelay, () => _active = true);
-            Audio.Play("active_magnet", transform.position);
-            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
-            new Timer(Duration, () => RemoveMagnet());
+            _pMAffected = new List<PlayerMovement>();
 
-            for (int i = 0; i < GameManager.NumPlayers; ++i) {
-                PostProcessingManager.Instance.ActivateWave(i, transform.position, deactivate: true, deactivateAfter: Duration);
-            }
+            PlayEffect();
+
+            new Timer(Duration, () => RemoveMagnet(), boundToRound:true);
+            PostProcessingManager.Instance.ActivateWave(transform.position, deactivate: true, deactivateAfter: Duration);
         }
 
         public override void Update() {
-            if (_active)
-                CheckSlowdownRadius();
+            if (_active) {
+                ClearSlowdown();
+                FindPlayersInRange();
+                SlowDown();
+                if (SomeoneSlowedDown() && _canPlayEffect)
+                    PlayEffect();
+            }
         }
 
 
@@ -51,40 +55,45 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        void CheckSlowdownRadius() {
+        void ClearSlowdown() {
             foreach (var pm in _pMAffected) pm.SetSlowdown(false);
             _pMAffected.Clear();
+        }
 
-            bool playSound = false;
-
-
+        void FindPlayersInRange() {
             foreach (Player p in ElementManager.Instance.Players()) {
                 if (InActionRadius(p.gameObject)) {
-                    playSound = true;
                     PlayerMovement pM = p.gameObject.GetComponent<PlayerMovement>();
-                    pM.SetSlowdown(true);
                     _pMAffected.Add(pM);
                 }
             }
-            if (playSound && canPlaySound) {
-                Audio.Play("active_magnet", transform.position);
-                ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy);
-                canPlaySound = false;
-                new Timer(soundDuration, () => canPlaySound = true);
-            }
+        }
 
+        void SlowDown() {
+            foreach (PlayerMovement pm in _pMAffected)
+                pm.SetSlowdown(true);
+        }
+
+        void PlayEffect() {
+            Audio.Play("active_magnet", transform.position);
+            ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Energy, 1.5f);
+            _canPlayEffect = false;
+            new Timer(EffectDuration, () => _canPlayEffect = true);
         }
 
         void RemoveMagnet() {
+            ClearSlowdown();
             ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject);
-
         }
 
 
         // queries
         bool InActionRadius(GameObject o) {
             return (o.transform.position - transform.position).LengthSquared() <= ActionRadius * ActionRadius;
+        }
+        bool SomeoneSlowedDown() {
+            return _pMAffected.Count > 0;
         }
 
 

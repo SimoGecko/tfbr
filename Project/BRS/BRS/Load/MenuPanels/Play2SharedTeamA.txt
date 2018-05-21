@@ -14,6 +14,7 @@ Position: 960 90
 Text: Player
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Image>
@@ -32,7 +33,7 @@ Position: 1080 455
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 215 173 35
+Color: 255 198 13
 </Image>
 
 <Image>
@@ -51,7 +52,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 215 173 35
+Color: 255 198 13
 </Image>
 
 <Image>
@@ -70,7 +71,7 @@ Position: 1080 455
 Active: no
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 215 173 35
+Color: 255 198 13
 </Image>
 
 <Button>
@@ -104,7 +105,7 @@ Position: 1005 620
 Active: yes
 ScaleWidth: 0.7
 ScaleHeight: 0.7
-Color: 215 173 35
+Color: 255 198 13
 </Button>
 
 <Button>

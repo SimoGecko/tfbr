@@ -1,9 +1,8 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
-using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -32,9 +31,10 @@ namespace BRS.Scripts.Particles3D {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
                     TextureName = "smoke",
-                    MaxParticles = 10000,
-                    ParticlesPerRound = 5,
-                    Duration = TimeSpan.FromSeconds(2),
+                    MaxParticles = 1000,
+                    ParticlesPerRound = 1,
+                    TimeBetweenRounds =  0.1f,
+                    Duration = 2.0f,
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.01f,
 
@@ -59,6 +59,7 @@ namespace BRS.Scripts.Particles3D {
             };
 
             _projectileTrailParticles.Awake();
+            ParticleRendering.AddInstance(_projectileTrailParticles);
         }
 
         /// <summary>
@@ -77,11 +78,10 @@ namespace BRS.Scripts.Particles3D {
         }
 
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _projectileTrailParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_projectileTrailParticles);
         }
     }
 }

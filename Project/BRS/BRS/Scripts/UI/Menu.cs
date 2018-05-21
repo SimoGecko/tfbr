@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Engine.Menu;
 using BRS.Scripts.Managers;
+using System.Threading.Tasks;
 
 namespace BRS.Scripts.UI {
 
@@ -19,35 +20,14 @@ namespace BRS.Scripts.UI {
         #region Properties and attributes
 
         /// <summary>
-        /// Store the different textures used for the menu
-        /// </summary>
-        public Dictionary<string, Texture2D> TexturesButtons;
-
-        /// <summary>
-        /// Store the different action to be be performed for specific events
-        /// </summary>
-        public Dictionary<string, EventHandler> FunctionsMenu;
-
-        /// <summary>
         /// Instance of the class
         /// </summary>
         public static Menu Instance;
 
         /// <summary>
-        /// Specification of the screen
-        /// </summary>
-        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
-        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
-
-        /// <summary>
-        /// Circular list of button where each element is connected to his two neighbors
-        /// </summary>
-        public List<Button> linkedButtonLeftRight = new List<Button>();
-
-        /// <summary>
         /// Defines the possible components types of the menu
         /// </summary>
-        public enum MenuType { Button, Text, Slider, Image, TickBox, none};
+        public enum MenuType { Button, Text, Slider, Image, TickBox, none };
 
         /// <summary>
         /// Describes the attributes of a component of the menu
@@ -64,53 +44,77 @@ namespace BRS.Scripts.UI {
             public int Index;
             public Color Color, ColorInside;
             public List<string> Functions;
-            public bool Active, CurrentSelection, IsClicked, deSelectOnMove;
+            public bool Active, CurrentSelection, IsClicked, deSelectOnMove, UseBigFont;
             public List<string> UniqueChoiceButtonWith;
             public int transparency;
         }
+
+        /// <summary>
+        /// Store the different textures used for the menu
+        /// </summary>
+        public Dictionary<string, Texture2D> TexturesButtons;
+
+        /// <summary>
+        /// Store the different action to be be performed for specific events
+        /// </summary>
+        public Dictionary<string, EventHandler> FunctionsMenu;
+
+        /// <summary>
+        /// Specification of the screen
+        /// </summary>
+        readonly Vector2 _middleScreen = new Vector2(Screen.Width / 2, Screen.Height / 2);
+        readonly Vector2 _screenSizeVec = new Vector2(Screen.Width, Screen.Height);
+
+        /// <summary>
+        /// Circular list of button where each element is connected to his two neighbors
+        /// </summary>
+        public List<Button> linkedButtonLeftRight = new List<Button>();
 
         #endregion
 
         #region Monogame-methods
 
+        /// <summary>
+        /// Monogame loadConent()
+        /// </summary>
         public void LoadContent() {
             Instance = this;
 
             // Load needed textures
-            Texture2D textureButton = File.Load<Texture2D>("Images/UI/panel");
-            Texture2D textureButtonBackground = File.Load<Texture2D>("Images/UI/panel_Background");
-            Texture2D textureButtonBigBackground = File.Load<Texture2D>("Images/UI/panel_BigBackground");
-            Texture2D textureSlider = File.Load<Texture2D>("Images/UI/progress_bar");
-            Texture2D textureButtonTitle = File.Load<Texture2D>("Images/UI/panel_Title");
-            Texture2D textureButtonCircle = File.Load<Texture2D>("Images/UI/CircleSmall");
-            Texture2D textureButtonSlider = File.Load<Texture2D>("Images/UI/sliderButton");
-            Texture2D textureTickBoxCliqued = File.Load<Texture2D>("Images/UI/tickbox_clicked");
-            Texture2D textureTickBoxNotCliqued = File.Load<Texture2D>("Images/UI/tickbox_notclicked");
-            Texture2D textureArrowLeft = File.Load<Texture2D>("Images/UI/ArrowLeft");
-            Texture2D textureArrowRight = File.Load<Texture2D>("Images/UI/ArrowRight");
-            Texture2D textureButtonAccept = File.Load<Texture2D>("Images/UI/Accept");
-            Texture2D textureMenuIcon = File.Load<Texture2D>("Images/UI/Menu");
-            Texture2D textureRestartIcon = File.Load<Texture2D>("Images/UI/Restart");
-            Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tutorial_1");
-            Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tutorial_2");
-            Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tutorial_3");
-            Texture2D textureModel1Back = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_back");
-            Texture2D textureModel2Back = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_back");
-            Texture2D textureModel3Back = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_back");
-            Texture2D textureModel1Color = File.Load<Texture2D>("Images/vehicles_menu_pics/fl_color");
-            Texture2D textureModel2Color = File.Load<Texture2D>("Images/vehicles_menu_pics/sw_color");
-            Texture2D textureModel3Color = File.Load<Texture2D>("Images/vehicles_menu_pics/bz_color");
+            Texture2D textureButton = File.Load<Texture2D>("Images/Menu/panel");
+            Texture2D textureButtonBackground = File.Load<Texture2D>("Images/Menu/panel_Background");
+            Texture2D textureButtonBigBackground = File.Load<Texture2D>("Images/Menu/panel_BigBackground");
+            Texture2D textureSlider = File.Load<Texture2D>("Images/Menu/progress_bar");
+            Texture2D textureButtonTitle = File.Load<Texture2D>("Images/Menu/panel_Title");
+            Texture2D textureButtonCircle = File.Load<Texture2D>("Images/Menu/CircleSmall");
+            Texture2D textureArrowLeft = File.Load<Texture2D>("Images/Menu/ArrowLeft");
+            Texture2D textureArrowRight = File.Load<Texture2D>("Images/Menu/ArrowRight");
+            Texture2D textureButtonAccept = File.Load<Texture2D>("Images/Menu/Accept");
+            Texture2D textureMenuIcon = File.Load<Texture2D>("Images/Menu/Menu");
+            Texture2D textureRestartIcon = File.Load<Texture2D>("Images/Menu/Restart");
+            Texture2D textureTuto1 = File.Load<Texture2D>("Images/tutorial/tut_1");
+            Texture2D textureTuto2 = File.Load<Texture2D>("Images/tutorial/tut_2");
+            Texture2D textureTuto3 = File.Load<Texture2D>("Images/tutorial/tut_3");
+            Texture2D textureTuto4 = File.Load<Texture2D>("Images/tutorial/tut_4");
+            Texture2D textureTuto5 = File.Load<Texture2D>("Images/tutorial/tut_5");
             Texture2D textureCredits = File.Load<Texture2D>("Images/tutorial/Credits");
-            Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Ui/ArrowDelete");
+            Texture2D textureButtonDelete = File.Load<Texture2D>("Images/Menu/ArrowDelete");
+            Texture2D textureIconBomb = File.Load<Texture2D>("Images/Menu/bomb");
+            Texture2D textureIconBox = File.Load<Texture2D>("Images/Menu/box");
+            Texture2D textureIconChicken = File.Load<Texture2D>("Images/Menu/chicken");
+            Texture2D textureIconDollar = File.Load<Texture2D>("Images/Menu/Dolar");
+            Texture2D textureTitle = File.Load<Texture2D>("Images/tutorial/title");
+            Texture2D textureParal = File.Load<Texture2D>("Images/tutorial/paral");
+            Texture2D xboxButtons = File.Load<Texture2D>("Images/UI/xbox_buttons");
 
             // Set mapping name - textures
             TexturesButtons = new Dictionary<string, Texture2D> {
-                { "model1Back", textureModel1Back },
-                { "model2Back", textureModel2Back },
-                { "model3Back", textureModel3Back },
-                { "model1Color", textureModel1Color },
-                { "model2Color", textureModel2Color },
-                { "model3Color", textureModel3Color },
+                { "model1Back", ScenesCommunicationManager.Instance.ModelImages[0] },
+                { "model2Back", ScenesCommunicationManager.Instance.ModelImages[1] },
+                { "model3Back", ScenesCommunicationManager.Instance.ModelImages[2] },
+                { "model1Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[0] },
+                { "model2Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[1] },
+                { "model3Color", ScenesCommunicationManager.Instance.ModelImagesColorPart[2] },
                 { "button", textureButton },
                 { "background", textureButtonBackground },
                 { "bigBackground", textureButtonBigBackground },
@@ -125,23 +129,27 @@ namespace BRS.Scripts.UI {
                 { "imageTuto1", textureTuto1 },
                 { "imageTuto2", textureTuto2 },
                 { "imageTuto3", textureTuto3 },
+                { "imageTuto4", textureTuto4 },
+                { "imageTuto5", textureTuto5 },
                 { "imageCredits", textureCredits },
                 { "deleteLetter", textureButtonDelete },
-                { "tickBoxCliqued", textureTickBoxCliqued },
-                { "tickBoxNotCliqued", textureTickBoxNotCliqued }
+                { "bomb", textureIconBomb },
+                { "chicken", textureIconChicken },
+                { "box", textureIconBox },
+                { "dollar", textureIconDollar },
+                { "titleGame", textureTitle },
+                { "paral", textureParal },
+                { "xboxButtons", xboxButtons },
             };
 
             // Set mapping name - functions
             FunctionsMenu = new Dictionary<string, EventHandler> {
                 { "SwitchToMenu", MenuManager.Instance.SwitchToMenu },
-                { "SetDefaultParametersGame", MenuManager.Instance.SetDefaultParametersGame },
                 { "UpdateRoundDuration", MenuManager.Instance.UpdateRoundDuration },
                 { "UpdateNoPlayers", MenuManager.Instance.UpdateNoPlayers },
-                //{ "SwitchRankingDisplay", MenuManager.Instance.SwitchRankingDisplay },
                 { "UpdateTemporaryNamePlayer", MenuManager.Instance.UpdateTemporaryNamePlayer },
                 { "ChangeNamePlayer", MenuManager.Instance.ChangeNamePlayer },
                 { "ChangeModelPlayer", MenuManager.Instance.ChangeModelPlayer },
-                //{ "UpdatePlayersNameInfosToChange", MenuManager.Instance.UpdatePlayersNameInfosToChange },
                 { "HighlightBorders", MenuManager.Instance.HighlightBorders },
                 { "GoDown", MenuManager.Instance.GoDown },
                 { "GoRight", MenuManager.Instance.GoRight },
@@ -156,7 +164,8 @@ namespace BRS.Scripts.UI {
                 { "SetMusic", MenuManager.Instance.SetMusic },
                 { "SetLevelDiffculty", MenuManager.Instance.SetLevelDiffculty },
                 { "SetCamera", MenuManager.Instance.SetCamera},
-                { "SetMode", MenuManager.Instance.SetMode}
+                { "SetMode", MenuManager.Instance.SetMode},
+                { "SetMap", MenuManager.Instance.SetMap}
             };
         }
 
@@ -170,12 +179,14 @@ namespace BRS.Scripts.UI {
 
         // Normal menu
         public void BuildMenuPanels(string panelPlay2Name) {
-            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true);
+            CreatePanel("Load/MenuPanels/MainMenu.txt", "main", true, offsetWidth: 420);
             CreatePanel("Load/MenuPanels/Play1.txt", "play1");
             CreatePanel("Load/MenuPanels/Rankings.txt", "ranking");
             CreatePanel("Load/MenuPanels/Tutorial1.txt", "tutorial1");
             CreatePanel("Load/MenuPanels/Tutorial2.txt", "tutorial2");
             CreatePanel("Load/MenuPanels/Tutorial3.txt", "tutorial3");
+            CreatePanel("Load/MenuPanels/Tutorial4.txt", "tutorial4");
+            CreatePanel("Load/MenuPanels/Tutorial5.txt", "tutorial5");
             CreatePanel("Load/MenuPanels/Options.txt", "options");
             CreatePanel("Load/MenuPanels/Credits.txt", "credits");
             CreatePanel("Load/MenuPanels/Play2SharedTeamA.txt", "play2Shared0", offsetWidth: -480, idAssociatePlayerScreen: 0);
@@ -228,6 +239,10 @@ namespace BRS.Scripts.UI {
                         button.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
                         button.Index = MS.Index;
                         button.DeSelectOnMove = MS.deSelectOnMove;
+                        button.Active = MS.Active;
+
+                        if (MS.UseBigFont)
+                            button.Font = UserInterface.menuBigFont;
 
                         MenuManager.Instance.MenuRect[panelName].AddComponent(button);
                     }
@@ -254,6 +269,8 @@ namespace BRS.Scripts.UI {
                     if (MS.ScaleHeight != default(float)) img.ScaleHeight = MS.ScaleHeight;
                     if (MS.ScaleWidth != default(float)) img.ScaleWidth = MS.ScaleWidth;
                     if (MS.Color != default(Color)) img.colour = MS.Color;
+                    if (MS.transparency != default(int))
+                        img.colour.A = (byte)MS.transparency;
 
                     img.Active = MS.Active;
 
@@ -432,8 +449,6 @@ namespace BRS.Scripts.UI {
 
                 if (i != 0) listStats.Active = false;
 
-                
-
                 // Add list to current panel
                 MenuManager.Instance.MenuRect[panelName].AddComponent(listStats);
             }
@@ -455,7 +470,6 @@ namespace BRS.Scripts.UI {
             float scaleAlphabet;
 
             Vector2[] startoffset;
-            //startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(885, 230), new Vector2(910, 230) };
             startoffset = new Vector2[] { new Vector2(860, 230), new Vector2(860, 230), new Vector2(860, 230) };
             scaleAlphabet = 0.37f;
 
@@ -531,7 +545,7 @@ namespace BRS.Scripts.UI {
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - firstLine.Length];
                 }
                 else {
-                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("ModelChangeLeft", panelName);
+                    buttonsCurrentPanel2[i].NeighborDown = FindMenuComponentinPanelWithName("ModelChangeRight", panelName);
                     buttonsCurrentPanel2[i].NeighborUp = buttonsCurrentPanel2[i - secondLine.Length];
                 }
             }
@@ -548,10 +562,11 @@ namespace BRS.Scripts.UI {
             // Create list of components for each combinaison of (#players <-> duration of a round)
             foreach (var noPlayers in MenuManager.Instance.RankingPlayersText) {
                 foreach (var durationRound in MenuManager.Instance.RankingDurationText) {
-                    List<Tuple<string, string>> rankinglist = File.ReadRanking("Load/Rankings/ranking" + durationRound + noPlayers + ".txt");
+                    List<Tuple<string, string>> rankinglist = File.ReadRanking("ranking" + durationRound + noPlayers + ".txt"); //File.ReadRanking("Load /Rankings/ranking" + durationRound + noPlayers + ".txt");
 
                     ListComponents listPersons = new ListComponents("ranking" + durationRound + noPlayers);
                     int count = 0;
+
                     // Text component with player's name and score
                     foreach (var aPerson in rankinglist) {
                         var namePerson = new TextBox() {

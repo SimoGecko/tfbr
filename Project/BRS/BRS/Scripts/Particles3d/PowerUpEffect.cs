@@ -4,6 +4,7 @@
 using System;
 using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -37,10 +38,10 @@ namespace BRS.Scripts.Particles3D {
             MaxColor.A = 64;
             _rayParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX3_T_RayStraight",
+                    TextureName = "powerup_ray",
                     MaxParticles = 500,
                     ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 
@@ -66,11 +67,11 @@ namespace BRS.Scripts.Particles3D {
             MaxColor.A = 128;
             _starParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX3_T_GlowStar",
+                    TextureName = "powerup_star",
                     MaxParticles = 50,
                     ParticlesPerRound = 1,
-                    Duration = TimeSpan.FromSeconds(1),
-                    // Create a wind effect by tilting the gravity vector sideways.
+                    Duration = 1.0f,
+
                     Gravity = new Vector3(0, 0, 0),
                     EndVelocity = 0.75f,
 
@@ -96,6 +97,9 @@ namespace BRS.Scripts.Particles3D {
 
             _rayParticles.Awake();
             _starParticles.Awake();
+
+            ParticleRendering.AddInstance(_rayParticles);
+            ParticleRendering.AddInstance(_starParticles);
         }
 
         /// <summary>
@@ -107,9 +111,12 @@ namespace BRS.Scripts.Particles3D {
 
         }
 
+        /// <summary>
+        /// Create a random sample on a circle witha given radius on agiven height
+        /// </summary>
+        /// <param name="radius">Radius of the circle</param>
+        /// <param name="height">Height of the circle</param>
         Vector3 RandomPointOnCircle(float radius, float height) {
-            
-
             double angle = _random.NextDouble() * Math.PI * 2;
 
             float x = (float)Math.Cos(angle);
@@ -124,9 +131,9 @@ namespace BRS.Scripts.Particles3D {
         public override void Update() {
             if (IsEmitting) {
                 _rayParticles.AddParticles(
-                    transform.position + RandomPointOnCircle(0.5f, -0.5f), 
+                    transform.position + RandomPointOnCircle(0.5f, -0.5f),
                     Vector3.Zero);
-                float height =  (float)_random.NextDouble() - 0.5f;
+                float height = (float)_random.NextDouble() - 0.5f;
                 _starParticles.AddParticles(
                     transform.position + RandomPointOnCircle(0.5f, height),
                     Vector3.Zero);
@@ -137,12 +144,11 @@ namespace BRS.Scripts.Particles3D {
         }
 
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _rayParticles.Draw3D(camera);
-            _starParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_rayParticles);
+            ParticleRendering.RemoveInstance(_starParticles);
         }
     }
 }

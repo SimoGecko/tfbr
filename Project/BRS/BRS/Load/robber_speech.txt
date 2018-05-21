@@ -34,6 +34,7 @@ We are about to be busted!
 You will never catch me police!
 Damn police!
 Let's go back to the base!
+I better move faster!
 
 -Win
 I won!
@@ -46,6 +47,8 @@ I'm feeling just awesome!
 I will win everything!
 Another point for me!
 Let's go!!
+It was well worth my time!
+I can't wait for the next robbery!
 
 -Lose
 Damn. Maybe next time...
@@ -57,6 +60,9 @@ Another lost point for me...
 Damn...
 I should have put more effort...
 I lost also this round...
+I didn't know I was THAT slow!
+I tough it would be easier...
+I doubt if I'm a good robber...
 
 -Random
 Best robbery ever!
@@ -70,6 +76,19 @@ I can't think of anything witty.
 Did you know: Escher was swiss?
 Escher founded the Bank Of Switzerland!
 Let's try not to get hit...
+
+-CloseToVault
+Maybe there is a way to open it...
+I could search for a key...
+All that gold inside the vault...
+What if I try to blow up the vault?
+I should find a bomb!
+I'm sure this can be opened...
+Could I open the vault?
+Must find a key!
+Let's look for a bomb for the vault!
+The vault can be opened!
+Let's open this vault!
 
 -Powerup
 I've got a powerup!
@@ -132,6 +151,7 @@ Get ready to try out this!
 You won't be needing all that cash!
 ..and this!
 Here payback is served!
+I almost feel sorry for you! Ahah
 
 -Damage
 Ouch!
@@ -144,6 +164,7 @@ That hurt!
 Aaah!
 Leave me alone!
 Ufff...
+How ironic...
 
 -Full
 I'm full!
@@ -156,6 +177,7 @@ Base, here I come!
 Quick, let's go back!
 Imagine all of this cash in my base!
 I hope I can reach my base!
+Arghh! I'm feeling heavy!
 
 -BringBase
 Sweet!

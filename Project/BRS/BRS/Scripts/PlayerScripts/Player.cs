@@ -41,14 +41,19 @@ namespace BRS.Scripts.PlayerScripts {
 
         //reference
 
+        // Last collider which used the vibration-event
+        private Collider _lastCollider;
+        // Last time when the vibration-event was used
+        private float _collidedAt;
+        // Allows to vibrate for the same collider if time between is larger than this
+        private const float TimeResetLastCollider = 2;
+
         //subcomponents
-        PlayerAttack _pA;
-        PlayerMovement _pM;
-        PlayerInventory _pI;
-        PlayerPowerup _pP;
-        PlayerStamina _pS;
-        PlayerLift _pL;
-        private PlayerCollider _pC;
+        private PlayerAttack _pA;
+        private PlayerMovement _pM;
+        private PlayerInventory _pI;
+        private PlayerPowerup _pP;
+        private PlayerStamina _pS;
         private SteerableCollider _steerableCollider;
 
         public CameraController CamController;
@@ -60,17 +65,20 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerIndex = playerIndex;
             TeamIndex = teamIndex;
             PlayerName = name + (playerIndex + 1).ToString();
-            PlayerColor = Graphics.ColorIndex(playerIndex);
+            //PlayerColor = Graphics.ColorIndex(playerIndex);
+            PlayerColor = playerIndex % 2 == 0
+                ? ScenesCommunicationManager.TeamAColor
+                : ScenesCommunicationManager.TeamBColor;
 
             startPosition = startPos;
-
-            // TODO make mesh have this color
         }
+
         public override void Start() {
             base.Start();
 
-            GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
-            if (po != null) _other = po.GetComponent<Player>();
+            //GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
+            //if (po != null) _other = po.GetComponent<Player>();
+            _other = ElementManager.Instance.Enemy(TeamIndex);
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
             CamController.Start();
@@ -81,8 +89,6 @@ namespace BRS.Scripts.PlayerScripts {
             _pI = gameObject.GetComponent<PlayerInventory>();
             _pP = gameObject.GetComponent<PlayerPowerup>();
             _pS = gameObject.GetComponent<PlayerStamina>();
-            _pL = gameObject.GetComponent<PlayerLift>();
-            _pC = gameObject.GetComponent<PlayerCollider>();
 
             MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
             _steerableCollider = mrb.SteerableCollider;
@@ -98,8 +104,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
             }
 
-            // Restart other components
-            _pM.Start();
         }
 
         public override void Update() {
@@ -118,8 +122,11 @@ namespace BRS.Scripts.PlayerScripts {
                     //Input.Vibrate(.001f, .001f, PlayerIndex);
                 }
 
-                Vector2 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
-                //Vector2 moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
+                Vector2 moveInput;
+                //if(true)//!CameraController.autoFollow)
+                moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
+                //else
+                    //moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
                 _pM.Move(moveInput.To3());
 
                 if (PowerupInput()) _pP.UsePowerup(this);
@@ -133,9 +140,6 @@ namespace BRS.Scripts.PlayerScripts {
                     CamController.Shake(.5f);
                 }
                 
-                if (LiftInput()) {
-                    _pL.Lift();
-                }
             } else if (State == PlayerState.Attack) {
                 _pA.AttackCoroutine();
                 if (_pA.AttackEnded) State = PlayerState.Normal;
@@ -148,12 +152,26 @@ namespace BRS.Scripts.PlayerScripts {
 
         public override void Reset() {
             Start();
+            _pA.Reset();
+            _pM.Reset();
+            _pI.Reset();
+            _pP.Reset();
+            _pS.Reset();
+            UpdateUI();
+            _steerableCollider.PostStep(0.0f);
         }
 
         public override void OnCollisionEnter(Collider c) {
             if (c.GameObject.tag == ObjectTag.StaticObstacle) {
                 _pM.SetSpeedPad(false);
-                // CamController.Shake(.3f);
+
+                if (_lastCollider != c || _collidedAt + TimeResetLastCollider < Time.CurrentTime) {
+                    Debug.Log("Vibration: " +(_collidedAt + TimeResetLastCollider )+ " < " + Time.CurrentTime);
+                    Input.Vibrate(.05f, .1f, PlayerIndex);
+                }
+
+                _lastCollider = c;
+                _collidedAt = Time.CurrentTime;
             }
         }
 
@@ -170,9 +188,10 @@ namespace BRS.Scripts.PlayerScripts {
                     nextStunTime = Time.CurrentTime + StunDisabledTime + StunTime; // to avoid too frequent
                     State = PlayerState.Stun;
                     Audio.Play("stun", transform.position);
-                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun);
+                    ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun, 1.2f);
                     PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
                     _pI.LoseMoney();
+                    ParticleUI.Instance.GiveOrder(transform.position+Vector3.Up*2, ParticleType.RotatingStars, .7f);
                     Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
                 }
 
@@ -189,9 +208,9 @@ namespace BRS.Scripts.PlayerScripts {
         }*/
 
         protected override void Respawn() {
-            base.Respawn();
-            State = PlayerState.Normal;
-            transform.position = new Vector3(-5 + 10 * PlayerIndex, 0, 0); // store base position
+            //base.Respawn();
+            //State = PlayerState.Normal;
+            //transform.position = startPosition; // store base position
         }
 
         void UpdateUI() {
@@ -203,7 +222,6 @@ namespace BRS.Scripts.PlayerScripts {
             }
             bool canAttack = /*_pS.HasStaminaForAttack() &&*/ playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
-                Health, StartingHealth,
                 _pS.Stamina, _pS.MaxStamina,
                 _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
         }
@@ -216,7 +234,6 @@ namespace BRS.Scripts.PlayerScripts {
         /// <param name="endAngle"></param>
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Normal;
-            //_pC.Begin(other, endPosition, endAngle);
             //_pM.ResetRotation(endAngle);
             _pM.ResetSmoothMatnitude();
         }
@@ -240,34 +257,40 @@ namespace BRS.Scripts.PlayerScripts {
             return Input.GetThumbstick(Input.Stick.Left, PlayerIndex);
         }
 
-        bool AttackInput() {
+        public bool AttackInput() {
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.Space) : Input.GetKeyDown(Keys.Enter))
                 || Input.GetButtonDown(Buttons.A, PlayerIndex);
         }
 
-        bool DropCashInput() {
+        public bool DropCashInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.C) : Input.GetKey(Keys.M))
                || Input.GetButton(Buttons.B, PlayerIndex);
         }
 
-        bool PowerupInput() {
+        public bool PowerupInput() {
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.R) : Input.GetKeyDown(Keys.P))
                || Input.GetButtonDown(Buttons.X, PlayerIndex);
         }
 
-        bool LiftInput() {
+        bool LiftInput() { // TODO remove
             return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
                || Input.GetButtonDown(Buttons.Y, PlayerIndex);
         }
 
-        bool BoostInput() {
+        public bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
                || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
                || Input.GetButton(Buttons.LeftShoulder, PlayerIndex) || Input.GetButton(Buttons.LeftTrigger, PlayerIndex);
         }
 
         // other
-
+        // Why not directly make it like: public PlayerAttack pA { get; private set; } => Then we couls save 5 properties and code redundancy
+        public PlayerAttack pA { get { return _pA; } }
+        public PlayerMovement pM { get { return _pM; } }
+        public PlayerInventory pI { get { return _pI; } }
+        public PlayerPowerup pP { get { return _pP; } }
+        public PlayerStamina pS { get { return _pS; } }
+        
 
     }
 

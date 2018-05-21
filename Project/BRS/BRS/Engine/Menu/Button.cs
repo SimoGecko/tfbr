@@ -65,11 +65,6 @@ namespace BRS.Engine.Menu {
         public string NameMenuToSwitchTo { get; set; }
 
         /// <summary>
-        /// Index of the associate playerScreen for split screen menu
-        /// </summary>
-        public int IndexAssociatedPlayerScreen = 0;
-
-        /// <summary>
         /// Index used for specific indexing in MenuManager
         /// </summary>
         public int Index { get; set; } 
@@ -93,8 +88,18 @@ namespace BRS.Engine.Menu {
         /// </summary>
         public Rectangle RectangleInsideObject {
             get {
-                Vector2 offsetInside = new Vector2((Texture.Width - InsideImage.Width) / 2 * (1 - ScaleWidth) * (1 - ScaleWidthInside), (Texture.Height - InsideImage.Height) / 2 * (1 - ScaleHeight) * (1 - ScaleHeightInside));
+                Vector2 offsetInside = new Vector2((Texture.Width - InsideImage.Width) / 2 * (1 - ScaleWidth) * (1 - ScaleWidthInside), (Texture.Height - InsideImage.Height) / 2 * (1 - ScaleHeight) * (1 - ScaleHeightInside));               
                 return new Rectangle((int)(Position.X + offsetInside.X), (int)(Position.Y + offsetInside.Y), (int)(InsideImage.Width * ScaleWidthInside / 1920f * Screen.Width), (int)(InsideImage.Height * ScaleHeightInside / 1080f * Screen.Height));
+            }
+        }
+
+        /// <summary>
+        /// Text area
+        /// </summary>
+        public Rectangle RectangleText {
+            get {
+                Vector2 offset = new Vector2(0, 5f * Screen.Height / 1080f);
+                return new Rectangle((int)(Position.X + offset.X), (int)(Position.Y + offset.Y), (int)(Texture.Width * ScaleWidth / 1920f * Screen.Width), (int)(Texture.Height * ScaleHeight / 1080f * Screen.Height));
             }
         }
 
@@ -163,6 +168,7 @@ namespace BRS.Engine.Menu {
                         if ((IndexAssociatedPlayerScreen % 2 == 0 ? Input.GetKeyUp(Keys.Enter) : Input.GetKeyUp(Keys.Space))
                             || Input.GetButtonUp(Buttons.A, IndexAssociatedPlayerScreen)) {
                             MenuManager.uniqueFrameInputUsed[IndexAssociatedPlayerScreen] = true;
+                            Audio.Play("button_press_A", transform.position);
                             Click?.Invoke(this, new EventArgs());
                         }
                     }
@@ -174,7 +180,7 @@ namespace BRS.Engine.Menu {
         /// Monogame Draw method
         /// </summary>
         public override void Draw2D(int i) {
-            if (Active && i==0) {
+            if (Active && i==-1) {
                 // Update default color/scale/rotation depending on the states of the button
                 var colour = ImageColor;
 
@@ -187,10 +193,12 @@ namespace BRS.Engine.Menu {
                     if (HilightsChoice1) {
                         rotation = 5;
                         scaleOnHovering = 1.2f;
-                        colour = new Color(110,235,150);
+                        colour = Graphics.Green;
+                        //colour = new Color(110,235,150);
                     }
                     else if (HilightsChoice2)
-                        colour = new Color(110, 235, 150);
+                        colour = Graphics.Green;
+                        //colour = new Color(110, 235, 150);
                 }
 
                 // Draw the textures and text
@@ -201,7 +209,7 @@ namespace BRS.Engine.Menu {
                     UserInterface.DrawPicture(InsideImage, new Rectangle(RectangleInsideObject.X, RectangleInsideObject.Y, (int)(RectangleInsideObject.Width * scaleOnHovering), (int)(RectangleInsideObject.Height * scaleOnHovering)), null, Align.TopLeft, Align.Center, InsideObjectColor, false, rotation);
                 
                 if (!string.IsNullOrEmpty(Text)) 
-                    UserInterface.DrawString(Text, Rectangle, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false, font : IsHovering ? UserInterface.menuHoveringFont : Font, rot: rotation);              
+                    UserInterface.DrawString(Text, RectangleText, Align.TopLeft, Align.Center, Align.Center, InsideObjectColor, false, font : IsHovering ? UserInterface.menuHoveringFont : Font, rot: rotation);              
             }
         }
 

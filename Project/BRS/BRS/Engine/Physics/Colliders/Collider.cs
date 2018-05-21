@@ -21,14 +21,9 @@ namespace BRS.Engine.Physics.Colliders {
         public List<Follower> SyncedObjects;
 
 
-        public float Length => BoundingBoxSize.X;
-        public float Height => BoundingBoxSize.Y;
-        public float Width => BoundingBoxSize.Z;
-        public float LengthHalf => BoundingBoxSizeHalf.X;
-        public float HeightHalf => BoundingBoxSizeHalf.Y;
-        public float WidthHalf => BoundingBoxSizeHalf.Z;
+        protected float HeightHalf => BoundingBoxSizeHalf.Y;
         public JVector BoundingBoxSize { get; }
-        public JVector BoundingBoxSizeHalf { get; }
+        private JVector BoundingBoxSizeHalf { get; }
 
         /// <summary>
         /// Last rotation can be used to determine the angle of the last rotation-change in the curve
@@ -96,6 +91,8 @@ namespace BRS.Engine.Physics.Colliders {
                 GameObject.transform.rotation = Conversion.ToXnaQuaternion(JQuaternion.CreateFromMatrix(Orientation));
 
                 _newRotation = GameObject.transform.eulerAngles.Y;
+                //float test = (float)Math.Acos(Vector3.Dot(GameObject.transform.Forward, Vector3.Forward));
+                //Debug.Log(test + " == " + _newRotation);
             }
 
 

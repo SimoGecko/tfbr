@@ -2,12 +2,13 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
+using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using BRS.Scripts.UI;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using BRS.Engine.Physics;
 
 namespace BRS.Scripts.Elements {
     class Base : LivingEntity {
@@ -17,21 +18,22 @@ namespace BRS.Scripts.Elements {
 
         //public
         public int TotalMoney { get; private set; }
+        public int TotalMoneyPenalty { get; private set; }
         public Color BaseColor { get; private set; }
         // deload done
-        public bool FullDeloadDone = false;
+        public bool FullDeloadDone;
 
         //private
-        private const float DeloadDistanceThreshold = 4f;
         private const float TimeBetweenUnloads = .03f;
-        private const float MoneyPenalty = .5f; // percent
-        private readonly int _baseIndex = 0;
+        private const int MoneyPenaltyAmount = 1000;
+        private const int BundlesPerStack = 10;
+        private const int ColumnsPerRow = 2;
+        private const float Margin = 1f;
 
-        private int _shownMoneyStacks = 0;
-        private int _bundlesPerStack = 10;
-        private int _columnsPerRow = 2;
-        private float _margin = 1f;
-        private List<GameObject> _moneyGameObjects = new List<GameObject>();
+        private int _shownMoneyStacks;
+        private readonly int _baseIndex;
+
+        private readonly List<GameObject> _moneyGameObjects = new List<GameObject>();
 
         public System.Action OnBringBase;
 
@@ -41,12 +43,16 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public Base(int baseIndex) {
             _baseIndex = baseIndex;
-            BaseColor = Graphics.ColorIndex(baseIndex);
+            //BaseColor = Graphics.ColorIndex(baseIndex);
+            BaseColor = baseIndex == 0
+                ? ScenesCommunicationManager.TeamAColor
+                : ScenesCommunicationManager.TeamBColor;
         }
 
         public override void Start() {
             base.Start();
             TotalMoney = 0;
+            TotalMoneyPenalty = 0;
 
             _shownMoneyStacks = 0;
 
@@ -64,6 +70,7 @@ namespace BRS.Scripts.Elements {
             }
 
             _moneyGameObjects.Clear();
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, 0);
 
             Start();
         }
@@ -98,56 +105,24 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        //public void DeloadPlayer(PlayerInventory pi) {
-        //    TotalMoney += pi.CarryingValue;
-        //    pi.DeloadAll();
-        //    UpdateUI();
-        //}
-
         void UpdateUI() {
-            BaseUI.Instance.UpdateBaseUI(_baseIndex, Health, StartingHealth, TotalMoney);
-        }
-
-        protected override void Die() {
-            //TODO show gameover because base exploded
-        }
-
-        public override void TakeDamage(float damage) {
-            //base.TakeDamage(damage);
-            //UpdateUI();
+            BaseUI.Instance.UpdateBaseUI(_baseIndex, TotalMoney);
         }
 
         public void NotifyRoundEnd() {
-            foreach (var p in TeamPlayers()) {
-                PlayerInventory pi = p.gameObject.GetComponent<PlayerInventory>();
-
-                if (!pi.CanDeload) {
-                    Debug.Log("BUSTED!!!");
+            foreach (var p in ElementManager.Instance.Team(_baseIndex)) {
+                if (PlayArea.IsInsidePlayArea(p.transform.position)) { // PROXIMITY CHECK
                     //apply penalty (could happen twice)
-                    TotalMoney -= (int)(TotalMoney * MoneyPenalty);
+                    TotalMoneyPenalty += MoneyPenaltyAmount;
                     RoundUI.instance.ShowEndRound(p.PlayerIndex, RoundUI.EndRoundCondition.Busted);
                 }
             }
-            //SHOW money penalty (BUSTED!)
             UpdateUI();
         }
 
 
         // queries
-        //bool PlayerInsideRange(GameObject p) {
-        //    return (p.transform.position - transform.position).LengthSquared() <= DeloadDistanceThreshold * DeloadDistanceThreshold;
-        //}
-
-        Player[] TeamPlayers() {
-            List<Player> result = new List<Player>();
-            GameObject[] players = GameObject.FindGameObjectsWithTag(ObjectTag.Player);
-            foreach (var player in players) {
-                Player p = player.GetComponent<Player>();
-                if (p.TeamIndex == _baseIndex) result.Add(p);
-            }
-            return result.ToArray();
-        }
-
+       
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {
@@ -169,7 +144,7 @@ namespace BRS.Scripts.Elements {
 
             if (wasDeloading) {
                 FullDeloadDone = true;
-                Timer t = new Timer(3, () => FullDeloadDone = false);
+                new Timer(3, () => FullDeloadDone = false);
             }
         }
 
@@ -177,20 +152,19 @@ namespace BRS.Scripts.Elements {
             int totalStacksToShow = TotalMoney / 1000;
 
             while (_shownMoneyStacks < totalStacksToShow) {
-                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, Quaternion.Identity);
+                GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, MyRandom.YRotation());
                 _moneyGameObjects.Add(newBundle);
 
                 Vector3 size = BoundingBoxHelper.CalculateSize(newBundle.Model, newBundle.transform.scale);
 
-                int stackId = _shownMoneyStacks / _bundlesPerStack;
-                int rowId = stackId % _columnsPerRow;
-                int colId = stackId / _columnsPerRow;
-                Vector3 up = (0.1f + (_shownMoneyStacks % _bundlesPerStack) * size.Y) * Vector3.Up;
-                Vector3 right = (rowId * _margin + size.X * rowId) * Vector3.Right;
-                Vector3 back = (colId * _margin + size.Z * colId) * Vector3.Backward;
+                int stackId = _shownMoneyStacks / BundlesPerStack;
+                int rowId = stackId % ColumnsPerRow;
+                int colId = stackId / ColumnsPerRow;
+                Vector3 up = (0.1f + (_shownMoneyStacks % BundlesPerStack) * size.Y) * Vector3.Up;
+                Vector3 right = (rowId * Margin + size.X * rowId) * Vector3.Right;
+                Vector3 back = (colId * Margin + size.Z * colId) * Vector3.Backward;
 
                 newBundle.transform.position = transform.position + up + right + back;
-                newBundle.transform.eulerAngles = new Vector3(0, MyRandom.Range(0.0f, 360.0f), 0);
 
                 ++_shownMoneyStacks;
             }

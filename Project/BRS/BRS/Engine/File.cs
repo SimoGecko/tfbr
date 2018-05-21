@@ -6,17 +6,22 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
 using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Windows.Storage;
 using static BRS.Scripts.UI.Menu;
 
 namespace BRS.Engine {
+
+    /// <summary>
+    /// Class used to load files from disk and providing safeguard agains null files
+    /// </summary>
     class File : Component {
-        ////////// class used to load files from disk and providing safeguard agains null files //////////
 
         // --------------------- VARIABLES ---------------------
 
@@ -24,7 +29,7 @@ namespace BRS.Engine {
 
 
         //private
-
+        static Windows.Storage.StorageFolder localFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
 
         //reference
         public static ContentManager content;
@@ -46,6 +51,7 @@ namespace BRS.Engine {
 
         // commands
         // Todo: Clean up
+        // simo code
         public static T Load<T>(string s, bool check = false) {
             //TODO check first if file exists
 
@@ -59,13 +65,6 @@ namespace BRS.Engine {
             T result = content.Load<T>(s);
             return result;
         }
-
-
-        // queries
-
-
-
-        // other
 
         /// <summary>
         /// Read the scene-file and build the game- and physic-objects for it
@@ -153,8 +152,6 @@ namespace BRS.Engine {
                     string lineNoObj = reader.ReadLine();
                     int n = int.Parse(lineNoObj.Split(' ')[1]);
 
-                    Debug.Log(string.Format("{0}: {1}", tagName, n));
-
                     for (int i = 0; i < n; i++) {
                         string p = reader.ReadLine();
                         string r = reader.ReadLine();
@@ -230,21 +227,27 @@ namespace BRS.Engine {
             }
         }
 
-
+        /// <summary>
+        /// Read the rankings and return a list of player's name with their highscore
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<Tuple<string, string>> ReadRanking(string pathName) {
             try {
                 List<Tuple<string, string>> listPerson = new List<Tuple<string, string>>();
                 using (StreamReader reader =
-                    new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
+                    new StreamReader(new FileStream(localFolder.Path + "/" + pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
                     string line;
                     while ((line = reader.ReadLine()) != null) {
                         if (line == "")
                             break;
 
-                        //string aPerson = reader.ReadLine();
-
                         string[] pSplit = line.Split(' ');
-                        listPerson.Add(new Tuple<string, string>(pSplit[0], pSplit[1]));
+
+                        string namePlayer = "";
+                        for (int i = 0; i < pSplit.Length-1; ++i)
+                            namePlayer += pSplit[i];
+
+                        listPerson.Add(new Tuple<string, string>(namePlayer, pSplit[pSplit.Length-1]));
 
                     }
                 }
@@ -256,27 +259,41 @@ namespace BRS.Engine {
             }
         }
 
-        public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
+        /// <summary>
+        /// Write the rankings to a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
+        async public static void WriteRanking(string pathName, List<Tuple<string, string>> listPlayersNameScore, int maxElem) {
             try {
-                using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
-                    fs.Flush();
-                    int count = 0;
-                    foreach (var elem in listPlayersNameScore) {
-                        AddText(fs, elem.Item1 + " " + elem.Item2 + "\n");
-                        ++count;
-                        if (count >= maxElem) break;
-                    }
+                StorageFile sampleFile = await localFolder.CreateFileAsync(pathName,
+                    CreationCollisionOption.ReplaceExisting);
+
+                int count = 0;
+                foreach (var elem in listPlayersNameScore) {
+                    await FileIO.AppendTextAsync(sampleFile, elem.Item1 + " " + elem.Item2 + "\n");
+                    ++count;
+                    if (count >= maxElem) break;
                 }
+
             } catch (Exception e) {
                 Debug.LogError(e.Message);
             }
         }
 
+        /// <summary>
+        /// Add text to file stream
+        /// </summary>
+        /// <param name="fs">Filestream</param>
+        /// /// <param name="value">Text to add</param>
         private static void AddText(FileStream fs, string value) {
             byte[] info = new UTF8Encoding(true).GetBytes(value);
             fs.Write(info, 0, info.Length);
         }
 
+        /// <summary>
+        /// Read the path of the police patrol
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<List<Vector3>> ReadPolicePaths(string pathName) {
             List<List<Vector3>> policePaths = new List<List<Vector3>>();
             using (StreamReader reader = new StreamReader(new FileStream(pathName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))) {
@@ -310,6 +327,11 @@ namespace BRS.Engine {
             return policePaths;
         }
 
+        /// <summary>
+        /// Write a 2D array of int to a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
+        /// <param name="values" fil>2D array of int</param>
         public static void Write2DArrayIntToFile(string pathName, int[,] values) {
             try {
                 using (FileStream fs = System.IO.File.Open(pathName, FileMode.OpenOrCreate)) {
@@ -332,6 +354,10 @@ namespace BRS.Engine {
             }
         }
 
+        /// <summary>
+        /// Parse a menu panel describe by a file
+        /// </summary>
+        /// <param name="pathName">Path to the file</param>
         public static List<MenuStruct> ReadMenuPanel(string pathName) {
             List<MenuStruct> panel = new List<MenuStruct>();
 
@@ -356,6 +382,8 @@ namespace BRS.Engine {
                         menuObject.menuType = MenuType.Slider;
                     else if (nameContent == "<TickBox>")
                         menuObject.menuType = MenuType.TickBox;
+
+                    menuObject.Active = true;
 
                     while ((!(line = reader.ReadLine()).Contains("</"))) {
                         key = line.Split(':')[0];
@@ -425,11 +453,14 @@ namespace BRS.Engine {
                             case "IsClicked":
                                 menuObject.IsClicked = values[0] == "yes" ? true : false;
                                 break;
+                            case "UseBigFont":
+                                menuObject.UseBigFont = values[0] == "yes" ? true : false;
+                                break;
                             case "DeSelectOnMove":
                                 menuObject.deSelectOnMove = values[0] == "yes" ? true : false;
                                 break;
                             case "Active":
-                                menuObject.Active = values[0] == "yes" ? true : false;
+                                menuObject.Active = values[0] == "no" ? false : true;
                                 break;
                             default:
                                     Debug.LogError("key: " + key + "  Menu Panel not found !");

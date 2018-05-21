@@ -24,7 +24,7 @@ namespace BRS.Engine.Physics {
         private SpriteBatch _spriteBatch;
 
         // Fonts used for the texts
-        private SpriteFont _font1, _font2;
+        private SpriteFont _font1;
 
         // Logo of the game-lab
         private Texture2D _texture;
@@ -44,6 +44,8 @@ namespace BRS.Engine.Physics {
 
         #endregion
 
+        #region Constructor
+
         public Display(Game game)
             : base(game) {
             _content = game.Content;
@@ -53,6 +55,10 @@ namespace BRS.Engine.Physics {
                 _displayText.Add(string.Empty);
             }
         }
+
+        #endregion
+
+        #region Monogame-structure
 
         private void GraphicsDevice_DeviceReset(object sender, EventArgs e) {
             _bbWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
@@ -64,8 +70,7 @@ namespace BRS.Engine.Physics {
             GraphicsDevice_DeviceReset(null, null);
 
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            _font1 = File.Load<SpriteFont>("Other/font/debugFont");
-            _font2 = File.Load<SpriteFont>("Other/font/debugFont");
+            _font1 = File.Load<SpriteFont>("Other/font/debug");
 
             _texture = File.Load<Texture2D>("Images/logos/gamelab");
         }
@@ -108,8 +113,8 @@ namespace BRS.Engine.Physics {
             _displayText[3] = "Islandcount: " + world.Islands.Count;
             _displayText[4] = "Bodycount: " + world.RigidBodies.Count + " (" + activeBodies + ")";
             _displayText[6] = "gen0: " + GC.CollectionCount(0)
-                + "  gen1: " + GC.CollectionCount(1)
-                + "  gen2: " + GC.CollectionCount(2);
+                              + "  gen1: " + GC.CollectionCount(1)
+                              + "  gen2: " + GC.CollectionCount(2);
 
             int entries = (int)World.DebugType.Num;
             double total = 0;
@@ -146,11 +151,13 @@ namespace BRS.Engine.Physics {
 
             for (int i = 0; i < _displayText.Count; i++) {
                 if (!string.IsNullOrEmpty(_displayText[i])) {
-                    _spriteBatch.DrawString(_font2, _displayText[i], new Vector2(11, PaddingTop + 40 + i * 20), Color.Black);
+                    _spriteBatch.DrawString(_font1, _displayText[i], new Vector2(11, PaddingTop + 40 + i * 20), Color.Black);
                 }
             }
 
             _spriteBatch.End();
         }
+
+        #endregion
     }
 }

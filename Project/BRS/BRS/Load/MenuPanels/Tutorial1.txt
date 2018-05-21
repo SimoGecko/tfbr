@@ -11,6 +11,7 @@ Functions: SwitchToMenu GoRight
 NeighborsUpDownLeftRight: null null Next Next
 NameSwitchTo: main
 ColorInside: 148 148 148
+Active: no
 </Button>
 
 <Button>
@@ -27,6 +28,7 @@ NeighborsUpDownLeftRight: null null Back Back
 NameSwitchTo: tutorial2
 ColorInside: 148 148 148
 CurrentSelection: yes
+Active: no
 </Button>
 
 <Image>

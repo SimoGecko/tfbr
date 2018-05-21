@@ -14,7 +14,7 @@ namespace BRS.Scripts.Elements {
 
         //private
         private const int FallDamage = 30;
-        private const float Lifetime = 3f;
+        private const float Lifetime = 2f;
 
         //reference
 
@@ -22,9 +22,10 @@ namespace BRS.Scripts.Elements {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Audio.Play("falling_weight", transform.position);
-
         }
+
         public override void Update() {
+
         }
 
         // --------------------- CUSTOM METHODS ----------------
@@ -44,7 +45,6 @@ namespace BRS.Scripts.Elements {
         void RemoveWeight() {
             ElementManager.Instance.Remove(this.gameObject);
             GameObject.Destroy(gameObject, Lifetime);
-
         }
 
 

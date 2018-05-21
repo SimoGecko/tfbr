@@ -13,6 +13,7 @@ Position: 960 162
 Text: Menu
 Color: 148 148 148
 ColorInside: 255 255 255
+UseBigFont: yes
 </Button>
 
 <Button>
@@ -20,7 +21,7 @@ NameIdentifier: Play
 Texture: button
 Position: 960 300
 ScaleWidth: 2
-Text: Play
+Text: PLAY
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Credits Tutorial null null
 NameSwitchTo: play1
@@ -32,7 +33,7 @@ NameIdentifier: Tutorial
 Texture: button
 Position: 960 420
 ScaleWidth: 2
-Text: Tutorial
+Text: TUTORIAL
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Play Rankings null null
 NameSwitchTo: tutorial1
@@ -43,7 +44,7 @@ NameIdentifier: Rankings
 Texture: button
 Position: 960 540
 ScaleWidth: 2
-Text: Rankings
+Text: RANKINGS
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Tutorial Options null null
 NameSwitchTo: ranking
@@ -54,7 +55,7 @@ NameIdentifier: Options
 Texture: button
 Position: 960 660
 ScaleWidth: 2
-Text: Options
+Text: OPTIONS
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Rankings Credits null null
 NameSwitchTo: options
@@ -65,8 +66,26 @@ NameIdentifier: Credits
 Texture: button
 Position: 960 780
 ScaleWidth: 2
-Text: Credits
+Text: CREDITS
 Functions: SwitchToMenu
 NeighborsUpDownLeftRight: Options Play null null
 NameSwitchTo: credits
 </Button>
+
+<Image>
+NameIdentifier: TitleGame
+Texture: titleGame
+Position: 120 140
+Active: yes
+ScaleHeight: 0.25
+ScaleWidth: 0.25
+</Image>
+
+<Image>
+NameIdentifier: Paral
+Texture: paral
+Position: 120 570
+Active: yes
+ScaleHeight: 0.16
+ScaleWidth: 0.16
+</Image>

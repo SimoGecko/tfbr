@@ -23,11 +23,11 @@ namespace BRS.Scripts {
         State state;
 
         //public
-        const float speed = 4f;
-        const float changeThreshold = .8f;
-        const float turnSmoothTime = .2f;
-        const float bustRadius = .5f;
-        const float stunTime = 2f;
+        const float Speed = 4f;
+        const float ChangeThreshold = .8f;
+        const float TurnSmoothTime = .2f;
+        const float BustRadius = .5f;
+        const float StunTime = 2f;
 
 
         //private
@@ -50,7 +50,7 @@ namespace BRS.Scripts {
             if (GameManager.GameActive && following && state == State.Chasing) {
                 bool wait = false;
 
-                while (Vector3.DistanceSquared(transform.position, waypoints[wpIndex]) < changeThreshold * changeThreshold && !wait) {
+                while (Vector3.DistanceSquared(transform.position, waypoints[wpIndex]) < ChangeThreshold * ChangeThreshold && !wait) {
                     if (wpIndex < waypoints.Count - 1) {
                         wpIndex++;
                     } else {
@@ -64,9 +64,9 @@ namespace BRS.Scripts {
                     float nowY = transform.eulerAngles.Y;
                     transform.LookAt(target);
                     float targetY = transform.eulerAngles.Y;
-                    float smoothY = Utility.SmoothDampAngle(nowY, targetY, ref angleRefVelocity, turnSmoothTime);
+                    float smoothY = Utility.SmoothDampAngle(nowY, targetY, ref angleRefVelocity, TurnSmoothTime);
                     transform.eulerAngles = new Vector3(0, smoothY, 0);
-                    transform.Translate(Vector3.Forward * speed * Time.DeltaTime);
+                    transform.Translate(Vector3.Forward * Speed * Time.DeltaTime);
                 }
             }
 
@@ -78,7 +78,6 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
-
             if (isPlayer) {
                 Player p = c.GameObject.GetComponent<Player>();
 
@@ -95,11 +94,9 @@ namespace BRS.Scripts {
 
         public override void OnCollisionEnd(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
-            if (isPlayer) {
-                state = State.Chasing;
-            }
+            bool isPolice = c.GameObject.tag == ObjectTag.Police;
 
-            if (c.GameObject.tag == ObjectTag.Police) {
+            if ((isPlayer|| isPolice) && Time.CurrentTime > endStunTime) {
                 state = State.Chasing;
             }
         }
@@ -109,15 +106,6 @@ namespace BRS.Scripts {
 
 
         // commands
-        /*
-        void CheckCollision() {
-            foreach(Player p in ElementManager.Instance.Players()) {
-                if(Vector3.DistanceSquared(transform.position, p.transform.position) < bustRadius * bustRadius) {
-                    p.TakeDamage(20);
-                }
-            }
-        }*/
-
         public void StartFollowing(List<Vector3> _wp, bool loop = false) {
             following = true;
             waypoints = _wp;
@@ -128,11 +116,9 @@ namespace BRS.Scripts {
 
         public void TakeDamage(float damage) {
             state = State.Stun;
-            endStunTime = Time.CurrentTime + stunTime;
+            endStunTime = Time.CurrentTime + StunTime;
+            ParticleUI.Instance.GiveOrder(transform.position + Vector3.Up * 2, ParticleType.RotatingStars, .7f);
         }
-
-
-
 
 
         // queries

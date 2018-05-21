@@ -28,7 +28,7 @@ namespace BRS.Scripts.Elements.Lighting {
         private List<float> _min, _diff;
         private List<float> _speed;
         private List<Vector3> _offsetsFront, _offsetsBack;
-        private Vector3 _lightSize = new Vector3(0.05f, 1.0f, 0.05f);
+        private readonly Vector3 _lightSize = new Vector3(0.05f, 1.0f, 0.05f);
         private int _size;
 
         // const
@@ -43,7 +43,7 @@ namespace BRS.Scripts.Elements.Lighting {
         public FrontLight(Type type, int playerType) {
             switch (playerType) {
                 default:
-                    Init(type, new Vector3(0.30f, 0.41f, -0.38f), new Vector3(0.22f, 0.40f, 0.75f));
+                    Init(type, new Vector3(0.30f, 0.51f, -0.38f), new Vector3(0.22f, 0.40f, 0.75f));
                     break;
                 case 1:
                     Init(type, new Vector3(0.23f, 0.47f, -0.63f), new Vector3(0.23f, 0.47f, 0.72f));
@@ -54,7 +54,7 @@ namespace BRS.Scripts.Elements.Lighting {
             }
         }
 
-        public void Init(Type type, Vector3 offsetFrontRight, Vector3 offsetBackLeft) {
+        private void Init(Type type, Vector3 offsetFrontRight, Vector3 offsetBackLeft) {
             _offsetsFront = new List<Vector3>
             {
                 new Vector3(offsetFrontRight.X, offsetFrontRight.Y, offsetFrontRight.Z + 0.001f),
@@ -108,7 +108,7 @@ namespace BRS.Scripts.Elements.Lighting {
             for (int i = 0; i < _size; ++i) {
                 float t = _alphaStart[i] + _speed[i] * (float)Time.Gt.TotalGameTime.TotalSeconds;
 
-                Followers[i].GameObject.material.Alpha = MathHelper.Clamp(((float)Math.Sin(t) + 1) * (_diff[i]) / 2 + _min[i], 0.0f, 1.0f);
+                Followers[i].GameObject.Alpha = MathHelper.Clamp(((float)Math.Sin(t) + 1) * (_diff[i]) / 2 + _min[i], 0.0f, 1.0f);
             }
         }
 

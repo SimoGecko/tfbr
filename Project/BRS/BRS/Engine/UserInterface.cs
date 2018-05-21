@@ -16,6 +16,8 @@ namespace BRS.Engine {
     //public enum Align2 { M=0, L=1, R=2, T=4, B=8, TL=5, TR=6, BL=9, BR=10 }
     //public enum Align3 { TL, RM, TR, ML, MM, MR, BL, BM, BR} // (top, middle, bottom) x (left, middle, right)
 
+    public enum Font { debug, comic, super}
+    
     class UserInterface {
         ////////// acts as HUB to draw everything related to the UI, either in splitscreen (each window) or global (just once) //////////
 
@@ -27,12 +29,14 @@ namespace BRS.Engine {
 
 
         //private
-        public static SpriteFont arialFont { get; private set; }
+        //TODO reduce to debug, comic, super
+        public static SpriteFont debugFont { get; private set; }
         public static SpriteFont comicFont { get; private set; }
-        public static SpriteFont archerFont   { get; private set; }
+        public static SpriteFont superFont   { get; private set; }
         public static SpriteFont menuFont { get; private set; }
         public static SpriteFont menuHoveringFont { get; private set; }
         public static SpriteFont menuSmallFont { get; private set; }
+        public static SpriteFont menuBigFont { get; private set; }
 
         private static Texture2D barStriped;
 
@@ -43,17 +47,16 @@ namespace BRS.Engine {
         // --------------------- BASE METHODS ------------------
 
         public static void Start() {
-            arialFont = File.Load<SpriteFont>("Other/font/debugFont");
+            debugFont = File.Load<SpriteFont>("Other/font/debug");
             comicFont = File.Load<SpriteFont>("Other/font/comic");
-            archerFont   = File.Load<SpriteFont>("Other/font/archer");
+            superFont = File.Load<SpriteFont>("Other/font/super");
+            //create one single menu font
             menuFont = File.Load<SpriteFont>("Other/font/menu");
             menuHoveringFont = File.Load<SpriteFont>("Other/font/menuHovering");
             menuSmallFont = File.Load<SpriteFont>("Other/font/menuSmall");
+            menuBigFont = File.Load<SpriteFont>("Other/font/menuBig");
 
             barStriped = File.Load<Texture2D>("Images/UI/bar_striped");
-
-
-           
         }
 
 
@@ -107,7 +110,7 @@ namespace BRS.Engine {
 
         //Rotation not supported
         public static void DrawString(string text, Vector2 pos, Align anchor = Align.TopLeft, Align pivot = Align.Undef, Align paragraph = Align.Undef, Color? col = null, bool flip = false, float scale = 1, bool bold = false, SpriteFont font = null, float rot = 0) { // bounds includes position offset and rectangle size
-            if (font == null ) font = bold ? archerFont : comicFont;
+            if (font == null ) font = bold ? superFont : comicFont;
             Rectangle dest = new Rectangle(pos.ToPoint(), (font.MeasureString(text) * scale).ToPoint());
             DrawString(text, dest, anchor, pivot, paragraph, col, flip, scale, bold, font, rot);
         }
@@ -119,7 +122,11 @@ namespace BRS.Engine {
                 dst.X *= -1;
                 pivot = Flip(pivot); anchor = Flip(anchor); paragraph = Flip(paragraph);
             }
-            if (font == null) font = bold ? archerFont : comicFont;
+            if (font == null) font = bold ? superFont : comicFont;
+
+            //ERRROR
+
+
             Rectangle src = new Rectangle(Point.Zero, (font.MeasureString(text)*scale).ToPoint());
             Rectangle diff = new Rectangle(Point.Zero,  dst.Size - src.Size);
 
@@ -150,6 +157,24 @@ namespace BRS.Engine {
             return al;
         }
 
+        static SpriteFont SpriteFontFromFont(Font f) {
+            if (f == Font.debug) return debugFont;
+            if (f == Font.comic) return comicFont;
+            if (f == Font.super) return superFont;
+            return debugFont;
+        }
+
+        public static bool FontSupportsString(string s, Font f) {
+            SpriteFont sf = SpriteFontFromFont(f);
+            for (int c=0; c<s.Length; c++) {
+                char character = s[c];
+                if (!sf.Characters.Contains(character) && character != '\r' && character != '\n') {
+                    Debug.Log("font doesn't support character " + character);
+                    return false;
+                }
+            }
+            return true;
+        }
 
 
         //OLD CODE

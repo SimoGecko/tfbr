@@ -1,10 +1,9 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace BRS.Scripts.Particles3D {
     /// <summary>
@@ -31,18 +30,18 @@ namespace BRS.Scripts.Particles3D {
         public override void Awake() {
             _projectileTrailParticles = new ParticleSystem3D {
                 Settings = new Settings {
-                    TextureName = "CFX_T_Flame1_ABP",
-                    MaxParticles = 10000,
-                    ParticlesPerRound = 10,
-                    Duration = TimeSpan.FromSeconds(.35f),
+                    TextureName = "boost",
+                    MaxParticles = 200,
+                    ParticlesPerRound = 5,
+                    Duration = 0.85f,
                     DurationRandomness = 1.5f,
                     EmitterVelocitySensitivity = 0.0f,
 
                     MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 0.1f,
+                    MaxHorizontalVelocity = 0.5f,
 
-                    MinVerticalVelocity = 0.01f,
-                    MaxVerticalVelocity = 0.01f,
+                    MinVerticalVelocity = 1.3f,
+                    MaxVerticalVelocity = 1.5f,
 
                     MinColor = new Color(255, 255, 255, 0),
                     MaxColor = new Color(255, 255, 255, 128),
@@ -59,6 +58,7 @@ namespace BRS.Scripts.Particles3D {
             };
 
             _projectileTrailParticles.Awake();
+            ParticleRendering.AddInstance(_projectileTrailParticles);
         }
 
         /// <summary>
@@ -77,11 +77,10 @@ namespace BRS.Scripts.Particles3D {
         }
 
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _projectileTrailParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_projectileTrailParticles);
         }
     }
 }

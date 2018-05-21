@@ -16,17 +16,17 @@ namespace BRS.Scripts {
         //there must be one per player
 
 
-        const int maxCharsPerLine = 11;
+        const int maxCharsPerLine = 10;
         const int maxLines = 4;
 
         public enum EventType {
             Begin, AlmostEnd, PoliceComing, Win, Lose, Random,
-            Powerup, Diamond, EnemyClose, Attack,
+            CloseToVault, Powerup, Diamond, EnemyClose, Attack,
             OpenCrate, OpenVault, HitEnemy, Damage, Full,
             BringBase, Tutorial }
         float[] SpeechProbability = new float[] {
             .6f, .8f, .8f, 1f, 1f, .1f,
-            .2f, .9f, .3f, .1f,
+            1f, .2f, .9f, .3f, .1f,
             .2f, .9f, .6f, .5f, .6f,
             .6f, .2f };
 
@@ -99,6 +99,8 @@ namespace BRS.Scripts {
                 if (line[0] == '-') { eventIndex++; continue; } // line with event type
                 string lineEscaped = EscapeLineAutomatically(11, line);
                 //string lineEscaped = line.Replace('|', '\n'); // newline
+                Debug.Assert(UserInterface.FontSupportsString(lineEscaped, Font.comic), "string not supported");
+
                 AddString(eventIndex, lineEscaped);
             }
         }
@@ -154,13 +156,14 @@ namespace BRS.Scripts {
 
             if (GameObject.NameExists("vault")) {
                 GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultOpen += (() => OnEvent(EventType.OpenVault));
+                GameObject.FindGameObjectWithName("vault").GetComponent<Vault>().OnVaultClosedCloseEnough += (() => { if (Vault.OnClosedCloseIndex == index) OnEvent(EventType.CloseToVault); });
             }
 
             if (GameObject.NameExists("base_"+index%2)) {
                 GameObject.FindGameObjectWithName("base_"+index%2).GetComponent<Base>().OnBringBase += (() => OnEvent(EventType.BringBase));
             }
             //still not plugged
-            /*Diamond, EnemyClose, OpenCrate }*/
+            /*Diamond, EnemyClose, OpenCrate, CloseToVault }*/
 
     }
 
@@ -168,6 +171,8 @@ namespace BRS.Scripts {
             if (RoundManager.Instance.Winner == index) OnEvent(EventType.Win);
             else OnEvent(EventType.Lose);
         }
+
+        
 
         void OnEvent(EventType st) {
             int sti = (int)st;
@@ -213,7 +218,7 @@ namespace BRS.Scripts {
 
 
 
-        async void RandomEvents() {
+        async void RandomEvents() { // check when it's started and if it should be .gameactive
             while (true) {
                 if (GameManager.GameActive) {
                     OnEvent(EventType.Random);

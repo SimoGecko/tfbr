@@ -28,7 +28,7 @@ namespace BRS.Scripts.UI {
         private const int MapWidth = 603, MapHeight = 770; // of screenshot
         private const int IconSize = 64;
         private const float MapScale = 1f;
-        private const int SmallMapWidth = 250; // squared pixel size of minimap
+        private const int SmallMapWidth = 200; // squared pixel size of minimap
 
         //to avoid passing them to the function
         private Vector2 _playerPos;
@@ -43,7 +43,7 @@ namespace BRS.Scripts.UI {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             Instance = this;
-            _mapSprite = File.Load<Texture2D>("Images/minimap/level1");
+            _mapSprite = File.Load<Texture2D>("Images/minimap/level" + GameManager.LvlScene);
             _mapIcons  = File.Load<Texture2D>("Images/minimap/icons");
             
             _pivot = new Vector2(IconSize / 2, IconSize / 2);
@@ -65,15 +65,15 @@ namespace BRS.Scripts.UI {
 
         // commands
         public override void Draw2D(int i) {
-            if (i == 0) return;
-            DrawSmall(UserInterface.sB, i-1);
+            if (i == -1) return;
+            DrawMinimap(UserInterface.sB, i);
         }
 
 
         
 
         //---------------------------------------------------------------------
-        public void DrawSmall(SpriteBatch spriteBatch, int index) { // drawp it relative to the player
+        public void DrawMinimap(SpriteBatch spriteBatch, int index) { // drawp it relative to the player
             //draw relative to player position
             _playerT = ElementManager.Instance.Player(index).transform;
             _playerPos = Pos3D2Pix(_playerT.position);
@@ -89,8 +89,8 @@ namespace BRS.Scripts.UI {
 
             Rectangle miniDest2 = _miniDest; miniDest2.Location += mapPivot2;
 
-
             //MAP (a bit of a HACK but it works)
+            //------------------------------------------------ close SpriteBatch
             UserInterface.sB.End();
             Viewport tempVp = Graphics.gD.Viewport;
             Point BR = new Point(tempVp.Bounds.Right, tempVp.Bounds.Bottom); // bottomright
@@ -106,6 +106,7 @@ namespace BRS.Scripts.UI {
 
             Graphics.gD.Viewport = tempVp;
             UserInterface.sB.Begin();
+            //------------------------------------------------ reopen SpriteBatch
 
 
             Vector2 finalPx;
@@ -162,35 +163,7 @@ namespace BRS.Scripts.UI {
             }
         }
 
-        public void DrawBigOld(SpriteBatch spriteBatch) { // draws the whole map in the middle
-            //MAP
-            spriteBatch.Draw(_mapSprite, _mapDest, Color.White);
-
-
-            //MONEY
-            foreach (Vector3 pos in ElementManager.Instance.AllMoneyPosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Circle), Color.Green, 0, _pivot, .08f, SpriteEffects.None, 1f);
-            }
-            //CRATES
-            foreach (Vector3 pos in ElementManager.Instance.AllCratePosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Square), Color.SaddleBrown, 0, _pivot, .12f, SpriteEffects.None, 1f);
-            }
-            //POWERUPS
-            foreach (Vector3 pos in ElementManager.Instance.AllPowerupPosition()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Star), Color.Blue, 0, _pivot, .12f, SpriteEffects.None, 1f);
-            }
-            //BASES
-            foreach (var b in ElementManager.Instance.Bases()) {
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(b.transform.position), IconFromType(IconType.House), b.BaseColor, 0, _pivot, .3f, SpriteEffects.None, 1f);
-            }
-            //PLAYERS
-            foreach (var p in ElementManager.Instance.Players()) {
-                Vector3 pos = p.transform.position;
-                float rotY = -p.transform.eulerAngles.Y;
-                spriteBatch.Draw(_mapIcons, Pos3D2Pix(pos), IconFromType(IconType.Triangle), p.PlayerColor, MathHelper.ToRadians(rotY), _pivot, .3f, SpriteEffects.None, 1f);
-            }
-        }
-
+       
 
         // queries
         Vector2 Pos3D2Pix(Vector3 pos) { // converts 3d position of object to pixel on screen inside minimap

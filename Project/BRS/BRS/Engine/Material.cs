@@ -1,7 +1,7 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System.ComponentModel.DataAnnotations;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,26 +11,24 @@ namespace BRS.Engine {
 
         // --------------------- VARIABLES ---------------------
 
+        public RenderingType RenderingType;
+
+        //simple = basic effect without anything
+        //textured = one single texture
+        //baked = texture for color and for lightmap
+
         //public
-        //public bool Lit;
         public Color Diffuse;
         public bool IsTransparent;
 
         public bool IsAlphaAnimated;
-        [Range(0.0f, 1.0f)]
-        public float Alpha;
 
         public bool baked;
         public bool textured;
-        public bool skybox;
         public Texture2D colorTex;
         public Texture2D lightTex;
 
-        //Texture2D Texture;
-        //EffectTechnique tt;
-
         public static Material Default = new Material(new Color(140, 140, 140), true);
-
 
 
         //private
@@ -40,28 +38,35 @@ namespace BRS.Engine {
         public Material() {
             Diffuse = Color.White;
             baked = false;
-            //Lit = false;
+            textured = false;
         }
+
         public Material(Texture2D color, Texture2D light) {
+            RenderingType = RenderingType.Baked;
             baked = true;
+            textured = false;
             colorTex = color;
             lightTex = light;
         }
-        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false, float alpha = 1.0f) {
+
+        public Material(Texture2D color, bool isTransparent = false, bool isAlphaAnimated = false) {
+            if (isAlphaAnimated) {
+                RenderingType = RenderingType.TextureAlphaAnimated;
+            } else if (isTransparent) {
+                RenderingType = RenderingType.TextureTransparent;
+            } else {
+                RenderingType = RenderingType.Texture;
+            }
+
             baked = false;
             textured = true;
             colorTex = color;
             IsTransparent = isTransparent;
             IsAlphaAnimated = isAlphaAnimated;
-            Alpha = alpha;
-        }
-        public Material(string type) {
-            if (type == "skybox") skybox = true;
         }
 
         public Material(Color color, bool lit = true) {
             Diffuse = color;
-            //Lit = lit;
         }
 
 
@@ -72,7 +77,6 @@ namespace BRS.Engine {
                 Diffuse = Diffuse,
                 IsTransparent = IsTransparent,
                 IsAlphaAnimated = IsAlphaAnimated,
-                Alpha = Alpha,
                 baked = baked,
                 textured = textured,
                 colorTex = colorTex,
@@ -86,8 +90,6 @@ namespace BRS.Engine {
 
 
         // queries
-
-
 
         // other
 

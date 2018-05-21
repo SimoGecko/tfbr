@@ -13,12 +13,10 @@ namespace BRS.Scripts.Elements {
 
         //public
         const float DelayBeforePickup = .5f; // cannot pickup right after spawned
-        //const float pickupDistThreshold = .5f;
 
 
         //private
         protected bool CanPickup;
-        //public System.Action OnPickup;
 
         //reference
 
@@ -29,15 +27,10 @@ namespace BRS.Scripts.Elements {
             Invoke(DelayBeforePickup, () => CanPickup = true);
         }
 
-        public override void Update() {
-            
-        }
-
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
             if (isPlayer && CanPickup) {
                 DoPickup(c.GameObject.GetComponent<Player>());
-                //OnPickup?.Invoke();
             }
         }
 
@@ -47,18 +40,7 @@ namespace BRS.Scripts.Elements {
 
 
         // commands
-        /*
-        void CheckPickup() {
-            foreach(GameObject o in players) {
-                float dist = Vector3.DistanceSquared(transform.position, o.transform.position);
-                if (dist < pickupthreshold) {
-                    OnPickup(o);
-                }
-            }
-            
-        }*/
-
-        protected virtual void DoPickup(Player p) {
+        public virtual void DoPickup(Player p) {
             //fill
         }
 

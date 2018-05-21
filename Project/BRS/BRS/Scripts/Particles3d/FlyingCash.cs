@@ -1,9 +1,9 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
 using BRS.Engine.Particles;
+using BRS.Engine.Rendering;
 using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Particles3D {
@@ -18,6 +18,7 @@ namespace BRS.Scripts.Particles3D {
 
         private static int _maxParticles = 250;
         private int _particlesCreated = 0;
+        
         // position
         private static float _minHeight = 10.0f;
         private static float _maxHeight = 15.0f;
@@ -25,8 +26,8 @@ namespace BRS.Scripts.Particles3D {
         private static float _maxX = 40.0f;
         private static float _minZ = -40.0f;
         private static float _maxZ = 40.0f;
-        // velocity
 
+        // velocity
         private static float _minYV = 1.0f;
         private static float _maxYV = 10.0f;
         private static float _minXV = 1.0f;
@@ -47,7 +48,7 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "cash",
                     MaxParticles = 1800,
-                    Duration = TimeSpan.FromSeconds(8),
+                    Duration = 8.0f,
                     // Create a wind effect by tilting the gravity vector sideways.
                     Gravity = new Vector3(-1.0f, -5.5f, 0),
                     EndVelocity = 0.75f,
@@ -57,8 +58,7 @@ namespace BRS.Scripts.Particles3D {
 
                     MinVerticalVelocity = 2.5f,
                     MaxVerticalVelocity = 10.0f,
-
-                    
+                
                     MinRotateSpeed = -1,
                     MaxRotateSpeed = 1,
 
@@ -70,8 +70,8 @@ namespace BRS.Scripts.Particles3D {
                 }
             };
 
-
             _cashParticles.Awake();
+            ParticleRendering.AddInstance(_cashParticles);
         }
 
         /// <summary>
@@ -110,13 +110,12 @@ namespace BRS.Scripts.Particles3D {
 
             _cashParticles.Update();
         }
-        
+
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _cashParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_cashParticles);
         }
     }
 }

@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------------
 // Managed for this project by Alexander Lelidis and Andreas Emch
 
-using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -28,8 +27,12 @@ namespace BRS.Engine.Particles {
         public float ParticlesPerRound = 1;
 
 
+        // Time between two emit-updates
+        public float TimeBetweenRounds = 0.0f;
+
+
         // How long these particles will last.
-        public TimeSpan Duration = TimeSpan.FromSeconds(1);
+        public float Duration = 1.0f;
 
 
         // If greater than zero, some particles will last a shorter time than others.

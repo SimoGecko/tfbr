@@ -30,7 +30,7 @@ namespace BRS.Engine {
 
         //reference
         public static Camera[] Cameras;
-        public static RasterizerState _fullRasterizer, _wireRasterizer;
+        public static RasterizerState _fullRasterizer, _wireRasterizer, _nocullRasterizer;
 
 
         // --------------------- BASE METHODS ------------------
@@ -65,6 +65,8 @@ namespace BRS.Engine {
             _fullRasterizer = graphicsDevice.RasterizerState;
             _wireRasterizer = new RasterizerState();
             _wireRasterizer.FillMode = FillMode.WireFrame;
+            _nocullRasterizer = new RasterizerState();
+            _nocullRasterizer.CullMode = CullMode.None;
         }
 
         //----------------------

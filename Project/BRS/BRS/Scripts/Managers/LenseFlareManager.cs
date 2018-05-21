@@ -17,12 +17,11 @@ namespace BRS.Scripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        public static bool IsActive = false;
+        public static bool IsActive = true;
 
         //private
         private List<List<Flare>> _flares;
         private List<bool> _active;
-        private List<float> _strength;
 
         private float _pulseTimer;
         private float _lightScale;
@@ -49,7 +48,6 @@ namespace BRS.Scripts {
             _spriteBatch = new SpriteBatch(Graphics.gD);
             _flares = new List<List<Flare>>();
             _active = new List<bool> { false, false, false, false };
-            _strength = new List<float> {0.0f, 0.0f, 0.0f, 0.0f };
 
             for (int i = 0; i < 4; ++i) {
                 _flares.Add(new List<Flare>());
@@ -94,7 +92,6 @@ namespace BRS.Scripts {
 
                 Vector3 cameraSun = camera.transform.Forward;
 
-                _strength[playerIndex] = Vector3.Dot(cameraSun, _sun);
                 _active[playerIndex] = Vector3.Dot(cameraSun, _sun) > 0.0f;
 
                 if (!_active[playerIndex]) {
@@ -139,11 +136,9 @@ namespace BRS.Scripts {
         }
 
         public override void Draw2D(int i) {
-            if (i == 0 || !IsActive) {
+            if (i == -1 || !IsActive) {
                 return;
             }
-
-            i--;
 
             if (!_active[i]) {
                 return;
@@ -153,7 +148,6 @@ namespace BRS.Scripts {
             _spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Additive);
             for (int j = 0; j < _flares[i].Count; ++j) {
                 Flare flare = _flares[i][j];
-                //flare.Color.A = (byte)_strength[i];
                 _spriteBatch.Draw(_flareTexture2D, flare.Pos, flare.Rect, flare.Color, flare.Rot,
                     flare.Origin, flare.Scale + _lightScale / 10, SpriteEffects.None, 0);
             }
@@ -163,15 +157,15 @@ namespace BRS.Scripts {
 
 
         // other
-        class Flare {
+        private class Flare {
 
             #region Properties and attributes
 
             // Source rectangle on texture image
-            public Rectangle Rect;
+            public readonly Rectangle Rect;
 
             // Flare's center
-            public Vector2 Origin;
+            public readonly Vector2 Origin;
 
             // Flare's position
             public Vector2 Pos;
@@ -190,7 +184,7 @@ namespace BRS.Scripts {
 
             #endregion
 
-
+            #region Constructor
 
             public Flare(Rectangle sourceRect, float distance, float scale, Color tint) {
                 Rect = sourceRect;
@@ -201,6 +195,9 @@ namespace BRS.Scripts {
                 Scale = scale;
                 Color = tint;
             }
+
+            #endregion
+
         }
     }
 }

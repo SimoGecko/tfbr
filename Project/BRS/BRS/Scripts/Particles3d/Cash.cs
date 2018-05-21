@@ -1,9 +1,8 @@
 ﻿// (c) Alexander Lelidis and Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
 using BRS.Engine.Particles;
-using System;
+using BRS.Engine.Rendering;
 
 namespace BRS.Scripts.Particles3D {
     /// <summary>
@@ -32,7 +31,7 @@ namespace BRS.Scripts.Particles3D {
                 Settings = new Settings {
                     TextureName = "cash",
                     MaxParticles = 64,
-                    Duration = TimeSpan.FromSeconds(1),
+                    Duration = 1.0f,
                     DurationRandomness = 3.5f,
                     EmitterVelocitySensitivity = 0.1f,
 
@@ -54,6 +53,7 @@ namespace BRS.Scripts.Particles3D {
             };
 
             _projectileTrailParticles.Awake();
+            ParticleRendering.AddInstance(_projectileTrailParticles);
         }
 
         /// <summary>
@@ -72,11 +72,10 @@ namespace BRS.Scripts.Particles3D {
         }
 
         /// <summary>
-        /// Draw the living particles in the 3D space on the current camera
+        /// Component is destroyed => Remove particles from drawings
         /// </summary>
-        /// <param name="camera">Camera to draw</param>
-        public override void Draw3D(Camera camera) {
-            _projectileTrailParticles.Draw3D(camera);
+        public override void Destroy() {
+            ParticleRendering.RemoveInstance(_projectileTrailParticles);
         }
     }
 }

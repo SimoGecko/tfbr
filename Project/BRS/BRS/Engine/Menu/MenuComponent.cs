@@ -1,4 +1,6 @@
-﻿
+﻿// (c) Nicolas Huart 2018
+// ETHZ - GAME PROGRAMMING LAB
+
 namespace BRS.Engine.Menu {
     /// <summary>
     /// Class to a component of the menu which can selected
@@ -24,6 +26,11 @@ namespace BRS.Engine.Menu {
         /// Name to identify the component
         /// </summary>
         public string nameIdentifier;
+
+        /// <summary>
+        /// Index of the associate playerScreen for split screen menu
+        /// </summary>
+        public int IndexAssociatedPlayerScreen = 0;
 
         #endregion
 
