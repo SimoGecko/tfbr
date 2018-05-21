@@ -222,7 +222,7 @@ namespace BRS.Scripts {
             while (true) {
                 if (GameManager.GameActive) {
                     OnEvent(EventType.Random);
-                }
+                } else { return; }
                 await Time.WaitForSeconds(MyRandom.Value * 10);
             }
         }
@@ -231,7 +231,7 @@ namespace BRS.Scripts {
             while (true) {
                 if (GameManager.GameActive) {
                     OnEvent(EventType.Tutorial);
-                }
+                } else { return; }
                 await Time.WaitForSeconds(MyRandom.Value * 100);
             }
         }

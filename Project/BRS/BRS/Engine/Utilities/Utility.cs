@@ -96,8 +96,8 @@ namespace BRS.Engine {
 
         public static float WrapAngle(float angle, float reference) {//in degrees, return angle in range -180, 180
             angle -= reference;
-            if (angle < -180) while (angle < -180) angle += 360;
-            if (angle > 180) while (angle > 180) angle -= 360;
+            while (angle < -180) angle += 360;
+            while (angle >  180) angle -= 360;
             return angle + reference;
         }
 

@@ -144,7 +144,6 @@ namespace BRS {
             HardwareRendering.DrawDepth();
             ParticleRendering.DrawDepth();
 
-
             // apply post processing
             PostProcessingManager.Instance.Draw(_spriteBatch);
 

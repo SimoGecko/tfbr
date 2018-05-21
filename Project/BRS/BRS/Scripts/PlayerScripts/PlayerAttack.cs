@@ -19,8 +19,8 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
-        //const
         public float AttackDistance = 5;
+        //const
         private const float AttackDuration = .2f;
         private const float AttackDistanceThreshold = 2f;
         private const float AttackDamage = 40;
@@ -45,7 +45,9 @@ namespace BRS.Scripts.PlayerScripts {
             _attacking = false;
             _rigidBody = gameObject.GetComponent<MovingRigidBody>();
         }
-        public override void Update() { }
+        public override void Update() {
+
+        }
 
         public override void OnCollisionEnter(Collider c) {
             bool isPlayer = c.GameObject.tag == ObjectTag.Player;
@@ -74,7 +76,6 @@ namespace BRS.Scripts.PlayerScripts {
             Input.Vibrate(.04f, .1f, gameObject.GetComponent<Player>().PlayerIndex);
             OnAttackBegin?.Invoke();
 
-            //Debug.Log(Time.CurrentTime);
             _attacking = true;
             _attackRefTime = 0;
             _attackStartPos = transform.position;
@@ -100,11 +101,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _attacking = false;
             }
         }
-        /*
-        void EndAttack() {
-            Debug.Log(Time.time);
-            attacking = false;
-        }*/
 
         void DealWithAttack(Player p) {
             PlayerAttack pa = p.gameObject.GetComponent<PlayerAttack>();
@@ -117,14 +113,6 @@ namespace BRS.Scripts.PlayerScripts {
                 _hasAppliedDamage = true;
             }
         }
-        /*
-        public void CheckCollision(Player otherPlayer) {
-            if (!hasAppliedDamage && Vector3.DistanceSquared(transform.position, otherPlayer.transform.position) < attackDistanceThreshold) {
-                otherPlayer.GetHit();
-                hasAppliedDamage = true;
-            }
-        }*/
-
 
         // queries
         public bool AttackEnded { get { return !_attacking; } }

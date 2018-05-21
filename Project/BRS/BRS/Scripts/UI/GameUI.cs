@@ -59,6 +59,7 @@ namespace BRS.Scripts.UI {
                     UserInterface.DrawPicture(_blackTex, new Rectangle(0, 0, 4000, 5), null, Align.BotRight, Align.Center);
                 return;
             }
+            if (!GameManager.GameActive) return;
 
             string roundString = "round " + RoundManager.RoundNumber + "/" + RoundManager.NumRounds;
             UserInterface.DrawString(roundString, new Rectangle(-20, 140, 100, 25), Align.TopRight, Align.TopRight, Align.Center, scale:.7f);
