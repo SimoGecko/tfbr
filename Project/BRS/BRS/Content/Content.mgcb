@@ -553,18 +553,6 @@
 /processorParam:TextureFormat=Color
 /build:Images/logos/gamelab.png
 
-#begin Images/lut/lut_01.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Images/lut/lut_01.png
-
 #begin Images/menu/Accept.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2948,4 +2936,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Images/menu/chicken.png
+
+#begin Images/lut/lut.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Images/lut/lut.png
 

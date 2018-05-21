@@ -121,7 +121,7 @@ namespace BRS.Engine.PostProcessing {
                         ppEffect.SetParameter("Size", 16f);
                         ppEffect.SetParameter("SizeRoot", 4f);
 
-                        ppEffect.SetParameter("LUT", File.Load<Texture2D>("Images/lut/lut_01"));
+                        ppEffect.SetParameter("LUT", File.Load<Texture2D>("Images/lut/lut"));
 
                         for (var i = 0; i < GameManager.NumPlayers; i++) {
                             ppEffect.Activate(i, true);
