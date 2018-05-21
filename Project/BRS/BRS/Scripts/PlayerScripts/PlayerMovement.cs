@@ -21,7 +21,7 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         private float MinSpeed = 4f;
         private float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
-        private const float MaxTurningRate = 360*2;// deg/sec
+        private const float MaxTurningRate = 360*5;// deg/sec
 
         private const float BoostSpeedMultiplier = 1.5f;
         private const float SlowdownMalus = .3f;

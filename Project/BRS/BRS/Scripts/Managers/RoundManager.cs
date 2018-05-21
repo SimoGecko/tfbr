@@ -242,7 +242,7 @@ namespace BRS.Scripts.Managers {
             bool oneAlreadyWon2Rounds = false;
             for (int i = 0; i < GameManager.NumTeams; i++)
                 oneAlreadyWon2Rounds = oneAlreadyWon2Rounds || teamWins[i] >= 2;
-            if (RoundNumber < NumRounds && !oneAlreadyWon2Rounds) {
+            if (RoundNumber < NumRounds /*&& !oneAlreadyWon2Rounds*/) {
                 GameManager.RestartCustom();
                 RestartRound();
             } else {
