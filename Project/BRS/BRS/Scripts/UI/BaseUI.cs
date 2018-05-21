@@ -51,6 +51,7 @@ namespace BRS.Scripts.UI {
 
         public override void Draw2D(int index) {
             if (index == -1) return;
+            if (!GameManager.GameActive) return;
             int baseIndex = GameManager.TeamIndex(index);
 
             UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, Align.TopRight, Align.Right, scale: .5f, bold: true);

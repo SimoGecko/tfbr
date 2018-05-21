@@ -17,7 +17,7 @@ namespace BRS.Engine {
         public static int Frame = 0;
         static bool needClearTimers = false;
         static float TimeScale = 1; // speedUp/slowdown
-        static float timeChange = .5f;
+        static float timeChange = 1f;
 
         public static List<Timer> timers = new List<Timer>();
 
@@ -31,7 +31,7 @@ namespace BRS.Engine {
             Gt = gt;
             Frame++;
 
-            CheckTimescaleInput();
+            //CheckTimescaleInput();
 
             if (needClearTimers) {
                 ActualClearRoundTimers();

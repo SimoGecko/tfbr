@@ -6,6 +6,7 @@ using BRS.Engine.Utilities;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.UI {
     class MoneyUI : Component {
@@ -41,6 +42,7 @@ namespace BRS.Scripts.UI {
 
         public override void Draw2D(int index) {
             if (index == -1) return;
+            if (!GameManager.GameActive) return;
 
             for (int i=0; i<orderList.Count; i++) {
                 DrawValuableOrder dvo = orderList[i];

@@ -17,6 +17,7 @@ namespace BRS {
 
         const bool loadMenu = true;
         const bool showUI = true;
+        private const bool ShowFps = false;
 
         // todo: for andy for debugging framerate => to be removed soon
         private SpriteFont _font;
@@ -62,15 +63,16 @@ namespace BRS {
             GameMode.Start();
             SceneManager.Start();
 
-            SceneManager.LoadScene(loadMenu? "LevelMenu" : "LevelGame");
+            SceneManager.LoadScene(loadMenu ? "LevelMenu" : "LevelGame");
 
             Audio.Start();
 
 
             PostProcessingManager.Instance.Start(_spriteBatch);
 
-            // Todo: Andy removes as soon as he is 100% sure that framerate is not a problem anymore
-            _font = File.Load<SpriteFont>("Other/font/debug");
+            if (ShowFps) {
+                _font = File.Load<SpriteFont>("Other/font/debug");
+            }
 
             // add skybox
             //Skybox.Start();
@@ -127,7 +129,6 @@ namespace BRS {
 
                 foreach (GameObject go in GameObject.All) go.Draw3D(cam);
 
-
                 ////gizmos
                 //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
                 //Gizmos.DrawWire(cam);
@@ -143,7 +144,6 @@ namespace BRS {
 
             HardwareRendering.DrawDepth();
             ParticleRendering.DrawDepth();
-
 
             // apply post processing
             PostProcessingManager.Instance.Draw(_spriteBatch);
@@ -170,21 +170,25 @@ namespace BRS {
                 _spriteBatch.End();
             }
 
-            //try {
-            //    string text = string.Format(
-            //        "Frames per second: {0}/{1}\n" +
-            //        "Instances: {2}\n",
-            //        (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
-            //        (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
-            //        GameObject.All.Length);
+            if (ShowFps) {
+                try {
+                    string text = string.Format(
+                        "Frames per second: {0}/{1}\n" +
+                        "Instances: {2}\n",
+                        (1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"),
+                        (_frames++ / gameTime.TotalGameTime.TotalSeconds).ToString("0.00"),
+                        GameObject.All.Length);
 
-            //    _spriteBatch.Begin();
+                    _spriteBatch.Begin();
 
-            //    _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
-            //    _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
+                    _spriteBatch.DrawString(_font, text, new Vector2(65, 265), Color.Black);
+                    _spriteBatch.DrawString(_font, text, new Vector2(64, 264), Color.White);
 
-            //    _spriteBatch.End();
-            //} catch { }
+                    _spriteBatch.End();
+                } catch {
+                    // Do nothing
+                }
+            }
         }
     }
 

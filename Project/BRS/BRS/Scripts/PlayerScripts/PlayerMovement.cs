@@ -21,9 +21,9 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         private float MinSpeed = 4f;
         private float MaxSpeed = 7f; // Todo: As soon as it is built in Release-mode, 7 is too fast
-        private const float MaxTurningRate = 10 * 360; // deg/sec
-        private const float BoostSpeedMultiplier = 1.5f;
+        private const float MaxTurningRate = 360*5;// deg/sec
 
+        private const float BoostSpeedMultiplier = 1.5f;
         private const float SlowdownMalus = .3f;
         private const float SpeedPadMultiplier = 2f;
 
@@ -79,8 +79,6 @@ namespace BRS.Scripts.PlayerScripts {
             OilTracks = false;
         }
 
-
-
         // --------------------- CUSTOM METHODS ----------------
 
 
@@ -128,27 +126,24 @@ namespace BRS.Scripts.PlayerScripts {
         public void SetSlowdown(bool b) {
             _slowdown = b;
         }
-
         public void SetOilTracks(bool b) {
             OilTracks = b;
         }
-
         internal void SetSpeedPad(bool b) {
             SpeedPad = b;
+        }
+        public void SetMaxSpeed(float f) {
+            MaxSpeed = f;
+        }
+        public void SetMinSpeed(float f) {
+            MinSpeed = f;
         }
 
         public void ResetSmoothMatnitude() {
             _smoothMagnitude = 0.0f;
             _refMagnitude = 0.0f;
         }
-
-        public void SetMaxSpeed(float f) {
-            MaxSpeed = f;
-        }
-
-        public void SetMinSpeed(float f) {
-            MinSpeed = f;
-        }
+        
 
         // queries
         float CapacityBasedSpeed { get { return MathHelper.Lerp(MaxSpeed, MinSpeed, playerInventory.MoneyPercent); } }

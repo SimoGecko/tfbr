@@ -56,7 +56,7 @@ namespace BRS.Scripts.UI {
                     UserInterface.DrawPicture(_xboxButtons, c.dest, SourceRectangle(c.Button), c.anchor, Align.Center, rot: 10 * angle);
                 }
             }
-            if(index==GameManager.NumPlayers-1)
+            if(index==GameManager.NumPlayers-1 || GameManager.state == GameManager.State.Menu)
                 _commands.Clear(); // at end of all calls
         }
 

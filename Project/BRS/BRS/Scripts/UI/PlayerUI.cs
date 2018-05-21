@@ -53,6 +53,7 @@ namespace BRS.Scripts.UI {
         // commands
         public override void Draw2D(int index) {
             if (index == -1) return;
+            if (!GameManager.GameActive) return;
 
             UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true);
             //UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);

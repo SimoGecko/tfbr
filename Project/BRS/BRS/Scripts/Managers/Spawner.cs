@@ -39,7 +39,6 @@ namespace BRS.Scripts.Managers {
             SpawnValuableContinuous();
             SpawnCrateContinuous();
             SpawnPowerupContinuous();
-            //SpawnDiamondCasual();
         }
 
         public override void Update() {
@@ -185,45 +184,6 @@ namespace BRS.Scripts.Managers {
         void SpawnPowerupContinuous() {
             SpawnStuffCoroutine(SpawnOnePowerupRandom, _currentMode.TimeBetweenPowerups);
         }
-
-        /*
-        async void SpawnValuableContinuous() {
-            float remainingTime = _currentMode.TimeBetweenValuables * TimeVariance;
-            while (!GameManager.GameEnded) {
-                if (remainingTime > coroutineWaitTime) {
-                    await Time.WaitForSeconds(coroutineWaitTime);
-                    remainingTime -= coroutineWaitTime;
-                } else {
-                    await Time.WaitForSeconds(remainingTime);
-                    SpawnOneValuableRandom();
-                    remainingTime = _currentMode.TimeBetweenValuables * TimeVariance;
-                }
-            }
-        }
-
-        async void SpawnCrateContinuous() {
-            while (!GameManager.GameEnded) {
-                await Time.WaitForSeconds(_currentMode.TimeBetweenCrates * TimeVariance);
-                SpawnOneCrateRandom();
-            }
-        }
-
-        async void SpawnPowerupContinuous() {
-            while (!GameManager.GameEnded) {
-                await Time.WaitForSeconds(_currentMode.TimeBetweenPowerups * TimeVariance);
-                SpawnOnePowerupRandom();
-            }
-        }*/
-
-        /*
-        async void SpawnDiamondCasual() {
-            if(MyRandom.Value< _currentMode.ProbOfDiamond) {
-                await Time.WaitForSeconds(MyRandom.Range(10, RoundManager.RoundTime));
-                SpawnOneDiamondRandom();
-            }
-        }*/
-
-
     }
 
 }

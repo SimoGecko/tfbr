@@ -26,8 +26,6 @@ namespace BRS.Scripts.Scenes {
         private List<Vector3> _basePositions;
         private List<Vector3> _policeStartPositions;
 
-        private GameObject _outsideScene;
-
 
         public override int GetNumCameras() { return GameManager.NumPlayers; }
 
@@ -48,9 +46,9 @@ namespace BRS.Scripts.Scenes {
         void LoadBlenderBakedScene() {
             string level = "level" + GameManager.LvlScene;
 
-            Material insideMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/" + level + "_inside"));
+            Material insideMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/" + level + "_inside"));
             Material outsideMat = new Material(File.Load<Texture2D>("Images/textures/polygonCity"), File.Load<Texture2D>("Images/lightmaps/" + level + "_outside"));
-            Material groundMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
+            Material groundMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
             HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/" + level + "_inside"), insideMat);
             HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/" + level + "_outside"), outsideMat);
@@ -61,7 +59,6 @@ namespace BRS.Scripts.Scenes {
 
             GameObject outsideScene = new GameObject("outside", ModelType.OutsideScene, true);
             outsideScene.tag = ObjectTag.Ground;
-            _outsideScene = outsideScene;
 
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
             infinitePlane.transform.Scale(1000);
@@ -75,8 +72,7 @@ namespace BRS.Scripts.Scenes {
             task2.Wait();
         }
 
-        void CreateSkybox()
-        {
+        void CreateSkybox() {
             bool useRandomSkybox = true;
 
             string[] skyboxTextures = { "daybreak", "midday", "evening", "sunset", "midnight", };
@@ -85,26 +81,11 @@ namespace BRS.Scripts.Scenes {
 
             // Hardware instancing
             HardwareRendering.InitializeModel(ModelType.Skybox, File.Load<Model>("Models/elements/skybox"), skyboxMat);
-            HardwareRendering.InitializeModel(ModelType.SkyboxInvisible, File.Load<Model>("Models/elements/skybox"), skyboxMat);
 
             // Visible skybox to render normaly
             GameObject skybox = new GameObject("skybox", ModelType.Skybox, true);
             skybox.transform.Scale(2); // not more than this or it will be culled
             skybox.material = skyboxMat;
-
-            // Invisible boudning box which is used for the depth-buffer
-            GameObject sceneBound = new GameObject("sceneBound", ModelType.SkyboxInvisible, true);
-            sceneBound.transform.Scale(1); // not more than this or it will be culled
-            sceneBound.material = skyboxMat;
-
-            Vector3 modelSize = BoundingBoxHelper.CalculateSize(_outsideScene.Model, _outsideScene.transform.scale);
-            Vector3 shadowSize = BoundingBoxHelper.CalculateSize(sceneBound.Model, sceneBound.transform.scale);
-
-            float xFactor = shadowSize.X / modelSize.X;
-            float zFactor = shadowSize.Z / modelSize.Z;
-
-            sceneBound.transform.scale = new Vector3(1.5f / xFactor, 10f, 1.5f / zFactor);
-
         }
 
         void CreateManagers() {
@@ -141,7 +122,7 @@ namespace BRS.Scripts.Scenes {
             _basePositions = new List<Vector3>();
             _policeStartPositions = new List<Vector3>();
             int overallOffset = GameManager.NumPlayers > 2 ? -1 : 0;
-            
+
             for (int i = 0; i < GameManager.NumPlayers; i++) {
                 int offset = i > 1 ? 2 : 0;
                 int xBase = -5 + 10 * (i % 2 == 0 ? 0 : 1) + offset;
@@ -198,7 +179,7 @@ namespace BRS.Scripts.Scenes {
                 ElementManager.Instance.Add(player.GetComponent<Player>());
 
                 // Model instanciation
-                ModelType modelType = (ModelType) Enum.Parse(typeof(ModelType), "player" + i, true);
+                ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), "player" + i, true);
 
                 player.UseHardwareInstanciation = true;
                 player.ModelType = modelType;

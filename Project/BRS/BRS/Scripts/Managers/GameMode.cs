@@ -109,8 +109,9 @@ namespace BRS.Scripts {
             GameMode gm = new GameMode("survival");
             gm.SetBaseParams(150, 20000, WinCondition.Time);
             gm.SetAmount(20, 0, 4, .3f);
-            gm.SetMoneyDistrib(0f, .3f, .0f);
-            gm.SetPowerupDistribution(1, 0, 1, 0, 1, 1, 0);
+            gm.SetMoneyDistrib(.3f, 0f, .0f);
+            //gm.SetPowerupDistribution(1, 0, 1, 0, 1, 1, 0);
+            gm.SetPowerupDistribution(0, 1, 0, 0, 0, 0, 0);
         }
 
         static void CreateBomberMode() {
