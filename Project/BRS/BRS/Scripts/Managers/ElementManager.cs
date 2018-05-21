@@ -95,8 +95,8 @@ namespace BRS.Scripts.Managers {
 
         // queries
         //-----------MONEY-----------
-        public Vector3[] AllCashPosition() { return AllMoneyTypePosition(Money.Type.Cash); }
-        public Vector3[] AllGoldPosition() { return AllMoneyTypePosition(Money.Type.Gold); }
+        public Vector3[] AllCashPosition()    { return AllMoneyTypePosition(Money.Type.Cash); }
+        public Vector3[] AllGoldPosition()    { return AllMoneyTypePosition(Money.Type.Gold); }
         public Vector3[] AllDiamondPosition() { return AllMoneyTypePosition(Money.Type.Diamond); }
 
         public Vector3[] AllMoneyPosition() {
@@ -127,9 +127,10 @@ namespace BRS.Scripts.Managers {
             return result.ToArray();
         }
 
-        public Vector3[] AllCratePosition() { return AllListElementsPosition(_crateList); }
+        public Vector3[] AllCratePosition()   { return AllListElementsPosition(_crateList); }
         public Vector3[] AllPowerupPosition() { return AllListElementsPosition(_powerupList); }
-        public Vector3[] AllPolicePosition() { return AllListElementsPosition(_policeList); }
+        public Vector3[] AllPolicePosition()  { return AllListElementsPosition(_policeList); }
+
         public Vector3[] AllVariousGameobjectsPosition() {
             List<Vector3> result = new List<Vector3>();
             foreach (var el in _variousObjects) {
@@ -142,20 +143,17 @@ namespace BRS.Scripts.Managers {
             if (i < 0 || i >= _playerList.Count) {
                 Debug.LogError("Player index out of range"); return null;
             }
-
             return _playerList[i];
         }
 
         public Player[] Team(int team) {
             Debug.Assert(team < 2, "Invalid team index");
             List<Player> result = new List<Player>();
-
             foreach (Player p in _playerList) {
                 if (p.TeamIndex == team) {
                     result.Add(p);
                 }
             }
-
             return result.ToArray();
         }
         public Player Enemy(int myteam) {
@@ -169,12 +167,11 @@ namespace BRS.Scripts.Managers {
             if (i < 0 || i >= _baseList.Count) {
                 Debug.LogError("Base index out of range"); return null;
             }
-
             return _baseList[i];
         }
 
         public Base EnemyBase(int i) {
-            if (GameManager.NumTeams == 1) return Base(i);
+            if (GameManager.NumTeams == 1) return Base(0);
             return Base(1 - i);
         }
         public Player[] Players() { return _playerList.ToArray(); }

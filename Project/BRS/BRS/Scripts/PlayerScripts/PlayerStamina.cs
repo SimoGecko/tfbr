@@ -81,7 +81,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // queries
         public bool HasStaminaForBoost() {
-            bool result = Stamina > 0;
+            bool result = Stamina > 0; //staminaPerBoost * Time.deltatime)
             if (!result) {
                 triedToUseStaminaUnsuccessfully = true;
                 timerForUnsuccessfulStamina = Time.CurrentTime + TimeOfUnsuccessfulTry;
@@ -90,7 +90,7 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public bool HasStaminaForAttack() {
-            bool result = Stamina >= StaminaPerAttack;//staminaPerBoost * Time.deltatime)
+            bool result = Stamina >= StaminaPerAttack; 
             if (!result) {
                 triedToUseStaminaUnsuccessfully = true;
                 timerForUnsuccessfulStamina = Time.CurrentTime + TimeOfUnsuccessfulTry;

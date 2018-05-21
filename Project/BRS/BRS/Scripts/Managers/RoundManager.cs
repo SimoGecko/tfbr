@@ -196,8 +196,6 @@ namespace BRS.Scripts.Managers {
         
 
         void OnRoundEnd() {
-            //Audio.Stop("police");
-            //Audio.SetLoop("police", false);
             roundEnded = true;
             GameManager.state = GameManager.State.Ended;
 

@@ -15,7 +15,7 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        const bool loadMenu = false;
+        const bool loadMenu = true;
         const bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon
@@ -142,7 +142,6 @@ namespace BRS {
             _graphics.GraphicsDevice.Clear(Color.Black);
 
             HardwareRendering.DrawDepth();
-
 
             // apply post processing
             // PostProcessingManager.Instance.Draw(_renderTarget, _spriteBatch, GraphicsDevice, _ZBuffer);

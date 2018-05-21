@@ -52,13 +52,12 @@ namespace BRS.Scripts.Managers {
                     controllerNo = i;
                 }
             }
-
             return new Tuple<bool, int>(pressed, controllerNo);
         }
 
         static void CheckForPause() {
             Tuple<bool, int> controllerPaused = CheckPauseForAllControllers();
-            if (Input.GetKeyDown(Keys.P) || controllerPaused.Item1) {
+            if (Input.GetKeyDown(Keys.P) || controllerPaused.Item1) { // this doesn't check that only the player who selected pause can unpause
                 if (state == State.Playing || state == State.Paused)
                     state = GamePaused ? State.Playing : State.Paused;
 
@@ -75,7 +74,7 @@ namespace BRS.Scripts.Managers {
 
 
 
-        public static void RestartCustom() { // TODO refactor
+        public static void RestartCustom() { // TODO refactor -> this is kind of a mess
             ElementManager.Instance.Restart();
             //Time.ClearTimers();
             Spawner.Instance.Start();

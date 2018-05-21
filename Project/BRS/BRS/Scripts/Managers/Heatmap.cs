@@ -24,7 +24,7 @@ namespace BRS.Scripts {
         CDFdistrib green, yellow, white; // stores yellow distribution
 
         float pixelSize;
-        int refreshFps = 40;
+        int refreshFps = 20;
 
         int[,] playerHeatmap;
         int distribWidth, distribHeight;
@@ -96,7 +96,7 @@ namespace BRS.Scripts {
         async void StartComputingHeatmap() {
             //checks continuously to see where the players are and increases a counter to get a heatmap in the end
             playerHeatmap = new int[distribWidth, distribHeight];
-            while (true && IsActive) {
+            while (IsActive) {
                 foreach (Player p in ElementManager.Instance.Players()) {
                     Vector2 normCoord = PlayArea.Pos3DNormalized(p.transform.position);
                     Point coord = new Point((int)(distribWidth * normCoord.X), (int)(distribHeight * normCoord.Y));
@@ -106,7 +106,6 @@ namespace BRS.Scripts {
                     //Texture2D heatmapResult = Graphics.ColorToTexture(Graphics.IntToColor(playerHeatmap));
                     Color[] colors = Graphics.Color2DToColor1D(Graphics.IntToColor(playerHeatmap));
                     heatmapPic.SetData(colors);
-
                 }
                 await Time.WaitForSeconds(1f / refreshFps);
             }
@@ -124,7 +123,6 @@ namespace BRS.Scripts {
         public override void Draw2D(int index) {
             if(showHeatMapOnScreen) UserInterface.DrawPicture(heatmapPic, Vector2.One * 100);
         }
-
 
     }
 

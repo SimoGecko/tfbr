@@ -34,7 +34,8 @@ namespace BRS.Scripts.PlayerScripts {
 
         // --------------------- BASE METHODS ------------------
         public override void Start() {
-            _carryingPowerup = new List<Powerup>();
+            //_carryingPowerup = new List<Powerup>();
+            Reset();
             _collidedWith = new List<Powerup>();
 
             _player = gameObject.GetComponent<Player>();
@@ -43,7 +44,6 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Reset() {
             _carryingPowerup = new List<Powerup>(); _carryingPowerup.Clear();
             PowerupUI.Instance.UpdatePlayerPowerupUI(gameObject.GetComponent<Player>().PlayerIndex, CarryingPowerups());
-
         }
 
 
@@ -67,16 +67,14 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public void Collect(Powerup powerup) {
-            int playerIndex = gameObject.GetComponent<Player>().PlayerIndex;
             if (_carryingPowerup.Count == MaxNumberPowerups) {
                 _carryingPowerup.RemoveAt(0);
             }
-            Input.Vibrate(.03f, .04f, playerIndex);
+            Input.Vibrate(.03f, .04f, _player.PlayerIndex);
 
             OnPowerupPickup?.Invoke();
             _carryingPowerup.Add(powerup);
             PowerupUI.Instance.UpdatePlayerPowerupUI(powerup.Owner.PlayerIndex, CarryingPowerups());
-            //PowerupUI.Instance.SetBackgroundColor(powerup.powerupColor, playerIndex);
         }
 
         public bool CanPickUp(Powerup powerup) {
