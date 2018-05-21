@@ -3,6 +3,7 @@
 
 using BRS.Engine;
 using BRS.Engine.Menu;
+using BRS.Scripts.Elements;
 using Microsoft.Xna.Framework.Input;
 using System;
 
@@ -81,6 +82,7 @@ namespace BRS.Scripts.Managers {
             //RoundManager.Instance.Start();
             //PowerupUI.instance.Start();
             PoliceManager.Instance.Reset();
+            Vault.instance.Reset();
 
             foreach (var g in GameObject.All) g.Reset();
 

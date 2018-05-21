@@ -66,6 +66,7 @@ namespace BRS.Scripts.UI {
         // commands
         public override void Draw2D(int i) {
             if (i == -1) return;
+            if (!GameManager.GameActive) return;
             DrawMinimap(UserInterface.sB, i);
         }
 
