@@ -98,6 +98,10 @@ namespace BRS.Scripts.PlayerScripts {
             return result; 
         }
 
+        public bool HasStaminaForAttackCheck() { // no side effects
+            return Stamina >= StaminaPerAttack;
+        }
+
 
 
         // other

@@ -15,7 +15,7 @@ namespace BRS {
         private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        const bool loadMenu = true;
+        const bool loadMenu = false;
         const bool showUI = true;
 
         // todo: for andy for debugging framerate => to be removed soon

@@ -49,13 +49,13 @@ namespace BRS.Scripts.PlayerScripts {
         private const float TimeResetLastCollider = 2;
 
         //subcomponents
-        private PlayerAttack _pA;
-        private PlayerMovement _pM;
-        private PlayerInventory _pI;
-        private PlayerPowerup _pP;
-        private PlayerStamina _pS;
-        private SteerableCollider _steerableCollider;
+        public PlayerAttack pA    { get; private set; }
+        public PlayerMovement pM  { get; private set; }
+        public PlayerInventory pI { get; private set; }
+        public PlayerPowerup pP   { get; private set; }
+        public PlayerStamina pS   { get; private set; }
 
+        private SteerableCollider _steerableCollider;
         public CameraController CamController;
         Player _other;
 
@@ -76,19 +76,17 @@ namespace BRS.Scripts.PlayerScripts {
         public override void Start() {
             base.Start();
 
-            //GameObject po = GameObject.FindGameObjectWithName("player_" + (1 - PlayerIndex));
-            //if (po != null) _other = po.GetComponent<Player>();
             _other = ElementManager.Instance.Enemy(TeamIndex);
 
             CamController = GameObject.FindGameObjectWithName("camera_" + PlayerIndex).GetComponent<CameraController>();
-            CamController.Start();
+            //CamController.Start(); // why is start called on this?
 
             //subcomponents (shorten)
-            _pA = gameObject.GetComponent<PlayerAttack>();
-            _pM = gameObject.GetComponent<PlayerMovement>();
-            _pI = gameObject.GetComponent<PlayerInventory>();
-            _pP = gameObject.GetComponent<PlayerPowerup>();
-            _pS = gameObject.GetComponent<PlayerStamina>();
+            pA = gameObject.GetComponent<PlayerAttack>();
+            pM = gameObject.GetComponent<PlayerMovement>();
+            pI = gameObject.GetComponent<PlayerInventory>();
+            pP = gameObject.GetComponent<PlayerPowerup>();
+            pS = gameObject.GetComponent<PlayerStamina>();
 
             MovingRigidBody mrb = gameObject.GetComponent<MovingRigidBody>();
             _steerableCollider = mrb.SteerableCollider;
@@ -103,22 +101,21 @@ namespace BRS.Scripts.PlayerScripts {
                 _steerableCollider.Position = Conversion.ToJitterVector(startPosition);
                 _steerableCollider.Orientation = JMatrix.CreateRotationY(0);
             }
-
         }
 
         public override void Update() {
             UpdateUI();
             if (!GameManager.GameActive) {
-                _pM.Move(Vector3.Zero); // smooth stop
+                pM.Move(Vector3.Zero); // smooth stop
                 return;
             }
 
             //only if game is running
             if (State == PlayerState.Normal) {
-                bool boosting = BoostInput() ? _pS.HasStaminaForBoost() : false;
-                _pM.Boosting = boosting;
+                bool boosting = BoostInput() ? pS.HasStaminaForBoost() : false;
+                pM.Boosting = boosting;
                 if (boosting) {
-                    _pS.UseStaminaForBoost();
+                    pS.UseStaminaForBoost();
                     //Input.Vibrate(.001f, .001f, PlayerIndex);
                 }
 
@@ -127,43 +124,43 @@ namespace BRS.Scripts.PlayerScripts {
                 moveInput = MoveInput().Rotate(CamController.YRotation); // first input type
                 //else
                     //moveInput = MoveInput().Rotate(transform.eulerAngles.Y); // input requested by nico
-                _pM.Move(moveInput.To3());
+                pM.Move(moveInput.To3());
 
-                if (PowerupInput()) _pP.UsePowerup(this);
-                if (DropCashInput()) _pI.DropMoney();
+                if (PowerupInput()) pP.UsePowerup(this);
+                if (DropCashInput()) pI.DropMoney();
 
-                bool attack = AttackInput() ? _pS.HasStaminaForAttack() : false;
+                bool attack = AttackInput() ? pS.HasStaminaForAttack() : false;
                 if (attack) {
                     State = PlayerState.Attack;
-                    _pS.UseStaminaForAttack();
-                    _pA.BeginAttack();
+                    pS.UseStaminaForAttack();
+                    pA.BeginAttack();
                     CamController.Shake(.5f);
                 }
                 
             } else if (State == PlayerState.Attack) {
-                _pA.AttackCoroutine();
-                if (_pA.AttackEnded) State = PlayerState.Normal;
+                pA.AttackCoroutine();
+                if (pA.AttackEnded) State = PlayerState.Normal;
             } else if (State == PlayerState.Stun) {
                 _steerableCollider.Speed = JVector.Zero;
             }
 
-            _pS.UpdateStamina();
+            pS.UpdateStamina();
         }
 
         public override void Reset() {
             Start();
-            _pA.Reset();
-            _pM.Reset();
-            _pI.Reset();
-            _pP.Reset();
-            _pS.Reset();
+            pA.Reset();
+            pM.Reset();
+            pI.Reset();
+            pP.Reset();
+            pS.Reset();
             UpdateUI();
             _steerableCollider.PostStep(0.0f);
         }
 
         public override void OnCollisionEnter(Collider c) {
             if (c.GameObject.tag == ObjectTag.StaticObstacle) {
-                _pM.SetSpeedPad(false);
+                pM.SetSpeedPad(false);
 
                 if (_lastCollider != c || _collidedAt + TimeResetLastCollider < Time.CurrentTime) {
                     Debug.Log("Vibration: " +(_collidedAt + TimeResetLastCollider )+ " < " + Time.CurrentTime);
@@ -190,40 +187,23 @@ namespace BRS.Scripts.PlayerScripts {
                     Audio.Play("stun", transform.position);
                     ParticleUI.Instance.GiveOrder(transform.position, ParticleType.Stun, 1.2f);
                     PostProcessingManager.Instance.ActivateBlackAndWhite(PlayerIndex);
-                    _pI.LoseMoney();
+                    pI.LoseMoney();
                     ParticleUI.Instance.GiveOrder(transform.position+Vector3.Up*2, ParticleType.RotatingStars, .7f);
                     Timer t = new Timer(StunTime, () => { if (State == PlayerState.Stun) State = PlayerState.Normal; });
                 }
-
-                
             }
-        }
-
-        /*
-        protected override void Die() {
-            base.Die();
-            _state = PlayerState.Dead;
-            _pI.LoseAllMoney();
-            Timer timer = new Timer(RespawnTime, Respawn);
-        }*/
-
-        protected override void Respawn() {
-            //base.Respawn();
-            //State = PlayerState.Normal;
-            //transform.position = startPosition; // store base position
         }
 
         void UpdateUI() {
-            //Base ba = GameObject.FindGameObjectWithName("Base_" + playerIndex).GetComponent<Base>();
-            // WHY SHOULD THE PLAYER KNOW ABOUT THE BASE??
             bool playerInRange = false;
             if (_other != null) {
-                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(_pA.AttackDistance, 2);
+                playerInRange = Vector3.DistanceSquared(transform.position, _other.transform.position) <= Math.Pow(pA.AttackDistance, 2);
             }
-            bool canAttack = /*_pS.HasStaminaForAttack() &&*/ playerInRange;
+            bool canAttack = pS.HasStaminaForAttackCheck() && playerInRange;
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
-                _pS.Stamina, _pS.MaxStamina,
-                _pI.Capacity, _pI.CarryingValue, _pI.CarryingWeight, PlayerName, canAttack);//, ba.Health, ba.startingHealth);
+                pS.Stamina, pS.MaxStamina,
+                pI.Capacity, pI.CarryingValue, pI.CarryingWeight,
+                PlayerName, canAttack);
         }
 
         /// <summary>
@@ -235,7 +215,7 @@ namespace BRS.Scripts.PlayerScripts {
         public void SetCollisionState(Collider other, Vector3 endPosition, float endAngle) {
             State = PlayerState.Normal;
             //_pM.ResetRotation(endAngle);
-            _pM.ResetSmoothMatnitude();
+            pM.ResetSmoothMatnitude();
         }
 
 
@@ -272,24 +252,14 @@ namespace BRS.Scripts.PlayerScripts {
                || Input.GetButtonDown(Buttons.X, PlayerIndex);
         }
 
-        bool LiftInput() { // TODO remove
-            return (PlayerIndex == 0 ? Input.GetKeyDown(Keys.F) : Input.GetKeyDown(Keys.L))
-               || Input.GetButtonDown(Buttons.Y, PlayerIndex);
-        }
-
         public bool BoostInput() {
             return (PlayerIndex == 0 ? Input.GetKey(Keys.LeftShift) : Input.GetKey(Keys.RightShift))
                || Input.GetButton(Buttons.RightShoulder, PlayerIndex) || Input.GetButton(Buttons.RightTrigger, PlayerIndex)
-               || Input.GetButton(Buttons.LeftShoulder, PlayerIndex) || Input.GetButton(Buttons.LeftTrigger, PlayerIndex);
+               || Input.GetButton(Buttons.LeftShoulder, PlayerIndex)  || Input.GetButton(Buttons.LeftTrigger, PlayerIndex);
         }
 
         // other
-        // Why not directly make it like: public PlayerAttack pA { get; private set; } => Then we couls save 5 properties and code redundancy
-        public PlayerAttack pA { get { return _pA; } }
-        public PlayerMovement pM { get { return _pM; } }
-        public PlayerInventory pI { get { return _pI; } }
-        public PlayerPowerup pP { get { return _pP; } }
-        public PlayerStamina pS { get { return _pS; } }
+        
         
 
     }

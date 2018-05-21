@@ -17,12 +17,12 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- VARIABLES ---------------------
 
         //public
+        public static bool autoFollow = false;
 
         // const
-        public static bool autoFollow = false;
         private const float SmoothTime = .2f;
         private const float AutoFollowSmoothTime = .4f;
-        private const int AngleVariation = 40;
+        private const float AngleVariation = 40;
         private const float ShakeAmount = .1f;
         private const float deadZone = .2f;
 
@@ -30,10 +30,10 @@ namespace BRS.Scripts.PlayerScripts {
         public static readonly Vector3 StartAngle = new Vector3(-45, 0, 0);
         static readonly Vector2 _angleRange = new Vector2(-AngleVariation, AngleVariation);
 
-        //private
         static Vector2 _mouseSensitivity = new Vector2(-.3f, -.3f); // TODO set those (also with sign) into options menu
         static Vector2 _gamepadSensitivity = new Vector2(-2f, -2f);
 
+        //private
         int camIndex;
 
         float _xAngle, _xAngleSmooth;
@@ -46,17 +46,15 @@ namespace BRS.Scripts.PlayerScripts {
 
         bool inputGreaterThanDeadzone;
 
-
-
         //reference
         private Transform _player;
 
+
+        // --------------------- BASE METHODS ------------------
         public CameraController(int _camIndex) {
             camIndex = _camIndex;
         }
 
-
-        // --------------------- BASE METHODS ------------------
         public override void Start() {
             _xAngle = _xAngleSmooth = _yAngle = _yAngleSmooth = _refVelocityX = _refVelocityY = 0;
 
@@ -88,7 +86,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // commands
         void ProcessInput() {
-            float inputX = (Input.MouseDelta.X * _mouseSensitivity.X).Clamp(-20, 20); // clamp is to avoid initial weird jump in mouse delta // TODO FIX
+            float inputX = (Input.MouseDelta.X * _mouseSensitivity.X).Clamp(-100, 100); // clamp is to avoid initial weird jump in mouse delta -> seems to be fixed
             float inputY = (Input.MouseDelta.Y * _mouseSensitivity.Y).Clamp(-100, 100);
 
             inputX += Input.GetThumbstick(Input.Stick.Right, camIndex).X * _gamepadSensitivity.X;
@@ -135,11 +133,10 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
 
-
         // queries
         public float YRotation { get { return transform.eulerAngles.Y; } }//_yAngleSmooth
 
-        public Vector3 GetPlayerPosition() {
+        public Vector3 GetPlayerPosition() { // TODO remove since you can access it with ElementManager.Player(camIndex)
             return _player.position;
         }
 

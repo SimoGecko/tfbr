@@ -36,8 +36,6 @@ namespace BRS.Scripts.PlayerScripts {
             Respawn();
         }
 
-
-
         public override void Update() { }
 
 
@@ -58,7 +56,6 @@ namespace BRS.Scripts.PlayerScripts {
         protected virtual void Die() {
             Dead = true;
             OnDeath?.Invoke();
-            //GameObject.Destroy(gameObject);
         }
 
         protected virtual void Respawn() {
@@ -74,10 +71,8 @@ namespace BRS.Scripts.PlayerScripts {
             StartingHealth += amountToAdd;
         }
 
-
         // queries
         public float HealthPercent { get { return Health / StartingHealth; } }
-
 
 
         // other

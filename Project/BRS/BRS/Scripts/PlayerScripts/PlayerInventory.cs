@@ -15,7 +15,7 @@ namespace BRS.Scripts.PlayerScripts {
 
         // const
         const float TimeBetweenDrops = .1f;
-        const float DropcashRadius = .5f;
+        const float DropcashRadius = 1f;
         const float LosecashRadius = 3f;
 
         //public
@@ -30,6 +30,7 @@ namespace BRS.Scripts.PlayerScripts {
         int _carryingWeight = 0;
         int _carryingValue = 0;
         private bool _canDropMoney = true;
+
         private Stack<Money> _carryingMoney = new Stack<Money>();
 
         //reference
@@ -113,6 +114,8 @@ namespace BRS.Scripts.PlayerScripts {
         public void UpdateCapacity(int amountToAdd) {
             _capacity += amountToAdd;
         }
+        public void SetCapacity(int cap) { _capacity = cap; }
+
 
         // queries
         public bool CanPickUp(Money money) {
@@ -126,18 +129,12 @@ namespace BRS.Scripts.PlayerScripts {
             return _carryingWeight >= _capacity;
         }
 
-        /*
-        bool CanDrop() {
-            return canDropMoney && carryingMoney.Count > 0;
-        }*/
-
         public float MoneyPercent { get { return (float)_carryingWeight / _capacity; } }
         public int CarryingValue { get { return _carryingValue; } }
         public int CarryingWeight { get { return _carryingWeight; } }
         public int Capacity { get { return _capacity; } }
         public int ValueOnTop { get { return _carryingMoney.Peek().Value; } }
 
-        public void SetCapacity(int cap) { _capacity = cap; }
 
         // other
 
