@@ -26,6 +26,8 @@ namespace BRS.Scripts.Scenes {
         private List<Vector3> _basePositions;
         private List<Vector3> _policeStartPositions;
 
+        private GameObject _outsideScene;
+
 
         public override int GetNumCameras() { return GameManager.NumPlayers; }
 
@@ -59,6 +61,7 @@ namespace BRS.Scripts.Scenes {
 
             GameObject outsideScene = new GameObject("outside", ModelType.OutsideScene, true);
             outsideScene.tag = ObjectTag.Ground;
+            _outsideScene = outsideScene;
 
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
             infinitePlane.transform.Scale(1000);
@@ -72,16 +75,38 @@ namespace BRS.Scripts.Scenes {
             task2.Wait();
         }
 
-        void CreateSkybox() {
+        void CreateSkybox()
+        {
             bool useRandomSkybox = true;
-            string[] skyboxTextures = new string[] { "daybreak", "midday", "evening", "sunset", "midnight", };
+
+            string[] skyboxTextures = { "daybreak", "midday", "evening", "sunset", "midnight", };
             string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
-            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
-            skybox.transform.Scale(2); // not more than this or it will be culled
             Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/" + skyTexture));
+
+            // Hardware instancing
+            HardwareRendering.InitializeModel(ModelType.Skybox, File.Load<Model>("Models/elements/skybox"), skyboxMat);
+            HardwareRendering.InitializeModel(ModelType.SkyboxInvisible, File.Load<Model>("Models/elements/skybox"), skyboxMat);
+
+            // Visible skybox to render normaly
+            GameObject skybox = new GameObject("skybox", ModelType.Skybox, true);
+            skybox.transform.Scale(2); // not more than this or it will be culled
             skybox.material = skyboxMat;
+
+            // Invisible boudning box which is used for the depth-buffer
+            GameObject sceneBound = new GameObject("sceneBound", ModelType.SkyboxInvisible, true);
+            sceneBound.transform.Scale(1); // not more than this or it will be culled
+            sceneBound.material = skyboxMat;
+
+            Vector3 modelSize = BoundingBoxHelper.CalculateSize(_outsideScene.Model, _outsideScene.transform.scale);
+            Vector3 shadowSize = BoundingBoxHelper.CalculateSize(sceneBound.Model, sceneBound.transform.scale);
+
+            float xFactor = shadowSize.X / modelSize.X;
+            float zFactor = shadowSize.Z / modelSize.Z;
+
+            sceneBound.transform.scale = new Vector3(1.5f / xFactor, 10f, 1.5f / zFactor);
+
         }
-        
+
         void CreateManagers() {
             GameObject UiManager = new GameObject("UImanager"); // must be before the other manager
             UiManager.AddComponent(new LenseFlareManager(new Vector3(-25f, 10f, 25f)));

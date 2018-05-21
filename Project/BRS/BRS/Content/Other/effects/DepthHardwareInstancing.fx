@@ -36,7 +36,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input, float4x4 instan
 
 	// Translate the vertex using matWorldViewProj.
 	// Get the distance of the vertex between near and far clipping plane in matWorldViewProj.
-	output.Depth.x = 1 - (output.Position.y / output.Position.w);
+	output.Depth.x = 1 - (output.Position.z / output.Position.w);
 
 	return output;
 }
@@ -46,23 +46,23 @@ VertexShaderOutput HardwareInstancingVertexShaderFunction(VertexShaderInput inpu
 }
 
 
-float4 RenderDepthMapPS(VertexShaderOutput In) : COLOR0
+float4 RenderDepthMapPS(VertexShaderOutput input) : COLOR0
 {
 	// should not really happen
 	//if(In.Distance.x < 0) {
 	//	return float4(0,0,1,1);
 	//}
-	float depth = saturate(In.Depth.x);
+	float depth = input.Depth.x;
 
-	return float4(depth, depth, depth, 1);
+	return float4(depth, 0, 0, 1);
 }
 
 //-------------------------- TECHNIQUES ----------------------------------------
 technique DepthMapShader {
 	pass P0 {
-		ZEnable = true;
-		ZWriteEnable = true;
-		AlphaBlendEnable = false;
+		ZEnable = TRUE;
+		ZWriteEnable = TRUE;
+		AlphaBlendEnable = FALSE;
 
 		VertexShader = compile VS_SHADERMODEL HardwareInstancingVertexShaderFunction();
 		PixelShader = compile PS_SHADERMODEL RenderDepthMapPS();

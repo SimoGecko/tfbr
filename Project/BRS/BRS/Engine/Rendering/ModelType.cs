@@ -11,9 +11,11 @@ namespace BRS.Engine.Rendering {
     /// </remarks>
     public enum ModelType {
         NoHardwareInstanciation,
+        Skybox,
+        SkyboxInvisible,
+        Ground,
         InsideScene,
         OutsideScene,
-        Ground,
         Cash,
         Gold,
         Diamond,

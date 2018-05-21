@@ -11,6 +11,8 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
+        private static List<ModelType> _usedForDepth = new List<ModelType>{ModelType.SkyboxInvisible, ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
+
         public static GraphicsDeviceManager GraphicsDeviceManager { private get; set; }
         private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
 
@@ -57,7 +59,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         public static void Draw() {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
-                if (ModelTransformations.ContainsKey(mt)) {
+                if (mt != ModelType.SkyboxInvisible && ModelTransformations.ContainsKey(mt)) {
                     DrawModelInstanciated(ModelTransformations[mt]);
                 }
             }
@@ -67,7 +69,7 @@ namespace BRS.Engine.Rendering {
         /// Draw all the models with hardware-instancing
         /// </summary>
         public static void DrawDepth() {
-            foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
+            foreach (ModelType mt in _usedForDepth) {
                 if (ModelTransformations.ContainsKey(mt)) {
                     DrawModelInstanciated(ModelTransformations[mt], _zBufferEffect);
                 }
@@ -203,7 +205,7 @@ namespace BRS.Engine.Rendering {
 
                         // Set camera-properties for shader
                         effect.Parameters["View"].SetValue(cam.View);
-                        effect.Parameters["Projection"].SetValue(cam.ProjDepth);
+                        effect.Parameters["Projection"].SetValue(cam.Proj);
 
                         // Draw all the instance copies in a single call.
                         foreach (EffectPass pass in effect.CurrentTechnique.Passes) {

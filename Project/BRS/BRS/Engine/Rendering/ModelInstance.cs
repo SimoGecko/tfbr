@@ -90,20 +90,26 @@ namespace BRS.Engine.Rendering {
                 return;
             }
 
-            // Update the size (which is only done if needed) and transfer all needed values for the vertex-description
-            Array.Resize(ref VertexInformation, GameObjects.Count);
+            // Store the size
+            int size = GameObjects.Count;
 
-            for (int i = 0; i < GameObjects.Count; ++i) {
+            // Update the size (which is only done if needed) and transfer all needed values for the vertex-description
+            Array.Resize(ref VertexInformation, size);
+
+            if (VertexInformation.Length != size)
+            Debug.Log(VertexInformation.Length + " == " + size);
+
+            for (int i = 0; i < size && i < VertexInformation.Length; ++i) {
                 VertexInformation[i].Matrix = GameObjects[i].transform.World;
                 VertexInformation[i].Alpha = GameObjects[i].Alpha;
             }
 
             // Re-Initialize the vertex-buffer if needed
-            if (VertexBuffer == null || GameObjects.Count > VertexBuffer.VertexCount) {
+            if (VertexBuffer == null || size > VertexBuffer.VertexCount) {
                 VertexBuffer?.Dispose();
 
                 VertexBuffer = new DynamicVertexBuffer(Graphics.gD, VertexPositionAlpha.InstanceVertexDeclaration,
-                    GameObjects.Count, BufferUsage.WriteOnly);
+                    size, BufferUsage.WriteOnly);
             }
 
             // Transfer the latest instance gameObject matrices into the vertex-buffer.
