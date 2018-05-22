@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.PowerUps {
 
+    // Important: Create for each powerup the corresponding particle-effect in Engine/Rendering/ParticleRendering.cs
     public enum PowerupType { Health, Capacity, Speed, Stamina, Bomb, Key, Shield, Trap, Explodingbox, Weight, Magnet };
 
     class Powerup : Pickup {

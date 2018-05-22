@@ -13,6 +13,7 @@ using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using BRS.Engine.Particles;
 
 
 namespace BRS.Engine {
@@ -35,6 +36,7 @@ namespace BRS.Engine {
             builtAlready = true;
 
             InitializeHardwareInstancing();
+            InitializeParticleSystems();
 
             //-------------------VALUABLES-------------------
             //cash
@@ -214,15 +216,15 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(wheelPolice);
         }
 
-        private static void InitializeHardwareInstancing()  {
+        private static void InitializeHardwareInstancing() {
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
             Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
             Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
             Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
-            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) {RenderingType = RenderingType.TextureAlpha};
-            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) {RenderingType = RenderingType.TextureAlpha};
+            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) { RenderingType = RenderingType.TextureAlpha };
+            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) { RenderingType = RenderingType.TextureAlpha };
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
@@ -261,6 +263,81 @@ namespace BRS.Engine {
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
                 HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
             }
+        }
+
+        private static void InitializeParticleSystems() {
+
+            #region Boost
+
+            ParticleSystem3D boost = new ParticleSystem3D {
+                Settings = new Settings {
+                    TextureName = "boost",
+                    MaxParticles = 200,
+                    ParticlesPerRound = 5,
+                    Duration = 0.85f,
+                    DurationRandomness = 1.5f,
+                    EmitterVelocitySensitivity = 0.0f,
+
+                    MinHorizontalVelocity = 0,
+                    MaxHorizontalVelocity = 0.5f,
+
+                    MinVerticalVelocity = 1.3f,
+                    MaxVerticalVelocity = 1.5f,
+
+                    MinColor = new Color(255, 255, 255, 0),
+                    MaxColor = new Color(255, 255, 255, 128),
+
+                    MinRotateSpeed = -4,
+                    MaxRotateSpeed = 4,
+
+                    MinStartSize = 0.1f,
+                    MaxStartSize = 0.15f,
+
+                    MinEndSize = 0.5f,
+                    MaxEndSize = 0.75f
+                }
+            };
+
+            #endregion
+
+            #region Powerup-Ray
+
+            Color minColor = Color.Black;
+            Color maxColor = Color.AliceBlue;
+
+            ParticleSystem3D rayParticles = new ParticleSystem3D {
+                Settings = new Settings {
+                    TextureName = "powerup_ray",
+                    MaxParticles = 10000,
+                    ParticlesPerRound = 10,
+                    Duration = 1.0f,
+                    Gravity = new Vector3(0, 0, 0),
+                    EndVelocity = 0.75f,
+
+                    MinHorizontalVelocity = 0,
+                    MaxHorizontalVelocity = 0,
+
+                    MinVerticalVelocity = 0.5f,
+                    MaxVerticalVelocity = 1.0f,
+
+                    MinColor = minColor,
+                    MaxColor = maxColor,
+
+                    MinRotateSpeed = 0,
+                    MaxRotateSpeed = 0,
+
+                    MinStartSize = 0.1f,
+                    MaxStartSize = 0.2f,
+
+                    MinEndSize = 0.2f,
+                    MaxEndSize = 0.5f
+                }
+            };
+
+            #endregion
+
+            ParticleRendering.Initialize(ParticleType3D.PowerUpRay, boost);
+            ParticleRendering.Initialize(ParticleType3D.PowerUpRay, rayParticles);
         }
     }
 }

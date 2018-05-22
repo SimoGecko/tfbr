@@ -152,9 +152,11 @@
     <Compile Include="Engine\PostProcessing\PostprocessingType.cs" />
     <Compile Include="Engine\PostProcessing\Skybox.cs" />
     <Compile Include="Engine\Prefabs.cs" />
+    <Compile Include="Engine\Rendering\ParticleInstance.cs" />
     <Compile Include="Engine\Rendering\ParticleRendering.cs" />
     <Compile Include="Engine\Rendering\HardwareRendering.cs" />
     <Compile Include="Engine\Rendering\ModelType.cs" />
+    <Compile Include="Engine\Rendering\ParticleType3D.cs" />
     <Compile Include="Engine\Rendering\RenderingType.cs" />
     <Compile Include="Engine\Rendering\VertexPositionAlpha.cs" />
     <Compile Include="Engine\Scene.cs" />

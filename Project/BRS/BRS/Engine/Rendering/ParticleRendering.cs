@@ -1,6 +1,7 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using System;
 using System.Collections.Generic;
 using BRS.Engine.Particles;
 
@@ -12,6 +13,7 @@ namespace BRS.Engine.Rendering {
         //reference
         private static readonly List<ParticleSystem3D> ParticleSystems = new List<ParticleSystem3D>();
         private static readonly List<ParticleSystem3D> DepthParticleSystems = new List<ParticleSystem3D>();
+        private static readonly Dictionary<ParticleType3D, ParticleInstance> ParticleSystems3D = new Dictionary<ParticleType3D, ParticleInstance>();
 
         #endregion
 
@@ -35,9 +37,10 @@ namespace BRS.Engine.Rendering {
         /// Update the informration which are needed for the instance-drawing
         /// </summary>
         public static void Update() {
-            //foreach (var keyValue in ModelTransformations) {
-            //    keyValue.Value.Update();
-            //}
+            foreach (var keyValue in ParticleSystems3D) {
+                keyValue.Value.Update();
+                keyValue.Value.ParticleSystem.Update();
+            }
         }
 
         /// <summary>
@@ -46,6 +49,9 @@ namespace BRS.Engine.Rendering {
         public static void Draw() {
             foreach (ParticleSystem3D particleSystem in ParticleSystems) {
                 particleSystem.Draw3D();
+            }
+            foreach (var keyValue in ParticleSystems3D) {
+                keyValue.Value.ParticleSystem.Draw3D();
             }
         }
 
@@ -61,6 +67,36 @@ namespace BRS.Engine.Rendering {
         #endregion
 
         #region Instanciation-handling
+
+        /// <summary>
+        /// Initialize a new model for hardware-instanciation
+        /// </summary>
+        /// <param name="particleType">Type of the particles to store uniquely</param>
+        /// <param name="particleSystem">Particle-system</param>
+        public static void Initialize(ParticleType3D particleType, ParticleSystem3D particleSystem) {
+            particleSystem.Awake();
+            particleSystem.Start();
+
+            ParticleSystems3D[particleType] = new ParticleInstance(particleSystem);
+        }
+
+        /// <summary>
+        /// Add a particle-system to render
+        /// </summary>
+        /// <param name="particleType">Particle-type on which the emitter is added</param>
+        /// <param name="transform">Transform-object of the emitter</param>
+        /// <param name="useForDepth">Used for depth rendering</param>
+        public static ParticleSystem3D AddInstance(ParticleType3D particleType, ParticleComponent transform, bool useForDepth = false) {
+            if (ParticleSystems3D.ContainsKey(particleType)) {
+                ParticleSystems3D[particleType].AddInstance(transform);
+                return ParticleSystems3D[particleType].ParticleSystem;
+            } else {
+                throw new Exception("Should not be here");
+            }
+            if (useForDepth) {
+                //DepthParticleSystems.Add(particleSystem);
+            }
+        }
 
         /// <summary>
         /// Add a particle-system to render

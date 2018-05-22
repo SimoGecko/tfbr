@@ -433,7 +433,7 @@ namespace BRS.Engine.Particles {
         #region Public Methods
 
         public void AddParticles(Vector3 position, Vector3 velocity) {
-            float currentTime = (float)Time.Gt.TotalGameTime.TotalSeconds;
+            float currentTime = Time.CurrentTime;
 
             if (currentTime > _lastEmittingTime + Settings.TimeBetweenRounds) {
                 for (int i = 0; i < Settings.ParticlesPerRound; ++i) {

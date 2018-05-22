@@ -1,0 +1,30 @@
+﻿namespace BRS.Engine.Rendering {
+    public enum ParticleType3D {
+        PowerUpHealthRay,
+        PowerUpCapacityRay,
+        PowerUpSpeedRay,
+        PowerUpStaminaRay,
+        PowerUpBombRay,
+        PowerUpKeyRay,
+        PowerUpShieldRay,
+        PowerUpTrapRay,
+        PowerUpExplodingboxRay,
+        PowerUpWeightRay,
+        PowerUpMagnetRay,
+        PowerUpHealthSteam,
+        PowerUpCapacitySteam,
+        PowerUpSpeedSteam,
+        PowerUpStaminaSteam,
+        PowerUpBombSteam,
+        PowerUpKeySteam,
+        PowerUpShieldSteam,
+        PowerUpTrapSteam,
+        PowerUpExplodingboxSteam,
+        PowerUpWeightSteam,
+        PowerUpMagnetSteam,
+        PowerUpRay,
+        Dust,
+        Boost,
+        Smoke
+    }
+}
