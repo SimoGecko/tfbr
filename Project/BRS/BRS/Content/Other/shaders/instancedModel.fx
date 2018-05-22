@@ -44,14 +44,14 @@ sampler2D lightTextureSampler = sampler_state {
 
 struct VertexShaderInputBaked {
 	float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
+	//float3 Normal : NORMAL0;
 	float2 ColorUV : TEXCOORD0;
 	float2 LightUV : TEXCOORD1;
 };
 
 struct VertexShaderInputTexture {
 	float4 Position : POSITION0;
-	float3 Normal : NORMAL0;
+	//float3 Normal : NORMAL0;
 	float2 ColorUV : TEXCOORD0;
 	float Alpha: BLENDWEIGHT4;
 };

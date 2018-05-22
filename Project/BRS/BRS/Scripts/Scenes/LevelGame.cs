@@ -61,6 +61,7 @@ namespace BRS.Scripts.Scenes {
             outsideScene.tag = ObjectTag.Ground;
 
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
+            infinitePlane.tag = ObjectTag.Ground;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -.1f, 0);
         }

@@ -110,22 +110,12 @@ namespace BRS.Engine {
             if (active) foreach (IComponent c in components) c.OnCollisionEnd(col);
         }
 
-        public void Draw3D(Camera cam) {
-            if (active) {
-                if (Model != null && !UseHardwareInstanciation) {
-                    //Debug.Log(name);
-                    Graphics.DrawModel(Model, cam.View, cam.Proj, transform.World, material);
-                }
-            }
-        }
 
         public void Draw2D(int i) { // i=-1 -> fullscreen, else (0, 1, 2...) splitscreen
             if (active) {
                 foreach (IComponent c in components) c.Draw2D(i);
             }
         }
-
-
 
 
         // ---------- STATIC COMMANDS ----------
