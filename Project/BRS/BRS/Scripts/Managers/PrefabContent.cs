@@ -249,6 +249,8 @@ namespace BRS.Engine {
             HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
             HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
             HardwareRendering.InitializeModel(ModelType.Vault, File.Load<Model>("Models/elements/vault"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.ArrowBase, File.Load<Model>("Models/elements/arrow_green"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.ArrowEnemy, File.Load<Model>("Models/elements/arrow_red"), elementsMat);
 
             for (int i = 0; i < powerupName.Length; i++) {
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);

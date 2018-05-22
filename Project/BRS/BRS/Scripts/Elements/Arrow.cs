@@ -1,12 +1,10 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using BRS.Engine;
-using BRS.Engine.Utilities;
 using BRS.Scripts.Managers;
-using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace BRS.Scripts.Elements {
     delegate bool Predicate();

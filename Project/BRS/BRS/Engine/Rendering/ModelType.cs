@@ -47,6 +47,8 @@ namespace BRS.Engine.Rendering {
         Player3,
         Base0,
         Base1,
+        ArrowEnemy,
+        ArrowBase,
         Vault,
 
         // The ones below have all a transparent texture => have to remain at the bottom!
