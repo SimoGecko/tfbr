@@ -124,7 +124,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="modelInstance">Instanciation information</param>
         static void DrawModelInstanciated(ModelInstance modelInstance) {
-            if (modelInstance.GameObjects.Count == 0) {
+            if (modelInstance.GameObjects.Count == 0 || modelInstance.VertexBuffer == null) {
                 return;
             }
 
