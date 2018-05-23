@@ -45,7 +45,7 @@ namespace BRS.Engine.Rendering {
         /// <summary>
         /// Size of the vertex-buffer after the update
         /// </summary>
-        public int VertexBufferSize = 0;
+        public int VertexBufferSize;
 
         #endregion
 
@@ -89,24 +89,23 @@ namespace BRS.Engine.Rendering {
         /// Updates the vertex-buffer with the newest information
         /// </summary>
         public void Update() {
+            GameObject[] safe = GameObjects.ToArray();
+
             // Store the size
-            VertexBufferSize = GameObjects.Count;
+            VertexBufferSize = safe.Length;
 
             // Vertex-buffer with 0 elements fails => handle this by explicitly doing nothing.
             // Important: Now there is most likely an instance remaining in the buffer => handle this case in the draw
-            if (GameObjects.Count == 0) {
+            if (safe.Length == 0) {
                 return;
             }
 
             // Update the size (which is only done if needed) and transfer all needed values for the vertex-description
             Array.Resize(ref VertexInformation, VertexBufferSize);
 
-            if (VertexInformation.Length != VertexBufferSize)
-            Debug.Log(VertexInformation.Length + " == " + VertexBufferSize);
-
-            for (int i = 0; i < VertexBufferSize && i < VertexInformation.Length; ++i) {
-                VertexInformation[i].Matrix = GameObjects[i].transform.World;
-                VertexInformation[i].Alpha = GameObjects[i].Alpha;
+            for (int i = 0; i < VertexBufferSize; ++i) {
+                VertexInformation[i].Matrix = safe[i].transform.World;
+                VertexInformation[i].Alpha = safe[i].Alpha;
             }
 
             // Re-Initialize the vertex-buffer if needed
