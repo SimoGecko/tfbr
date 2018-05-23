@@ -8,10 +8,11 @@ namespace BRS.Engine.Rendering {
     public class ParticleInstance {
         public readonly ParticleSystem3D ParticleSystem;
         public readonly Dictionary<ParticleComponent, float> Positions = new Dictionary<ParticleComponent, float>();
-        public List<float> Times = new List<float>();
+        private readonly Settings _settings;
 
         public ParticleInstance(ParticleSystem3D particleSystem) {
             ParticleSystem = particleSystem;
+            _settings = ParticleSystem.Settings;
         }
 
         public void AddInstance(ParticleComponent transform) {
@@ -23,14 +24,18 @@ namespace BRS.Engine.Rendering {
         }
 
         public void Update() {
-            
+
             foreach (var keyValue in Positions.ToList()) {
+                if (!keyValue.Key.IsEmitting) {
+                    continue;
+                }
+
                 float currentTime = Time.CurrentTime;
 
-                if (currentTime > keyValue.Value + ParticleSystem.Settings.TimeBetweenRounds) {
-                    List<Tuple<Vector3, Vector3>> newParticles = keyValue.Key.GetNextPositions();
-                    foreach (var particle in newParticles) {
-                        ParticleSystem.AddSingleParticle(particle.Item1, particle.Item2);
+                if (currentTime > keyValue.Value + _settings.TimeBetweenRounds) {
+                    Tuple<Vector3, Vector3> posVel = keyValue.Key.GetNextPosition();
+                    for (int i = 0; i < _settings.ParticlesPerRound; ++i) {
+                        ParticleSystem.AddSingleParticle(posVel.Item1, posVel.Item2);
                     }
 
                     Positions[keyValue.Key] = currentTime;

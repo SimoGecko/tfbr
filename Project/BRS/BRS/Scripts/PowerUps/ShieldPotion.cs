@@ -1,10 +1,9 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
-using BRS.Scripts.Managers;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Elements;
-using Microsoft.Xna.Framework;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PowerUps {
     class ShieldPotion : Powerup {
@@ -17,14 +16,12 @@ namespace BRS.Scripts.PowerUps {
 
         public ShieldPotion() {
             powerupType = PowerupType.Shield;
+            ParticleRay = ParticleType3D.PowerUpShieldRay;
+            ParticleStar = ParticleType3D.PowerUpShieldStar;
             _useInstantly = true;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

@@ -4,6 +4,7 @@
 using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
@@ -23,6 +24,8 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public PowerupType powerupType;
+        public ParticleType3D ParticleRay;
+        public ParticleType3D ParticleStar;
         private const float RotSpeed = 1;
 
         //private

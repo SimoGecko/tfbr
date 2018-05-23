@@ -47,7 +47,7 @@ namespace BRS.Engine.Rendering {
         /// Draw all the models with hardware-instancing
         /// </summary>
         public static void Draw() {
-            foreach (ParticleSystem3D particleSystem in ParticleSystems) {
+            foreach (ParticleSystem3D particleSystem in DepthParticleSystems) {
                 particleSystem.Draw3D();
             }
             foreach (var keyValue in ParticleSystems3D) {
@@ -85,16 +85,23 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="particleType">Particle-type on which the emitter is added</param>
         /// <param name="transform">Transform-object of the emitter</param>
-        /// <param name="useForDepth">Used for depth rendering</param>
-        public static ParticleSystem3D AddInstance(ParticleType3D particleType, ParticleComponent transform, bool useForDepth = false) {
+        public static void AddInstance(ParticleType3D particleType, ParticleComponent transform) {
             if (ParticleSystems3D.ContainsKey(particleType)) {
                 ParticleSystems3D[particleType].AddInstance(transform);
-                return ParticleSystems3D[particleType].ParticleSystem;
             } else {
                 throw new Exception("Should not be here");
             }
-            if (useForDepth) {
-                //DepthParticleSystems.Add(particleSystem);
+        }
+
+        /// <summary>
+        /// Remove a particle-system to not be drawn anymore
+        /// </summary>
+        /// <param name="particleType">Particle-type on which the emitter is added</param>
+        /// <param name="transform">Transform-object of the emitter</param>
+        public static void RemoveInstance(ParticleType3D particleType, ParticleComponent transform) {
+            if (ParticleSystems3D.ContainsKey(particleType)) {
+                ParticleSystems3D[particleType].RemoveInstance(transform);
+
             }
         }
 
