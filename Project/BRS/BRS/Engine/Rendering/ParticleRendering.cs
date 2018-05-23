@@ -6,6 +6,10 @@ using System.Collections.Generic;
 using BRS.Engine.Particles;
 
 namespace BRS.Engine.Rendering {
+    /// <summary>
+    /// Optimized class to draw all the particle-systems as performant as possible by only sending the model once to the GPU.
+    /// Additionally all world-matrices for this model are send as well in one batch to the GPU.
+    /// </summary>
     public static class ParticleRendering {
 
         #region Properties and attributes
@@ -47,7 +51,7 @@ namespace BRS.Engine.Rendering {
         /// Draw all the models with hardware-instancing
         /// </summary>
         public static void Draw() {
-            foreach (ParticleSystem3D particleSystem in DepthParticleSystems) {
+            foreach (ParticleSystem3D particleSystem in ParticleSystems) {
                 particleSystem.Draw3D();
             }
             foreach (var keyValue in ParticleSystems3D) {
@@ -74,6 +78,7 @@ namespace BRS.Engine.Rendering {
         /// <param name="particleType">Type of the particles to store uniquely</param>
         /// <param name="particleSystem">Particle-system</param>
         public static void Initialize(ParticleType3D particleType, ParticleSystem3D particleSystem) {
+            // Startup the particle-systems properly
             particleSystem.Awake();
             particleSystem.Start();
 
@@ -84,10 +89,10 @@ namespace BRS.Engine.Rendering {
         /// Add a particle-system to render
         /// </summary>
         /// <param name="particleType">Particle-type on which the emitter is added</param>
-        /// <param name="transform">Transform-object of the emitter</param>
-        public static void AddInstance(ParticleType3D particleType, ParticleComponent transform) {
+        /// <param name="emitter">Component of the emitter</param>
+        public static void AddInstance(ParticleType3D particleType, ParticleComponent emitter) {
             if (ParticleSystems3D.ContainsKey(particleType)) {
-                ParticleSystems3D[particleType].AddInstance(transform);
+                ParticleSystems3D[particleType].Add(emitter);
             } else {
                 throw new Exception("Should not be here");
             }
@@ -97,10 +102,10 @@ namespace BRS.Engine.Rendering {
         /// Remove a particle-system to not be drawn anymore
         /// </summary>
         /// <param name="particleType">Particle-type on which the emitter is added</param>
-        /// <param name="transform">Transform-object of the emitter</param>
-        public static void RemoveInstance(ParticleType3D particleType, ParticleComponent transform) {
+        /// <param name="emitter">Component of the emitter</param>
+        public static void RemoveInstance(ParticleType3D particleType, ParticleComponent emitter) {
             if (ParticleSystems3D.ContainsKey(particleType)) {
-                ParticleSystems3D[particleType].RemoveInstance(transform);
+                ParticleSystems3D[particleType].RemoveInstance(emitter);
 
             }
         }

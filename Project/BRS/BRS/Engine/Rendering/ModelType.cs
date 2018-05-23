@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 namespace BRS.Engine.Rendering {
+
     /// <summary>
     /// Defines the model-type which is used for the hardware-instanciation.
     /// </summary>
@@ -12,7 +13,6 @@ namespace BRS.Engine.Rendering {
     public enum ModelType {
         NoHardwareInstanciation,
         Skybox,
-        SkyboxInvisible,
         Ground,
         InsideScene,
         OutsideScene,

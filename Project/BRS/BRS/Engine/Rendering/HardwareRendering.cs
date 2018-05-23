@@ -7,11 +7,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
+    /// <summary>
+    /// Optimized class to draw all the 3D-models performantly by only sending the model once to the GPU.
+    /// Additionally all world-matrices for this model are send as well in one batch to the GPU.
+    /// </summary>
     public static class HardwareRendering {
 
         #region Properties and attributes
 
-        private static List<ModelType> _usedForDepth = new List<ModelType>{ModelType.SkyboxInvisible, ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
+        private static readonly List<ModelType> UsedForDepth = new List<ModelType>{ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
 
         public static GraphicsDeviceManager GraphicsDeviceManager { private get; set; }
         private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
@@ -59,7 +63,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         public static void Draw() {
             foreach (ModelType mt in Enum.GetValues(typeof(ModelType))) {
-                if (mt != ModelType.SkyboxInvisible && ModelTransformations.ContainsKey(mt)) {
+                if (ModelTransformations.ContainsKey(mt)) {
                     DrawModelInstanciated(ModelTransformations[mt]);
                 }
             }
@@ -69,7 +73,7 @@ namespace BRS.Engine.Rendering {
         /// Draw all the models with hardware-instancing
         /// </summary>
         public static void DrawDepth() {
-            foreach (ModelType mt in _usedForDepth) {
+            foreach (ModelType mt in UsedForDepth) {
                 if (ModelTransformations.ContainsKey(mt)) {
                     DrawModelInstanciated(ModelTransformations[mt], _zBufferEffect);
                 }
@@ -118,6 +122,10 @@ namespace BRS.Engine.Rendering {
                 ModelTransformations[modelType].Remove(gameObject);
             }
         }
+
+        #endregion
+
+        #region Drawing
 
         /// <summary>
         /// Draw a model with the vertex-/index-buffers to accelerate the drawing

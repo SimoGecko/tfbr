@@ -1,4 +1,11 @@
-﻿namespace BRS.Engine.Rendering {
+﻿// (c) Andreas Emch 2018
+// ETHZ - GAME PROGRAMMING LAB
+
+namespace BRS.Engine.Rendering {
+
+    /// <summary>
+    /// Particle type which are combined together
+    /// </summary>
     public enum ParticleType3D {
         PowerUpHealthRay,
         PowerUpCapacityRay,
@@ -21,10 +28,6 @@
         PowerUpTrapStar,
         PowerUpExplodingboxStar,
         PowerUpWeightStar,
-        PowerUpMagnetStar,
-        //PowerUpRay,
-        //Dust,
-        //Boost,
-        //Smoke
+        PowerUpMagnetStar
     }
 }
