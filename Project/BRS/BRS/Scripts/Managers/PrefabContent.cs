@@ -86,7 +86,8 @@ namespace BRS.Engine {
                 powerupPrefab.transform.Scale(powerupScale);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
-                powerupPrefab.AddComponent(new PowerUpEffect(powerupcomponents[i].powerupColor));
+                powerupPrefab.AddComponent(new PowerUpRay(powerupcomponents[i].ParticleRay));
+                powerupPrefab.AddComponent(new PowerUpStar(powerupcomponents[i].ParticleStar));
                 Prefabs.AddPrefab(powerupPrefab);
             }
 
@@ -267,77 +268,75 @@ namespace BRS.Engine {
 
         private static void InitializeParticleSystems() {
 
-            #region Boost
+            foreach (Powerup powerup in powerupcomponents) {
+                Color minColor = powerup.powerupColor;
+                minColor.A = 0;
+                Color maxColor = powerup.powerupColor;
+                maxColor.A = 64;
 
-            ParticleSystem3D boost = new ParticleSystem3D {
-                Settings = new Settings {
-                    TextureName = "boost",
-                    MaxParticles = 200,
-                    ParticlesPerRound = 5,
-                    Duration = 0.85f,
-                    DurationRandomness = 1.5f,
-                    EmitterVelocitySensitivity = 0.0f,
+                ParticleSystem3D rayParticles = new ParticleSystem3D {
+                    Settings = new Settings {
+                        TextureName = "powerup_ray",
+                        MaxParticles = 10000,
+                        ParticlesPerRound = 10,
+                        Duration = 1.0f,
+                        Gravity = new Vector3(0, 0, 0),
+                        EndVelocity = 0.75f,
 
-                    MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 0.5f,
+                        MinHorizontalVelocity = 0,
+                        MaxHorizontalVelocity = 0,
 
-                    MinVerticalVelocity = 1.3f,
-                    MaxVerticalVelocity = 1.5f,
+                        MinVerticalVelocity = 0.5f,
+                        MaxVerticalVelocity = 1.0f,
 
-                    MinColor = new Color(255, 255, 255, 0),
-                    MaxColor = new Color(255, 255, 255, 128),
+                        MinColor = minColor,
+                        MaxColor = maxColor,
 
-                    MinRotateSpeed = -4,
-                    MaxRotateSpeed = 4,
+                        MinRotateSpeed = 0,
+                        MaxRotateSpeed = 0,
 
-                    MinStartSize = 0.1f,
-                    MaxStartSize = 0.15f,
+                        MinStartSize = 0.1f,
+                        MaxStartSize = 0.2f,
 
-                    MinEndSize = 0.5f,
-                    MaxEndSize = 0.75f
-                }
-            };
+                        MinEndSize = 0.2f,
+                        MaxEndSize = 0.5f
+                    }
+                };
 
-            #endregion
+                maxColor.A = 128;
+                ParticleSystem3D starParticles = new ParticleSystem3D {
+                    Settings = new Settings {
+                        TextureName = "powerup_star",
+                        MaxParticles = 50,
+                        ParticlesPerRound = 1,
+                        Duration = 1.0f,
 
-            #region Powerup-Ray
+                        Gravity = new Vector3(0, 0, 0),
+                        EndVelocity = 0.75f,
 
-            Color minColor = Color.Black;
-            Color maxColor = Color.AliceBlue;
+                        MinHorizontalVelocity = 0,
+                        MaxHorizontalVelocity = 0,
 
-            ParticleSystem3D rayParticles = new ParticleSystem3D {
-                Settings = new Settings {
-                    TextureName = "powerup_ray",
-                    MaxParticles = 10000,
-                    ParticlesPerRound = 10,
-                    Duration = 1.0f,
-                    Gravity = new Vector3(0, 0, 0),
-                    EndVelocity = 0.75f,
+                        MinVerticalVelocity = 0.1f,
+                        MaxVerticalVelocity = 0.5f,
 
-                    MinHorizontalVelocity = 0,
-                    MaxHorizontalVelocity = 0,
+                        MinColor = minColor,
+                        MaxColor = maxColor,
 
-                    MinVerticalVelocity = 0.5f,
-                    MaxVerticalVelocity = 1.0f,
+                        MinRotateSpeed = 0,
+                        MaxRotateSpeed = 0,
 
-                    MinColor = minColor,
-                    MaxColor = maxColor,
+                        MinStartSize = 0.1f,
+                        MaxStartSize = 0.2f,
 
-                    MinRotateSpeed = 0,
-                    MaxRotateSpeed = 0,
+                        MinEndSize = 0.2f,
+                        MaxEndSize = 0.5f
+                    }
+                };
 
-                    MinStartSize = 0.1f,
-                    MaxStartSize = 0.2f,
-
-                    MinEndSize = 0.2f,
-                    MaxEndSize = 0.5f
-                }
-            };
-
-            #endregion
-
-            ParticleRendering.Initialize(ParticleType3D.PowerUpRay, boost);
-            ParticleRendering.Initialize(ParticleType3D.PowerUpRay, rayParticles);
+                ParticleRendering.Initialize(powerup.ParticleRay, rayParticles);
+                ParticleRendering.Initialize(powerup.ParticleStar, starParticles);
+            }
         }
     }
 }
