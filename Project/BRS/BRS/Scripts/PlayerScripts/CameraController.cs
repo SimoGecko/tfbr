@@ -68,15 +68,20 @@ namespace BRS.Scripts.PlayerScripts {
             //transform.eulerAngles = StartAngle;
         }
 
+        public override void Reset() {
+            transform.position = _player.position + Offset;
+            transform.eulerAngles = StartAngle;
+        }
+
         public override void LateUpdate() { // after player has moved
             if (!RoundManager.Instance.CamMoving) { // but only after the cam transition for the 3-2-1 count down
                 if (GameManager.GameActive) ProcessInput();
 
                 if (!autoFollow) FollowSmoothAndRotate();
-                else  SetBehindPlayer();
+                else SetBehindPlayer();
                 ProcessShake();
             }
-            
+
         }
 
 
