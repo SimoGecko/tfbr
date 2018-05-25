@@ -9,9 +9,11 @@ using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using BRS.Engine.Rendering;
+using Jitter.DataStructures;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
@@ -22,6 +24,10 @@ namespace BRS.Engine {
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
     public class GameObject {
+        private static readonly object lockList = new object();
+        private static readonly object lockCounter = new object();
+
+
         public Transform transform;
         public List<IComponent> components;
         public Model Model { get; set; }
@@ -54,7 +60,7 @@ namespace BRS.Engine {
             //UseHardwareInstanciation = false;
             //ModelType = ModelType.NoHardwareInstanciation;
 
-            allGameObjects.Add(this);
+            AddGameObject(this);
             SortAll();
         }
 
@@ -64,14 +70,14 @@ namespace BRS.Engine {
         /// <param name="name"></param>
         /// <param name="modelType"></param>
         /// <param name="addToDrawings">True if the model is drawn, false if not.</param>
-        public GameObject(string name, ModelType modelType, bool addToDrawings ) {
+        public GameObject(string name, ModelType modelType, bool addToDrawings) {
             Debug.Assert(!NameExists(name), "Name " + name + " must be unique!");
 
             this.name = name;
             DrawOrder = 0;
             transform = new Transform();
             components = new List<IComponent>();
-            allGameObjects.Add(this);
+            AddGameObject(this);
 
             UseHardwareInstanciation = true;
             ModelType = modelType;
@@ -83,6 +89,16 @@ namespace BRS.Engine {
             SortAll();
         }
 
+        private static void AddGameObject(GameObject go) {
+            lock (lockList) {
+                allGameObjects.Add(go);
+            }
+        }
+        private static void RemoveGameObject(GameObject go) {
+            lock (lockList) {
+                allGameObjects.Remove(go);
+            }
+        }
 
         // ---------- CALLBACKS ----------
         public void Awake() {
@@ -119,11 +135,12 @@ namespace BRS.Engine {
 
 
         // ---------- STATIC COMMANDS ----------
-        static List<GameObject> allGameObjects = new List<GameObject>();
-        public static GameObject[] All { get { return allGameObjects.ToArray(); } }
+        static HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
+        public static GameObject[] All { get { lock(lockList) { return allGameObjects.ToArray(); } } }
+        //public static ReadOnlyHashset<GameObject> All = new ReadOnlyHashset<GameObject>(allGameObjects);
 
         public static void SortAll() {
-            allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
+            //allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
         }
 
 
@@ -167,12 +184,16 @@ namespace BRS.Engine {
             return result;
         }
 
-        public virtual object Clone()  {
-            string newName = name + "_clone_" + InstanceCount++;
+        public virtual object Clone() {
+            int counter = 0;
+            lock (lockCounter) {
+                counter = InstanceCount++;
+            }
+            string newName = name + "_clone_" + counter;
             GameObject newObject;
 
             if (UseHardwareInstanciation) {
-                newObject=  new GameObject(newName, ModelType, true);
+                newObject = new GameObject(newName, ModelType, true);
             } else {
                 newObject = new GameObject(newName);
                 newObject.Model = Model;
@@ -203,24 +224,28 @@ namespace BRS.Engine {
         // ---------- DELETION ----------
 
         public static void ClearAll() {
-            while (allGameObjects.Count > 0) {
-                Destroy(allGameObjects[0]);
+            foreach (GameObject go in All) {
+                Destroy(go);
             }
-            allGameObjects.Clear();
+
+            lock (lockList) {
+                allGameObjects.Clear();
+            }
         }
 
         public static void Destroy(GameObject o) {
             if (o == null) return;
             o.active = false;
-            //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
-            allGameObjects.Remove(o);
-            //TODO free up memory
-            foreach (Component c in o.components) c.Destroy();
 
             // Instanciating
             if (o.Model != null) {
                 HardwareRendering.RemoveInstance(o.ModelType, o);
             }
+
+            //if (o.HasComponent<RigidBodyComponent>()) RigidBodyComponent.allcolliders.Remove(o.GetComponent<RigidBodyComponent>()); // to avoid increase in colliders
+            RemoveGameObject(o);
+            //TODO free up memory
+            foreach (Component c in o.components) c.Destroy();
         }
 
         public static void Destroy(GameObject o, float lifetime) {// delete after some time
@@ -228,38 +253,42 @@ namespace BRS.Engine {
         }
 
         public static void ConsiderPrefab(GameObject o) {
-            allGameObjects.Remove(o);
+            RemoveGameObject(o);
         }
 
 
         // ---------- SEARCH ----------
         public static GameObject FindGameObjectWithName(string name) { // note: this is a dangerous method, as it could return null and cause unhandled exception -> Check NameExists()
-            foreach (GameObject o in allGameObjects) {
-                if (o.name.Equals(name)) return o;
+            lock (lockList) {
+                foreach (GameObject o in allGameObjects) {
+                    if (o.name.Equals(name)) return o;
+                }
+                Debug.LogError("could not find gameobject " + name);
+                return null;
             }
-            Debug.LogError("could not find gameobject " + name);
-            return null;
         }
 
         public static bool NameExists(string name) {
-            foreach (GameObject o in allGameObjects.ToArray()) {
-                if (o.name.Equals(name)) return true;
+            lock (lockList) {
+                foreach (GameObject o in allGameObjects.ToArray()) {
+                    if (o.name.Equals(name)) return true;
+                }
+                return false;
             }
-            return false;
         }
 
         //returns all the gameobject that satisfy the tag
-        public static GameObject[] FindGameObjectsWithTag(ObjectTag _tag) {
-            List<GameObject> result = new List<GameObject>();
-            foreach (GameObject o in allGameObjects) {
-                if (o.tag == _tag) result.Add(o);
-            }
-            if (result.Count == 0) {
-                Debug.LogError("could not find any gameobject with tag " + _tag.ToString());
-                return null;
-            }
-            return result.ToArray();
-        }
+        //public static GameObject[] FindGameObjectsWithTag(ObjectTag _tag) {
+        //    List<GameObject> result = new List<GameObject>();
+        //    foreach (GameObject o in allGameObjects) {
+        //        if (o.tag == _tag) result.Add(o);
+        //    }
+        //    if (result.Count == 0) {
+        //        Debug.LogError("could not find any gameobject with tag " + _tag.ToString());
+        //        return null;
+        //    }
+        //    return result.ToArray();
+        //}
 
         // ---------- COMPONENTS ----------
         public void AddComponent(IComponent c) {

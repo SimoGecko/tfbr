@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
@@ -12,6 +13,8 @@ namespace BRS.Engine.Rendering {
     public class ModelInstance {
 
         #region Properties and attributes
+
+        private readonly object lockList = new object();
 
         /// <summary>
         /// Model for the current instance.
@@ -70,7 +73,9 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="gameObject">New instance of the model</param>
         public void Add(GameObject gameObject) {
-            GameObjects.Add(gameObject);
+            lock (lockList) {
+                GameObjects.Add(gameObject);
+            }
         }
 
         /// <summary>
@@ -78,7 +83,9 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="gameObject"></param>
         public void Remove(GameObject gameObject) {
-            GameObjects.Remove(gameObject);
+            lock (lockList) {
+                GameObjects.Remove(gameObject);
+            }
         }
 
         #endregion
@@ -89,7 +96,11 @@ namespace BRS.Engine.Rendering {
         /// Updates the vertex-buffer with the newest information
         /// </summary>
         public void Update() {
-            GameObject[] safe = GameObjects.ToArray();
+            GameObject[] safe;
+            
+            //lock(lockList) {
+                safe = GameObjects.ToArray();
+            //}
 
             // Store the size
             VertexBufferSize = safe.Length;
@@ -104,6 +115,10 @@ namespace BRS.Engine.Rendering {
             Array.Resize(ref VertexInformation, VertexBufferSize);
 
             for (int i = 0; i < VertexBufferSize; ++i) {
+                if (safe[i] == null) {
+                    continue;
+                }
+
                 VertexInformation[i].Matrix = safe[i].transform.World;
                 VertexInformation[i].Alpha = safe[i].Alpha;
             }
@@ -125,7 +140,9 @@ namespace BRS.Engine.Rendering {
         /// Reset all instances so that no game-object belongs to any hardware-instance
         /// </summary>
         public void Reset() {
-            GameObjects.Clear();
+            lock (lockList) {
+                GameObjects.Clear();
+            }
         }
 
         #endregion
