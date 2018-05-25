@@ -69,6 +69,8 @@ namespace BRS.Scripts.PlayerScripts {
         }
 
         public override void Reset() {
+            _xAngle = _xAngleSmooth = _yAngle = _yAngleSmooth = _refVelocityX = _refVelocityY = 0;
+
             transform.position = _player.position + Offset;
             transform.eulerAngles = StartAngle;
         }

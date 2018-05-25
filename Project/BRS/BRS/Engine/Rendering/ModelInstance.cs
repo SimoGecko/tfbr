@@ -14,8 +14,6 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
-        private readonly object lockList = new object();
-
         /// <summary>
         /// Model for the current instance.
         /// </summary>
@@ -73,9 +71,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="gameObject">New instance of the model</param>
         public void Add(GameObject gameObject) {
-            lock (lockList) {
-                GameObjects.Add(gameObject);
-            }
+            GameObjects.Add(gameObject);
         }
 
         /// <summary>
@@ -83,9 +79,7 @@ namespace BRS.Engine.Rendering {
         /// </summary>
         /// <param name="gameObject"></param>
         public void Remove(GameObject gameObject) {
-            lock (lockList) {
-                GameObjects.Remove(gameObject);
-            }
+            GameObjects.Remove(gameObject);
         }
 
         #endregion
@@ -96,11 +90,7 @@ namespace BRS.Engine.Rendering {
         /// Updates the vertex-buffer with the newest information
         /// </summary>
         public void Update() {
-            GameObject[] safe;
-            
-            //lock(lockList) {
-                safe = GameObjects.ToArray();
-            //}
+            GameObject[] safe = GameObjects.ToArray();
 
             // Store the size
             VertexBufferSize = safe.Length;
@@ -140,9 +130,7 @@ namespace BRS.Engine.Rendering {
         /// Reset all instances so that no game-object belongs to any hardware-instance
         /// </summary>
         public void Reset() {
-            lock (lockList) {
-                GameObjects.Clear();
-            }
+            GameObjects.Clear();
         }
 
         #endregion

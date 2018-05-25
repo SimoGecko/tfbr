@@ -148,8 +148,9 @@ namespace BRS.Scripts.Managers {
                 else Audio.Play("start0", Vector3.Zero);
                 if (i == 0) {
                     foreach (Camera c in Screen.Cameras) {
-                        c.transform.position = c.gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset;
-                        c.transform.eulerAngles = CameraController.StartAngle;
+                        //c.transform.position = c.gameObject.GetComponent<CameraController>().GetPlayerPosition() + CameraController.Offset;
+                        //c.transform.eulerAngles = CameraController.StartAngle;
+                        c.gameObject.GetComponent<CameraController>().Reset();
                     }
 
                     CamMoving = false;
