@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using BRS.Engine.Utilities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -108,7 +109,7 @@ namespace BRS.Engine.Rendering {
                 gameObject.Model = modelInstance.Model;
                 gameObject.material = modelInstance.Material;
             } else {
-                throw new Exception("Should not be here");
+                Debug.LogError("ModelType "+ modelType.GetDescription()+ " not properly initialized");
             }
         }
 

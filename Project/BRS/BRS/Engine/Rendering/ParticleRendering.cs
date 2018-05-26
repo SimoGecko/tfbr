@@ -1,9 +1,9 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using System;
 using System.Collections.Generic;
 using BRS.Engine.Particles;
+using BRS.Engine.Utilities;
 
 namespace BRS.Engine.Rendering {
     /// <summary>
@@ -94,7 +94,7 @@ namespace BRS.Engine.Rendering {
             if (ParticleSystems3D.ContainsKey(particleType)) {
                 ParticleSystems3D[particleType].Add(emitter);
             } else {
-                throw new Exception("Should not be here");
+                Debug.LogError("ParticleType3D " + particleType.GetDescription()+ " not properly initialized");
             }
         }
 
