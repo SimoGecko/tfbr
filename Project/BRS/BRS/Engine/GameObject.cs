@@ -9,11 +9,9 @@ using BRS.Scripts.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using BRS.Engine.Rendering;
-using Jitter.DataStructures;
 
 namespace BRS.Engine {
     public enum ObjectTag { Default, Ground, Player, Base, Obstacle, Boundary, VaultDoor, DynamicObstacle, StaticObstacle, Chair, Plant, Cart, Police, Lighting }
@@ -24,8 +22,8 @@ namespace BRS.Engine {
     /// Class for objects in the world that have a transform, possibly a model and a list of components (scripts like in unity). Updated from main gameloop
     /// </summary>
     public class GameObject {
-        private static readonly object lockList = new object();
-        private static readonly object lockCounter = new object();
+        private static readonly object LockList = new object();
+        private static readonly object LockCounter = new object();
 
 
         public Transform transform;
@@ -61,7 +59,6 @@ namespace BRS.Engine {
             //ModelType = ModelType.NoHardwareInstanciation;
 
             AddGameObject(this);
-            SortAll();
         }
 
         /// <summary>
@@ -85,19 +82,17 @@ namespace BRS.Engine {
             if (addToDrawings) {
                 HardwareRendering.AddInstance(modelType, this);
             }
-
-            SortAll();
         }
 
         private static void AddGameObject(GameObject go) {
-            lock (lockList) {
+            //lock (LockList) {
                 allGameObjects.Add(go);
-            }
+            //}
         }
         private static void RemoveGameObject(GameObject go) {
-            lock (lockList) {
+            //lock (LockList) {
                 allGameObjects.Remove(go);
-            }
+            //}
         }
 
         // ---------- CALLBACKS ----------
@@ -136,13 +131,8 @@ namespace BRS.Engine {
 
         // ---------- STATIC COMMANDS ----------
         static HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
-        public static GameObject[] All { get { lock(lockList) { return allGameObjects.ToArray(); } } }
-        //public static ReadOnlyHashset<GameObject> All = new ReadOnlyHashset<GameObject>(allGameObjects);
-
-        public static void SortAll() {
-            //allGameObjects = allGameObjects.OrderBy(x => x.DrawOrder).ToList();
-        }
-
+        public static GameObject[] All { get { return allGameObjects.ToArray(); } }
+        //public static GameObject[] All { get { lock (LockList) { return allGameObjects.ToArray(); } } }
 
 
         // ---------- INSTANTIATION ----------
@@ -186,9 +176,9 @@ namespace BRS.Engine {
 
         public virtual object Clone() {
             int counter = 0;
-            lock (lockCounter) {
+            //lock (LockCounter) {
                 counter = InstanceCount++;
-            }
+            //}
             string newName = name + "_clone_" + counter;
             GameObject newObject;
 
@@ -228,9 +218,9 @@ namespace BRS.Engine {
                 Destroy(go);
             }
 
-            lock (lockList) {
+            //lock (LockList) {
                 allGameObjects.Clear();
-            }
+            //}
         }
 
         public static void Destroy(GameObject o) {
@@ -259,22 +249,18 @@ namespace BRS.Engine {
 
         // ---------- SEARCH ----------
         public static GameObject FindGameObjectWithName(string name) { // note: this is a dangerous method, as it could return null and cause unhandled exception -> Check NameExists()
-            lock (lockList) {
-                foreach (GameObject o in allGameObjects) {
-                    if (o.name.Equals(name)) return o;
-                }
-                Debug.LogError("could not find gameobject " + name);
-                return null;
+            foreach (GameObject o in All) {
+                if (o.name.Equals(name)) return o;
             }
+            Debug.LogError("could not find gameobject " + name);
+            return null;
         }
 
         public static bool NameExists(string name) {
-            lock (lockList) {
-                foreach (GameObject o in allGameObjects.ToArray()) {
-                    if (o.name.Equals(name)) return true;
-                }
-                return false;
+            foreach (GameObject o in All) {
+                if (o.name.Equals(name)) return true;
             }
+            return false;
         }
 
         //returns all the gameobject that satisfy the tag

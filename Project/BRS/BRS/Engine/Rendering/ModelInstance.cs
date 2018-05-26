@@ -1,10 +1,9 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
     /// <summary>

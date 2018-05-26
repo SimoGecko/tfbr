@@ -34,7 +34,7 @@ namespace BRS.Scripts.Elements {
         private readonly int _baseIndex;
 
         private readonly List<GameObject> _moneyGameObjects = new List<GameObject>();
-        //private readonly object lockList = new object();
+        private readonly object lockList = new object();
 
         public System.Action OnBringBase;
 
@@ -150,13 +150,12 @@ namespace BRS.Scripts.Elements {
         }
 
 
-        void UpdateMoneyStack() {
+        async void UpdateMoneyStack() {
             //HashSet<GameObject> stacks = new HashSet<GameObject>();
             int totalStacksToShow = TotalMoney / 1000;
 
             while (_shownMoneyStacks < totalStacksToShow) {
                 GameObject newBundle = GameObject.Instantiate("cashStack", transform.position + 0.5f * Vector3.Up, MyRandom.YRotation());
-                _moneyGameObjects.Add(newBundle);
                 //stacks.Add(newBundle);
 
                 Vector3 size = BoundingBoxHelper.CalculateSize(newBundle.Model, newBundle.transform.scale);
@@ -170,17 +169,12 @@ namespace BRS.Scripts.Elements {
 
                 newBundle.transform.position = transform.position + up + right + back;
 
-                //lock (lockList) {
-                ++_shownMoneyStacks;
-                //}
-                //await Time.WaitForSeconds(0.001f);
-
+                lock (lockList) {
+                    //_moneyGameObjects.Add(newBundle);
+                    ++_shownMoneyStacks;
+                }
+                await Time.WaitForSeconds(0.001f);
             }
-
-            //_shownMoneyStacks = 0;
-            //foreach (GameObject go in stacks) {
-            //    GameObject.Destroy(go);
-            //}
         }
 
     }

@@ -19,7 +19,7 @@ namespace BRS.Scripts.UI {
         const float timeBetweenTut = 3f;
 
         //private
-        bool showTutorial = true;
+        bool showTutorial = false;
 
         private int _index;
         Tut[] tutorial;

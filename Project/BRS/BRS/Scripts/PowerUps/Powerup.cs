@@ -45,8 +45,6 @@ namespace BRS.Scripts.PowerUps {
             base.Start();
             transform.rotation = MyRandom.YRotation();
 
-            
-
             if (gameObject.HasComponent<DynamicRigidBody>()) {
                 _rigidBody = gameObject.GetComponent<DynamicRigidBody>();
             }

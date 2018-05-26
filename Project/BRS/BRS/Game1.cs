@@ -128,13 +128,14 @@ namespace BRS {
                     // Allow physics drawing for debug-reasons (display boundingboxes etc..)
                     PhysicsDrawer.Instance.Draw(cam);
 
-                    ////gizmos
-                    //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
-                    //Gizmos.DrawWire(cam);
-                    //GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                    //Gizmos.DrawFull(cam);
+                    //gizmos
+                    GraphicsDevice.RasterizerState = Screen._wireRasterizer;
+                    Gizmos.DrawWire(cam);
+                    GraphicsDevice.RasterizerState = Screen._fullRasterizer;
+                    Gizmos.DrawFull(cam);
                 }
-                //Gizmos.ClearOrders();
+
+                Gizmos.ClearOrders();
             }
 
             // draw everything 3D to get the depth info

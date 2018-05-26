@@ -22,7 +22,7 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         private const float SmoothTime = .2f;
         private const float AutoFollowSmoothTime = .4f;
-        private const float AngleVariation = 40;
+        private const float AngleVariation = 5;
         private const float ShakeAmount = .1f;
         private const float deadZone = .2f;
 
