@@ -42,23 +42,18 @@ namespace BRS.Scripts.Scenes {
             Material groundMat  = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"));
 
             // Model instanciation -> not wokring with these models, but not to bad since we have not many models in the menu-level
-            //HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
-            //HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
+            HardwareRendering.InitializeModel(ModelType.InsideScene, File.Load<Model>("Models/scenes/menu_inside"), insideMat);
+            HardwareRendering.InitializeModel(ModelType.OutsideScene, File.Load<Model>("Models/scenes/menu_outside"), outsideMat);
             HardwareRendering.InitializeModel(ModelType.Ground, File.Load<Model>("Models/elements/ground"), groundMat);
 
-            GameObject insideScene = new GameObject("menu_inside", File.Load<Model>("Models/scenes/menu_inside"));
-            insideScene.DrawOrder = 1;
-            insideScene.material = insideMat;
+            GameObject insideScene = new GameObject("menu_inside", ModelType.InsideScene, true);
             insideScene.tag = ObjectTag.Ground;
 
-            GameObject outsideScene = new GameObject("menu_outside", File.Load<Model>("Models/scenes/menu_outside"));
-            outsideScene.DrawOrder = 2;
-            outsideScene.material = outsideMat;
+            GameObject outsideScene = new GameObject("menu_outside", ModelType.OutsideScene, true);
             outsideScene.tag = ObjectTag.Ground;
 
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
-            infinitePlane.DrawOrder = 0;
-            infinitePlane.material = groundMat;
+            infinitePlane.tag = ObjectTag.Ground;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -5.0f, 0);
         }
@@ -76,11 +71,17 @@ namespace BRS.Scripts.Scenes {
 
         void CreateSkybox() {
             bool useRandomSkybox = true;
-            string[] skyboxTextures = new string[] { "daybreak", "midday", "evening", "sunset", "midnight", };
+
+            string[] skyboxTextures = { "daybreak", "midday", "evening", "sunset", "midnight", };
             string skyTexture = useRandomSkybox ? skyboxTextures[MyRandom.Range(0, 5)] : "midday";
-            GameObject skybox = new GameObject("skybox", File.Load<Model>("Models/elements/skybox"));
-            skybox.transform.Scale(2); // not more than this or it will be culled
             Material skyboxMat = new Material(File.Load<Texture2D>("Images/skyboxes/" + skyTexture));
+
+            // Hardware instancing
+            HardwareRendering.InitializeModel(ModelType.Skybox, File.Load<Model>("Models/elements/skybox"), skyboxMat);
+
+            // Visible skybox to render normaly
+            GameObject skybox = new GameObject("skybox", ModelType.Skybox, true);
+            skybox.transform.Scale(2); // not more than this or it will be culled
             skybox.material = skyboxMat;
         }
 
@@ -90,14 +91,14 @@ namespace BRS.Scripts.Scenes {
         private void CreateManagers() {
             // !! Has to be called before the next manager
             // Store the information needed from for multiple scene => don't get destroyed
-            GameObject ScenesCommManager = new GameObject("scenesComManager");
-            ScenesCommManager.AddComponent(new ScenesCommunicationManager());
+            GameObject scenesCommManager = new GameObject("scenesComManager");
+            scenesCommManager.AddComponent(new ScenesCommunicationManager());
             ScenesCommunicationManager.loadOnlyPauseMenu = false;
 
             // Define the menu
-            GameObject Manager = new GameObject("manager");
-            Manager.AddComponent(new ButtonsUI());
-            Manager.AddComponent(new MenuManager());
+            GameObject manager = new GameObject("manager");
+            manager.AddComponent(new ButtonsUI());
+            manager.AddComponent(new MenuManager());
         }
 
         #endregion

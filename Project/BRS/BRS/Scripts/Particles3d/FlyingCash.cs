@@ -95,14 +95,14 @@ namespace BRS.Scripts.Particles3D {
                 // compute a random velocity
                 Vector3 velocity = Vector3.Zero;
                 velocity.X += MathHelper.Lerp(_minXV, _maxXV, MyRandom.Value);
+                velocity.Z += MathHelper.Lerp(_minZV, _maxZV, MyRandom.Value);
                 // falling down
                 velocity.Y -= MathHelper.Lerp(_minYV, _maxYV, MyRandom.Value);
-                velocity.Z += MathHelper.Lerp(_minZV, _maxZV, MyRandom.Value);
-
 
                 _cashParticles.AddParticles(position, velocity);
                 _particlesCreated++;
             }
+
             // only emitted in the beginning till the max number is created
             if (_particlesCreated > _maxParticles) {
                 IsEmitting = false;

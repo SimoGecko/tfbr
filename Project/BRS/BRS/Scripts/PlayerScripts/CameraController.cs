@@ -22,7 +22,7 @@ namespace BRS.Scripts.PlayerScripts {
         // const
         private const float SmoothTime = .2f;
         private const float AutoFollowSmoothTime = .4f;
-        private const float AngleVariation = 40;
+        private const float AngleVariation = 5;
         private const float ShakeAmount = .1f;
         private const float deadZone = .2f;
 
@@ -68,15 +68,22 @@ namespace BRS.Scripts.PlayerScripts {
             //transform.eulerAngles = StartAngle;
         }
 
+        public override void Reset() {
+            _xAngle = _xAngleSmooth = _yAngle = _yAngleSmooth = _refVelocityX = _refVelocityY = 0;
+
+            transform.position = _player.position + Offset;
+            transform.eulerAngles = StartAngle;
+        }
+
         public override void LateUpdate() { // after player has moved
             if (!RoundManager.Instance.CamMoving) { // but only after the cam transition for the 3-2-1 count down
                 if (GameManager.GameActive) ProcessInput();
 
                 if (!autoFollow) FollowSmoothAndRotate();
-                else  SetBehindPlayer();
+                else SetBehindPlayer();
                 ProcessShake();
             }
-            
+
         }
 
 

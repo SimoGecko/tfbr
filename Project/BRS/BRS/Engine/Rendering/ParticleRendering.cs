@@ -3,8 +3,13 @@
 
 using System.Collections.Generic;
 using BRS.Engine.Particles;
+using BRS.Engine.Utilities;
 
 namespace BRS.Engine.Rendering {
+    /// <summary>
+    /// Optimized class to draw all the particle-systems as performant as possible by only sending the model once to the GPU.
+    /// Additionally all world-matrices for this model are send as well in one batch to the GPU.
+    /// </summary>
     public static class ParticleRendering {
 
         #region Properties and attributes
@@ -12,6 +17,7 @@ namespace BRS.Engine.Rendering {
         //reference
         private static readonly List<ParticleSystem3D> ParticleSystems = new List<ParticleSystem3D>();
         private static readonly List<ParticleSystem3D> DepthParticleSystems = new List<ParticleSystem3D>();
+        private static readonly Dictionary<ParticleType3D, ParticleInstance> ParticleSystems3D = new Dictionary<ParticleType3D, ParticleInstance>();
 
         #endregion
 
@@ -35,9 +41,10 @@ namespace BRS.Engine.Rendering {
         /// Update the informration which are needed for the instance-drawing
         /// </summary>
         public static void Update() {
-            //foreach (var keyValue in ModelTransformations) {
-            //    keyValue.Value.Update();
-            //}
+            foreach (var keyValue in ParticleSystems3D) {
+                keyValue.Value.Update();
+                keyValue.Value.ParticleSystem.Update();
+            }
         }
 
         /// <summary>
@@ -46,6 +53,9 @@ namespace BRS.Engine.Rendering {
         public static void Draw() {
             foreach (ParticleSystem3D particleSystem in ParticleSystems) {
                 particleSystem.Draw3D();
+            }
+            foreach (var keyValue in ParticleSystems3D) {
+                keyValue.Value.ParticleSystem.Draw3D();
             }
         }
 
@@ -61,6 +71,44 @@ namespace BRS.Engine.Rendering {
         #endregion
 
         #region Instanciation-handling
+
+        /// <summary>
+        /// Initialize a new model for hardware-instanciation
+        /// </summary>
+        /// <param name="particleType">Type of the particles to store uniquely</param>
+        /// <param name="particleSystem">Particle-system</param>
+        public static void Initialize(ParticleType3D particleType, ParticleSystem3D particleSystem) {
+            // Startup the particle-systems properly
+            particleSystem.Awake();
+            particleSystem.Start();
+
+            ParticleSystems3D[particleType] = new ParticleInstance(particleSystem);
+        }
+
+        /// <summary>
+        /// Add a particle-system to render
+        /// </summary>
+        /// <param name="particleType">Particle-type on which the emitter is added</param>
+        /// <param name="emitter">Component of the emitter</param>
+        public static void AddInstance(ParticleType3D particleType, ParticleComponent emitter) {
+            if (ParticleSystems3D.ContainsKey(particleType)) {
+                ParticleSystems3D[particleType].Add(emitter);
+            } else {
+                Debug.LogError("ParticleType3D " + particleType.GetDescription()+ " not properly initialized");
+            }
+        }
+
+        /// <summary>
+        /// Remove a particle-system to not be drawn anymore
+        /// </summary>
+        /// <param name="particleType">Particle-type on which the emitter is added</param>
+        /// <param name="emitter">Component of the emitter</param>
+        public static void RemoveInstance(ParticleType3D particleType, ParticleComponent emitter) {
+            if (ParticleSystems3D.ContainsKey(particleType)) {
+                ParticleSystems3D[particleType].RemoveInstance(emitter);
+
+            }
+        }
 
         /// <summary>
         /// Add a particle-system to render

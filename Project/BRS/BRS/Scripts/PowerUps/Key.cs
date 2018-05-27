@@ -4,8 +4,8 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.Colliders;
+using BRS.Engine.Rendering;
 using BRS.Scripts.PowerUps;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.Elements {
     class Key : Powerup {
@@ -22,18 +22,14 @@ namespace BRS.Scripts.Elements {
         //reference
         public Key() {
             powerupType = PowerupType.Key;
+            ParticleRay = ParticleType3D.PowerUpKeyRay;
+            ParticleStar = ParticleType3D.PowerUpKeyStar;
         }
 
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-            
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
-
 
         // commands
         public override void UsePowerup() {

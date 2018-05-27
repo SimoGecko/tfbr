@@ -61,6 +61,7 @@ namespace BRS.Scripts.Scenes {
             outsideScene.tag = ObjectTag.Ground;
 
             GameObject infinitePlane = new GameObject("infinitePlane", ModelType.Ground, true);
+            infinitePlane.tag = ObjectTag.Ground;
             infinitePlane.transform.Scale(1000);
             infinitePlane.transform.position = new Vector3(0, -.1f, 0);
         }
@@ -188,18 +189,15 @@ namespace BRS.Scripts.Scenes {
                 HardwareRendering.AddInstance(modelType, player);
 
                 //ARROWS
-                Material arrowMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
 
                 //arrow for base
-                GameObject arrow = new GameObject("arrow_" + i, File.Load<Model>("Models/elements/arrow_green"));
-                arrow.material = arrowMat;
+                GameObject arrow = new GameObject("arrow_" + i, ModelType.ArrowBase, true);
                 arrow.AddComponent(new Arrow(player, false, i, player.GetComponent<PlayerInventory>().IsAlmostFull));
                 arrow.transform.Scale(.6f);
 
                 //arrow for enemy
                 if (GameManager.NumPlayers > 1) {
-                    GameObject arrow2 = new GameObject("arrow2_" + i, File.Load<Model>("Models/elements/arrow_red"));
-                    arrow2.material = arrowMat;
+                    GameObject arrow2 = new GameObject("arrow2_" + i, ModelType.ArrowEnemy, true);
                     arrow2.AddComponent(new Arrow(player, true, i, () => true));
                     arrow2.transform.Scale(.3f);
                 }
@@ -257,7 +255,6 @@ namespace BRS.Scripts.Scenes {
 
             //other elements
             GameObject speedpad = GameObject.Instantiate("speedpadPrefab", new Vector3(0, 0, -18), Quaternion.Identity);
-            //GameObject speedpad = new GameObject("speedpad", ModelType.Speedpad, true);
             speedpad.transform.eulerAngles = Vector3.Up * 90;
         }
 

@@ -84,7 +84,7 @@ namespace BRS.Scripts.Managers {
             PoliceManager.Instance.Reset();
             Vault.instance.Reset();
 
-            foreach (var g in GameObject.All) g.Reset();
+            foreach (GameObject g in GameObject.All) g.Reset();
 
             state = State.Playing;
         }

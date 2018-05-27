@@ -2,8 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
     class Trap : Powerup {
@@ -15,13 +15,11 @@ namespace BRS.Scripts.PowerUps {
 
         public Trap() {
             powerupType = PowerupType.Trap;
+            ParticleRay = ParticleType3D.PowerUpTrapRay;
+            ParticleStar = ParticleType3D.PowerUpTrapStar;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

@@ -2,9 +2,9 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using BRS.Scripts.Managers;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Elements;
-using Microsoft.Xna.Framework;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PowerUps {
     class ExplodingBox : Powerup {
@@ -15,13 +15,11 @@ namespace BRS.Scripts.PowerUps {
         //public
         public ExplodingBox() {
             powerupType = PowerupType.Explodingbox;
+            ParticleRay = ParticleType3D.PowerUpExplodingboxRay;
+            ParticleStar = ParticleType3D.PowerUpExplodingboxStar;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands
