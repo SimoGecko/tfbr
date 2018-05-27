@@ -176,9 +176,9 @@ namespace BRS.Engine {
 
         public virtual object Clone() {
             int counter = 0;
-            //lock (LockCounter) {
+            lock (LockCounter) {
                 counter = InstanceCount++;
-            //}
+            }
             string newName = name + "_clone_" + counter;
             GameObject newObject;
 

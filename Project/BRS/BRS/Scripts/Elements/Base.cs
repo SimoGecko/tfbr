@@ -173,7 +173,7 @@ namespace BRS.Scripts.Elements {
                     //_moneyGameObjects.Add(newBundle);
                     ++_shownMoneyStacks;
                 }
-                await Time.WaitForSeconds(0.001f);
+                await Time.WaitForSeconds(0.1f);
             }
         }
 
