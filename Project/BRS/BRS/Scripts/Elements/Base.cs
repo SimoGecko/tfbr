@@ -169,10 +169,10 @@ namespace BRS.Scripts.Elements {
 
                 newBundle.transform.position = transform.position + up + right + back;
 
-                //lock (lockList) {
-                    //_moneyGameObjects.Add(newBundle);
+                lock (lockList) {
+                    _moneyGameObjects.Add(newBundle);
                     ++_shownMoneyStacks;
-                //}
+                }
                 //await Time.WaitForSeconds(0.1f);
             }
         }
