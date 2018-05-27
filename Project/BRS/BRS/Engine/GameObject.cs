@@ -85,14 +85,14 @@ namespace BRS.Engine {
         }
 
         private static void AddGameObject(GameObject go) {
-            //lock (LockList) {
+            lock (LockList) {
                 allGameObjects.Add(go);
-            //}
+            }
         }
         private static void RemoveGameObject(GameObject go) {
-            //lock (LockList) {
+            lock (LockList) {
                 allGameObjects.Remove(go);
-            //}
+            }
         }
 
         // ---------- CALLBACKS ----------
@@ -131,8 +131,8 @@ namespace BRS.Engine {
 
         // ---------- STATIC COMMANDS ----------
         static HashSet<GameObject> allGameObjects = new HashSet<GameObject>();
-        public static GameObject[] All { get { return allGameObjects.ToArray(); } }
-        //public static GameObject[] All { get { lock (LockList) { return allGameObjects.ToArray(); } } }
+        //public static GameObject[] All { get { return allGameObjects.ToArray(); } }
+        public static GameObject[] All { get { lock (LockList) { return allGameObjects.ToArray(); } } }
 
 
         // ---------- INSTANTIATION ----------
@@ -218,9 +218,9 @@ namespace BRS.Engine {
                 Destroy(go);
             }
 
-            //lock (LockList) {
+            lock (LockList) {
                 allGameObjects.Clear();
-            //}
+            }
         }
 
         public static void Destroy(GameObject o) {
