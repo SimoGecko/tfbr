@@ -307,6 +307,16 @@ namespace BRS.Scripts.UI {
                 Button bu = ((Button)FindMenuComponentinPanelWithName("NamePlayer", panelName));
                 bu.Text = "Player " + (idAssociatePlayerScreen + 1).ToString();
                 bu.IndexAssociatedPlayerScreen = idAssociatePlayerScreen;
+
+                switch (panelName) {
+                    case "play2Shared0":
+                        bu.Text = "Louis";
+                        break;
+
+                    case "play2Shared1":
+                        bu.Text = "Ted";
+                        break;
+                }
             }
 
             // Set constraints
