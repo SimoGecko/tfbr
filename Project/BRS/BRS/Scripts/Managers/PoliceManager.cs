@@ -17,7 +17,8 @@ namespace BRS.Scripts {
         const float recordRefreshTime = .3f; // refresh rate to check for point
         const int startDelay = 20; // how much time to wait before first police spawn
         int[] patrolPolicePerDifficulty = new int[] { 1, 2, 3 }; // patrol = follow predefined path
-        int[] followPolicePerDifficulty = new int[] { 0, 3, 6 }; // follow = chase player
+        // Todo: For release: 0, 3, 6
+        int[] followPolicePerDifficulty = new int[] { 0, 1, 6 }; // follow = chase player
 
         public static bool IsActive = true;
 
