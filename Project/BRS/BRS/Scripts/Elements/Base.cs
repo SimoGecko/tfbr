@@ -157,7 +157,7 @@ namespace BRS.Scripts.Elements {
         }
 
 
-        async void UpdateMoneyStack() {
+        void UpdateMoneyStack() {
             //HashSet<GameObject> stacks = new HashSet<GameObject>();
             int totalStacksToShow = TotalMoney / 1000;
 
@@ -177,10 +177,10 @@ namespace BRS.Scripts.Elements {
                 newBundle.transform.position = transform.position + up + right + back;
 
                 lock (lockList) {
-                    //_moneyGameObjects.Add(newBundle);
+                    _moneyGameObjects.Add(newBundle);
                     ++_shownMoneyStacks;
                 }
-                await Time.WaitForSeconds(0.001f);
+                //await Time.WaitForSeconds(0.1f);
             }
         }
 
