@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using BRS.Engine;
+using BRS.Engine.Menu;
 using BRS.Engine.PostProcessing;
 using BRS.Engine.Utilities;
 using BRS.Scripts.Elements;
@@ -62,7 +63,6 @@ namespace BRS.Scripts.Managers {
         public static RoundManager Instance;
 
 
-
         // --------------------- BASE METHODS ------------------
         public override void Start() { // done only once at beginning
             Instance = this;
@@ -71,11 +71,14 @@ namespace BRS.Scripts.Managers {
                 teamWins = new int[GameManager.NumTeams];
                 roundNumber = 0;
             }
+
             RestartRound();
         }
 
         void RestartRound() { // done at beginning of every round
             SetUpStartCamTransition();
+
+            UpdateLvlAllPlayers();
 
             roundTimer = new Timer(RoundTime, OnRoundEnd, boundToRound:true);
             roundNumber++;
@@ -100,6 +103,65 @@ namespace BRS.Scripts.Managers {
         }
 
         // --------------------- CUSTOM METHODS ---------b -------
+
+        void UpdateLvlAllPlayers() {
+            for (int i = 0; i < GameManager.NumPlayers; i++) {
+                // update lvl
+                Player p = ElementManager.Instance.Player(i);
+                p.PlayerLvl = GetLvlSinglePlayer(p);
+
+                // update capacity according to level
+                int currIdModel = 0;
+                if (ScenesCommunicationManager.Instance != null) 
+                    if (ScenesCommunicationManager.Instance.PlayersInfo.ContainsKey("player_" + i))
+                        currIdModel = ScenesCommunicationManager.Instance.PlayersInfo["player_" + i].Item2;
+
+                float coeffMult = 1 + (float)((float)p.PlayerLvl / (float)Player.PlayermaxLvl);
+                p.gameObject.GetComponent<PlayerInventory>().SetCapacity((int)(ScenesCommunicationManager.ValuesStats[currIdModel].Capacity * coeffMult));
+                p.gameObject.GetComponent<PlayerAttack>().AttackDistance = (int)(ScenesCommunicationManager.ValuesStats[currIdModel].AttackDistance * coeffMult);
+                p.gameObject.GetComponent<PlayerMovement>().SetMaxSpeed((int)(ScenesCommunicationManager.ValuesStats[currIdModel].MaxSpeed * coeffMult));
+                p.gameObject.GetComponent<PlayerMovement>().SetMinSpeed((int)(ScenesCommunicationManager.ValuesStats[currIdModel].MinSpeed * coeffMult));
+            }
+        }
+
+        int GetLvlSinglePlayer(Player p) {
+            string[] RankingPlayersText = { "1P", "2P", "4P" };
+            string[] RankingDurationText = { "2 min", "3 min", "5 min", "10 min" };
+            float[] coeffMult = { 1, 1.5f, 3 };
+
+            int highscore = 0;
+            int count = 0;
+
+            foreach (var noPlayers in RankingPlayersText) {
+                foreach (var durationRound in RankingDurationText) {
+                    List<Tuple<string, string>> rankinglist = File.ReadRanking("ranking" + durationRound + noPlayers + ".txt"); //File.ReadRanking("Load /Rankings/ranking" + durationRound + noPlayers + ".txt");
+
+                    // Text component with player's name and score
+                    foreach (var aPerson in rankinglist) {
+                        if (aPerson.Item1 == p.PlayerName) {
+                            highscore += (int)(int.Parse(aPerson.Item2) * float.Parse(noPlayers[0].ToString()) / int.Parse(durationRound.Split(' ')[0]));
+                            count++;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            highscore += p.highscore;
+            if (count != 0)
+                highscore /= (count + p.highscore == 0 ? 0 : 1);
+            p.highscore = highscore;
+
+            int level = highscore / 3000;
+
+            if (level > Player.PlayermaxLvl)
+                level = Player.PlayermaxLvl;
+            if (level < 0)
+                level = 0;
+
+            return level;
+        }
+
 
         /// <summary>
         /// Set up the start information for the 3-2-1 count down camera transition
@@ -266,6 +328,9 @@ namespace BRS.Scripts.Managers {
 
             for (int i = 0; i < GameManager.NumPlayers; ++i) {
                 Base b = ElementManager.Instance.Base(i % 2);
+                Player p = ElementManager.Instance.Player(i);
+                p.highscore += b.TotalMoney;
+
                 rankinglist.Add(new Tuple<string, string>(PlayerUI.Instance.GetPlayerName(i), b.TotalMoney.ToString()));
             }
             rankinglist.Sort((x, y) => -1 * Int32.Parse(x.Item2).CompareTo(Int32.Parse(y.Item2)));
