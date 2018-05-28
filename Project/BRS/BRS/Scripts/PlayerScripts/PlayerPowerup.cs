@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using BRS.Engine;
 using BRS.Scripts.PowerUps;
 using BRS.Scripts.UI;
+using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PlayerScripts {
     /// <summary>
@@ -35,14 +36,27 @@ namespace BRS.Scripts.PlayerScripts {
         // --------------------- BASE METHODS ------------------
         public override void Start() {
             //_carryingPowerup = new List<Powerup>();
-            Reset();
+            //Reset();
+            if (_carryingPowerup == null) _carryingPowerup = new List<Powerup>();
             _collidedWith = new List<Powerup>();
 
             _player = gameObject.GetComponent<Player>();
         }
         
-        public override void Reset() {
+        public override void Reset() { // this is called 4 times
             _carryingPowerup = new List<Powerup>(); _carryingPowerup.Clear();
+            //int boughtPowerup = 0;
+            if(BuyPowerupManager.Instance != null && _player != null)
+                if (BuyPowerupManager.Instance.HasBoughtPowerup(_player.PlayerIndex)){
+                    //create and add powerup
+                    Powerup newPowerup = Spawner.Instance.SpawnPowerupToBuy();//Powerup.PowerupFromIndex(boughtPowerup);
+                    newPowerup.DoPickup(_player);
+                    //newPowerup.SetOwner(_player);
+                    //_carryingPowerup.Clear();
+                    //_carryingPowerup.Add(newPowerup);
+                    //Collect(newPowerup); // TODO make sure this works
+                }
+
             PowerupUI.Instance.UpdatePlayerPowerupUI(gameObject.GetComponent<Player>().PlayerIndex, CarryingPowerups());
         }
 

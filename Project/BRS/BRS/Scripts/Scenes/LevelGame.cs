@@ -116,6 +116,7 @@ namespace BRS.Scripts.Scenes {
             Manager.AddComponent(new Minimap());
             Manager.AddComponent(new PoliceManager(_policeStartPositions));
             Manager.AddComponent(new MenuManager()); // For pause menu only (not whole menu)
+            Manager.AddComponent(new BuyPowerupManager());
         }
 
         void SetStartPositions() {

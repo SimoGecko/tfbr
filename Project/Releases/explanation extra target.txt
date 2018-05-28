@@ -1,0 +1,15 @@
+Enemy AI, with navigation and decision making
+
+	We feature 2 types of AI in our game.
+	The enemy AI is the police cars, who exhibit different types of behaviour: patrolling high risk areas determined by the heatmap, as well as actively chasing the player while avoiding obstacles. The AI difficulty and amount of bots is adjusted based on the difficulty selected by the user. Police AI was tweaked to be also attackable and get stunned, as well as stop for a few seconds after catching the player to better balance the game and not make it too hard or frustrating.
+	The second AI is the robber AI that is aware of what is going on in the game and provides personalized suggestion through the context-sensitive UI to each user. This takes into consideration the actions each player is currently doing. If for example the AI detects that another player is in range and could be attacked but the player isn't attacking, a suggestion will be given. Other events can also accour, such as the AI giving suggestions to the losing player on how to open the vault if it's not opened yet. This AI supports many other events in the game, and decides what should be said to avoid repetition and not interrupting higher priority suggestions.
+
+Buyable from store between rounds
+
+	Between rounds, if a player has enough cash and wasn't busted, he can decide to spend 1000.- CHF to buy a random powerup from the store that will be available the next round. The amount of money spent is removed from the total in the same way the penalty for not escaping the bank is.
+
+Persistent progression system:
+
+Each player as an associated level which increase his current statistics. The level depends on the player's name and his associated highscores. 
+From all highscores, the mean (for the player's name) is calculated and then divided by a chosen coefficient to get the level (min 0, max 10). Then each statistic is multiplied by a coefficient between 1 and 2 (depends linearly on the level).
+Doing so, each new player (with a name not present in the highscores) start at level 0 and can be upgrated after each round depending on his score (=> progression). Since the highscores persist even after closing the game, so is the level system (=> persistent).

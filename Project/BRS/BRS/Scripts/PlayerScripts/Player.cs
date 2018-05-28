@@ -27,6 +27,9 @@ namespace BRS.Scripts.PlayerScripts {
         public int TeamIndex { get; private set; } // to differentiate teams
         public string PlayerName;
         public Color PlayerColor;
+        public int PlayerLvl;
+        public static int PlayermaxLvl = 10;
+        public int highscore;
 
         //HIT and STUN
         const float StunTime = 2f;
@@ -71,6 +74,8 @@ namespace BRS.Scripts.PlayerScripts {
                 : ScenesCommunicationManager.TeamBColor;
 
             startPosition = startPos;
+            PlayerLvl = 0;
+            highscore = 0;
         }
 
         public override void Start() {
@@ -152,7 +157,7 @@ namespace BRS.Scripts.PlayerScripts {
             pA.Reset();
             pM.Reset();
             pI.Reset();
-            pP.Reset();
+            //pP.Reset();
             pS.Reset();
             UpdateUI();
             _steerableCollider.PostStep(0.0f);
@@ -203,7 +208,8 @@ namespace BRS.Scripts.PlayerScripts {
             PlayerUI.Instance.UpdatePlayerUI(PlayerIndex,
                 pS.Stamina, pS.MaxStamina,
                 pI.Capacity, pI.CarryingValue, pI.CarryingWeight,
-                PlayerName, canAttack);
+                PlayerName, canAttack, 
+                PlayerLvl);
         }
 
         /// <summary>

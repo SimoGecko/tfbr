@@ -20,7 +20,7 @@ namespace BRS.Scripts {
         const int roundEndHeight = 256;
 
         //private
-        Texture2D countdownTex, endroundTex, robAgain;
+        Texture2D countdownTex, endroundTex, robAgain, buyPowerup, buyRandom;
 
         bool showCountdown = false;
         int countdownNumber = 0;
@@ -39,7 +39,9 @@ namespace BRS.Scripts {
         public override void Start() {
             countdownTex = File.Load<Texture2D>("Images/UI/countdown");
             endroundTex  = File.Load<Texture2D>("Images/UI/end_round_text");
-            robAgain     = File.Load<Texture2D>("Images/UI/rob_again");
+            robAgain = File.Load<Texture2D>("Images/UI/rob_again");
+            buyPowerup = File.Load<Texture2D>("Images/UI/buy_powerup");
+            buyRandom = File.Load<Texture2D>("Images/UI/buy_random");
 
             endRoundPlayerText = new int[GameManager.NumPlayers];
         }
@@ -67,6 +69,12 @@ namespace BRS.Scripts {
                 UserInterface.DrawString(gotPenalty?penaltyString : cashString, new Vector2(0, 100), Align.Center, bold:true, scale:.6f);
 
                 UserInterface.DrawPicture(robAgain,new Vector2(-20, 200), anchor: Align.Center, scale: .5f);
+                if (BuyPowerupManager.Instance.CanBuyPowerup(i)) {
+                    UserInterface.DrawPicture(buyPowerup, new Vector2(0, 300), anchor: Align.Center, scale: .5f);
+                }
+                if (BuyPowerupManager.Instance.HasBoughtPowerup(i)) {
+                    UserInterface.DrawPicture(buyRandom, new Vector2(0, 300), anchor: Align.Center, scale: .5f);
+                }
             }
         }
 

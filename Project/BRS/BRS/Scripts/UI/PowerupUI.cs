@@ -49,7 +49,26 @@ namespace BRS.Scripts.UI {
         // commands
         public override void Draw2D(int index) { // TODO clean out this code
             if (index == -1) return;
-            if (!GameManager.GameActive) return;
+
+            /*
+            if(GameManager.state == GameManager.State.Ended && _powerupUi[index].CurrentPowerup != -1) {
+                //SHOW POWERUP
+                if (BuyPowerupManager.Instance.HasBoughtPowerup(index)){
+                    int powerupIdx = _powerupUi[index].CurrentPowerup;
+                    // COPY PASTE TO DRAW BUTTON AND POWERUP
+                    UserInterface.DrawString("powerup", new Rectangle(0, 32, 125, 25), Align.Top, Align.Top, Align.Bottom, scale: .7f);
+                    UserInterface.DrawPicture(_smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 0, 64, 64), Align.Top);
+                    UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 65, 55, 55), RectangleFromIndex(powerupIdx), Align.Top);
+                    Color bgcol = (usePowerupColor) ? Powerup.PowerupColor(powerupIdx) : Color.Orange;
+                    UserInterface.DrawPicture(_smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 64, 64, 64), Align.Top, col: bgcol);
+                    UserInterface.DrawPicture(_powerupsAtlas, new Rectangle(0, 65, 55, 55), RectangleFromIndex(powerupIdx), Align.Top);
+                    string powerupName = ((PowerupType)powerupIdx).ToString();
+                    UserInterface.DrawString(powerupName, new Rectangle(0, 127, 125, 25), Align.Top, Align.Top, Align.Top);
+                }
+                return;
+            }*/
+
+            if (!GameManager.GameActive/* && !BuyPowerupManager.Instance.HasBoughtPowerup(index)*/) return;
 
             UserInterface.DrawString("powerup", new Rectangle(0, 32, 125, 25), Align.Top, Align.Top, Align.Bottom, scale:.7f);
             UserInterface.DrawPicture(_smallButton, new Rectangle(0, 57, 70, 70), new Rectangle(0, 0, 64, 64), Align.Top);

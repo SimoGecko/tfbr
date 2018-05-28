@@ -142,6 +142,12 @@ namespace BRS.Scripts.Managers {
             ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
         }
 
+        public Powerup SpawnPowerupToBuy() {
+            GameObject newPowerup = GameObject.Instantiate(_currentMode.RandomPowerupBiased + "Prefab", Vector3.Zero + Vector3.Up * 1.5f, Quaternion.Identity, Vector3.Zero);
+            ElementManager.Instance.Add(newPowerup.GetComponent<Powerup>());
+            return newPowerup.GetComponent<Powerup>();
+        }
+
 
 
         // queries
