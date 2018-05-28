@@ -10,6 +10,6 @@ Buyable from store between rounds
 
 Persistent progression system:
 
-Each player as an associated level which increase his current statistics. The level depends on the player's name and his associated highscores. 
+Each player has an associated level which increases his current statistics. The level depends on the player's name and his associated highscores. 
 From all highscores, the mean (for the player's name) is calculated and then divided by a chosen coefficient to get the level (min 0, max 10). Then each statistic is multiplied by a coefficient between 1 and 2 (depends linearly on the level).
-Doing so, each new player (with a name not present in the highscores) start at level 0 and can be upgrated after each round depending on his score (=> progression). Since the highscores persist even after closing the game, so is the level system (=> persistent).
+Doing so, each new player (with a name not present in the highscores) start at level 0 and can be upgraded after each round depending on his score (=> progression). Since the highscores persist even after closing the game, so is the level system (=> persistent).
