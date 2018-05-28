@@ -182,6 +182,7 @@
     <Compile Include="Scripts\Elements\Police.cs" />
     <Compile Include="Scripts\Elements\AnimatedWheels.cs" />
     <Compile Include="Scripts\Managers\AudioContent.cs" />
+    <Compile Include="Scripts\Managers\BuyPowerupManager.cs" />
     <Compile Include="Scripts\Managers\GameMode.cs" />
     <Compile Include="Scripts\Managers\LenseFlareManager.cs" />
     <Compile Include="Scripts\Managers\PlayArea.cs" />

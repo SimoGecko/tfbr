@@ -56,6 +56,8 @@ namespace BRS.Scripts.UI {
             if (!GameManager.GameActive) return;
 
             UserInterface.DrawString(_playerUi[index].Name, new Rectangle(20, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true);
+            UserInterface.DrawString("LVL" + _playerUi[index].level.ToString(), new Rectangle(160, 10, 330, 40), Align.TopLeft, scale: .5f, bold: true);
+
             //UserInterface.DrawPicture(_forkliftIcon, new Rectangle(20, 40, 100, 100), null, Align.TopLeft, flip: flip);
             UserInterface.DrawPicture(_playerUi[index].modelBack, new Rectangle(15, 35, 110, 110), null, Align.TopLeft);
             UserInterface.DrawPicture(_playerUi[index].modelPartColor, new Rectangle(15, 35, 110, 110), null, Align.TopLeft, col: _playerUi[index].modelColor);
@@ -106,7 +108,7 @@ namespace BRS.Scripts.UI {
 
         }
 
-        public void UpdatePlayerUI(int index, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack) {
+        public void UpdatePlayerUI(int index, float stamina, float maxStamina, int maxCapacity, int carryingValue, int carryingWeight, string name, bool canAttack, int lvl) {
             //TODO remove all unnecessary parameters
             // current
             _playerUi[index].CarryingValue = carryingValue;
@@ -119,6 +121,8 @@ namespace BRS.Scripts.UI {
 
             _playerUi[index].Name = name;
             _playerUi[index].CanAttack = canAttack;
+
+            _playerUi[index].level = lvl;
         }
 
         // Set default Player Model Image and color (UI)
@@ -182,6 +186,8 @@ namespace BRS.Scripts.UI {
         public Texture2D modelBack;
         public Texture2D modelPartColor;
         public Color modelColor;
+
+        public int level;
     }
 
 }

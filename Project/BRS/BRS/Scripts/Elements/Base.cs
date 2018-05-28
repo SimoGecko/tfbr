@@ -121,9 +121,16 @@ namespace BRS.Scripts.Elements {
             UpdateUI();
         }
 
+        public void Spend(int amount) {
+            if (CanAfford(amount))
+                TotalMoney -= amount;
+        }
+
 
         // queries
-
+        public bool CanAfford(int amount) {
+            return TotalMoney >= amount;
+        }
 
         // other
         async void DeloadPlayerProgression(PlayerInventory pi) {

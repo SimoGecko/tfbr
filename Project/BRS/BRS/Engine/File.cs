@@ -274,7 +274,6 @@ namespace BRS.Engine {
                     ++count;
                     if (count >= maxElem) break;
                 }
-
             } catch (Exception e) {
                 Debug.LogError(e.Message);
             }
