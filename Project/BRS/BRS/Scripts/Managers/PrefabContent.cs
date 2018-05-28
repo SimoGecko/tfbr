@@ -13,6 +13,7 @@ using BRS.Scripts.PowerUps;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using BRS.Engine.Particles;
 
 
 namespace BRS.Engine {
@@ -35,6 +36,7 @@ namespace BRS.Engine {
             builtAlready = true;
 
             InitializeHardwareInstancing();
+            InitializeParticleSystems();
 
             //-------------------VALUABLES-------------------
             //cash
@@ -84,7 +86,8 @@ namespace BRS.Engine {
                 powerupPrefab.transform.Scale(powerupScale);
                 powerupPrefab.AddComponent(powerupcomponents[i]);
                 powerupPrefab.AddComponent(new DynamicRigidBody(shapeType: ShapeType.Sphere, pureCollider: true));
-                powerupPrefab.AddComponent(new PowerUpEffect(powerupcomponents[i].powerupColor));
+                powerupPrefab.AddComponent(new PowerUpRay(powerupcomponents[i].ParticleRay));
+                powerupPrefab.AddComponent(new PowerUpStar(powerupcomponents[i].ParticleStar));
                 Prefabs.AddPrefab(powerupPrefab);
             }
 
@@ -214,15 +217,15 @@ namespace BRS.Engine {
             Prefabs.AddPrefab(wheelPolice);
         }
 
-        private static void InitializeHardwareInstancing()  {
+        private static void InitializeHardwareInstancing() {
             //-------------------MATERIALS-------------------
             Material powerupMat = new Material(File.Load<Texture2D>("Images/textures/powerups"));
             Material shadowMat = new Material(File.Load<Texture2D>("Images/textures/shadow"), true);
             Material lightPlayerMat = new Material(File.Load<Texture2D>("Images/textures/player_light"), true, true);
             Material lightBlueMat = new Material(File.Load<Texture2D>("Images/textures/police_blue"), true, true);
             Material lightRedMat = new Material(File.Load<Texture2D>("Images/textures/police_red"), true, true);
-            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) {RenderingType = RenderingType.TextureAlpha};
-            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) {RenderingType = RenderingType.TextureAlpha};
+            Material carTrackOilMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_oil"), true, true) { RenderingType = RenderingType.TextureAlpha };
+            Material carTrackSpeedMat = new Material(File.Load<Texture2D>("Images/particles3d/tracks_speed"), true, true) { RenderingType = RenderingType.TextureAlpha };
             Material elementsMat = new Material(File.Load<Texture2D>("Images/textures/polygonHeist"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material policeMat = new Material(File.Load<Texture2D>("Images/textures/Vehicle_Police"), File.Load<Texture2D>("Images/lightmaps/elements"));
             Material playerMat = new Material(File.Load<Texture2D>("Images/textures/player_colors_p1"), File.Load<Texture2D>("Images/lightmaps/elements"));
@@ -249,6 +252,8 @@ namespace BRS.Engine {
             HardwareRendering.InitializeModel(ModelType.WheelBz, File.Load<Model>("Models/vehicles/wheel_bz"), playerMat);
             HardwareRendering.InitializeModel(ModelType.WheelPolice, File.Load<Model>("Models/vehicles/wheel_police"), policeMat);
             HardwareRendering.InitializeModel(ModelType.Vault, File.Load<Model>("Models/elements/vault"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.ArrowBase, File.Load<Model>("Models/elements/arrow_green"), elementsMat);
+            HardwareRendering.InitializeModel(ModelType.ArrowEnemy, File.Load<Model>("Models/elements/arrow_red"), elementsMat);
 
             for (int i = 0; i < powerupName.Length; i++) {
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), powerupName[i], true);
@@ -258,6 +263,79 @@ namespace BRS.Engine {
             foreach (string s in dynamicElements) {
                 ModelType modelType = (ModelType)Enum.Parse(typeof(ModelType), s, true);
                 HardwareRendering.InitializeModel(modelType, File.Load<Model>("Models/elements/" + s), elementsMat);
+            }
+        }
+
+        private static void InitializeParticleSystems() {
+
+            foreach (Powerup powerup in powerupcomponents) {
+                Color minColor = powerup.powerupColor;
+                minColor.A = 0;
+                Color maxColor = powerup.powerupColor;
+                maxColor.A = 64;
+
+                ParticleSystem3D rayParticles = new ParticleSystem3D {
+                    Settings = new Settings {
+                        TextureName = "powerup_ray",
+                        MaxParticles = 10000,
+                        ParticlesPerRound = 10,
+                        Duration = 1.0f,
+                        Gravity = new Vector3(0, 0, 0),
+                        EndVelocity = 0.75f,
+
+                        MinHorizontalVelocity = 0,
+                        MaxHorizontalVelocity = 0,
+
+                        MinVerticalVelocity = 0.5f,
+                        MaxVerticalVelocity = 1.0f,
+
+                        MinColor = minColor,
+                        MaxColor = maxColor,
+
+                        MinRotateSpeed = 0,
+                        MaxRotateSpeed = 0,
+
+                        MinStartSize = 0.1f,
+                        MaxStartSize = 0.2f,
+
+                        MinEndSize = 0.2f,
+                        MaxEndSize = 0.5f
+                    }
+                };
+
+                maxColor.A = 128;
+                ParticleSystem3D starParticles = new ParticleSystem3D {
+                    Settings = new Settings {
+                        TextureName = "powerup_star",
+                        MaxParticles = 50,
+                        ParticlesPerRound = 1,
+                        Duration = 1.0f,
+
+                        Gravity = new Vector3(0, 0, 0),
+                        EndVelocity = 0.75f,
+
+                        MinHorizontalVelocity = 0,
+                        MaxHorizontalVelocity = 0,
+
+                        MinVerticalVelocity = 0.1f,
+                        MaxVerticalVelocity = 0.5f,
+
+                        MinColor = minColor,
+                        MaxColor = maxColor,
+
+                        MinRotateSpeed = 0,
+                        MaxRotateSpeed = 0,
+
+                        MinStartSize = 0.1f,
+                        MaxStartSize = 0.2f,
+
+                        MinEndSize = 0.2f,
+                        MaxEndSize = 0.5f
+                    }
+                };
+
+                ParticleRendering.Initialize(powerup.ParticleRay, rayParticles);
+                ParticleRendering.Initialize(powerup.ParticleStar, starParticles);
             }
         }
     }

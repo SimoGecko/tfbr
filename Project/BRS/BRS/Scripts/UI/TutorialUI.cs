@@ -19,7 +19,8 @@ namespace BRS.Scripts.UI {
         const float timeBetweenTut = 3f;
 
         //private
-        bool showTutorial = true;
+        // Todo: For release: true
+        bool showTutorial = false;
 
         private int _index;
         Tut[] tutorial;

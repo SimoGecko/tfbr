@@ -54,7 +54,7 @@ namespace BRS.Scripts.UI {
             if (!GameManager.GameActive) return;
             int baseIndex = GameManager.TeamIndex(index);
 
-            UserInterface.DrawString("Team " + (index+1), new Rectangle(-20, 10, 300, 40), Align.TopRight, Align.TopRight, Align.Right, scale: .5f, bold: true);
+            UserInterface.DrawString("Team " + (baseIndex + 1), new Rectangle(-20, 10, 300, 40), Align.TopRight, Align.TopRight, Align.Right, scale: .5f, bold: true);
             UserInterface.DrawPicture(_baseIcon, new Rectangle(-20, 40, 100, 100), null, Align.TopRight);
 
             int rank = RoundManager.GetRank(baseIndex);

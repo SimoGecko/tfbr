@@ -2,8 +2,8 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
+using BRS.Engine.Rendering;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
     class SpeedBoost : Powerup {
@@ -16,14 +16,11 @@ namespace BRS.Scripts.PowerUps {
 
         public SpeedBoost() {
             powerupType = PowerupType.Speed;
+            ParticleRay = ParticleType3D.PowerUpSpeedRay;
+            ParticleStar = ParticleType3D.PowerUpSpeedStar;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-            
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

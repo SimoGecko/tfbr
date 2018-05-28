@@ -47,8 +47,8 @@ namespace BRS.Engine {
         public static GraphicsDeviceManager gDM;
         public static GraphicsDevice gD { get { return gDM.GraphicsDevice; } }
 
-        public static Effect texlightEffect;
-        public static Effect textureEffect;
+        private static Effect texlightEffect;
+        private static Effect textureEffect;
         //public static Texture2D lightMap;
         //public static Texture2D textureCol;
 

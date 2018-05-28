@@ -2,7 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 using BRS.Engine;
-using Microsoft.Xna.Framework;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 
 namespace BRS.Scripts.PowerUps {
@@ -15,13 +15,11 @@ namespace BRS.Scripts.PowerUps {
 
         public Magnet() {
             powerupType = PowerupType.Magnet;
-        }
-        // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-            
+            ParticleRay = ParticleType3D.PowerUpMagnetRay;
+            ParticleStar = ParticleType3D.PowerUpMagnetStar;
         }
 
+        // --------------------- BASE METHODS ------------------
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

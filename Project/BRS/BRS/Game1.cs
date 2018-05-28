@@ -121,22 +121,22 @@ namespace BRS {
             HardwareRendering.Draw();
             ParticleRendering.Draw();
 
-            foreach (Camera cam in Screen.Cameras) {
-                GraphicsDevice.Viewport = cam.Viewport;
+            if (PhysicsDrawer.Instance.DoDrawings) {
+                foreach (Camera cam in Screen.Cameras) {
+                    GraphicsDevice.Viewport = cam.Viewport;
 
-                // Allow physics drawing for debug-reasons (display boundingboxes etc..)
-                PhysicsDrawer.Instance.Draw(cam);
+                    // Allow physics drawing for debug-reasons (display boundingboxes etc..)
+                    PhysicsDrawer.Instance.Draw(cam);
 
-                foreach (GameObject go in GameObject.All) go.Draw3D(cam);
+                    //gizmos
+                    GraphicsDevice.RasterizerState = Screen._wireRasterizer;
+                    Gizmos.DrawWire(cam);
+                    GraphicsDevice.RasterizerState = Screen._fullRasterizer;
+                    Gizmos.DrawFull(cam);
+                }
 
-                ////gizmos
-                //GraphicsDevice.RasterizerState = Screen._wireRasterizer;
-                //Gizmos.DrawWire(cam);
-                //GraphicsDevice.RasterizerState = Screen._fullRasterizer;
-                //Gizmos.DrawFull(cam);
+                Gizmos.ClearOrders();
             }
-            //Gizmos.ClearOrders();
-
 
             // draw everything 3D to get the depth info
             _graphics.GraphicsDevice.SetRenderTarget(PostProcessingManager.DepthTarget);

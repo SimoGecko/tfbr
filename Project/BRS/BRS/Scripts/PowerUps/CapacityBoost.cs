@@ -1,9 +1,8 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
+using BRS.Engine.Rendering;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
     class CapacityBoost : Powerup {
@@ -14,15 +13,12 @@ namespace BRS.Scripts.PowerUps {
 
         public CapacityBoost() {
             powerupType = PowerupType.Capacity;
+            ParticleRay = ParticleType3D.PowerUpCapacityRay;
+            ParticleStar = ParticleType3D.PowerUpCapacityStar;
             _useInstantly = true;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-            
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

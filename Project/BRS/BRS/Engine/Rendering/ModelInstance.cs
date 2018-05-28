@@ -1,9 +1,9 @@
 ﻿// (c) Andreas Emch 2018
 // ETHZ - GAME PROGRAMMING LAB
 
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Engine.Rendering {
     /// <summary>
@@ -41,6 +41,11 @@ namespace BRS.Engine.Rendering {
         /// Vertex-buffer for the instance
         /// </summary>
         public DynamicVertexBuffer VertexBuffer;
+
+        /// <summary>
+        /// Size of the vertex-buffer after the update
+        /// </summary>
+        public int VertexBufferSize;
 
         #endregion
 
@@ -84,32 +89,35 @@ namespace BRS.Engine.Rendering {
         /// Updates the vertex-buffer with the newest information
         /// </summary>
         public void Update() {
+            GameObject[] safe = GameObjects.ToArray();
+
+            // Store the size
+            VertexBufferSize = safe.Length;
+
             // Vertex-buffer with 0 elements fails => handle this by explicitly doing nothing.
             // Important: Now there is most likely an instance remaining in the buffer => handle this case in the draw
-            if (GameObjects.Count == 0) {
+            if (safe.Length == 0) {
                 return;
             }
 
-            // Store the size
-            int size = GameObjects.Count;
-
             // Update the size (which is only done if needed) and transfer all needed values for the vertex-description
-            Array.Resize(ref VertexInformation, size);
+            Array.Resize(ref VertexInformation, VertexBufferSize);
 
-            if (VertexInformation.Length != size)
-            Debug.Log(VertexInformation.Length + " == " + size);
+            for (int i = 0; i < VertexBufferSize; ++i) {
+                if (safe[i] == null) {
+                    continue;
+                }
 
-            for (int i = 0; i < size && i < VertexInformation.Length; ++i) {
-                VertexInformation[i].Matrix = GameObjects[i].transform.World;
-                VertexInformation[i].Alpha = GameObjects[i].Alpha;
+                VertexInformation[i].Matrix = safe[i].transform.World;
+                VertexInformation[i].Alpha = safe[i].Alpha;
             }
 
             // Re-Initialize the vertex-buffer if needed
-            if (VertexBuffer == null || size > VertexBuffer.VertexCount) {
+            if (VertexBuffer == null || VertexBufferSize > VertexBuffer.VertexCount) {
                 VertexBuffer?.Dispose();
 
                 VertexBuffer = new DynamicVertexBuffer(Graphics.gD, VertexPositionAlpha.InstanceVertexDeclaration,
-                    size, BufferUsage.WriteOnly);
+                    VertexBufferSize, BufferUsage.WriteOnly);
             }
 
             // Transfer the latest instance gameObject matrices into the vertex-buffer.

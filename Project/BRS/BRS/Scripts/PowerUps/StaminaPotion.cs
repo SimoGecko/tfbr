@@ -1,9 +1,8 @@
 // (c) Simone Guggiari 2018
 // ETHZ - GAME PROGRAMMING LAB
 
-using BRS.Engine;
+using BRS.Engine.Rendering;
 using BRS.Scripts.PlayerScripts;
-using Microsoft.Xna.Framework;
 
 namespace BRS.Scripts.PowerUps {
     class StaminaPotion : Powerup {
@@ -16,15 +15,12 @@ namespace BRS.Scripts.PowerUps {
 
         public StaminaPotion() {
             powerupType = PowerupType.Stamina;
+            ParticleRay = ParticleType3D.PowerUpStaminaRay;
+            ParticleStar = ParticleType3D.PowerUpStaminaStar;
             _useInstantly = false;
         }
 
         // --------------------- BASE METHODS ------------------
-        public override void Start() {
-            base.Start();
-            
-        }
-
 
         // --------------------- CUSTOM METHODS ----------------
         // commands

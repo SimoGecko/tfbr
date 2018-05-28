@@ -4,6 +4,7 @@
 using BRS.Engine;
 using BRS.Engine.Physics;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
 using Microsoft.Xna.Framework;
@@ -19,6 +20,8 @@ namespace BRS.Scripts.PowerUps {
 
         public Weight() {
             powerupType = PowerupType.Weight;
+            ParticleRay = ParticleType3D.PowerUpWeightRay;
+            ParticleStar = ParticleType3D.PowerUpWeightStar;
         }
 
         // --------------------- BASE METHODS ------------------

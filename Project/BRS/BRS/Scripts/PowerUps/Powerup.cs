@@ -4,6 +4,7 @@
 using BRS.Engine;
 using BRS.Engine.Physics.Colliders;
 using BRS.Engine.Physics.RigidBodies;
+using BRS.Engine.Rendering;
 using BRS.Scripts.Elements;
 using BRS.Scripts.Managers;
 using BRS.Scripts.PlayerScripts;
@@ -13,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace BRS.Scripts.PowerUps {
 
+    // Important: Create for each powerup the corresponding particle-effect in Engine/Rendering/ParticleRendering.cs
     public enum PowerupType { Health, Capacity, Speed, Stamina, Bomb, Key, Shield, Trap, Explodingbox, Weight, Magnet };
 
     class Powerup : Pickup {
@@ -22,6 +24,8 @@ namespace BRS.Scripts.PowerUps {
 
         //public
         public PowerupType powerupType;
+        public ParticleType3D ParticleRay;
+        public ParticleType3D ParticleStar;
         private const float RotSpeed = 1;
 
         //private
@@ -40,8 +44,6 @@ namespace BRS.Scripts.PowerUps {
         public override void Start() {
             base.Start();
             transform.rotation = MyRandom.YRotation();
-
-            
 
             if (gameObject.HasComponent<DynamicRigidBody>()) {
                 _rigidBody = gameObject.GetComponent<DynamicRigidBody>();

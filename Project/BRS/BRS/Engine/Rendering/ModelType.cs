@@ -2,6 +2,7 @@
 // ETHZ - GAME PROGRAMMING LAB
 
 namespace BRS.Engine.Rendering {
+
     /// <summary>
     /// Defines the model-type which is used for the hardware-instanciation.
     /// </summary>
@@ -12,7 +13,6 @@ namespace BRS.Engine.Rendering {
     public enum ModelType {
         NoHardwareInstanciation,
         Skybox,
-        SkyboxInvisible,
         Ground,
         InsideScene,
         OutsideScene,
@@ -47,6 +47,8 @@ namespace BRS.Engine.Rendering {
         Player3,
         Base0,
         Base1,
+        ArrowEnemy,
+        ArrowBase,
         Vault,
 
         // The ones below have all a transparent texture => have to remain at the bottom!
