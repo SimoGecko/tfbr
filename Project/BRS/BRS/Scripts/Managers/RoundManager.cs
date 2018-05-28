@@ -91,7 +91,8 @@ namespace BRS.Scripts.Managers {
         public override void Update() {
             if (roundEnded) {
                 //check for input to restart
-                if (InputRestart()) TryRestartRound();
+                if (InputRestart())
+                    TryRestartRound();
             }
 
             if (CamMoving)
@@ -199,6 +200,7 @@ namespace BRS.Scripts.Managers {
         void OnRoundEnd() {
             roundEnded = true;
             GameManager.state = GameManager.State.Ended;
+            BuyPowerupManager.Instance.ResetCustom();
 
             //FIND WINNER
             //reset // TODO reorganize

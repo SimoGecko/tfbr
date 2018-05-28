@@ -152,7 +152,7 @@ namespace BRS.Scripts.PlayerScripts {
             pA.Reset();
             pM.Reset();
             pI.Reset();
-            pP.Reset();
+            //pP.Reset();
             pS.Reset();
             UpdateUI();
             _steerableCollider.PostStep(0.0f);

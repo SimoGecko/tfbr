@@ -121,7 +121,45 @@ namespace BRS.Scripts.PowerUps {
             return powerupColors[index];
         }
 
+        public static int NumPowerups{
+            get {
+                return System.Enum.GetNames(typeof(PowerupType)).Length;
+            }
+        }
 
+        public static int StringToInt(string p) {
+            switch (p) {
+                case "health":      return 0;
+                case "capacity":    return 1;
+                case "speed":       return 2;
+                case "stamina":     return 3;
+                case "bomb":        return 4;
+                case "key":         return 5;
+                case "shield":      return 6;
+                case "trap":        return 7;
+                case "explodingbox":return 8;
+                case "weight":      return 9;
+                case "magnet":      return 10;
+                default: return 0;
+            }
+        }
+
+        public static Powerup PowerupFromIndex(int i) {
+            switch (i) {
+                case 0: return new HealthPotion();
+                case 1: return new CapacityBoost();
+                case 2: return new SpeedBoost();
+                case 3: return new StaminaPotion();
+                case 4: return new Bomb();
+                case 5: return new Key();
+                case 6: return new ShieldPotion();
+                case 7: return new Trap();
+                case 8: return new ExplodingBox();
+                case 9: return new Weight();
+                case 10:return new Magnet();
+            }
+            return new Bomb();
+        }
 
         // other
 
