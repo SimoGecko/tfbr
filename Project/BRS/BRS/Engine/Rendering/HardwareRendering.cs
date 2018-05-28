@@ -16,7 +16,7 @@ namespace BRS.Engine.Rendering {
 
         #region Properties and attributes
 
-        private static readonly List<ModelType> UsedForDepth = new List<ModelType>{ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene};
+        private static readonly List<ModelType> UsedForDepth = new List<ModelType>{ModelType.Ground, ModelType.InsideScene, ModelType.OutsideScene, ModelType.Stack};
 
         public static GraphicsDeviceManager GraphicsDeviceManager { private get; set; }
         private static GraphicsDevice GraphicsDevice => GraphicsDeviceManager.GraphicsDevice;
