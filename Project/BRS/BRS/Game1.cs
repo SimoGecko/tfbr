@@ -17,7 +17,7 @@ namespace BRS {
 
         const bool loadMenu = true;
         const bool showUI = true;
-        private const bool ShowFps = false;
+        private const bool ShowFps = true;
 
         // todo: for andy for debugging framerate => to be removed soon
         private SpriteFont _font;
@@ -25,7 +25,7 @@ namespace BRS {
 
         public Game1() {
             //NOTE: don't add anything into constructor
-            _graphics = new GraphicsDeviceManager(this) /*{ IsFullScreen = true }*/;
+            _graphics = new GraphicsDeviceManager(this) { IsFullScreen = true };
             Content.RootDirectory = "Content";
             File.content = Content;
             Graphics.gDM = _graphics;
@@ -188,6 +188,8 @@ namespace BRS {
                 } catch {
                     // Do nothing
                 }
+            } else {
+                Debug.Log((1.0f / gameTime.ElapsedGameTime.TotalSeconds).ToString("0.00"));
             }
         }
     }
